@@ -1,0 +1,94 @@
+﻿@page "/"
+@page "/index"
+@page "/close/{action?}/{id?}"
+<SectionContent SectionName="title">@title</SectionContent>
+<PageTitle>@title</PageTitle>
+
+<AuthorizeView>
+  <Authorized>
+    @* <h3>Willkommen zum Blazor-Haushaltsprogramm</h3>
+    <p>Hier ist noch keine Funktion hinterlegt.</p>
+    <p>Angemeldet als <b>@context.User.Identity?.Name</b></p>
+    <Signout></Signout> *@
+  </Authorized>
+  <NotAuthorized>
+    <p>Bitte anmelden!</p>
+    <Signin></Signin>
+  </NotAuthorized>
+</AuthorizeView>
+
+@* <p>@SessionValue</p> *@
+
+@code {
+  /// <summary>Action des Formulars aus @page Attribut.</summary>
+  [Parameter]
+  public string? Action { get; set; }
+
+  /// <summary>Id des Formulars aus @page Attribut.</summary>
+  [Parameter]
+  public string? Id { get; set; }
+
+  private string title = "Startseite";
+
+  [CascadingParameter]
+  public HttpContext HttpContext { get; set; } = default!;
+
+  /// <summary>Navigation-Manager zum Navigieren.</summary>
+  [Inject]
+  protected NavigationManager Navigation { get; set; } = default!;
+
+  // private string? SessionValue = null;
+
+  protected override void OnInitialized()
+  {
+    if (!string.IsNullOrWhiteSpace(Action) && !string.IsNullOrWhiteSpace(Id))
+    {
+      // UseCase schließen.
+      var fz = HttpContext.Session.GetFormState() ?? new FormularZustand();
+      try
+      {
+        var uc = fz.UseCases.FirstOrDefault(a => a.Formulare.Any(b => b.Id == Id));
+        if (fz != null && uc != null)
+        {
+          fz.UseCases.Remove(uc);
+          if (fz.AktuellId == uc.Id)
+          {
+            fz.AktuellId = null;
+            var uc0 = fz.UseCases.FirstOrDefault();
+            if (uc0 != null)
+              fz.AktuellId = uc0.Id;
+          }
+
+          // Aktuelles Formular ermitteln und öffnen.
+          Formular? f = null;
+          uc = fz.UseCases.FirstOrDefault(a => a.Id == fz.AktuellId);
+          if (uc != null)
+            f = uc.Formulare.LastOrDefault();
+          if (f == null)
+          {
+            Navigation.NavigateTo("/index");
+            return;
+          }
+          if (string.IsNullOrEmpty(f.Area))
+            Navigation.NavigateTo($"/{f.Action}/{f.Id ?? ""}", true, true);
+          else
+          {
+            // Redirect mit Id gibt immer Exception.
+            Navigation.NavigateTo($"/{f.Area}/{f.Action}/{f.Id ?? ""}", true, true);
+          }
+        }
+      }
+      finally
+      {
+        HttpContext.Session?.SetFormState(fz);
+      }
+    }
+    // HttpContext.Response.Cookies.Append("BlazorBpUser", "Ich");
+    // HttpContext.Response.Cookies.Delete("BlazorBpUser");
+    // SessionValue = HttpContext.Session.GetString("SessionValue");
+    // if (string.IsNullOrWhiteSpace(SessionValue))
+    //   SessionValue = "";
+    // SessionValue += "x";
+    // HttpContext.Session.SetString("SessionValue", SessionValue);
+  }
+}

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorBp.Services\BlazorBp.Services.csproj" />
+    <ProjectReference Include="..\..\csbp\CSBP.Services\CSBP.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NeoSmart.Caching.Sqlite.AspNetCore" Version="8.*" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.*" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <InvariantGlobalization>false</InvariantGlobalization><!-- Culture de-DE en-GB gehen bei true nicht! -->
+    <PublishTrimmed>false</PublishTrimmed>
+    <PublishAot>false</PublishAot>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile><!-- Generate a xml file containing API documentation. -->
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,184 @@
+@using System.Linq.Expressions
+@using System.Reflection
+
+@OnRendering@if (attr) {
+<button @attributes="Attributes2">@NameMu</button>
+}
+else
+{
+<button type="submit" class="@CssClass" name="Model.SubmitControl" value="@Name" title="@Title" accesskey="@Accesskey">@NameMu</button>
+}
+
+@code {
+  [Parameter]
+  public string? Name { get; set; }
+
+  [Parameter] // , EditorRequired]
+  public Expression<Func<string>> For { get; set; } = default!;
+
+  [Parameter(CaptureUnmatchedValues = true)]
+  public IDictionary<string, object>? AdditionalAttributes { get; set; }
+
+  private IDictionary<string, object>? Attributes2 { get; set; }
+
+  private MarkupString NameMu { get; set; } = new();
+
+  private string? CssClass { get; set; }
+
+  private string? Title { get; set; }
+
+  private string? Accesskey { get; set; }
+
+  private bool attr = true;
+
+  private string? autofocus = null;
+
+  /// <summary>Wert für Attribut name beim Postback.</summary>
+  private string? NameAttributeValue { get; set; }
+
+  /// <summary>Anzahl der Renderns.</summary>
+  private int rendern = 0;
+
+  /// <summary>Holt der leere Ergebnis des Renderns.</summary>
+  private string? OnRendering
+  {
+    get
+    {
+      rendern++;
+      OnInitialized2();
+      return "";
+    }
+  }
+
+  @* /// <summary>
+  /// Es wird höchstens zweimal gerendert.
+  /// </summary>
+  /// <returns>True, wenn noch einmal gerendert werden soll.</returns>
+  protected override bool ShouldRender()
+  {
+    return rendern < 2; // nur höchstens zweimal rendern.
+  } *@
+
+  /// <summary>
+  /// Setzen des Postback-value, des Access-Keys, des Tooltips und des Anzeige-Textes.
+  /// Kann direkt über Attribute value und title gesetzt werden.
+  /// Ansonsten werden die Werte aus dem Display-Attributs des For-Property bestimmt.
+  /// </summary>
+  protected void OnInitialized2()
+  {
+    object? obj = "";
+    AdditionalAttributes ??= new Dictionary<string, object>();
+    AdditionalAttributes.TryGetValue("class", out obj);
+    CssClass = obj?.ToString() ?? "";
+    AdditionalAttributes.TryGetValue("value", out obj);
+    var lbl = obj?.ToString() ?? "";
+    AdditionalAttributes.TryGetValue("title", out obj);
+    Title = obj?.ToString() ?? "";
+    AdditionalAttributes.TryGetValue("accesskey", out obj);
+    Accesskey = obj?.ToString() ?? "";
+
+    // Initialisierung für Mehrfach-Rendering.
+    autofocus = null;
+
+    var hidden = false;
+    if (For?.Body is MemberExpression me)
+    {
+      var mb = me.Member;
+      var dp = mb.GetCustomAttribute(typeof(DisplayAttribute)) as DisplayAttribute;
+      if (dp != null)
+      {
+        if (string.IsNullOrEmpty(lbl))
+          lbl = dp.GetName() ?? "";
+        if (string.IsNullOrEmpty(Title))
+          Title = dp.Description ?? "";
+      }
+      if (string.IsNullOrEmpty(lbl))
+        lbl = mb.Name ?? "";
+      var modeltype = mb.DeclaringType;
+      var modelprop = modeltype?.GetProperty(mb.Name ?? "");
+      var fex = me.Expression as MemberExpression;
+      var cex = fex?.Expression as ConstantExpression;
+      var fld = fex?.Member as PropertyInfo;
+      var model = fld?.GetValue(cex?.Value);
+      var name = mb.Name;
+      var modelname = fld?.Name ?? "Model";
+      NameAttributeValue = $"{modelname}.SubmitControl";
+      if (model != null && !string.IsNullOrEmpty(name))
+      {
+        // Readonly, Hidden, Error, Mandatory
+        var rheprop = modeltype?.GetProperty("ReadonlyHiddenError");
+        var rhe = rheprop?.GetValue(model) as string ?? "";
+        if (rhe.Contains($"#{name}#H"))
+        {
+          hidden = true;
+        }
+        else
+        {
+          @* if (rhe.Contains($"#{name}#R"))
+          {
+            // disabled = true;
+            SetAttribute(AdditionalAttributes, "disabled", "");
+          }
+          if (rhe.Contains($"#{name}#E"))
+          {
+            CssClass += Functions.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "border-danger";
+          }
+          if (rhe.Contains($"#{name}#M"))
+          {
+            CssClassLabel += Functions.Iif(string.IsNullOrEmpty(CssClassLabel), "", " ") + "fw-bold";
+          } *@
+        }
+        // Fokus
+        var focusprop = modeltype?.GetProperty("Focus");
+        var focus = focusprop?.GetValue(model) as string ?? "";
+        if (!string.IsNullOrEmpty(focus) && name.EndsWith(focus))
+          autofocus = "";
+      }
+    }
+    if (string.IsNullOrEmpty(lbl))
+      lbl = "OK";
+    Name = lbl.Replace("_", "");
+    var i = lbl.IndexOf("_");
+    if (string.IsNullOrEmpty(Accesskey) && i >= 0 && i < lbl.Length - 1)
+      Accesskey = lbl.Substring(i + 1, 1);
+    if (string.IsNullOrEmpty(Accesskey))
+      NameMu = new MarkupString(Name);
+    else
+      NameMu = new MarkupString(lbl.Replace($"_{Accesskey}", $"<u>{Accesskey}</u>"));
+    if (attr)
+    {
+      Attributes2 = new Dictionary<string, object>();
+      foreach (var e in AdditionalAttributes.ToList())
+        Attributes2.Add(e.Key, e.Value);
+      SetAttribute(Attributes2, "type", "submit");
+      SetAttribute(Attributes2, "name", NameAttributeValue);
+      SetAttribute(Attributes2, "value", Functions.TrimNull(Name));
+      if (hidden)
+        SetAttribute(Attributes2, "hidden", "");
+      else
+      {
+        SetAttribute(Attributes2, "class", Functions.TrimNull(CssClass));
+        SetAttribute(Attributes2, "title", Functions.TrimNull(Title));
+        SetAttribute(Attributes2, "accesskey", Functions.TrimNull(Accesskey));
+        SetAttribute(Attributes2, "autofocus", autofocus);
+      }
+    }
+    //if (Name == "Not Mandatory")
+    //  Functions.MachNichts();
+  }
+
+  private static void SetAttribute(IDictionary<string, object>? AdditionalAttributes, string key, string? value)
+  {
+    if (AdditionalAttributes == null)
+      return;
+    if (AdditionalAttributes.TryGetValue(key, out var attr))
+    {
+      if (value == null)
+        AdditionalAttributes.Remove(key);
+      else
+        AdditionalAttributes[key] = value;
+    }
+    else if (value != null)
+      AdditionalAttributes.Add(key, value);
+  }
+}

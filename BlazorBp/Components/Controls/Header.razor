@@ -1,0 +1,87 @@
+@if (userDaten == null)
+{
+  <span class="ms-1 fw-bold">Nicht angemeldet.</span>
+}
+else
+{
+  <table class="table table-sm table-striped mt-2">
+    <tbody>
+      <tr><td>Mandant</td><td>@userDaten.MandantNr</td></tr>
+      <tr><td>Benutzer</td><td>@userDaten.BenutzerId</td></tr>
+      <tr><td>Rolle</td><td>@string.Join(", ", userDaten.Rollen)</td></tr>
+    </tbody>
+  </table>
+  <EditForm Enhance method="post" Model="Model" OnSubmit="Submit" FormName="formheader">
+    <button class="btn btn-outline-secondary btn-sm" type="submit" value="undo" name="Model" title="Rückgängig">
+      <i class="bi bi-arrow-left-nav-menu"></i> Rückgängig (@AnzahlUndo)
+    </button>
+    <button class="btn btn-outline-secondary btn-sm" type="submit" value="redo" name="Model" title="Wiederherstellen">
+      <i class="bi bi-arrow-right-nav-menu"></i> Wiederherstellen (@AnzahlRedo)
+    </button>
+  </EditForm>
+}
+
+@code {
+  [CascadingParameter]
+  protected HttpContext HttpContext { get; set; } = default!;
+
+  [Inject]
+  NavigationManager navigation { get; set; } = default!;
+
+  /// <summary>Betroffene Benutzerdaten.</summary>
+  private UserDaten? userDaten;
+
+  /// <summary>Betroffene Größe des Undo-Stacks.</summary>
+  private int AnzahlUndo = 0;
+
+  /// <summary>Betroffene Größe des Redo-Stacks.</summary>
+  private int AnzahlRedo = 0;
+
+  [SupplyParameterFromForm]
+  private string Model { get; set; } = "";
+
+  /// <summary>
+  /// Initialisierung des Headers.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    userDaten = HttpContext.Session?.GetUserDaten();
+    Model ??= "";
+    if (userDaten != null)
+    {
+      var daten = new ServiceDaten(userDaten);
+      var r = ServiceBase.GetUndoRedoSize(userDaten.SessionId);
+      AnzahlUndo = r.Item1;
+      AnzahlRedo = r.Item2;
+    }
+    // TODO Anzahl für Undo und Redo anzeigen.
+    // System.Diagnostics.Debug.Write($"Header.razor: " + (userDaten == null ? "nicht angemeldet" : userDaten.BenutzerId));
+  }
+
+   // private async Task Submit()
+   private void Submit()
+  {
+    // await Task.Delay(1);
+    if (userDaten == null)
+      return;
+    var daten = new ServiceDaten(userDaten);
+    if (Model == "undo")
+    {
+      // Rückgängig machen
+      // TODO Session-spezifisches Undo.
+      var r = FactoryService.LoginService.Undo(daten);
+      if (r.Ok && r.Ergebnis)
+      {
+        // Aktualisieren der aktuellen Seite.
+        navigation.NavigateTo(HttpContext.Request.Path, true);
+      }
+    }
+    else if (Model == "redo")
+    {
+      // Wiederherstellen.
+      var r = FactoryService.LoginService.Redo(daten);
+      if (r.Ok && r.Ergebnis)
+        navigation.NavigateTo(HttpContext.Request.Path, true);
+    }
+  }
+}

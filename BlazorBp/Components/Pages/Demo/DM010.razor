@@ -1,0 +1,155 @@
+﻿@page "/demo/dm010"
+@inject IDemoService DemoService
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+@if (Liste.Any())
+{
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nr.</th>
+        <th>Autor</th>
+        <th>Titel</th>
+        <th>Seiten</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var b in Liste)
+      {
+        <tr>
+          <td>@b.Nr</td>
+          <td>@b.Autor</td>
+          <td>@b.Titel</td>
+          <td>@b.Seiten</td>
+          <td>
+            <form data-enhance="" method="post" @onsubmit="@(() => ViewBook(@b.Nr))" @formname=@($"Anzeige{b.Nr}")>
+              <AntiforgeryToken/>
+              <button class="btn btn-primary" type="submit">Anzeige</button>
+            </form>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
+else
+{
+  <p>Keine Bücher erfasst.</p>
+}
+
+@if (Model is not null)
+{
+  <h3>Buch</h3>
+  <EditForm Enhance method="post" Model="Model" OnValidSubmit="Submit" FormName="dm010">
+    <DataAnnotationsValidator/>
+    <ValidationSummary class="text-danger"/>
+    <input type="hidden" name="Model.Nr" value="@Model.Nr"/>
+    <div class="form-group">
+      <label for="autor">Autor:</label>
+      <InputText id="autor" class="form-control" autofocus="" @bind-Value="Model.Autor"/>
+      <ValidationMessage class="text-danger" For="@(() => Model.Autor)"/>
+    </div>
+    <div class="form-group">
+      <label for="titel">Titel:</label>
+      <InputText id="titel" class="form-control" @bind-Value="Model.Titel"/>
+      <ValidationMessage class="text-danger" For="@(() => Model.Titel)"/>
+    </div>
+    <div class="form-group">
+      <label for="seiten">Seiten:</label>
+      <InputNumber id="seiten" class="form-control" @bind-Value="Model.Seiten"/>
+      <ValidationMessage class="text-danger" For="@(() => Model.Seiten)"/>
+    </div>
+    <TestInputNumber @bind-Value="Model.Seiten" For="@(() => Model.Seiten)" />
+    <button type="submit" class="btn btn-primary">Speichern</button>
+  </EditForm>
+}
+
+@code {
+  private string Title = "SSR - DM010";
+
+  [SupplyParameterFromForm(FormName = "dm010")]
+  protected Buch Model { get; set; } = default!;
+
+  private List<Buch> Liste { get; set; } = new();
+
+  protected override void OnInitialized()
+  {
+    if (Model == null)
+      Model = new Buch { Autor = "a", Titel = "t" };
+    LoadListe();
+  }
+
+  private void Submit()
+  {
+    if (Model is not null)
+    {
+      DemoService.SaveBook(Model.ToBook());
+      // Model = new();
+      Model.Nr = 0;
+      Model.Seiten++;
+      LoadListe();
+    }
+  }
+
+  protected override bool ShouldRender()
+  {
+    var b = base.ShouldRender();
+    return b;
+  }
+
+  protected override void OnAfterRender(bool firstrender)
+  {
+    base.OnAfterRender(firstrender);
+  }
+
+  private void ViewBook(int id)
+  {
+    var b = DemoService.GetBook(id);
+    Model = b == null ? Model : Buch.FromBook(b);
+  }
+
+  private void LoadListe()
+  {
+    Liste = DemoService.GetBookList().Select(a => Buch.FromBook(a)).ToList();
+  }
+
+  public class Buch {
+    public int Nr { get; set; } = 0;
+
+    [Required]
+    [MaxLength(50)]
+    public string Autor { get; set; } = "";
+
+    [Required]
+    [MaxLength(100)]
+    public string Titel { get; set; } = "";
+
+    [Range(0, 1500)]
+    public int Seiten { get; set; } = 0;
+
+    public Book ToBook()
+    {
+      return new Book
+      {
+        Id = Nr,
+        Author = Autor,
+        Title = Titel,
+        Pages = Seiten,
+      };
+    }
+
+    public static Buch FromBook(Book b)
+    {
+      return new Buch
+      {
+        Nr = b?.Id ?? 0,
+        Autor = b?.Author ?? "",
+        Titel = b?.Title ?? "",
+        Seiten = b?.Pages ?? 0,
+      };
+    }
+  }
+}

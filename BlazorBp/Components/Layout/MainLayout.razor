@@ -1,0 +1,69 @@
+﻿@inherits LayoutComponentBase
+@inject IHostEnvironment HostEnvironment
+
+<div class="row">
+  <div class="col-md-2">
+    <NavMenu Interactive="@Interactive"/>
+  </div>
+
+  <div class="col-md-10" id="Seite2">
+    <div class="row border border-2 border-secondary rounded-3 mt-1 ms-0 me-0">
+      <div class="col-1">
+        <NavLink class="nav-link mt-2" href="@helpurl" target="bphelp" title="Hilfe aufrufen" aria-label="Hilfe aufrufen"><span class="bi bi-question-circle-fill-nav-menu" aria-hidden="true"></span></NavLink>
+      </div>
+      <div class="col-1">
+        <NavLink class="nav-link mt-2" href="#" id="Drucken" title="TODO Aktuelle Seite drucken" aria-label="Aktuelle Seite drucken"><span class="bi bi-printer-fill-nav-menu" aria-hidden="true"></span></NavLink>
+      </div>
+      <div class="col-8">
+        <span class="btn btn-secondary fw-bold"><SectionOutlet SectionName="title"/></span>
+      </div>
+      <div class="col-2">
+        <Countdown Sekunden="@((Konstanten.SESSION_TIMEOUT - 5) / 2)"></Countdown>
+      </div>
+    </div>
+    <div class="row border border-2 border-primary rounded-3 mt-1 ms-0 me-0">
+      <main role="main" class="pb-3 col">
+        @* <ErrorBoundary> *@
+        @* <div class="container body-content"> *@
+          @Body
+        @* </div> *@
+        @* </ErrorBoundary> *@
+      </main>
+    </div>
+  </div>
+</div>
+
+<PageScript Src="./site.js" />
+
+<div id="blazor-error-ui">
+  An unhandled error has occurred.
+  <a href="" class="reload">Reload</a>
+  <a class="dismiss">🗙</a>
+</div>
+
+@code {
+  [CascadingParameter]
+  protected HttpContext HttpContext { get; set; } = default!;
+
+  private bool Interactive { get; set; } = Konstanten.Interactive;
+
+  private string helpurl { get; set; } = "";
+
+  /// <summary>
+  /// Initialisierung der Hilfe.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    // Form aus HttpContext bestimmen.
+    var form = "";
+    var path = HttpContext.Request.Path.Value ?? "";
+    const int len = 4;
+    if (path.Length > len && path[0] == '/' && path[3] == '/')
+    {
+      var f = Functions.Between(path, path.Substring(0, len), path.LastIndexOf("/") > len ? "/" : null);
+      form = $"?#{f.ToUpper()}";
+    }
+    helpurl = $"/help/Csbp-Hilfe.html{form}";
+    //// System.Diagnostics.Debug.Write($"Hilfe: {helpurl}");
+  }
+}

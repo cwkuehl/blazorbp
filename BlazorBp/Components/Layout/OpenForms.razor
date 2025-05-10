@@ -1,0 +1,31 @@
+@if (fz != null && fz.UseCases.Any())
+{
+<div class="border border-2 border-secondary rounded-3 mt-1 mb-1">
+  <span class="ms-1 fw-bold">Offene Formulare</span>
+  @foreach (var uc in fz.UseCases)
+  {
+    var f = uc.Formulare.LastOrDefault();
+    if (f != null)
+    {
+      var title = uc.Formulare.Select(a => a.Name).ToList().Aggregate(new System.Text.StringBuilder(), (current, next) => current.Append(current.Length <= 0 ? "" : " - ").Append(next)).ToString();
+      <br /><div class="col btn-group ms-1 mt-1">
+        <a class="btn btn-secondary btn-sm" href="@f.GetHref(true)" title="@title" aria-label="@uc.Name">@uc.Name</a>
+        <a class="btn btn-secondary btn-sm" href="@f.GetHref(true, true)" title="Formular schließen"><b>X</b></a>
+      </div>
+    }
+  }
+</div>
+}
+
+@code
+{
+  [CascadingParameter]
+  protected HttpContext HttpContext { get; set; } = default!;
+
+  private FormularZustand? fz = null;
+
+  protected override void OnInitialized()
+  {
+    fz = HttpContext?.Session?.GetFormState();
+  }
+}

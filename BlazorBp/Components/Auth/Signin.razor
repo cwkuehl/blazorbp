@@ -1,0 +1,137 @@
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="Signin">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Id"/>
+  <div class="row mt-1">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Client)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Username)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid type="password" AutoPostback="" For="@(() => Model!.Password)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <button class="btn btn-primary mb-1 mt-1" type="submit">Anmelden</button>
+</EditForm>
+
+@code {
+  [CascadingParameter]
+  protected HttpContext HttpContext { get; set; } = default!;
+
+  [Inject]
+  NavigationManager navigation { get; set; } = default!;
+
+  [Inject]
+  IHttpClientFactory clientFactory { get; set; } = default!;
+
+  /// <summary>Betroffener EditContext.</summary>
+  private EditContext? EditContext;
+
+  /// <summary>Betroffener ValidationMessageStore.</summary>
+  private ValidationMessageStore? Messages;
+
+  [SupplyParameterFromForm]
+  private UserInfo? Model { get; set; }
+
+#if DEBUG
+  private readonly string CookieName = "BlazorBpSigninDebug";
+#else
+  private readonly string CookieName = "BlazorBpSignin";
+#endif
+
+  //protected override async Task OnInitializedAsync()
+  protected override void OnInitialized()
+  {
+    // Wegen static SSR KEIN async! Das Model muss sofort vorhanden sein.
+    //await Task.Delay(1);
+    if (Model == null)
+    {
+      Model = new UserInfo
+      {
+        Client = 1,
+#if DEBUG
+        Username = "admin",
+        Password = "test",
+#endif
+      };
+      var c = HttpContext.Request.Cookies[CookieName];
+      if (c != null)
+      {
+        var arr = c.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+        if (arr.Length == 2)
+        {
+          Model.Client = Functions.ToInt32(arr[0]);
+          Model.Username = arr[1];
+        }
+      }
+    }
+    Model.Focus = Model.Client < 0 ? nameof(Model.Client) : string.IsNullOrEmpty(Model.Username) ? nameof(Model.Username) : nameof(Model.Password);
+    #pragma warning disable CS8604
+    EditContext = new(Model);
+    #pragma warning restore CS8604
+    Messages = new(EditContext);
+  }
+
+  private void Submit() // private async Task Submit() // Zum Setzen der Validation Summary darf es nich async sein.
+  {
+    if (Model == null || Messages == null)
+      return;
+    if (Functions.MachNichts() == 01)
+      navigation.NavigateTo($"/auth/login?u={Model?.Username}&p={Model?.Password}", true);
+    else
+    {
+      var http = clientFactory.CreateClient("HttpClientWithSSLUntrusted");
+      //// var response = await http.PostAsJsonAsync($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/auth/login", Model);
+      var response = http.PostAsJsonAsync($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/auth/login", Model).Result;
+      if (response.IsSuccessStatusCode)
+      {
+        // Nach erfolgreichem Login weiterleiten
+        foreach (var cookieHeader in response.Headers.GetValues("Set-Cookie"))
+        {
+          HttpContext.Response.Headers.Append("Set-Cookie", cookieHeader.ToString());
+        }
+        var o = new CookieOptions
+        {
+          HttpOnly = true,
+          Expires = DateTime.Now.AddYears(2),
+          SameSite = SameSiteMode.Strict,
+        };
+        var json = response.Content.ReadFromJsonAsync<string>().Result ?? "";
+        var ud = System.Text.Json.JsonSerializer.Deserialize<UserDaten>(json);
+        if (ud == null)
+          Messages.Add(() => Model, $"Anmeldedaten sind ungültig");
+        else
+        {
+          HttpContext.Session?.SetUserDaten(ud);
+          HttpContext.Response.Cookies.Append(CookieName, $"{ud.MandantNr};{ud.BenutzerId}", o);
+          //var username = Functions.Between(json, "\"Username\":\"", "\"");
+          //if (!string.IsNullOrEmpty(username))
+          //  Model.Username = username;
+          //HttpContext.Response.Cookies.Append(CookieName, $"{Model.Client};{Model.Username}", o);
+          var ru = Functions.TrimNull(HttpContext.Request.Query["returnurl"].ToString()) ?? "/";
+          navigation.NavigateTo(ru);
+        }
+      }
+      else
+      {
+        #pragma warning disable CS8603
+        //// Messages.Add(() => Model.Username, $"Anmeldedaten sind ungültig");
+        Messages.Add(() => Model, $"Anmeldedaten sind ungültig");
+        #pragma warning restore CS8603
+      }
+    }
+  }
+
+  public class UserInfo : PageModelBase
+  {
+    public string? Id { get; set; } = "1x";
+
+    [Display(Name = "_Mandant", Description = "Die Mandantennummer ist notwendig.")]
+    [Required(ErrorMessage = "Die Mandantennummer muss angegeben werden.")]
+    public int Client { get; set; }
+
+    [Display(Name = "_Benutzer-ID", Description = "Die Benutzer-ID ist notwendig.")]
+    [Required(ErrorMessage = "Die Benutzer-ID muss angegeben werden.")]
+    public string? Username { get; set; }
+
+    [Display(Name = "_Kennwort", Description = "Das Kennwort ist notwendig.")]
+    [Required(ErrorMessage = "Das Kennwort muss angegeben werden.")]
+    public string? Password { get; set; }
+  }
+}

@@ -1,0 +1,118 @@
+﻿@page "/am/am100/{id?}"
+@inherits BlazorComponentBase<AM100Model, TableRowModelBase>
+@attribute [Authorize(Roles = "User, Admin, Superuser")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnSubmit="Submit" FormName="am100">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <input type="hidden" name="SubmitControl"/>
+  <div class="row mt-1">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Mandant)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Benutzer)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row mt-1">
+    <LabelInputValid type="password" AutoPostback="" For="@(() => Model!.KennwortAlt)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid type="password" AutoPostback="" For="@(() => Model!.KennwortNeu)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid type="password" AutoPostback="" For="@(() => Model!.KennwortNeu2)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row ms-1 mt-2">
+    <SubmitButton class="btn btn-primary col-md-2 me-1" For="@(() => Model!.Ok)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
+  </div>
+</EditForm>
+
+@code {
+  private bool valid;
+
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id">Betroffene Id.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id, AM100Model? model = null, TableModelBase<TableRowModelBase>? table = null)
+  {
+    if (model != null)
+      Model = model;
+    if (Model == null)
+    {
+      var daten = ServiceDaten;
+      Model = new AM100Model
+      {
+        Nr = id,
+        Mandant = daten.MandantNr,
+        Benutzer = daten.BenutzerId,
+      };
+      Model.SetMhrf(DialogTypeEnum.New);
+    }
+    Model.Nr = id;
+  }
+
+  /// <summary>
+  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
+  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
+  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    if (OnInitializedFormular("AM100", "Kennwort ändern - AM100", Id, true))
+      return;
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// -Wegen Anzeige von Fehlermeldungen darf die Funktion nicht async sein (private async Task Submit()).
+  /// -Speichern des geänderten Models.
+  /// </summary>
+  private void Submit()
+  {
+    if (Model == null || Messages == null)
+      return;
+    var submit = Model.Submit ?? "";
+    if (!string.IsNullOrEmpty(submit))
+    {
+      valid = EditContext?.Validate() ?? false;
+      if (valid && Model.KennwortNeu != Model.KennwortNeu2)
+      {
+        #pragma warning disable CS8603
+        Messages.Add(() => Model.KennwortNeu2, $"Die neuen Kennwörter stimmen nicht überein.");
+        #pragma warning restore CS8603
+        valid = false;
+      }
+    }
+    if (valid && submit == "OK")
+    {
+      var daten = ServiceDaten;
+      var r = FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId,
+        Model.KennwortAlt, Model.KennwortNeu, true);
+      if (r != null)
+      {
+        Get(r);
+        if (r.Ok)
+        {
+          CloseFormular();
+          return;
+        }
+      }
+    }
+    WriteFormularModel(Model.Nr ?? "0", Model);
+    if (submit == "Schließen")
+    {
+      CloseFormular();
+    }
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData(AM100Model model, AM100Model model0)
+  {
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+  }
+}

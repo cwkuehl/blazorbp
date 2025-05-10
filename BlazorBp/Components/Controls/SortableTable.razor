@@ -1,0 +1,244 @@
+@using System.Reflection;
+
+@typeparam TModel where TModel : PageModelBase
+@typeparam TRTable where TRTable : TableRowModelBase
+
+<CascadingValue Value="this">
+@ChildContent
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="@(GetFormName())">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Table!.Nr"/>
+  <input type="hidden" name="Table.SelectedRow" value="@(Table!.SelectedRow ?? -1)"/>
+  <InputText type="hidden" @bind-Value="Table!.SortColumn"/>
+  <InputText type="hidden" @bind-Value="Table!.VisibleColumns"/>
+  <input type="hidden" name="SubmitControl"/>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        @{
+          var sc = Table?.SortColumn ?? "";
+          var desc = sc.EndsWith("#-");
+        }
+        @foreach (var c in Columns.Where(a => a.Visible))
+        {
+          var sort = sc.StartsWith($"{c.SortName}#");
+          var v = c.SortName + Functions.Iif(sort, Functions.Iif(desc, "#+", "#-"), "#-");
+          var v2 = c.Label + Functions.Iif(sort, Functions.Iif(desc, " ^", " v"), "");
+          <th><button type="submit" class="btn btn-outline-info btn-sm" formaction="@actionpath?handler=Table_Sort" value="@v" name="Table.SortColumn" title="@c.SortTitle">@v2</button></th>
+        }
+        @if (EditAktion || DeleteAktion || NewAktion)
+        {
+          <th>Aktion
+            @if (NewAktion)
+            {
+              <button type="submit" class="btn btn-outline-info btn-sm ms-1" formaction="@actionpath?handler=Table_New" value="-1" name="Table.ModalId" title="Neuen Datensatz erfassen">Neu</button>
+            }
+          </th>
+        }
+      </tr>
+    </thead>
+    @if (!(Table?.Liste?.Any() ?? false))
+    {
+      <tbody>
+        @if (!string.IsNullOrEmpty(NoData))
+        {
+          <p>@NoData</p>
+        }
+      </tbody>
+    }
+    else
+    {
+      <tbody>
+        @{
+          var ix = 0;
+          var sr = Table.SelectedRow ?? 0;
+        }
+        @foreach (var r in Table.Liste)
+        {
+          ix++;
+          <tr class="@Functions.Iif(ix == sr, "table-primary", "")">
+            <td scope="row"><button type="submit" class="btn btn-secondary btn-sm" formaction="@actionpath?handler=Table_Row" value="@ix" name="Table.SelectedRow" title="Zeile markieren">&gt;</button></td>
+            @foreach (var c in Columns.Where(a => a.Visible))
+            {
+              <td>@c.Pi.GetValue(r)</td>
+            }
+            @if (EditAktion || DeleteAktion)
+            {
+              <td>
+                @if (EditAktion)
+                {
+                  <button type="submit" class="btn btn-outline-info btn-sm" formaction="@actionpath?handler=Table_Edit" value="@ix" name="Table.ModalId" title="Datensatz ändern">Ändern</button>
+                }
+                @if (DeleteAktion)
+                {
+                  <button type="submit" class="btn btn-outline-info btn-sm ms-1" formaction="@actionpath?handler=Table_Delete" value="@ix" name="Table.ModalId" title="Datensatz löschen">Löschen</button>
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    }
+  </table>
+  <div class="row">
+    <div class="form-group col-md-1 mt-1">
+      <button type="submit" class="btn btn-secondary" formaction="@actionpath?handler=Table_First" value="First" name="Table.First" title="Erste Seite">|&lt;</button>
+      <button type="submit" class="btn btn-secondary" formaction="@actionpath?handler=Table_Prev" value="Prev" name="Table.Prev" title="Vorherige Seite">&lt;</button>
+    </div>
+    <div class="col-md-1">
+      <input class="form-control" type="text" readonly="readonly" value="@Table!.SelectedPage" name="Table.SelectedPage"/>
+    </div>
+    <div class="col-md-1">
+      <label class="control-label"> von </label>
+    </div>
+    <div class="col-md-1">
+      <input class="form-control" type="text" readonly="readonly" value="@Table!.PageCount" name="Table.PageCount"/>
+    </div>
+    <div class="form-group col-md-1 mt-1">
+      <button type="submit" class="btn btn-secondary" formaction="@actionpath?handler=Table_Next" value="Next" name="Table.Next" title="Nächste Seite">&gt;</button>
+      <button type="submit" class="btn btn-secondary" formaction="@actionpath?handler=Table_Last" value="Last" name="Table.Last" title="Letzte Seite">&gt;|</button>
+    </div>
+    <div class="form-group col-md-1">
+      @* <button type="submit" class="btn btn-secondary" formaction="@actionpath?handler=Table_Export" value="Export" name="Table.Export" title="Die Daten aller Seiten in csv-Datei exportieren.">Export</button> *@
+      <a id="exportCsv" class="btn btn-secondary" href="@($"/download/{FormName}/{Table!.Nr}")" download="Export.csv" target="=_top">CSV-Export</a>
+    </div>
+    <div class="form-group col-md-1">
+      <LabelInputValid type="combobox" AutoPostback="x" DataList="Table!.AuswahlRowsPerPage" For="@(() => Table!.RowsPerPage)" NoLable="true" NoValidation="true"/>
+    </div>
+    <div class="btn-group col-md-2" role="group">
+      <button id="btnspalten" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" title="Anzuzeigende Spalten auswählen">Spalten</button>
+      <ul class="dropdown-menu" aria-labelledby="btnspalten">
+        @if (Columns.Any())
+        {
+          var i = 0;
+          foreach (var c in Columns)
+          {
+            <li><label title="Spalte @c.Name"><input type="checkbox" class="form-check-input ms-3" name="@($"Table.Column{i}")" onchange="submitc($(this));" value="True" checked="@Functions.Iif(c.Visible,"checked",null)">&nbsp;@(c.Name)&nbsp;&nbsp;</label></li>
+            i++;
+          }
+        }
+      </ul>
+    </div>
+    <div class="form-group col-md-2">
+      <LabelInputValid AutoPostback="x" For="@(() => Table!.Search)" NoLable="true" NoValidation="true"/>
+    </div>
+  </div>
+</EditForm>
+</CascadingValue>
+
+@code {
+  [CascadingParameter]
+  public BlazorComponentBase<TModel, TRTable>? Parent { get; set; }
+
+  [Parameter]
+  public RenderFragment? ChildContent { get; set; }
+
+  [Parameter]
+  // public RenderFragment? Empty { get; set; } = @<p>Keine Daten vorhanden.</p>;
+  public string? NoData { get; set; } = "Keine Daten vorhanden.";
+
+  /// <summary>Kurzname des Formulars in kleinen Buchstaben, z.B. ag100.</summary>
+  [Parameter]
+  public string? FormName { get; set; } = "noform";
+
+  [CascadingParameter]
+  protected HttpContext HttpContext { get; set; } = default!;
+
+  [Parameter(CaptureUnmatchedValues = true)]
+  public IDictionary<string, object>? AdditionalAttributes { get; set; }
+
+  /// <summary>Holt oder setzt die zu generierenden Attribute.</summary>
+  private IDictionary<string, object>? Attributes2 { get; set; }
+
+  /// <summary>Holt oder setzt die anzuzeigende Liste.</summary>
+  [Parameter]
+  //[SupplyParameterFromForm]
+  public TableModelBase<TRTable>? Table { get; set; }
+
+  /// <summary>Holt oder setzt einen Wert, der angibt, ob eine New-Aktion angeboten wird (Table_New).</summary>
+  [Parameter]
+  public bool NewAktion { get; set; }
+
+  /// <summary>Holt oder setzt einen Wert, der angibt, ob eine Edit-Aktion angeboten wird (Table_Edit).</summary>
+  [Parameter]
+  public bool EditAktion { get; set; }
+
+  /// <summary>Holt oder setzt einen Wert, der angibt, ob eine Delete-Aktion angeboten wird (Table_Delete).</summary>
+  [Parameter]
+  public bool DeleteAktion { get; set; }
+
+  private EditContext? EditContext = default!;
+
+  /// <summary>Betroffener ValidationMessageStore.</summary>
+  protected ValidationMessageStore? Messages;
+
+  private string? actionpath = null;
+
+  private List<BlazorBp.Base.Column> Columns = new();
+
+  public void AddColumn(TableColumn<TModel, TRTable> column)
+  {
+    var field = Functions.TrimNull(column.Field) ?? "";
+    var prop = typeof(TRTable).GetProperty(field);
+    if (prop is null)
+    {
+      var props = string.Join(", ", typeof(TRTable).GetProperties().Select(a => a.Name).ToList());
+      throw new Exception($"TableColumn: '{field}' ist keine Spalte von {typeof(TRTable).Name} ({props}).");
+    }
+    var sortfield = Functions.TrimNull(column.SortField) ?? field;
+    var label = Functions.TrimNull(column.Label);
+    var title = Functions.TrimNull(column.Title);
+    if (string.IsNullOrEmpty(label) || string.IsNullOrEmpty(title))
+    {
+      var dp = prop.GetCustomAttributes(typeof(DisplayAttribute), true).FirstOrDefault() as DisplayAttribute;
+      if (dp != null)
+      {
+        if (string.IsNullOrEmpty(label))
+          label = (dp.GetName() ?? "").Replace("_", "");
+        if (string.IsNullOrEmpty(title))
+          title = (dp.Description ?? "").Replace("_", "");
+      }
+    }
+    var sorttitle = $"Sortierung nach Spalte {label}";
+    if (Table != null)
+    {
+      Table.VisibleColumns ??= "1";
+      while (Table.VisibleColumns.Length <= Columns.Count)
+        Table.VisibleColumns += "1"; // TODO Sichtbarkeit benutzerbezogen initialisieren.
+    }
+    var v = Table != null && Table.VisibleColumns[Columns.Count] == '1';
+    Columns.Add(new Column(field, sortfield, label ?? "", title ?? "", sorttitle, prop, v));
+    // StateHasChanged();
+  }
+
+  protected override void OnInitialized()
+  {
+    //if (Table == null && Parent != null)
+    //  Table = Parent.Table;
+    if (Table == null)
+      Table = new TableModelBase<TRTable>();
+    actionpath = HttpContext?.Request?.Path;
+    EditContext = new EditContext(Table);
+    Messages = new(EditContext);
+    // Columns sind noch nicht initialisiert.
+    // Table.GetSubmit(HttpContext?.Request, "formt", Columns);
+    // Der Aufruf hier ist zu spät:
+    // Parent?.InitModal(Table.Handler, Table.ModalId);
+  }
+
+  private void Submit()
+  {
+    if (Table == null || Parent == null)
+      return;
+    Table.GetSubmit(HttpContext?.Request, GetFormName(), Columns);
+    Parent.OnTable(Table, Messages);
+    // Parent.TableData(Table);
+  }
+
+  private string GetFormName()
+  {
+    return $"""{FormName ?? "form"}t""";
+  }
+}

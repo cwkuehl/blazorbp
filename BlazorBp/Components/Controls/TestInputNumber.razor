@@ -1,0 +1,71 @@
+@using System.Linq.Expressions
+@inherits InputBase<int>
+
+@OnRendering<div class="form-group">
+  <label for="seiten">Test:</label>
+  <input type="number" class="@CssClass" name="@NameAttributeValue" value="@CurrentValue">
+  @* <InputNumber id="seiten" class="form-control" @bind-Value="Model.Seiten"/> *@
+  @* <ValidationMessage class="text-danger" For="@(() => Model.Seiten)"/> *@
+</div>
+
+@code {
+  [Parameter]
+  public Expression<Func<int>> For { get; set; } = default!;
+
+  @* [Parameter(CaptureUnmatchedValues = true)]
+  public IDictionary<string, object>? AdditionalAttributes { get; set; } *@
+
+  @* /// <summary>Übergebener Wert.</summary>
+  [Parameter]
+  public int Value { get; set; } = default!; *@
+
+  @* /// <summary>Aktueller Wert (public für Reflection).</summary>
+  public int CurrentValue { get; set; } = default!; *@
+
+  @* /// <summary>Wert für Attribut name beim Postback.</summary>
+  private string? NameAttributeValue { get; set; } *@
+
+  @* /// <summary>Css-Klassen.</summary>
+  private string? CssClass { get; set; } *@
+
+  /// <summary>Anzahl der Renderns.</summary>
+  private int rendern = 0;
+
+  private string? OnRendering
+  {
+    get
+    {
+      rendern++;
+      OnInitialized2();
+      return "";
+    }
+  }
+
+  protected override bool ShouldRender()
+  {
+    return rendern < 2; // nur höchstens zweimal rendern.
+    // var b = base.ShouldRender();
+    // return false;
+  }
+
+  protected void OnInitialized2()
+  {
+    //CssClass = "form-control";
+    if (For?.Body is MemberExpression me)
+    {
+      var mb = me.Member;
+      // NameAttributeValue = $"Model.{mb.Name}";
+      var cf = For.Compile();
+      CurrentValue = cf.Invoke();
+      //if (CurrentValue % 2 == 0)
+        //CssClass += Functions.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "border-danger";
+    }
+  }
+
+  protected override bool TryParseValueFromString(string? value, out int result, out string validationErrorMessage)
+  {
+    result = int.TryParse(value, out var r) ? r : 0;
+    validationErrorMessage = "";
+    return true;
+  }
+}

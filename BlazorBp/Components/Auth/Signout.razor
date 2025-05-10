@@ -1,0 +1,30 @@
+<PageTitle>Abmeldung</PageTitle>
+<h3>Abmeldung</h3>
+<EditForm Enhance method="post" Model="Model" OnSubmit="Submit" FormName="Signin">
+  <button class="btn btn-primary" type="submit">Abmelden</button>
+</EditForm>
+
+@code {
+  [Inject]
+  NavigationManager Navigation { get; set; } = default!;
+
+  [CascadingParameter]
+  protected HttpContext HttpContext { get; set; } = default!;
+
+  [SupplyParameterFromForm]
+  private string? Model { get; set; }
+
+  protected override void OnInitialized()
+  {
+    // Wegen static SSR KEIN async! Das Model muss sofort vorhanden sein.
+    if (Model == null)
+    {
+      Model = "nix";
+    }
+  }
+   private async Task Submit()
+  {
+    await Task.Delay(1);
+    Navigation.NavigateTo($"/auth/logout", true);
+  }
+}

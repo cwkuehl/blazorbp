@@ -1,0 +1,47 @@
+﻿@{#pragma warning disable RZ10012}
+<header>
+  <div class="border border-2 border-secondary rounded-3 bg-info-subtle mt-1">
+    <NavLink class="navbar-brand ms-1" href="" Match="NavLinkMatch.All" title="Blazor Haushaltsprogramm 2024"><span class="bi bi-house-door-nav-menu" aria-hidden="true"></span>Blazor HH</NavLink>
+  </div>
+</header>
+<div class="border border-2 border-secondary rounded-3 mt-1">
+  <Header></Header>
+</div>
+<div class="border border-2 border-secondary rounded-3 mt-1 mb-1">
+  <span class="ms-1 fw-bold">Menü</span>
+  <NavLink class="nav-link ms-1" href="impressum" title="Verwendung der Daten"><span class="bi bi-incognito-nav-menu" aria-hidden="true"></span>Impressum</NavLink>
+  <AuthorizeView Roles="@UserDaten.RoleAdmin">
+    <NavLink class="nav-link text-dark ms-1" href="#" title="Menü Datei" data-bs-toggle="collapse" data-bs-target="#submenufile" aria-expanded="false" aria-controls="submenufile"><span class="bi bi-file-nav-menu" aria-hidden="true"></span>Datei</NavLink>
+    <div class="collapse showxxx ms-3" id="submenufile">
+      <NavLink class="nav-link text-dark" href="ag/ag100" title="Mandanten" aria-label="Mandanten"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Mandanten</NavLink>
+      <NavLink class="nav-link text-dark" href="ag/ag200" title="Benutzer" aria-label="Benutzer"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Benutzer</NavLink>
+    </div>
+  </AuthorizeView>
+  <AuthorizeView>
+    <NavLink class="nav-link text-dark ms-1" href="#" title="Menü Benutzer" data-bs-toggle="collapse" data-bs-target="#submenuuser" aria-expanded="false" aria-controls="submenuuser"><span class="bi bi-person-nav-menu" aria-hidden="true"></span>Benutzer</NavLink>
+    <div class="collapse showxxx ms-3" id="submenuuser">
+      <NavLink class="nav-link text-dark" href="am/am100" title="Kennwort ändern" aria-label="Kennwort ändern"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Kennwort ändern</NavLink>
+      <NavLink class="nav-link text-dark" href="am/am500" title="Einstellungen" aria-label="Einstellungen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Einstellungen</NavLink>
+    </div>
+  </AuthorizeView>
+  <AuthorizeView>
+    <NavLink class="nav-link text-dark ms-1" href="#" title="Menü Privat" data-bs-toggle="collapse" data-bs-target="#submenuprivate" aria-expanded="false" aria-controls="submenuprivate"><span class="bi bi-person-nav-menu" aria-hidden="true"></span>Privat</NavLink>
+    <div class="collapse showxxx ms-3" id="submenuprivate">
+      <NavLink class="nav-link text-dark" href="fz/fz700" title="Notizen" aria-label="Notizen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Notizen</NavLink>
+    </div>
+  </AuthorizeView>
+  <NavLink class="nav-link text-dark ms-1" href="#" title="Menü Demo" data-bs-toggle="collapse" data-bs-target="#submenudemo" aria-expanded="false" aria-controls="submenudemo"><span class="bi bi-screwdriver-nav-menu" aria-hidden="true"></span>Demo</NavLink>
+  <div class="collapse show ms-3" id="submenudemo">
+    <NavLink class="nav-link text-dark" href="demo/dm010" title="Statisches Server Side Rendering testen" aria-label="SSR testen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>SSR</NavLink>
+    <AuthorizeView Roles="@UserDaten.RoleAdmin">
+      <NavLink class="nav-link text-dark" href="demo/dm100" title="Steuerelemente testen" aria-label="Steuerelemente testen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Steuerelemente</NavLink>
+      <NavLink class="nav-link text-dark" href="demo/dm200" title="Tabelle testen" aria-label="Tabelle testen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Tabelle</NavLink>
+    </AuthorizeView>
+  </div>
+</div>
+<OpenForms/>
+
+@code {
+  [Parameter]
+  public bool Interactive { get; set; }
+}

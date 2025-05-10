@@ -1,0 +1,25 @@
+@typeparam TModel where TModel : PageModelBase
+@typeparam TRTable where TRTable : TableRowModelBase
+
+@code {
+  [CascadingParameter]
+  public SortableTable<TModel, TRTable>? Parent { get; set; }
+
+  [Parameter, EditorRequired]
+  public string? Field { get; set; }
+
+  [Parameter]
+  public string? SortField { get; set; }
+
+  [Parameter]
+  public string? Label { get; set; }
+
+  [Parameter]
+  public string? Title { get; set; }
+
+  protected override void OnInitialized()
+  {
+    base.OnInitialized();
+    Parent?.AddColumn(this); // register child into parent
+  }
+}

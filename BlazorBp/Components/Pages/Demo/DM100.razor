@@ -1,0 +1,365 @@
+﻿@page "/demo/dm100/{id?}"
+@inherits BlazorComponentBase<DM100Model, TableRowModelBase>
+@attribute [Authorize(Roles = "Admin, Superuser")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnSubmit="Submit" FormName="dm100">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <InputText type="hidden" @bind-Value="Model!.VerticalColClass"/>
+  <input type="hidden" name="SubmitControl"/>
+  <div class="row mt-1">
+    <LabelInputValid type="submit" class="btn btn-secondary" For="@(() => Model!.Button)" VerticalColClass="@Model.VerticalColClass"/>
+  </div>
+  <div class="row mt-1">
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.TextBox)" VerticalColClass="@Model.VerticalColClass"/>
+  </div>
+  <div class="row mt-1">
+    <LabelInputValid rows="5" AutoPostback="x" For="@(() => Model!.TextArea)" VerticalColClass="@Model.VerticalColClass"/>
+  </div>
+  <div class="row mt-1">
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.NumberBox)" VerticalColClass="@Model.VerticalColClass"/>
+  </div>
+  <div class="row mt-1">
+    <LabelInputValid step="0.01" AutoPostback="x" For="@(() => Model!.CurrencyBox)" VerticalColClass="@Model.VerticalColClass"/>
+  </div>
+  <div class="row mt-1">
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.DateBox)" VerticalColClass="@Model.VerticalColClass"/>
+  </div>
+  <div class="row mt-1">
+    <LabelInputValid type="checkbox" TrailingLabel="true" AutoPostback="x" For="@(() => Model!.CheckBox)" VerticalColClass="@Model.VerticalColClass"/>
+  </div>
+  <div class="row mt-1">
+    <LabelInputValid type="radio" DataList="Model!.AuswahlRadioButton" AutoPostback="x" For="@(() => Model!.RadioButton)" VerticalColClass="@Model.VerticalColClass"/>
+  </div>
+  <div class="row mt-1">
+    <LabelInputValid type="combobox" AutoPostback="x" DataList="Model!.AuswahlComboBox" For="@(() => Model!.ComboBox)" VerticalColClass="@Model.VerticalColClass"/>
+  </div>
+  <div class="row mt-1">
+    <LabelInputValid type="listbox" size="3" AutoPostback="x" DataList="Model!.AuswahlListBox" For="@(() => Model!.ListBox)" VerticalColClass="@Model.VerticalColClass"/>
+  </div>
+  <div class="row ms-1 mt-1">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.ReadWrite)"/>
+    <SubmitButton class="btn btn-primary col-md-2 me-1" For="@(() => Model!.ReadOnly)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Hidden)"/>
+  </div>
+  <div class="row ms-1 mt-1">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Color0)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Color1)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Color2)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Color3)"/>
+  </div>
+  <div class="row ms-1 mt-1">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Mandatory)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.MandatoryNot)"/>
+  </div>
+  <div class="row ms-1 mt-1">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Error)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.ErrorNot)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.ErrorMessage)"/>
+  </div>
+  <div class="row ms-1 mt-1">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Horizontal)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Vertikal)"/>
+  </div>
+  <div class="row ms-1 mt-1">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
+    @* <SubmitButton class="btn btn-secondary col-md-2 me-1" value="_OK" title="Zum Drücken."/> *@
+  </div>
+</EditForm>
+@if(valid)
+{
+  <div class="alert alert-success mt-3">Formular OK.</div>
+}
+
+@* <script>alert('Hallo');</script> *@
+
+@code {
+  private bool valid;
+
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id">Betroffene Id.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id, DM100Model? model = null, TableModelBase<TableRowModelBase>? table = null)
+  {
+    if (model != null)
+      Model = model;
+    if (Model == null)
+      Model = new DM100Model
+      {
+        Nr = id,
+        Focus = nameof(Model.TextBox),
+        TextBox = $"ABC",
+        TextArea = $@"Mehrere Zeilen:
+Zeile 2",
+        NumberBox = 123,
+        CurrencyBox = 123.45m,
+        DateBox = DateTime.Now,
+        CheckBox = true,
+        RadioButton = "A",
+        ComboBox = "CA",
+        ListBox = "MX",
+      };
+    Model.Nr = id;
+    Model.AuswahlRadioButton = new List<ListItem> { new("A", "ABC"), new("D", "DEF"), new("G", "GHI") };
+    Model.AuswahlComboBox = new List<ListItem> { new("MX", "Mexico"), new("CA", "Canada"), new("US", "USA") };
+    Model.AuswahlListBox = new List<ListItem> { new("MX", "Mexico"), new("CA", "Canada"), new("US", "USA") };
+    // await Task.Delay(1);
+    // await _context.Movie.ToListAsync();
+  }
+
+  /// <summary>
+  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
+  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
+  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    if (OnInitializedFormular("DM100", "Steuerelemente - DM100", Id, true))
+      return;
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// -Wegen Anzeige von Fehlermeldungen darf die Funktion nicht async sein (private async Task Submit()).
+  /// -Speichern des geänderten Models.
+  /// </summary>
+  private void Submit()
+  {
+    // await Task.Delay(1);
+    if (Model == null || Messages == null)
+      return;
+    var submit = Model.Submit ?? "";
+    if (!string.IsNullOrEmpty(submit))
+      valid = EditContext?.Validate() ?? false;
+    if (submit == "ComboBox")
+    {
+      System.Diagnostics.Debug.Print($"ComboBox {Model.ComboBox}");
+    }
+    else if (submit == "ListBox")
+    {
+      System.Diagnostics.Debug.Print($"ListBox {Model.ListBox}");
+    }
+    else if (submit == "ReadWrite")
+    {
+      Model.SetReadonly(nameof(Model.Button), true);
+      Model.SetReadonly(nameof(Model.TextBox), true);
+      Model.SetReadonly(nameof(Model.TextArea), true);
+      Model.SetReadonly(nameof(Model.NumberBox), true);
+      Model.SetReadonly(nameof(Model.CurrencyBox), true);
+      Model.SetReadonly(nameof(Model.DateBox), true);
+      Model.SetReadonly(nameof(Model.CheckBox), true);
+      Model.SetReadonly(nameof(Model.RadioButton), true);
+      Model.SetReadonly(nameof(Model.ComboBox), true);
+      Model.SetReadonly(nameof(Model.ListBox), true);
+      Model.Focus = nameof(Model.ReadOnly);
+    }
+    else if (submit == "ReadOnly")
+    {
+      Model.SetReadonly(nameof(Model.Button));
+      Model.SetReadonly(nameof(Model.TextBox));
+      Model.SetReadonly(nameof(Model.TextArea));
+      Model.SetReadonly(nameof(Model.NumberBox));
+      Model.SetReadonly(nameof(Model.CurrencyBox));
+      Model.SetReadonly(nameof(Model.DateBox));
+      Model.SetReadonly(nameof(Model.CheckBox));
+      Model.SetReadonly(nameof(Model.RadioButton));
+      Model.SetReadonly(nameof(Model.ComboBox));
+      Model.SetReadonly(nameof(Model.ListBox));
+      Model.Focus = nameof(Model.Hidden);
+    }
+    else if (submit == "Hidden")
+    {
+      Model.SetHidden(nameof(Model.Button));
+      Model.SetHidden(nameof(Model.TextBox));
+      Model.SetHidden(nameof(Model.TextArea));
+      Model.SetHidden(nameof(Model.NumberBox));
+      Model.SetHidden(nameof(Model.CurrencyBox));
+      Model.SetHidden(nameof(Model.DateBox));
+      Model.SetHidden(nameof(Model.CheckBox));
+      Model.SetHidden(nameof(Model.RadioButton));
+      Model.SetHidden(nameof(Model.ComboBox));
+      Model.SetHidden(nameof(Model.ListBox));
+      Model.Focus = nameof(Model.ReadWrite);
+    }
+    else if (submit == "No Color")
+    {
+      Model.SetNoColor(nameof(Model.Button));
+      Model.SetNoColor(nameof(Model.TextBox));
+      Model.SetNoColor(nameof(Model.TextArea));
+      Model.SetNoColor(nameof(Model.NumberBox));
+      Model.SetNoColor(nameof(Model.CurrencyBox));
+      Model.SetNoColor(nameof(Model.DateBox));
+      Model.SetNoColor(nameof(Model.CheckBox));
+      Model.SetNoColor(nameof(Model.RadioButton));
+      Model.SetNoColor(nameof(Model.ComboBox));
+      Model.SetNoColor(nameof(Model.ListBox));
+      Model.Focus = nameof(Model.Color1);
+    }
+    else if (submit == "Color 1")
+    {
+      Model.SetColor1(nameof(Model.Button));
+      Model.SetColor1(nameof(Model.TextBox));
+      Model.SetColor1(nameof(Model.TextArea));
+      Model.SetColor1(nameof(Model.NumberBox));
+      Model.SetColor1(nameof(Model.CurrencyBox));
+      Model.SetColor1(nameof(Model.DateBox));
+      Model.SetColor1(nameof(Model.CheckBox));
+      Model.SetColor1(nameof(Model.RadioButton));
+      Model.SetColor1(nameof(Model.ComboBox));
+      Model.SetColor1(nameof(Model.ListBox));
+      Model.Focus = nameof(Model.Color2);
+    }
+    else if (submit == "Color 2")
+    {
+      Model.SetColor2(nameof(Model.Button));
+      Model.SetColor2(nameof(Model.TextBox));
+      Model.SetColor2(nameof(Model.TextArea));
+      Model.SetColor2(nameof(Model.NumberBox));
+      Model.SetColor2(nameof(Model.CurrencyBox));
+      Model.SetColor2(nameof(Model.DateBox));
+      Model.SetColor2(nameof(Model.CheckBox));
+      Model.SetColor2(nameof(Model.RadioButton));
+      Model.SetColor2(nameof(Model.ComboBox));
+      Model.SetColor2(nameof(Model.ListBox));
+      Model.Focus = nameof(Model.Color3);
+    }
+    else if (submit == "Color 3")
+    {
+      Model.SetColor3(nameof(Model.Button));
+      Model.SetColor3(nameof(Model.TextBox));
+      Model.SetColor3(nameof(Model.TextArea));
+      Model.SetColor3(nameof(Model.NumberBox));
+      Model.SetColor3(nameof(Model.CurrencyBox));
+      Model.SetColor3(nameof(Model.DateBox));
+      Model.SetColor3(nameof(Model.CheckBox));
+      Model.SetColor3(nameof(Model.RadioButton));
+      Model.SetColor3(nameof(Model.ComboBox));
+      Model.SetColor3(nameof(Model.ListBox));
+      Model.Focus = nameof(Model.Color0);
+    }
+    else if (submit == "Mandatory")
+    {
+      Model.SetMandatory(nameof(Model.Button));
+      Model.SetMandatory(nameof(Model.TextBox));
+      Model.SetMandatory(nameof(Model.TextArea));
+      Model.SetMandatory(nameof(Model.NumberBox));
+      Model.SetMandatory(nameof(Model.CurrencyBox));
+      Model.SetMandatory(nameof(Model.DateBox));
+      Model.SetMandatory(nameof(Model.CheckBox));
+      Model.SetMandatory(nameof(Model.RadioButton));
+      Model.SetMandatory(nameof(Model.ComboBox));
+      Model.SetMandatory(nameof(Model.ListBox));
+      Model.Focus = nameof(Model.MandatoryNot);
+    }
+    else if (submit == "Not Mandatory")
+    {
+      Model.SetMandatory(nameof(Model.Button), true);
+      Model.SetMandatory(nameof(Model.TextBox), true);
+      Model.SetMandatory(nameof(Model.TextArea), true);
+      Model.SetMandatory(nameof(Model.NumberBox), true);
+      Model.SetMandatory(nameof(Model.CurrencyBox), true);
+      Model.SetMandatory(nameof(Model.DateBox), true);
+      Model.SetMandatory(nameof(Model.CheckBox), true);
+      Model.SetMandatory(nameof(Model.RadioButton), true);
+      Model.SetMandatory(nameof(Model.ComboBox), true);
+      Model.SetMandatory(nameof(Model.ListBox), true);
+      Model.Focus = nameof(Model.Mandatory);
+    }
+    else if (submit == "Error")
+    {
+      Model.SetError(nameof(Model.Button));
+      Model.SetError(nameof(Model.TextBox));
+      Model.SetError(nameof(Model.TextArea));
+      Model.SetError(nameof(Model.NumberBox));
+      Model.SetError(nameof(Model.CurrencyBox));
+      Model.SetError(nameof(Model.DateBox));
+      Model.SetError(nameof(Model.CheckBox));
+      Model.SetError(nameof(Model.RadioButton));
+      Model.SetError(nameof(Model.ComboBox));
+      Model.SetError(nameof(Model.ListBox));
+      Model.Focus = nameof(Model.ErrorNot);
+    }
+    else if (submit == "No Error")
+    {
+      Model.SetError(nameof(Model.Button), true);
+      Model.SetError(nameof(Model.TextBox), true);
+      Model.SetError(nameof(Model.TextArea), true);
+      Model.SetError(nameof(Model.NumberBox), true);
+      Model.SetError(nameof(Model.CurrencyBox), true);
+      Model.SetError(nameof(Model.DateBox), true);
+      Model.SetError(nameof(Model.CheckBox), true);
+      Model.SetError(nameof(Model.RadioButton), true);
+      Model.SetError(nameof(Model.ComboBox), true);
+      Model.SetError(nameof(Model.ListBox), true);
+      Model.Focus = nameof(Model.ErrorMessage);
+    }
+    else if (submit == "Error Message")
+    {
+      #pragma warning disable CS8603
+      Messages.Add(() => Model.Button, $"Fehlermeldung für {nameof(Model.Button)}");
+      Messages.Add(() => Model, $"Allgemeine Fehlermeldung von {nameof(Model.Button)}");
+      Messages.Add(() => Model.TextBox, $"Fehlermeldung für {nameof(Model.TextBox)}");
+      Messages.Add(() => Model, $"Allgemeine Fehlermeldung von {nameof(Model.TextBox)}");
+      Messages.Add(() => Model.TextArea, $"Fehlermeldung für {nameof(Model.TextArea)}");
+      Messages.Add(() => Model, $"Allgemeine Fehlermeldung von {nameof(Model.TextArea)}");
+      Messages.Add(() => Model.NumberBox, $"Fehlermeldung für {nameof(Model.NumberBox)}");
+      Messages.Add(() => Model, $"Allgemeine Fehlermeldung von {nameof(Model.NumberBox)}");
+      Messages.Add(() => Model.CurrencyBox, $"Fehlermeldung für {nameof(Model.CurrencyBox)}");
+      Messages.Add(() => Model, $"Allgemeine Fehlermeldung von {nameof(Model.CurrencyBox)}");
+      Messages.Add(() => Model.DateBox, $"Fehlermeldung für {nameof(Model.DateBox)}");
+      Messages.Add(() => Model, $"Allgemeine Fehlermeldung von {nameof(Model.DateBox)}");
+      Messages.Add(() => Model.CheckBox, $"Fehlermeldung für {nameof(Model.CheckBox)}");
+      Messages.Add(() => Model, $"Allgemeine Fehlermeldung von {nameof(Model.CheckBox)}");
+      Messages.Add(() => Model.RadioButton, $"Fehlermeldung für {nameof(Model.RadioButton)}");
+      Messages.Add(() => Model, $"Allgemeine Fehlermeldung von {nameof(Model.RadioButton)}");
+      Messages.Add(() => Model.ComboBox, $"Fehlermeldung für {nameof(Model.ComboBox)}");
+      Messages.Add(() => Model, $"Allgemeine Fehlermeldung von {nameof(Model.ComboBox)}");
+      Messages.Add(() => Model.ListBox, $"Fehlermeldung für {nameof(Model.ListBox)}");
+      Messages.Add(() => Model, $"Allgemeine Fehlermeldung von {nameof(Model.ListBox)}");
+      Model.Focus = nameof(Model.Error);
+      #pragma warning restore CS8603
+    }
+    else if (submit == "Horizontal")
+    {
+      Model.VerticalColClass = "";
+      Model.Focus = nameof(Model.Vertikal);
+    }
+    else if (submit == "Vertikal")
+    {
+      Model.VerticalColClass = "form-group col-md-6";
+      Model.Focus = nameof(Model.Horizontal);
+    }
+    //if (ModelState.IsValid && submit == "OK")
+    //{
+    //  return CloseFormular();
+    //}
+    WriteFormularModel(Model.Nr ?? "0", Model);
+    if (submit == "Schließen")
+    {
+      CloseFormular();
+    }
+  }
+
+  protected override bool ShouldRender()
+  {
+    var b = base.ShouldRender();
+    return b;
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData(DM100Model model, DM100Model model0)
+  {
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+  }
+}
