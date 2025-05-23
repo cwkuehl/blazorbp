@@ -49,12 +49,12 @@ else
     Model ??= "";
     if (userDaten != null)
     {
+      // Anzahl für Undo und Redo anzeigen.
       var daten = new ServiceDaten(userDaten);
       var r = ServiceBase.GetUndoRedoSize(userDaten.SessionId);
       AnzahlUndo = r.Item1;
       AnzahlRedo = r.Item2;
     }
-    // TODO Anzahl für Undo und Redo anzeigen.
     // System.Diagnostics.Debug.Write($"Header.razor: " + (userDaten == null ? "nicht angemeldet" : userDaten.BenutzerId));
   }
 
