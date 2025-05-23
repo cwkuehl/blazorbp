@@ -7,6 +7,7 @@ namespace BlazorBp.Components.Pages;
 using BlazorBp.Base;
 using BlazorBp.Models.Ag;
 using BlazorBp.Models.Demo;
+using BlazorBp.Models.Fz;
 using BlazorBp.Services.Apis;
 using CSBP.Services.Base;
 using CSBP.Services.Factory;
@@ -46,6 +47,19 @@ public static class DownloadData
         if (m != null)
         {
           var csv = ds.GetCsvString(page, m.ReadModel);
+          return csv;
+        }
+      }
+      else if (page == "FZ700")
+      {
+        var m = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ700TableRowModel>>(s, page, id);
+        if (m != null)
+        {
+          // var csv = ds.GetCsvString(page, m.ReadModel);
+          var csv = """
+          abc;def
+          1;2
+          """;
           return csv;
         }
       }
