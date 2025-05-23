@@ -5,7 +5,7 @@
       // IntelliSense verwenden, um herauszufinden, welche Attribute für das C#-Debuggen vorhanden sind
       // Hover für die Beschreibung der vorhandenen Attribute verwenden
       // Weitere Informationen finden Sie unter https://github.com/dotnet/vscode-csharp/blob/main/debugger-launchjson.md.
-      "name": ".NET Core Launch (web)",
+      "name": ".NET Launch (web)",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
@@ -30,7 +30,7 @@
       // IntelliSense verwenden, um herauszufinden, welche Attribute für das C#-Debuggen vorhanden sind
       // Hover für die Beschreibung der vorhandenen Attribute verwenden
       // Weitere Informationen finden Sie unter https://github.com/dotnet/vscode-csharp/blob/main/debugger-launchjson.md.
-      "name": ".NET Core Launch (ID-web)",
+      "name": ".NET Launch (ID-web)",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
@@ -52,7 +52,7 @@
       }
     },
     {
-      "name": ".NET Core Attach",
+      "name": ".NET Attach",
       "type": "coreclr",
       "request": "attach"
     }
