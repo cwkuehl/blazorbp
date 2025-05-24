@@ -117,6 +117,8 @@ public class Generator
     var lastc = controls.Last();
     foreach (var c in controls)
     {
+      if (IgnoreControl(c))
+        continue;
       var n = c.Text.Replace("_", "");
       sb.AppendLine($$"""
   /// <summary>Holt oder setzt {{n}}.</summary>
@@ -127,7 +129,7 @@ public class Generator
       if (c != lastc)
         sb.AppendLine();
       var na = c.Name.ToFirstUpper();
-      if ((table || modal) && na != "Ok" && na != "Abbrechen" && !na.StartsWith("Angelegt") && !na.StartsWith("Geaendert"))
+      if ((table || modal) && !IgnoreControl(c) && na != "Ok" && na != "Abbrechen" && !na.StartsWith("Angelegt") && !na.StartsWith("Geaendert"))
       {
         sbt.AppendLine($$"""
   /// <summary>Holt oder setzt die Spalte {{n}}.</summary>
@@ -291,7 +293,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
     }
     var sorttable = $$"""
 <CascadingValue Value="this">
-<SortableTable Table="Table" NoData="" FormName="{{form.ToLower()}}" EditAktion="true" DeleteAktion="true" NewAktion="true" TModel="{{form}}Model" TRTable="{{form}}TableRowModel">
+<SortableTable Table="Table" NoData="" FormName="{{form.ToLower()}}" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="{{form}}Model" TRTable="{{form}}TableRowModel">
   <ChildContent>
 {{sb}}    <TableColumn Field="AngelegtAm" SortField="@nameof({{form}}TodoModel.Angelegt_Am)" TModel="{{form}}Model" TRTable="{{form}}TableRowModel"/>
     <TableColumn Field="AngelegtVon" SortField="@nameof({{form}}TodoModel.Angelegt_Von)" TModel="{{form}}Model" TRTable="{{form}}TableRowModel"/>
@@ -304,6 +306,19 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
 
 """;
     return sorttable;
+  }
+
+  /// <summary>
+  /// Soll Control bei Generierung ignoriert werden?
+  /// </summary>
+  /// <param name="c">Betroffenes Control.</param>
+  /// <returns>True, wenn das Control nicht generiert werden soll.</returns>
+  private static bool IgnoreControl(Control? c)
+  {
+    if (c == null || c.Type != "GtkButton")
+      return false;
+    var n = c.Name.ToLower();
+    return n == "undo" || n == "redo" || n == "newaction" || n == "edit" || n == "delete" || n == "copy";
   }
 
   /// <summary>
@@ -345,7 +360,10 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
         sb.AppendLine($"""  <div class="row ms-0 mt-1">""");
       }
       if (c.Type == "GtkButton")
-        sb.AppendLine($$"""    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.{{Functions.ToFirstUpper(c.Name)}})"/>""");
+      {
+        if (!IgnoreControl(c))
+          sb.AppendLine($$"""    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.{{Functions.ToFirstUpper(c.Name)}})"/>""");
+      }
       else
         sb.AppendLine($$"""    <LabelInputValid AutoPostback="" For="@(() => Model!.{{Functions.ToFirstUpper(c.Name)}})" VerticalColClass="form-group col-md-2"/>""");
     }
@@ -378,38 +396,38 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
           <input type="hidden" name="SubmitControl"/>
 
 """);
-    controls = GetControls(modalroot.Children, a => a.Children.Count <= 0 && a.Type != "GtkTreeView");
-    parent = null;
-    sb.Length = 0;
-    sb.AppendLine($"""
+      controls = GetControls(modalroot.Children, a => a.Children.Count <= 0 && a.Type != "GtkTreeView");
+      parent = null;
+      sb.Length = 0;
+      sb.AppendLine($"""
         <div class="row ms-0 mt-1">
 """);
-    foreach (var c in controls)
-    {
-      var n = c.Text.Replace("_", "");
-      if (parent != c.Parent)
+      foreach (var c in controls)
       {
-        parent = c.Parent;
-        sb.AppendLine($"          </div>");
-        sb.AppendLine($"""          <div class="row ms-0 mt-1">""");
-      }
-      if (c.Type == "GtkButton")
-      {
-        if (c.Name == "abbrechen")
-          sb.AppendLine($$"""          <button type="button" class="btn btn-secondary col-md-2 me-1" data-bs-dismiss="modal">Abbrechen</button>""");
+        var n = c.Text.Replace("_", "");
+        if (parent != c.Parent)
+        {
+          parent = c.Parent;
+          sb.AppendLine($"          </div>");
+          sb.AppendLine($"""          <div class="row ms-0 mt-1">""");
+        }
+        if (c.Type == "GtkButton")
+        {
+          if (c.Name == "abbrechen")
+            sb.AppendLine($$"""          <button type="button" class="btn btn-secondary col-md-2 me-1" data-bs-dismiss="modal">Abbrechen</button>""");
+          else
+            sb.AppendLine($$"""            <SubmitButton class="btn btn-{{Functions.Iif(c.Name == "ok", "primary", "secondary")}} col-md-2 me-1" For="@(() => ModalModel!.{{Functions.ToFirstUpper(c.Name)}})"/>""");
+        }
         else
-        sb.AppendLine($$"""            <SubmitButton class="btn btn-{{Functions.Iif(c.Name == "ok", "primary", "secondary")}} col-md-2 me-1" For="@(() => ModalModel!.{{Functions.ToFirstUpper(c.Name)}})"/>""");
+        {
+          sb.AppendLine($$"""            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.{{Functions.ToFirstUpper(c.Name)}})" VerticalColClass="form-group col-md-2"/>""");
+          if (c.Name != "angelegt" && c.Name != "geaendert")
+            sbm.AppendLine($$"""       {{Functions.ToFirstUpper(c.Name)}} = "{{Functions.ToFirstUpper(c.Name)}}1",""");
+        }
       }
-      else
-      {
-        sb.AppendLine($$"""            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.{{Functions.ToFirstUpper(c.Name)}})" VerticalColClass="form-group col-md-2"/>""");
-        if (c.Name != "angelegt" && c.Name != "geaendert")
-          sbm.AppendLine($$"""       {{Functions.ToFirstUpper(c.Name)}} = "{{Functions.ToFirstUpper(c.Name)}}1",""");
-      }
-    }
-    sb.AppendLine($"          </div>");
-    sbr.Append(sb);
-    sbr.Append($$"""
+      sb.AppendLine($"          </div>");
+      sbr.Append(sb);
+      sbr.Append($$"""
         </EditForm>
       </div>
     </div>

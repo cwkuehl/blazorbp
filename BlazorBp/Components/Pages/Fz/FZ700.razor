@@ -6,7 +6,7 @@
 <PageTitle>@Title</PageTitle>
 
 <CascadingValue Value="this">
-<SortableTable Table="Table" NoData="" FormName="fz700" EditAktion="true" DeleteAktion="true" NewAktion="true" TModel="FZ700Model" TRTable="FZ700TableRowModel">
+<SortableTable Table="Table" NoData="" FormName="fz700" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="FZ700Model" TRTable="FZ700TableRowModel">
   <ChildContent>
     <TableColumn Field="Nummer" SortField="@nameof(FZ700TodoModel.Nummer)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
     <TableColumn Field="Thema" SortField="@nameof(FZ700TodoModel.Thema)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
@@ -27,12 +27,6 @@
   </div>
   <div class="row ms-0 mt-1">
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Refresh)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Undo)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Redo)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.NewAction)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Copy)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Edit)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Delete)"/>
   </div>
   <div class="row ms-0 mt-1">
     <LabelInputValid AutoPostback="" For="@(() => Model!.Notizen)" VerticalColClass="form-group col-md-2"/>

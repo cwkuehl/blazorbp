@@ -28,7 +28,7 @@
           var v2 = c.Label + Functions.Iif(sort, Functions.Iif(desc, " ^", " v"), "");
           <th><button type="submit" class="btn btn-outline-info btn-sm" formaction="@actionpath?handler=Table_Sort" value="@v" name="Table.SortColumn" title="@c.SortTitle">@v2</button></th>
         }
-        @if (EditAktion || DeleteAktion || NewAktion)
+        @if (EditAktion || DeleteAktion || CopyAktion || NewAktion)
         {
           <th>Aktion
             @if (NewAktion)
@@ -64,7 +64,7 @@
             {
               <td>@c.Pi.GetValue(r)</td>
             }
-            @if (EditAktion || DeleteAktion)
+            @if (EditAktion || DeleteAktion || CopyAktion)
             {
               <td>
                 @if (EditAktion)
@@ -74,6 +74,10 @@
                 @if (DeleteAktion)
                 {
                   <button type="submit" class="btn btn-outline-info btn-sm ms-1" formaction="@actionpath?handler=Table_Delete" value="@ix" name="Table.ModalId" title="Datensatz löschen">Löschen</button>
+                }
+                @if (CopyAktion)
+                {
+                  <button type="submit" class="btn btn-outline-info btn-sm ms-1" formaction="@actionpath?handler=Table_Copy" value="@ix" name="Table.ModalId" title="Datensatz kopieren">Kopieren</button>
                 }
               </td>
             }
@@ -164,6 +168,10 @@
   /// <summary>Holt oder setzt einen Wert, der angibt, ob eine Edit-Aktion angeboten wird (Table_Edit).</summary>
   [Parameter]
   public bool EditAktion { get; set; }
+
+  /// <summary>Holt oder setzt einen Wert, der angibt, ob eine Copy-Aktion angeboten wird (Table_Copy).</summary>
+  [Parameter]
+  public bool CopyAktion { get; set; }
 
   /// <summary>Holt oder setzt einen Wert, der angibt, ob eine Delete-Aktion angeboten wird (Table_Delete).</summary>
   [Parameter]

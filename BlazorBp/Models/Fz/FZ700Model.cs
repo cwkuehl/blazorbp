@@ -19,36 +19,6 @@ public class FZ700Model : PageModelBase
   //// [Required(ErrorMessage = "Aktualisieren muss angegeben werden.")]
   public string? Refresh { get; set; }
 
-  /// <summary>Holt oder setzt Rückgängig.</summary>
-  [Display(Name = "Rückgängig", Description = "Rückgängig")]
-  //// [Required(ErrorMessage = "Rückgängig muss angegeben werden.")]
-  public string? Undo { get; set; }
-
-  /// <summary>Holt oder setzt Wiederherstellen.</summary>
-  [Display(Name = "Wiederherstellen", Description = "Wiederherstellen")]
-  //// [Required(ErrorMessage = "Wiederherstellen muss angegeben werden.")]
-  public string? Redo { get; set; }
-
-  /// <summary>Holt oder setzt Neu.</summary>
-  [Display(Name = "Neu", Description = "Neu")]
-  //// [Required(ErrorMessage = "Neu muss angegeben werden.")]
-  public string? NewAction { get; set; }
-
-  /// <summary>Holt oder setzt Kopieren.</summary>
-  [Display(Name = "Kopieren", Description = "Kopieren")]
-  //// [Required(ErrorMessage = "Kopieren muss angegeben werden.")]
-  public string? Copy { get; set; }
-
-  /// <summary>Holt oder setzt Ändern.</summary>
-  [Display(Name = "Ändern", Description = "Ändern")]
-  //// [Required(ErrorMessage = "Ändern muss angegeben werden.")]
-  public string? Edit { get; set; }
-
-  /// <summary>Holt oder setzt Löschen.</summary>
-  [Display(Name = "Löschen", Description = "Löschen")]
-  //// [Required(ErrorMessage = "Löschen muss angegeben werden.")]
-  public string? Delete { get; set; }
-
   /// <summary>Holt oder setzt Notizen.</summary>
   [Display(Name = "_Notizen", Description = "Notizen")]
   //// [Required(ErrorMessage = "Notizen muss angegeben werden.")]

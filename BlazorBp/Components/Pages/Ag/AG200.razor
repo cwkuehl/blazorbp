@@ -8,7 +8,7 @@
 <PageTitle>@Title</PageTitle>
 
 <CascadingValue Value="this">
-<SortableTable Table="Table" NoData="" FormName="ag200" EditAktion="true" DeleteAktion="true" NewAktion="@superadmin" TModel="AG200Model" TRTable="AG200TableRowModel">
+<SortableTable Table="Table" NoData="" FormName="ag200" EditAktion="true" DeleteAktion="true" CopyAktion="false" NewAktion="@superadmin" TModel="AG200Model" TRTable="AG200TableRowModel">
   <ChildContent>
     <TableColumn Field="Nummer" SortField="@nameof(Benutzer.Person_Nr)" TModel="AG200Model" TRTable="AG200TableRowModel"/>
     <TableColumn Field="BenutzerId" SortField="@nameof(Benutzer.Benutzer_ID)" TModel="AG200Model" TRTable="AG200TableRowModel"/>
