@@ -50,15 +50,15 @@ public static class DownloadData
           return csv;
         }
       }
-      else if (page == "FZ700")
+      else
       {
         var m = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ700TableRowModel>>(s, page, id);
         if (m != null)
         {
           // var csv = ds.GetCsvString(page, m.ReadModel);
-          var csv = """
-          abc;def
-          1;2
+          var csv = $"""
+          Seite;Fehler
+          {page};CSV-Export nicht implementiert
           """;
           return csv;
         }
