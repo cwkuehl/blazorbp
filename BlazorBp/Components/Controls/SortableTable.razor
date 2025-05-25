@@ -33,7 +33,7 @@
           <th>Aktion
             @if (NewAktion)
             {
-              <button type="submit" class="btn btn-outline-info btn-sm ms-1" formaction="@actionpath?handler=Table_New" value="-1" name="Table.ModalId" title="Neuen Datensatz erfassen">Neu</button>
+              <button type="submit" class="btn btn-outline-info btn-sm ms-1" formaction="@actionpath?handler=Table_New" value="-1" name="Table.ModalId" title="Neuen Datensatz erfassen"><i class="bi bi-file-plus-button"></i></button>
             }
           </th>
         }
@@ -69,15 +69,15 @@
               <td>
                 @if (EditAktion)
                 {
-                  <button type="submit" class="btn btn-outline-info btn-sm" formaction="@actionpath?handler=Table_Edit" value="@ix" name="Table.ModalId" title="Datensatz ändern">Ändern</button>
+                  <button type="submit" class="btn btn-outline-info btn-sm" formaction="@actionpath?handler=Table_Edit" value="@ix" name="Table.ModalId" title="Datensatz ändern"><i class="bi bi-pencil-button"></i></button>
                 }
                 @if (DeleteAktion)
                 {
-                  <button type="submit" class="btn btn-outline-info btn-sm ms-1" formaction="@actionpath?handler=Table_Delete" value="@ix" name="Table.ModalId" title="Datensatz löschen">Löschen</button>
+                 <button type="submit" class="btn btn-outline-info btn-sm ms-1" formaction="@actionpath?handler=Table_Delete" value="@ix" name="Table.ModalId" title="Datensatz löschen"><i class="bi bi-file-x-button"></i></button>
                 }
                 @if (CopyAktion)
                 {
-                  <button type="submit" class="btn btn-outline-info btn-sm ms-1" formaction="@actionpath?handler=Table_Copy" value="@ix" name="Table.ModalId" title="Datensatz kopieren">Kopieren</button>
+                  <button type="submit" class="btn btn-outline-info btn-sm ms-1" formaction="@actionpath?handler=Table_Copy" value="@ix" name="Table.ModalId" title="Datensatz kopieren"><i class="bi bi-copy-button"></i></button>
                 }
               </td>
             }
