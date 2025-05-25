@@ -384,7 +384,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="lbldetails">@Functions.Iif(Model?.ModalArt == "Table_Edit", "Mandant ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "TODO löschen", "TODO Mandant"))</h5>
+        <h5 class="modal-title" id="lbldetails">TODO @Functions.Iif(Model?.ModalArt == "Table_Edit", "ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "löschen", Functions.Iif(Model?.ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
       </div>
       <div class="modal-body">
