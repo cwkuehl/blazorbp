@@ -1,6 +1,7 @@
 @page "/fz/fz700/{id?}"
 @inherits BlazorComponentBase<FZ700Model, FZ700TableRowModel>
 @attribute [Authorize(Roles = "User, Admin, Superuser")]
+@using CSBP.Services.Apis.Models;
 
 <SectionContent SectionName="title">@Title</SectionContent>
 <PageTitle>@Title</PageTitle>
@@ -8,13 +9,13 @@
 <CascadingValue Value="this">
 <SortableTable Table="Table" NoData="" FormName="fz700" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="FZ700Model" TRTable="FZ700TableRowModel">
   <ChildContent>
-    <TableColumn Field="Nummer" SortField="@nameof(FZ700TodoModel.Nummer)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
-    <TableColumn Field="Thema" SortField="@nameof(FZ700TodoModel.Thema)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
-    <TableColumn Field="Notiz" SortField="@nameof(FZ700TodoModel.Notiz)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
-    <TableColumn Field="AngelegtAm" SortField="@nameof(FZ700TodoModel.Angelegt_Am)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
-    <TableColumn Field="AngelegtVon" SortField="@nameof(FZ700TodoModel.Angelegt_Von)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
-    <TableColumn Field="GeaendertAm" SortField="@nameof(FZ700TodoModel.Geaendert_Am)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
-    <TableColumn Field="GeaendertVon" SortField="@nameof(FZ700TodoModel.Geaendert_Von)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
+    <TableColumn Field="Nummer" SortField="@nameof(FzNotiz.Uid)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
+    <TableColumn Field="Thema" SortField="@nameof(FzNotiz.Thema)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
+    <TableColumn Field="Notiz" SortField="@nameof(FzNotiz.Notiz)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
+    <TableColumn Field="AngelegtAm" SortField="@nameof(FzNotiz.Angelegt_Am)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
+    <TableColumn Field="AngelegtVon" SortField="@nameof(FzNotiz.Angelegt_Von)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
+    <TableColumn Field="GeaendertAm" SortField="@nameof(FzNotiz.Geaendert_Am)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
+    <TableColumn Field="GeaendertVon" SortField="@nameof(FzNotiz.Geaendert_Von)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
   </ChildContent>
 </SortableTable>
 </CascadingValue>
@@ -47,7 +48,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="lbldetails">TODO @Functions.Iif(Model?.ModalArt == "Table_Edit", "ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "löschen", Functions.Iif(Model?.ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
+        <h5 class="modal-title" id="lbldetails">Notiz @Functions.Iif(Model?.ModalArt == "Table_Edit", "ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "löschen", Functions.Iif(Model?.ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
       </div>
       <div class="modal-body">
@@ -125,7 +126,7 @@ else
         SelectedPage = 1,
         RowsPerPage = 10,
         SelectedRow = 1,
-        SortColumn = $"{nameof(FZ700TodoModel.Nummer)}#+",
+        SortColumn = $"{nameof(FzNotiz.Thema)}#+",
         Search = "",
       };
     Table.Nr = id;
@@ -272,16 +273,7 @@ else
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var r = new ServiceErgebnis<List<FZ700TodoModel>>(new List<FZ700TodoModel>());
-    r.Ergebnis.Add(new FZ700TodoModel()
-    {
-       Notiz = "Notiz1",
-       Nummer = "Nummer1",
-       Thema = "Thema1",
-    });
-    if (rm != null)
-      rm.PageCount = 0;
-    // TODO var r = FactoryService.ClientService.GetClientList(daten, rm);
+    var r = FactoryService.PrivateService.GetMemoList(daten, rm);
     var l = r.Ergebnis.Select(a => FZ700TableRowModel.From(a)).ToList();
     if (!r.Ok)
       messages?.Add(() => Model, r.GetErrors());

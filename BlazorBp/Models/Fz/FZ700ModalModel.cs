@@ -6,6 +6,8 @@ namespace BlazorBp.Models.Fz;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Base;
+using CSBP.Services.Apis.Models;
+using CSBP.Services.Base;
 using static BlazorBp.Base.DialogTypeEnum;
 
 /// <summary>
@@ -51,9 +53,9 @@ public class FZ700ModalModel : PageModelBase
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
   /// <returns>Das kopierte Model.</returns>
-  public FZ700TodoModel To() => new()
+  public FzNotiz To() => new()
   {
-    Nummer = Nummer,
+    Uid = Nummer,
     Thema = Thema,
     Notiz = Notiz,
   };
@@ -64,13 +66,15 @@ public class FZ700ModalModel : PageModelBase
   (
     Nummer,
     Thema,
-    Notiz
-    // TODO Angelegt, Geaendert
+    Notiz,
+    Angelegt,
+    Geaendert
   ) = (
     m.Nummer,
     m.Thema,
-    m.Notiz
-    // TODO ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon), ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon)
+    m.Notiz,
+    ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon),
+    ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon)
   );
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>

@@ -236,10 +236,10 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
   public void From({{form}}TableRowModel m) =>
   (
 {{sbt5.ToString()[..^2]}}
-    // TODO Angelegt, Geaendert
+    // TODO , Angelegt, Geaendert
   ) = (
 {{sbt6.ToString()[..^2]}}
-    // TODO ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon), ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon)
+    // TODO , ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon), ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon)
   );
 
 """;

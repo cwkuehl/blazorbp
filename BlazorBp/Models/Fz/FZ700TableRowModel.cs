@@ -6,36 +6,8 @@ namespace BlazorBp.Models.Fz;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Base;
+using CSBP.Services.Apis.Models;
 using static BlazorBp.Base.DialogTypeEnum;
-
-/// <summary>
-/// TodoModel-Klasse für Formular FZ700 Notizen.
-/// TODO Durch passendes Model ersetzen und löschen.
-/// </summary>
-[Serializable]
-public class FZ700TodoModel
-{
-  /// <summary>Holt oder setzt die Spalte Nr..</summary>
-  public string? Nummer { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Thema.</summary>
-  public string? Thema { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Notiz.</summary>
-  public string? Notiz { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Angelegt_Am. TODO DateTime?</summary>
-  public string? Angelegt_Am { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Angelegt_Von.</summary>
-  public string? Angelegt_Von { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Geaendert_Am. TODO DateTime?</summary>
-  public string? Geaendert_Am { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Geaendert_Von.</summary>
-  public string? Geaendert_Von { get; set; }
-}
 
 /// <summary>
 /// Model-Klasse für eine Zeile in der Tabelle von Formular FZ700 Notizen.
@@ -61,7 +33,7 @@ public class FZ700TableRowModel : TableRowModelBase
   /// <summary>Holt oder setzt Angelegt am.</summary>
   [Display(Name = "Angelegt am", Description = "Der Zeitpunkt der Anlage")]
   //// [Required(ErrorMessage = "Angelegt am muss angegeben werden.")]
-  public string? AngelegtAm { get; set; }
+  public DateTime? AngelegtAm { get; set; }
 
   /// <summary>Holt oder setzt Angelegt von.</summary>
   [Display(Name = "Angelegt von", Description = "Die Benutzer-ID der Anlage")]
@@ -71,7 +43,7 @@ public class FZ700TableRowModel : TableRowModelBase
   /// <summary>Holt oder setzt Geändert am.</summary>
   [Display(Name = "Geändert am", Description = "Der Zeitpunkt der letzten Änderung")]
   //// [Required(ErrorMessage = "Geändert am muss angegeben werden.")]
-  public string? GeaendertAm { get; set; }
+  public DateTime? GeaendertAm { get; set; }
 
   /// <summary>Holt oder setzt Geändert von.</summary>
   [Display(Name = "Geändert von", Description = "Die Benutzer-ID der letzten Änderung")]
@@ -79,11 +51,11 @@ public class FZ700TableRowModel : TableRowModelBase
   public string? GeaendertVon { get; set; }
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
-  public FZ700TodoModel To()
+  public FzNotiz To()
   {
-    return new FZ700TodoModel
+    return new FzNotiz
     {
-      Nummer = Nummer,
+      Uid = Nummer,
       Thema = Thema,
       Notiz = Notiz,
       Angelegt_Am = AngelegtAm,
@@ -95,11 +67,11 @@ public class FZ700TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
-  public static FZ700TableRowModel From(FZ700TodoModel m)
+  public static FZ700TableRowModel From(FzNotiz m)
   {
     return new FZ700TableRowModel
     {
-      Nummer = m.Nummer,
+      Nummer = m.Uid,
       Thema = m.Thema,
       Notiz = m.Notiz,
       AngelegtAm = m.Angelegt_Am,
