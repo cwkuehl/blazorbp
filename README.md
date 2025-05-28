@@ -31,7 +31,7 @@ Folgende Funktionen sind implementiert:
 -Anzeige der Restzeit für den Ablauf der Sitzung und automatische Abmeldung,
 -dynamischer Link zu Hilfe-Seite des aktuellen Formulars,
 -Drucken des aktuellen Formulars,
--Nachfrage zum Schließen des Tabs, wenn man angemeldet ist,
+-(28.05.2025 Funktion musste entfernt werden, weil im Chrome bei jedem Control-Postback danach gefragt wird.) Nachfrage zum Schließen des Tabs, wenn man angemeldet ist,
 -Anmeldung mit POST-Request bei WebAPI über MVC-AuthController,
 -Nach der Anmeldung wird Query-Parameter ReturnUrl zum Weiterleiten berücksichtigt,
 -Lauffähig unter HTTP und HTTPS, konfigurierbar in der appsettings.json,

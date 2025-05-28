@@ -43,7 +43,7 @@ export function onUpdate() {
   const angemeldet = $('#countdown').length > 0;
   if (angemeldet) {
     startCountdown();
-    window.onbeforeunload = function() { return angemeldet ? "Bitte zuerst abmelden, wenn Sie die Seite verlassen wollen." : null; }
+    // TODO window.onbeforeunload = function() { return angemeldet ? "Bitte zuerst abmelden, wenn Sie die Seite verlassen wollen." : null; }
   }
   else
     window.onbeforeunload = null;

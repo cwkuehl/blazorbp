@@ -29,7 +29,9 @@ function submitc(ctrl) {
   window.onbeforeunload = null;
   f.submit();
   disableAllControls();
-  window.onbeforeunload = function() { return "Bitte zuerst abmelden, wenn Sie die Seite verlassen wollen."; }
+  // console.log('Vor window.onbeforeunload');
+  // TODO 28.05.2025 Firefox Postback von Checkbox fragt nach Seite verlassen, bei Chrome bei allen Controls.
+  // window.onbeforeunload = function() { return "Bitte zuerst abmelden, wenn Sie die Seite verlassen wollen."; }
 }
 
 function disableAllControls() {
