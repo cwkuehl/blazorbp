@@ -414,7 +414,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
         if (c.Type == "GtkButton")
         {
           if (c.Name == "abbrechen")
-            sb.AppendLine($$"""          <button type="button" class="btn btn-secondary col-md-2 me-1" data-bs-dismiss="modal">Abbrechen</button>""");
+            sb.AppendLine($$"""            <button type="button" class="btn btn-secondary col-md-2 me-1" data-bs-dismiss="modal">Abbrechen</button>""");
           else
             sb.AppendLine($$"""            <SubmitButton class="btn btn-{{Functions.Iif(c.Name == "ok", "primary", "secondary")}} col-md-2 me-1" For="@(() => ModalModel!.{{Functions.ToFirstUpper(c.Name)}})"/>""");
         }

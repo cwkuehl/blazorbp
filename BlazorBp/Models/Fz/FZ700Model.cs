@@ -45,9 +45,9 @@ public class FZ700Model : PageModelBase
   {
     if (mode == New)
     {
-      // TODO KennwortAlt = null;
+      // KennwortAlt = null;
     }
-    // TODO SetMandatoryHiddenReadonly(nameof(Mandant), true, false, true);
+    // SetMandatoryHiddenReadonly(nameof(Mandant), true, false, true);
     // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
   }
 }
