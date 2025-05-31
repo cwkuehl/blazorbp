@@ -5,6 +5,7 @@
 namespace BlazorBp.Models.Fz;
 
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using BlazorBp.Base;
@@ -25,32 +26,31 @@ public class FZ700ModalModel : PageModelBase
 
   /// <summary>Holt oder setzt Thema.</summary>
   [Display(Name = "_Thema", Description = "Thema")]
-  //// [Required(ErrorMessage = "Thema muss angegeben werden.")]
+  [Required(ErrorMessage = "Thema muss angegeben werden.")]
   public string? Thema { get; set; }
 
   /// <summary>Holt oder setzt Notiz.</summary>
-  [Display(Name = "_Notiz", Description = "")]
-  //// [Required(ErrorMessage = "Notiz muss angegeben werden.")]
+  [Display(Name = "_Notiz", Description = "Unstrukturierte Notizen.")]
   public string? Notiz { get; set; }
+
+  /// <summary>Holt oder setzt Tabelle.</summary>
+  [Display(Name = "T_abelle", Description = "Notizen in Tabellen-Form (momentan nur lesen).")]
+  public string? Tabelle { get; set; }
 
   /// <summary>Holt oder setzt Angelegt.</summary>
   [Display(Name = "Angelegt", Description = "Datum, Uhrzeit und Benutzer, der die Daten angelegt hat")]
-  //// [Required(ErrorMessage = "Angelegt muss angegeben werden.")]
   public string? Angelegt { get; set; }
 
   /// <summary>Holt oder setzt Geändert.</summary>
   [Display(Name = "Geändert", Description = "Datum, Uhrzeit und Benutzer, der die Daten geändert hat")]
-  //// [Required(ErrorMessage = "Geändert muss angegeben werden.")]
   public string? Geaendert { get; set; }
 
   /// <summary>Holt oder setzt OK.</summary>
   [Display(Name = "_OK", Description = "Dialog mit Speichern schließen")]
-  //// [Required(ErrorMessage = "OK muss angegeben werden.")]
   public string? Ok { get; set; }
 
   /// <summary>Holt oder setzt Abbrechen.</summary>
   [Display(Name = "Abbre_chen", Description = "Dialog ohne Speichern schließen")]
-  //// [Required(ErrorMessage = "Abbrechen muss angegeben werden.")]
   public string? Abbrechen { get; set; }
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
@@ -69,12 +69,14 @@ public class FZ700ModalModel : PageModelBase
     Nummer,
     Thema,
     Notiz,
+    Tabelle,
     Angelegt,
     Geaendert
   ) = (
     m.Nummer,
     m.Thema,
     GetMemo(m.Notiz),
+    GetTable(m.Notiz),
     ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon),
     ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon)
   );
@@ -88,10 +90,12 @@ public class FZ700ModalModel : PageModelBase
       Nummer = "";
       Thema = null;
       Notiz = null;
+      Tabelle = null;
     }
-    SetMandatoryHiddenReadonly(nameof(Nummer), true, false, mode != New, mode == New);
-    SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == Edit);
+    SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
     SetMandatoryHiddenReadonly(nameof(Notiz), false, false, mode == Delete, mode == Edit);
+    SetMandatoryHiddenReadonly(nameof(Tabelle), false, false, true, false);
     SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
     SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
     SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
@@ -163,6 +167,54 @@ public class FZ700ModalModel : PageModelBase
     var node = root?.SelectSingleNode("//tabelle//notiz");
     if (node != null)
       return node.InnerText;
+    return null;
+  }
+
+  /// <summary>
+  /// Gets table from xml.
+  /// </summary>
+  /// <param name="xml">Affected xml.</param>
+  /// <returns>Table from xml.</returns>
+  public static string? GetTable(string? xml)
+  {
+    if (string.IsNullOrWhiteSpace(xml))
+      xml = InitMemo();
+    var doc = new XmlDocument();
+    doc.Load(new StringReader(xml));
+    var root = doc.DocumentElement;
+    var table = root?.SelectSingleNode("/tabelle");
+    if (table != null)
+    {
+      // return table.InnerText;
+      var spalten = Math.Max(Functions.ToInt32(table.Attributes?["spalten"]?.Value), 1);
+      var zeilen = Math.Max(Functions.ToInt32(table.Attributes?["zeilen"]?.Value), 1);
+      var list = new List<string?[]>();
+      var flist = new Formulas();
+      for (var i = 0; i < zeilen; i++)
+      {
+        var arr = new string?[spalten + 1];
+        arr[0] = $"{i + 1:000}";
+        var zellen = table.SelectNodes($"zelle[@y='{i}']");
+        if (zellen != null)
+          foreach (XmlElement z in zellen)
+          {
+            var x = Functions.ToInt32(z.Attributes["x"]?.Value);
+            var formel = Functions.MakeBold(z.FirstChild?.InnerText, true);
+            arr[x + Formula.Offset] = formel;
+            var f = Formula.Instance(formel, x, i); // Read formula.
+            if (f != null)
+              flist.List.Add(f);
+          }
+        list.Add(arr);
+      }
+      flist.CalculateFormulas(list);
+      var sb = new StringBuilder();
+      foreach (var z in list)
+      {
+        sb.AppendLine(string.Join('|', z));
+      }
+      return sb.ToString();
+    }
     return null;
   }
 
