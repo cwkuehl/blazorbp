@@ -55,6 +55,7 @@
           <ValidationSummary class="text-danger"/>
           <InputText type="hidden" @bind-Value="ModalModel!.Nr"/>
           <InputText type="hidden" @bind-Value="ModalModel!.ReadonlyHiddenError"/>
+          <InputText type="hidden" @bind-Value="ModalModel!.Xml"/>
           <input type="hidden" name="SubmitControl"/>
           <div class="row ms-0 mt-1">
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-2"/>
@@ -176,7 +177,8 @@ else
   {
     if (!string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
     {
-      if (handler == "Table_New")
+      var dt = Formular.GetTableDialogType(handler);
+      if (dt == DialogTypeEnum.New)
       {
         ModalModel.SetMhrf(DialogTypeEnum.New);
         Model.ModalArt = handler;
@@ -184,7 +186,6 @@ else
       }
       else
       {
-        var edit = handler == "Table_Edit";
         var i = Functions.ToInt32(id);
         if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
         {
@@ -193,7 +194,7 @@ else
           if (ds != null)
           {
             ModalModel.From(ds);
-            ModalModel.SetMhrf(edit ? DialogTypeEnum.Edit : DialogTypeEnum.Delete);
+            ModalModel.SetMhrf(dt);
             Model.ModalArt = handler;
             Model.ModalId = id;
           }
@@ -205,12 +206,14 @@ else
       var msubmit = ModalModel.Submit ?? "";
       if (msubmit == "OK")
       {
-        var o = ModalModel.To();
+        var dt = Formular.GetTableDialogType(Model.ModalArt);
         var daten = ServiceDaten;
-        var r = new ServiceErgebnis();
-        // TODO var r = Model.ModalArt == "Table_Delete"
-        //   ? FactoryService.ClientService.DeleteClient(daten, o)
-        //   : FactoryService.ClientService.SaveClient(daten, o.Nr, o.Beschreibung);
+        var o = ModalModel.To(daten);
+        var xml = Functions.Base64Decode(ModalModel.Xml);
+        xml = FZ700ModalModel.SetMemo(xml, o.Notiz);
+        var r = dt == DialogTypeEnum.Delete
+          ? FactoryService.PrivateService.DeleteMemo(daten, o)
+          : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
         if (r.Ok)
         {
           Model.ModalArt = null;

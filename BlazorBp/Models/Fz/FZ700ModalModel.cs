@@ -29,6 +29,10 @@ public class FZ700ModalModel : PageModelBase
   [Required(ErrorMessage = "Thema muss angegeben werden.")]
   public string? Thema { get; set; }
 
+  /// <summary>Holt oder setzt Tabelle.</summary>
+  [Display(Name = "_XML", Description = "Notizen als XML.")]
+  public string? Xml { get; set; }
+
   /// <summary>Holt oder setzt Notiz.</summary>
   [Display(Name = "_Notiz", Description = "Unstrukturierte Notizen.")]
   public string? Notiz { get; set; }
@@ -54,9 +58,11 @@ public class FZ700ModalModel : PageModelBase
   public string? Abbrechen { get; set; }
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
+  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
   /// <returns>Das kopierte Model.</returns>
-  public FzNotiz To() => new()
+  public FzNotiz To(ServiceDaten daten) => new()
   {
+    Mandant_Nr = daten.MandantNr,
     Uid = Nummer,
     Thema = Thema,
     Notiz = Notiz,
@@ -68,6 +74,7 @@ public class FZ700ModalModel : PageModelBase
   (
     Nummer,
     Thema,
+    Xml,
     Notiz,
     Tabelle,
     Angelegt,
@@ -75,6 +82,7 @@ public class FZ700ModalModel : PageModelBase
   ) = (
     m.Nummer,
     m.Thema,
+    Functions.Base64Encode(m.Notiz),
     GetMemo(m.Notiz),
     GetTable(m.Notiz),
     ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon),
@@ -85,9 +93,12 @@ public class FZ700ModalModel : PageModelBase
   /// <param name="mode">Betroffener Modus.</param>
   public void SetMhrf(DialogTypeEnum mode)
   {
-    if (mode == New)
+    if (mode == New || mode == Copy)
     {
       Nummer = "";
+    }
+    if (mode == New)
+    {
       Thema = null;
       Notiz = null;
       Tabelle = null;
@@ -173,7 +184,7 @@ public class FZ700ModalModel : PageModelBase
   /// <summary>
   /// Gets table from xml.
   /// </summary>
-  /// <param name="xml">Affected xml.</param>
+  /// <param name="xml">Affected xml string.</param>
   /// <returns>Table from xml.</returns>
   public static string? GetTable(string? xml)
   {
@@ -216,6 +227,29 @@ public class FZ700ModalModel : PageModelBase
       return sb.ToString();
     }
     return null;
+  }
+
+  /// <summary>
+  /// Sets memo into xml string.
+  /// </summary>
+  /// <param name="xml">Affected xml string.</param>
+  /// <param name="memo">Affected memo as string.</param>
+  /// <returns>Xml string from memo.</returns>
+  public static string SetMemo(string? xml, string? memo)
+  {
+    if (string.IsNullOrWhiteSpace(xml))
+      xml = InitMemo();
+    var doc = new XmlDocument();
+    doc.Load(new StringReader(xml));
+    var root = doc.DocumentElement;
+    var node = root?.SelectSingleNode("//tabelle//notiz");
+    if (node != null)
+      node.InnerText = Functions.TrimNull(memo) ?? "";
+    using var sw = new StringWriter();
+    using var tw = XmlWriter.Create(sw);
+    doc.WriteTo(tw);
+    tw.Flush();
+    return sw.GetStringBuilder().ToString();
   }
 
   // / <summary>

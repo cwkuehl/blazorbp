@@ -196,10 +196,12 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
       model += $$"""
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
-  public {{form}}TodoModel To()
+  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
+  public {{form}}TodoModel To(ServiceDaten daten)
   {
     return new {{form}}TodoModel
     {
+      // TODO Mandant_Nr = daten.MandantNr,
 {{sbt2}}      Angelegt_Am = AngelegtAm,
       Angelegt_Von = AngelegtVon,
       Geaendert_Am = GeaendertAm,
@@ -252,11 +254,18 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
   /// <param name="mode">Betroffener Modus.</param>
   public void SetMhrf(DialogTypeEnum mode)
   {
+    if (mode == New || mode == Copy)
+    {
+      // TODO Nummer = "";
+    }
     if (mode == New)
     {
-      // TODO KennwortAlt = null;
+      // TODO Thema = null;
     }
-    // TODO SetMandatoryHiddenReadonly(nameof(Mandant), true, false, true);
+    // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
+    // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
+    // SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
+    // SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
     // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
   }
 """;
@@ -563,7 +572,8 @@ else
   {
     if (!string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
     {
-      if (handler == "Table_New")
+      var dt = Formular.GetTableDialogType(handler);
+      if (dt == DialogTypeEnum.New)
       {
         ModalModel.SetMhrf(DialogTypeEnum.New);
         Model.ModalArt = handler;
@@ -571,7 +581,6 @@ else
       }
       else
       {
-        var edit = handler == "Table_Edit";
         var i = Functions.ToInt32(id);
         if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
         {
@@ -580,7 +589,7 @@ else
           if (ds != null)
           {
             ModalModel.From(ds);
-            ModalModel.SetMhrf(edit ? DialogTypeEnum.Edit : DialogTypeEnum.Delete);
+            ModalModel.SetMhrf(dt);
             Model.ModalArt = handler;
             Model.ModalId = id;
           }
@@ -592,12 +601,13 @@ else
       var msubmit = ModalModel.Submit ?? "";
       if (msubmit == "OK")
       {
+        var dt = Formular.GetTableDialogType(Model.ModalArt);
         var o = ModalModel.To();
         var daten = ServiceDaten;
         var r = new ServiceErgebnis();
-        // TODO var r = Model.ModalArt == "Table_Delete"
-        //   ? FactoryService.ClientService.DeleteClient(daten, o)
-        //   : FactoryService.ClientService.SaveClient(daten, o.Nr, o.Beschreibung);
+        // TODO var r = dt == DialogTypeEnum.Delete
+        //   ? FactoryService.PrivateService.DeleteMemo(daten, o)
+        //   : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
         if (r.Ok)
         {
           Model.ModalArt = null;
