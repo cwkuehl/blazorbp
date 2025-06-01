@@ -50,20 +50,22 @@ public static class DownloadData
           return csv;
         }
       }
-      else
+      else if (page == "FZ700")
       {
         var m = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ700TableRowModel>>(s, page, id);
         if (m != null)
         {
-          // var csv = ds.GetCsvString(page, m.ReadModel);
-          var csv = $"""
-          Seite;Fehler
-          {page};CSV-Export nicht implementiert
-          """;
-          return csv;
+          var daten = new ServiceDaten(s.GetUserDaten());
+          var r = FactoryService.PrivateService.GetCsvString(daten, page, m.ReadModel);
+          if (r.Ok)
+            return r.Ergebnis;
         }
       }
     }
-    return null;
+    var csv0 = $"""
+      Seite;Fehler
+      {page};CSV-Export nicht implementiert
+      """;
+    return csv0;
   }
 }

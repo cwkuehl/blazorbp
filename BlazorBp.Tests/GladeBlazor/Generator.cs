@@ -509,7 +509,6 @@ else
         RowsPerPage = 10,
         SelectedRow = 1,
         SortColumn = $"{nameof({{form}}TodoModel.{{first}})}#+",
-        Search = "",
       };
     Table.Nr = id;
 

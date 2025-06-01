@@ -27,15 +27,6 @@
   <input type="hidden" name="SubmitControl"/>
   <div class="row ms-0 mt-1">
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Refresh)"/>
-  </div>
-  <div class="row ms-0 mt-1">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Notizen)" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row ms-0 mt-1">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Alle)"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Text)" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row ms-0 mt-1">
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
   </div>
 </EditForm>
@@ -129,7 +120,6 @@ else
         RowsPerPage = 10,
         SelectedRow = 1,
         SortColumn = $"{nameof(FzNotiz.Thema)}#+",
-        Search = "",
       };
     Table.Nr = id;
 

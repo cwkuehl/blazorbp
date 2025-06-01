@@ -440,6 +440,8 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       last = true;
       table.SelectedPage = table.PageCount;
     }
+    if (handler == "Table_All")
+      table.Search = "%%";
     table.Liste = TableData(table, messages);
     if (table.SelectedPage > table.PageCount)
     {
@@ -451,12 +453,12 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     if (table.SelectedRow < 1 && (table.Liste?.Count ?? 0) > 0)
       table.SelectedRow = 1;
     if (handler == "Table_Export")
-    {
-      var csv = new CsvWriter();
-      csv.AddCsvLine(["1", "2", "3"]);
-      csv.AddCsvLine(["4", "5", "6"]);
-      //csv.WriteFile();
-    }
+      {
+        var csv = new CsvWriter();
+        csv.AddCsvLine(["1", "2", "3"]);
+        csv.AddCsvLine(["4", "5", "6"]);
+        //csv.WriteFile();
+      }
     WriteFormularModel(table.Nr ?? "", null, table);
     SetRhe();
   }

@@ -41,6 +41,7 @@ public class TableModelBase<T>
   {
     new("5","5"),
     new("10","10"),
+    new("15","15"),
     new("20","20"),
   };
 
@@ -62,7 +63,7 @@ public class TableModelBase<T>
 
   /// <summary>Holt oder setzt die Sucheingabe.</summary>
   [Display(Name = "_Suche", Description = "Suchen nach Text in Tabelle, Platzhalter % und _")]
-  public string? Search { get; set; } = default;
+  public string? Search { get; set; } = "%%";
 
   /// <summary>Holt oder setzt die letzte Benutzer-Aktion.</summary>
   public string? Handler { get; set; } = default;
