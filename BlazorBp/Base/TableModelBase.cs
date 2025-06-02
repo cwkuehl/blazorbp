@@ -100,6 +100,8 @@ public class TableModelBase<T>
     {
       if (handler != null && handler != Request.Form["_handler"])
         return;
+      if (Request.Form["SubmitControl"] == nameof(Search))
+        Handler = null;
       if (columns != null)
       {
         VisibleColumns = "";
