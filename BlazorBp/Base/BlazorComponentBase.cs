@@ -28,6 +28,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       { "AM500", new Formular { Action = "am500", Area = "am", Name = "Einstellungen" } },
       { "DM100", new Formular { Action = "dm100", Area = "demo", Name = "Steuerelemente" } },
       { "DM200", new Formular { Action = "dm200", Area = "demo", Name = "Tabelle" } },
+      { "FZ200", new Formular { Action = "fz200", Area = "fz", Name = "Fahrräder" } },
       { "FZ700", new Formular { Action = "fz700", Area = "fz", Name = "Notizen" } },
 };
 
