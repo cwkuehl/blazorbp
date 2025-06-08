@@ -30,7 +30,7 @@ public class AG200ModalModel : PageModelBase
   [Display(Name = "_Kennwort", Description = "Das Kennwort kann angegeben werden, wenn es geändert werden soll.")]
   public string? Kennwort { get; set; } = default!;
 
-  /// <summary>Holt oder setzt die Liste von RadioButton.</summary>
+  /// <summary>Holt oder setzt die Liste von Berechtigung.</summary>
   public List<ListItem>? AuswahlBerechtigung { get; set; }
 
   /// <summary>Holt oder setzt die Berechtigung.</summary>

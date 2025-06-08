@@ -20,11 +20,6 @@ public class FZ200Model : PageModelBase
   //// [Required(ErrorMessage = "Aktualisieren muss angegeben werden.")]
   public string? Refresh { get; set; }
 
-  /// <summary>Holt oder setzt FZ200.fahrraeder.</summary>
-  [Display(Name = "FZ200.fahrraeder", Description = "FZ200.fahrraeder.tt")]
-  //// [Required(ErrorMessage = "FZ200.fahrraeder muss angegeben werden.")]
-  public string? Fahrraeder { get; set; }
-
   /// <summary>Holt oder setzt Schließen.</summary>
   [Display(Name = "Schließen", Description = "Schließen")]
   //// [Required(ErrorMessage = "Schließen muss angegeben werden.")]

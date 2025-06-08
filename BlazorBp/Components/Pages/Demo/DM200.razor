@@ -28,7 +28,7 @@
     <input type="file" class="btn btn-secondary col-md-6 me-1" value="" name="filehochladen" id="filehochladen" multiple="multiple"/>
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Import)"/>
   </div>
-  <div class="row ms-1 mt-1">
+  <div class="modal-footer mt-2">
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
   </div>
 </EditForm>
@@ -54,7 +54,7 @@
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Bezeichnung)" VerticalColClass="form-group col-md-4"/>
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Beschreibung)" VerticalColClass="form-group col-md-4"/>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer mt-2">
             <SubmitButton class="btn btn-primary col-md-2 me-1" For="@(() => ModalModel!.Ok)"/>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
             @* <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => ModalModel!.Schliessen)"/> *@

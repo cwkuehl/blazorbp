@@ -120,11 +120,14 @@ public class Generator
       if (IgnoreControl(c))
         continue;
       var n = c.Text.Replace("_", "");
+      var typ = "string";
+      if (c.Name == "AngelegtAm" || c.Name == "GeaendertAm")
+        typ = "DateTime";
       sb.AppendLine($$"""
   /// <summary>Holt oder setzt {{n}}.</summary>
   [Display(Name = "{{c.Text}}", Description = "{{c.Tooltip}}")]
   //// [Required(ErrorMessage = "{{n}} muss angegeben werden.")]
-  public string? {{Functions.ToFirstUpper(c.Name)}} { get; set; }
+  public {{typ}}? {{Functions.ToFirstUpper(c.Name)}} { get; set; }
 """);
       if (c != lastc)
         sb.AppendLine();
@@ -167,14 +170,14 @@ using static BlazorBp.Base.DialogTypeEnum;
 [Serializable]
 public class {{form}}TodoModel
 {
-{{sbt}}  /// <summary>Holt oder setzt die Spalte Angelegt_Am. TODO DateTime?</summary>
-  public string? Angelegt_Am { get; set; }
+{{sbt}}  /// <summary>Holt oder setzt die Spalte Angelegt_Am.</summary>
+  public DateTime? Angelegt_Am { get; set; }
 
   /// <summary>Holt oder setzt die Spalte Angelegt_Von.</summary>
   public string? Angelegt_Von { get; set; }
 
-  /// <summary>Holt oder setzt die Spalte Geaendert_Am. TODO DateTime?</summary>
-  public string? Geaendert_Am { get; set; }
+  /// <summary>Holt oder setzt die Spalte Geaendert_Am.</summary>
+  public DateTime? Geaendert_Am { get; set; }
 
   /// <summary>Holt oder setzt die Spalte Geaendert_Von.</summary>
   public string? Geaendert_Von { get; set; }
@@ -229,9 +232,11 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
       model += $$"""
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
+  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
   /// <returns>Das kopierte Model.</returns>
-  public {{form}}TodoModel To() => new()
+  public {{form}}TodoModel To(ServiceDaten daten) => new()
   {
+    Mandant_Nr = daten.MandantNr,
 {{sbt4}}  };
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
@@ -359,7 +364,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
 """);
     var controls = GetControls(root.Children, a => a.Children.Count <= 0);
     Control? parent = null;
-    sb.AppendLine($"""  <div class="row ms-0 mt-1">""");
+    sb.AppendLine($"""    <div class="row ms-0 mt-1">""");
     foreach (var c in controls)
     {
       var n = c.Text.Replace("_", "");
@@ -602,8 +607,8 @@ else
       if (msubmit == "OK")
       {
         var dt = Formular.GetTableDialogType(Model.ModalArt);
-        var o = ModalModel.To();
         var daten = ServiceDaten;
+        var o = ModalModel.To(daten);
         var r = new ServiceErgebnis();
         // TODO var r = dt == DialogTypeEnum.Delete
         //   ? FactoryService.PrivateService.DeleteMemo(daten, o)
@@ -686,7 +691,7 @@ else
 {{sbm}}    });
     if (rm != null)
       rm.PageCount = 0;
-    // TODO var r = FactoryService.ClientService.GetClientList(daten, rm);
+    // TODO var r = FactoryService.PrivateService.GetClientList(daten, rm);
     var l = r.Ergebnis.Select(a => {{form}}TableRowModel.From(a)).ToList();
     if (!r.Ok)
       messages?.Add(() => Model, r.GetErrors());

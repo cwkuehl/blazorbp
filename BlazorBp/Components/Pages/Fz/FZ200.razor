@@ -1,4 +1,5 @@
 @page "/fz/fz200/{id?}"
+@using CSBP.Services.Apis.Models
 @inherits BlazorComponentBase<FZ200Model, FZ200TableRowModel>
 @attribute [Authorize(Roles = "User, Admin, Superuser")]
 
@@ -8,15 +9,13 @@
 <CascadingValue Value="this">
 <SortableTable Table="Table" NoData="" FormName="fz200" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="FZ200Model" TRTable="FZ200TableRowModel">
   <ChildContent>
-    <TableColumn Field="Nummer" SortField="@nameof(FZ200TodoModel.Nummer)" TModel="FZ200Model" TRTable="FZ200TableRowModel"/>
-    <TableColumn Field="Bezeichnung" SortField="@nameof(FZ200TodoModel.Bezeichnung)" TModel="FZ200Model" TRTable="FZ200TableRowModel"/>
-    <TableColumn Field="Typ0" SortField="@nameof(FZ200TodoModel.Typ0)" TModel="FZ200Model" TRTable="FZ200TableRowModel"/>
-    <TableColumn Field="Typ1" SortField="@nameof(FZ200TodoModel.Typ1)" TModel="FZ200Model" TRTable="FZ200TableRowModel"/>
-    <TableColumn Field="Typ2" SortField="@nameof(FZ200TodoModel.Typ2)" TModel="FZ200Model" TRTable="FZ200TableRowModel"/>
-    <TableColumn Field="AngelegtAm" SortField="@nameof(FZ200TodoModel.Angelegt_Am)" TModel="FZ200Model" TRTable="FZ200TableRowModel"/>
-    <TableColumn Field="AngelegtVon" SortField="@nameof(FZ200TodoModel.Angelegt_Von)" TModel="FZ200Model" TRTable="FZ200TableRowModel"/>
-    <TableColumn Field="GeaendertAm" SortField="@nameof(FZ200TodoModel.Geaendert_Am)" TModel="FZ200Model" TRTable="FZ200TableRowModel"/>
-    <TableColumn Field="GeaendertVon" SortField="@nameof(FZ200TodoModel.Geaendert_Von)" TModel="FZ200Model" TRTable="FZ200TableRowModel"/>
+    <TableColumn Field="Nummer" SortField="@nameof(FzFahrrad.Uid)" TModel="FZ200Model" TRTable="FZ200TableRowModel"/>
+    <TableColumn Field="Bezeichnung" SortField="@nameof(FzFahrrad.Bezeichnung)" TModel="FZ200Model" TRTable="FZ200TableRowModel"/>
+    <TableColumn Field="Typ" SortField="@nameof(FzFahrrad.Typ)" TModel="FZ200Model" TRTable="FZ200TableRowModel"/>
+    <TableColumn Field="AngelegtAm" SortField="@nameof(FzFahrrad.Angelegt_Am)" TModel="FZ200Model" TRTable="FZ200TableRowModel"/>
+    <TableColumn Field="AngelegtVon" SortField="@nameof(FzFahrrad.Angelegt_Von)" TModel="FZ200Model" TRTable="FZ200TableRowModel"/>
+    <TableColumn Field="GeaendertAm" SortField="@nameof(FzFahrrad.Geaendert_Am)" TModel="FZ200Model" TRTable="FZ200TableRowModel"/>
+    <TableColumn Field="GeaendertVon" SortField="@nameof(FzFahrrad.Geaendert_Von)" TModel="FZ200Model" TRTable="FZ200TableRowModel"/>
   </ChildContent>
 </SortableTable>
 </CascadingValue>
@@ -27,16 +26,10 @@
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
   <input type="hidden" name="SubmitControl"/>  <div class="row ms-0 mt-1">
   </div>
-  <div class="row ms-0 mt-1">
+  <div class="modal-footer mt-2">
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-0" For="@(() => Model!.Schliessen)"/>
   </div>
-  <div class="row ms-0 mt-1">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Fahrraeder)" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row ms-0 mt-1">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
-  </div>
-  <!-- TODO btn-primary festlegen -->
 </EditForm>
 
 @if (!string.IsNullOrEmpty(Model!.ModalId))
@@ -45,7 +38,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="lbldetails">TODO @Functions.Iif(Model?.ModalArt == "Table_Edit", "ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "löschen", Functions.Iif(Model?.ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
+        <h5 class="modal-title" id="lbldetails">Fahrrad @Functions.Iif(Model?.ModalArt == "Table_Edit", "ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "löschen", Functions.Iif(Model?.ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
       </div>
       <div class="modal-body">
@@ -55,22 +48,20 @@
           <InputText type="hidden" @bind-Value="ModalModel!.Nr"/>
           <InputText type="hidden" @bind-Value="ModalModel!.ReadonlyHiddenError"/>
           <input type="hidden" name="SubmitControl"/>
-        <div class="row ms-0 mt-1">
-          </div>
-          <div class="row ms-0 mt-1">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Typ1)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Typ2)" VerticalColClass="form-group col-md-2"/>
-          </div>
-          <div class="row ms-0 mt-1">
-            <SubmitButton class="btn btn-primary col-md-2 me-1" For="@(() => ModalModel!.Ok)"/>
-            <button type="button" class="btn btn-secondary col-md-2 me-1" data-bs-dismiss="modal">Abbrechen</button>
-          </div>
           <div class="row ms-0 mt-1">
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Bezeichnung)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Typ0)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Angelegt)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Geaendert)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Bezeichnung)" VerticalColClass="form-group col-md-10"/>
+          </div>
+          <div class="row ms-0 mt-1">
+            <LabelInputValid type="radio" AutoPostback="" DataList="ModalModel!.AuswahlTyp" For="@(() => ModalModel!.Typ)" VerticalColClass="form-group col-md-2"/>
+          </div>
+          <div class="row ms-0 mt-1">
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Angelegt)" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Geaendert)" VerticalColClass="form-group col-md-6"/>
+          </div>
+          <div class="modal-footer mt-2">
+            <SubmitButton class="btn btn-primary col-md-2 me-1" For="@(() => ModalModel!.Ok)"/>
+            <button type="button" class="btn btn-secondary col-md-2 me-0" data-bs-dismiss="modal">Abbrechen</button>
           </div>
         </EditForm>
       </div>
@@ -112,7 +103,6 @@ else
       Model = new FZ200Model
       {
         Nr = id,
-        // TODO Mandant = daten.MandantNr,
       };
       Model.SetMhrf(DialogTypeEnum.New);
     }
@@ -125,18 +115,19 @@ else
         SelectedPage = 1,
         RowsPerPage = 10,
         SelectedRow = 1,
-        SortColumn = $"{nameof(FZ200TodoModel.Nummer)}#+",
+        SortColumn = $"{nameof(FzFahrrad.Bezeichnung)}#+",
       };
     Table.Nr = id;
 
     if (ModalModel == null)
-      ModalModel = new FZ200ModalModel
-      {
-        // TODO Nummer = "1",
-        // Beschreibung = null,
-      };
+      ModalModel = new FZ200ModalModel();
     ModalModel.Nr = id;
-      #pragma warning disable CS8604
+    ModalModel.AuswahlTyp = new List<ListItem>
+    {
+      new(Functions.ToString((int)CSBP.Services.Apis.Enums.BikeTypeEnum.Tour), CSBP.Services.Resources.Messages.Enum_bike_tour),
+      new(Functions.ToString((int)CSBP.Services.Apis.Enums.BikeTypeEnum.Weekly), CSBP.Services.Resources.Messages.Enum_bike_weekly),
+    };
+    #pragma warning disable CS8604
     ModalEditContext = new(ModalModel);
     #pragma warning restore CS8604
     // #pragma warning disable CS0618
@@ -203,12 +194,11 @@ else
       if (msubmit == "OK")
       {
         var dt = Formular.GetTableDialogType(Model.ModalArt);
-        var o = ModalModel.To();
         var daten = ServiceDaten;
-        var r = new ServiceErgebnis();
-        // TODO var r = dt == DialogTypeEnum.Delete
-        //   ? FactoryService.PrivateService.DeleteMemo(daten, o)
-        //   : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
+        var o = ModalModel.To(daten);
+        var r = dt == DialogTypeEnum.Delete
+          ? FactoryService.PrivateService.DeleteBike(daten, o)
+          : FactoryService.PrivateService.SaveBike(daten, o.Uid, o.Bezeichnung, o.Typ);
         if (r.Ok)
         {
           Model.ModalArt = null;
@@ -244,7 +234,7 @@ else
     if (valid && submit == "OK")
     {
       var daten = ServiceDaten;
-      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
+      var r = new ServiceErgebnis();
       if (r != null)
       {
         Get(r);
@@ -272,18 +262,7 @@ else
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var r = new ServiceErgebnis<List<FZ200TodoModel>>(new List<FZ200TodoModel>());
-    r.Ergebnis.Add(new FZ200TodoModel()
-    {
-       Typ1 = "Typ11",
-       Typ2 = "Typ21",
-       Nummer = "Nummer1",
-       Bezeichnung = "Bezeichnung1",
-       Typ0 = "Typ01",
-    });
-    if (rm != null)
-      rm.PageCount = 0;
-    // TODO var r = FactoryService.ClientService.GetClientList(daten, rm);
+    var r = FactoryService.PrivateService.GetBikeList(daten, rm);
     var l = r.Ergebnis.Select(a => FZ200TableRowModel.From(a)).ToList();
     if (!r.Ok)
       messages?.Add(() => Model, r.GetErrors());
