@@ -30,36 +30,52 @@ public static class DownloadData
     if (!string.IsNullOrEmpty(page) && !string.IsNullOrEmpty(id) && ds != null && s != null)
     {
       page = page.ToUpper();
-      if (page == "AG100")
+      TableReadModel? rm;
+      var service = -1;
+      switch (page)
       {
-        var m = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<AG100TableRowModel>>(s, page, id);
-        if (m != null)
-        {
-          var daten = new ServiceDaten(s.GetUserDaten());
-          var r = FactoryService.ClientService.GetCsvString(daten, page, m.ReadModel);
-          if (r.Ok)
-            return r.Ergebnis;
-        }
+        case "AG100":
+          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<AG100TableRowModel>>(s, page, id)?.ReadModel;
+          service = 1; // ClientService
+          break;
+        case "DM200":
+          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<DM200TableRowModel>>(s, page, id)?.ReadModel;
+          service = 0; // DemoService
+          break;
+        case "FZ200":
+          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ200TableRowModel>>(s, page, id)?.ReadModel;
+          service = 2; // PrivateService
+          break;
+        case "FZ700":
+          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ700TableRowModel>>(s, page, id)?.ReadModel;
+          service = 2; // PrivateService
+          break;
+        default:
+          rm = null;
+          break;
       }
-      else if (page == "DM200")
+      if (rm != null && service > 0)
       {
-        var m = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<DM200TableRowModel>>(s, page, id);
-        if (m != null)
+        var daten = new ServiceDaten(s.GetUserDaten());
+        ServiceErgebnis<string>? r;
+        switch (service)
         {
-          var csv = ds.GetCsvString(page, m.ReadModel);
-          return csv;
+          case 0:
+            var csv = ds.GetCsvString(page, rm);
+            r = new ServiceErgebnis<string>(csv);
+            break;
+          case 1:
+            r = FactoryService.ClientService.GetCsvString(daten, page, rm);
+            break;
+          case 2:
+            r = FactoryService.PrivateService.GetCsvString(daten, page, rm);
+            break;
+          default:
+            r = null;
+            break;
         }
-      }
-      else if (page == "FZ700")
-      {
-        var m = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ700TableRowModel>>(s, page, id);
-        if (m != null)
-        {
-          var daten = new ServiceDaten(s.GetUserDaten());
-          var r = FactoryService.PrivateService.GetCsvString(daten, page, m.ReadModel);
-          if (r.Ok)
-            return r.Ergebnis;
-        }
+        if (r != null && r.Ok && !string.IsNullOrEmpty(r.Ergebnis))
+          return r.Ergebnis;
       }
     }
     var csv0 = $"""
