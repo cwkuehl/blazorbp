@@ -1,0 +1,316 @@
+@page "/fz/fz250/{id?}"
+@inherits BlazorComponentBase<FZ250Model, FZ250TableRowModel>
+@attribute [Authorize(Roles = "User, Admin, Superuser")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<CascadingValue Value="this">
+<SortableTable Table="Table" NoData="" FormName="fz250" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="FZ250Model" TRTable="FZ250TableRowModel">
+  <ChildContent>
+    <TableColumn Field="Nummer" SortField="@nameof(FZ250TodoModel.Nummer)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="Fahrrad" SortField="@nameof(FZ250TodoModel.Fahrrad)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="Datum" SortField="@nameof(FZ250TodoModel.Datum)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="Zaehler" SortField="@nameof(FZ250TodoModel.Zaehler)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="Km" SortField="@nameof(FZ250TodoModel.Km)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="Schnitt" SortField="@nameof(FZ250TodoModel.Schnitt)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="Beschreibung" SortField="@nameof(FZ250TodoModel.Beschreibung)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="AngelegtAm" SortField="@nameof(FZ250TodoModel.Angelegt_Am)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="AngelegtVon" SortField="@nameof(FZ250TodoModel.Angelegt_Von)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="GeaendertAm" SortField="@nameof(FZ250TodoModel.Geaendert_Am)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="GeaendertVon" SortField="@nameof(FZ250TodoModel.Geaendert_Von)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+  </ChildContent>
+</SortableTable>
+</CascadingValue>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="fz250">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <input type="hidden" name="SubmitControl"/>    <div class="row ms-0 mt-1">
+  </div>
+  <div class="row ms-0 mt-1">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Refresh)"/>
+  </div>
+  <div class="row ms-0 mt-1">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Fahrradstaende)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row ms-0 mt-1">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Alle)"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Fahrrad)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Text)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row ms-0 mt-1">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
+  </div>
+  <!-- TODO btn-primary festlegen -->
+</EditForm>
+
+@if (!string.IsNullOrEmpty(Model!.ModalId))
+{
+<div class="modal xxxfade" id="idmodal" tabindex="-1" role="dialog" aria-labelledby="lbldetails" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="lbldetails">TODO @Functions.Iif(Model?.ModalArt == "Table_Edit", "ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "löschen", Functions.Iif(Model?.ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+      </div>
+      <div class="modal-body">
+        <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="Submit" FormName="fz250modal">
+          <DataAnnotationsValidator/>
+          <ValidationSummary class="text-danger"/>
+          <InputText type="hidden" @bind-Value="ModalModel!.Nr"/>
+          <InputText type="hidden" @bind-Value="ModalModel!.ReadonlyHiddenError"/>
+          <input type="hidden" name="SubmitControl"/>
+        <div class="row ms-0 mt-1">
+          </div>
+          <div class="row ms-0 mt-1">
+            <SubmitButton class="btn btn-primary col-md-2 me-1" For="@(() => ModalModel!.Ok)"/>
+            <button type="button" class="btn btn-secondary col-md-2 me-1" data-bs-dismiss="modal">Abbrechen</button>
+          </div>
+          <div class="row ms-0 mt-1">
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Fahrrad)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Datum)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Zaehler)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Km)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Schnitt)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Beschreibung)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Angelegt)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Geaendert)" VerticalColClass="form-group col-md-2"/>
+          </div>
+        </EditForm>
+      </div>
+    </div>
+  </div>
+</div>
+}
+else
+{
+  <EditForm Enhance method="post" EditContext="ModalEditContext" FormName="fz250modal">
+  </EditForm>
+}
+
+@code {
+  [SupplyParameterFromForm]
+  protected FZ250ModalModel ModalModel { get; set; } = default!;
+
+  /// <summary>Betroffener EditContext.</summary>
+  protected EditContext? ModalEditContext;
+
+  /// <summary>Betroffener ValidationMessageStore.</summary>
+  protected ValidationMessageStore? ModalMessages;
+  /// <summary>True, wenn EditContext ohne Fehler.</summary>
+  private bool valid;
+
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id">Betroffene Id.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id, FZ250Model? model = null, TableModelBase<FZ250TableRowModel>? table = null)
+  {
+    if (model != null)
+      Model = model;
+    if (Model == null)
+    {
+      var daten = ServiceDaten;
+      Model = new FZ250Model
+      {
+        Nr = id,
+        // TODO Mandant = daten.MandantNr,
+      };
+      Model.SetMhrf(DialogTypeEnum.New);
+    }
+    Model.Nr = id;
+    if (table != null)
+      Table = table;
+    if (Table == null)
+      Table = new TableModelBase<FZ250TableRowModel>
+      {
+        SelectedPage = 1,
+        RowsPerPage = 10,
+        SelectedRow = 1,
+        SortColumn = $"{nameof(FZ250TodoModel.Nummer)}#+",
+      };
+    Table.Nr = id;
+
+    if (ModalModel == null)
+      ModalModel = new FZ250ModalModel
+      {
+        // TODO Nummer = "1",
+        // Beschreibung = null,
+      };
+    ModalModel.Nr = id;
+      #pragma warning disable CS8604
+    ModalEditContext = new(ModalModel);
+    #pragma warning restore CS8604
+    // #pragma warning disable CS0618
+    // ModalEditContext.EnableDataAnnotationsValidation();
+    // #pragma warning disable CS0618
+    ModalMessages = new(ModalEditContext);
+  }
+
+  /// <summary>
+  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
+  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
+  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    if (OnInitializedFormular("FZ250", "Fahrradstände - FZ250", Id, true))
+      return;
+
+    // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
+    // var submit = Model.Submit ?? "";
+    // if (submit == "TODO z.B. Import")
+    // {
+    //   var l = SaveUploadFiles("FZ250", "filehochladen");
+    // }
+  }
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Posback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  public override void InitModal(string? form, string? handler, string? id)
+  {
+    if (!string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
+    {
+      var dt = Formular.GetTableDialogType(handler);
+      if (dt == DialogTypeEnum.New)
+      {
+        ModalModel.SetMhrf(DialogTypeEnum.New);
+        Model.ModalArt = handler;
+        Model.ModalId = id;
+      }
+      else
+      {
+        var i = Functions.ToInt32(id);
+        if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
+        {
+          var l = TableData(Table, ModalMessages);
+          var ds = l.Skip(i - 1).FirstOrDefault();
+          if (ds != null)
+          {
+            ModalModel.From(ds);
+            ModalModel.SetMhrf(dt);
+            Model.ModalArt = handler;
+            Model.ModalId = id;
+          }
+        }
+      }
+    }
+    else
+    {
+      var msubmit = ModalModel.Submit ?? "";
+      if (msubmit == "OK")
+      {
+        var dt = Formular.GetTableDialogType(Model.ModalArt);
+        var daten = ServiceDaten;
+        var o = ModalModel.To(daten);
+        var r = new ServiceErgebnis();
+        // TODO var r = dt == DialogTypeEnum.Delete
+        //   ? FactoryService.PrivateService.DeleteMemo(daten, o)
+        //   : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
+        if (r.Ok)
+        {
+          Model.ModalArt = null;
+          Model.ModalId = null;
+          TableData(Table, ModalMessages);
+        }
+        else
+          ModalMessages?.Add(() => ModalModel, r.GetErrors());
+      }
+      else if (form != "fz250modal")
+      {
+        Model.ModalArt = null;
+        Model.ModalId = null;
+      }
+    }
+    WriteFormularModel(Model.Nr ?? "0", Model);
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// -Wegen Anzeige von Fehlermeldungen darf die Funktion nicht async sein (private async Task Submit()).
+  /// -Speichern des geänderten Models.
+  /// </summary>
+  private void Submit()
+  {
+    if (Model == null || Messages == null)
+      return;
+    var submit = Model.Submit ?? "";
+    if (!string.IsNullOrEmpty(submit))
+    {
+      valid = EditContext?.Validate() ?? false;
+    }
+    if (valid && submit == "OK")
+    {
+      var daten = ServiceDaten;
+      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
+      if (r != null)
+      {
+        Get(r);
+        if (r.Ok)
+        {
+          CloseFormular();
+          return;
+        }
+      }
+    }
+    WriteFormularModel(Model.Nr ?? "0", Model);
+    if (submit == "Schließen")
+    {
+      CloseFormular();
+    }
+  }
+
+  /// <summary>
+  /// Bereitstellen der Tabellen-Daten mit Berücksichtigung der Filterung, Sortierung und Paginierung.
+  /// </summary>
+  /// <param name="m">Betroffenes TableRowModel.</param>
+  /// <param name="messages">Betroffene Fehlermeldungen.</param>
+  /// <returns>Tabellen-Daten als Liste.</returns>
+  protected override List<FZ250TableRowModel> TableData(TableModelBase<FZ250TableRowModel>? m, ValidationMessageStore? messages)
+  {
+    var rm = m?.ReadModel;
+    var daten = ServiceDaten;
+    var r = new ServiceErgebnis<List<FZ250TodoModel>>(new List<FZ250TodoModel>());
+    r.Ergebnis.Add(new FZ250TodoModel()
+    {
+       Nummer = "Nummer1",
+       Fahrrad = "Fahrrad1",
+       Datum = "Datum1",
+       Zaehler = "Zaehler1",
+       Km = "Km1",
+       Schnitt = "Schnitt1",
+       Beschreibung = "Beschreibung1",
+    });
+    if (rm != null)
+      rm.PageCount = 0;
+    // TODO var r = FactoryService.PrivateService.GetClientList(daten, rm);
+    var l = r.Ergebnis.Select(a => FZ250TableRowModel.From(a)).ToList();
+    if (!r.Ok)
+      messages?.Add(() => Model, r.GetErrors());
+    if (m != null && rm != null)
+    {
+      m.PageCount = rm.PageCount;
+      m.Liste = l;
+    }
+    return l;
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData(FZ250Model model, FZ250Model model0)
+  {
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+  }
+}

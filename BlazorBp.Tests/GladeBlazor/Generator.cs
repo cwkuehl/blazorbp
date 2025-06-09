@@ -236,7 +236,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
   /// <returns>Das kopierte Model.</returns>
   public {{form}}TodoModel To(ServiceDaten daten) => new()
   {
-    Mandant_Nr = daten.MandantNr,
+    // TODO Mandant_Nr = daten.MandantNr,
 {{sbt4}}  };
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
@@ -753,15 +753,17 @@ else
           }
           else if (n == "object")
           {
+            var parent = cstack.Peek();
             var name = reader.GetAttribute("id") ?? "";
             var type = reader.GetAttribute("class") ?? "";
             if (type == "GtkTreeSelection" || type == "GtkImage")
+              ignore = true;
+            else if (type == "GtkEntry" && parent.Type == "GtkComboBoxText")
               ignore = true;
             else
             {
               if (type == "GtkButton" && name.EndsWith("Action") && name != "newAction")
                 name = name.Substring(0, name.Length - 6);
-              var parent = cstack.Peek();
               var c = new Control(name, type, "", "", parent);
               // if (type == "GtkImage")
               // {
