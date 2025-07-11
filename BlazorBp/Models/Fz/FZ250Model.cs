@@ -20,25 +20,12 @@ public class FZ250Model : PageModelBase
   //// [Required(ErrorMessage = "Aktualisieren muss angegeben werden.")]
   public string? Refresh { get; set; }
 
-  /// <summary>Holt oder setzt Fahrradstände.</summary>
-  [Display(Name = "Fahrrad_stände", Description = "Fahrradstände")]
-  //// [Required(ErrorMessage = "Fahrradstände muss angegeben werden.")]
-  public string? Fahrradstaende { get; set; }
-
-  /// <summary>Holt oder setzt Alle.</summary>
-  [Display(Name = "A_lle", Description = "Selektionskriterien zurücksetzen")]
-  //// [Required(ErrorMessage = "Alle muss angegeben werden.")]
-  public string? Alle { get; set; }
+  /// <summary>Holt oder setzt die Auswahlliste von Fahrrad.</summary>
+  public List<ListItem>? AuswahlFahrrad { get; set; } = default!;
 
   /// <summary>Holt oder setzt Fahrrad.</summary>
   [Display(Name = "_Fahrrad", Description = "Selektions-Fahrrad")]
-  //// [Required(ErrorMessage = "Fahrrad muss angegeben werden.")]
   public string? Fahrrad { get; set; }
-
-  /// <summary>Holt oder setzt Suche.</summary>
-  [Display(Name = "_Suche", Description = "Suche nach Beschreibung")]
-  //// [Required(ErrorMessage = "Suche muss angegeben werden.")]
-  public string? Text { get; set; }
 
   /// <summary>Holt oder setzt Schließen.</summary>
   [Display(Name = "Schließen", Description = "Schließen")]

@@ -6,6 +6,7 @@ namespace BlazorBp.Models.Fz;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Base;
+using CSBP.Services.Apis.Models.Views;
 using CSBP.Services.Base;
 using static BlazorBp.Base.DialogTypeEnum;
 
@@ -16,34 +17,42 @@ using static BlazorBp.Base.DialogTypeEnum;
 public class FZ250ModalModel : PageModelBase
 {
   /// <summary>Holt oder setzt Nr..</summary>
-  [Display(Name = "Nr.", Description = "Fahrradstand-Nr.")]
+  [Display(Name = "Fahrrad-Nr.", Description = "Fahrradstand-Nr.")]
   //// [Required(ErrorMessage = "Nr. muss angegeben werden.")]
   public string? Nummer { get; set; }
 
+  /// <summary>Holt oder setzt die Auswahlliste von Fahrrad.</summary>
+  public List<ListItem>? AuswahlFahrrad { get; set; } = default!;
+
   /// <summary>Holt oder setzt Fahrrad.</summary>
   [Display(Name = "_Fahrrad", Description = "Fahrrad")]
-  //// [Required(ErrorMessage = "Fahrrad muss angegeben werden.")]
+  [Required(ErrorMessage = "Fahrrad muss angegeben werden.")]
   public string? Fahrrad { get; set; }
 
   /// <summary>Holt oder setzt Datum.</summary>
-  [Display(Name = "_Datum", Description = "")]
+  [Display(Name = "_Datum", Description = "Datum")]
+  [Required(ErrorMessage = "Datum muss angegeben werden.")]
+  public DateTime? Datum { get; set; }
+
+  /// <summary>Holt oder setzt die Fahrradstand-Nr.</summary>
+  [Display(Name = "_Nr.", Description = "Nr. bei mehreren Touren pro Tag.")]
   //// [Required(ErrorMessage = "Datum muss angegeben werden.")]
-  public string? Datum { get; set; }
+  public int UnterNr { get; set; }
 
   /// <summary>Holt oder setzt Zähler.</summary>
   [Display(Name = "_Zähler", Description = "Zählerstand")]
   //// [Required(ErrorMessage = "Zähler muss angegeben werden.")]
-  public string? Zaehler { get; set; }
+  public decimal? Zaehler { get; set; }
 
   /// <summary>Holt oder setzt Km.</summary>
   [Display(Name = "_Km", Description = "Tages- oder Wochen-km")]
   //// [Required(ErrorMessage = "Km muss angegeben werden.")]
-  public string? Km { get; set; }
+  public decimal? Km { get; set; }
 
   /// <summary>Holt oder setzt Schnitt.</summary>
   [Display(Name = "_Schnitt", Description = "Durchschnittsgeschwindigkeit")]
   //// [Required(ErrorMessage = "Schnitt muss angegeben werden.")]
-  public string? Schnitt { get; set; }
+  public decimal? Schnitt { get; set; }
 
   /// <summary>Holt oder setzt Beschreibung.</summary>
   [Display(Name = "_Beschreibung", Description = "Beschreibung")]
@@ -73,15 +82,16 @@ public class FZ250ModalModel : PageModelBase
   /// <summary>Kopiert die Werte in ein Model.</summary>
   /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
   /// <returns>Das kopierte Model.</returns>
-  public FZ250TodoModel To(ServiceDaten daten) => new()
+  public VFzFahrradstand To(ServiceDaten daten) => new()
   {
-    // TODO Mandant_Nr = daten.MandantNr,
-    Nummer = Nummer,
-    Fahrrad = Fahrrad,
-    Datum = Datum,
-    Zaehler = Zaehler,
-    Km = Km,
-    Schnitt = Schnitt,
+    Mandant_Nr = daten.MandantNr,
+    Fahrrad_Uid = Nummer,
+    Bezeichnung = Fahrrad,
+    Datum = Datum ?? daten.Heute,
+    Nr = UnterNr,
+    Zaehler_km = Zaehler ?? 0,
+    Periode_km = Km ?? 0,
+    Periode_Schnitt = Functions.Round(Schnitt) ?? 0,
     Beschreibung = Beschreibung,
   };
 
@@ -92,20 +102,22 @@ public class FZ250ModalModel : PageModelBase
     Nummer,
     Fahrrad,
     Datum,
+    UnterNr,
     Zaehler,
     Km,
     Schnitt,
-    Beschreibung
-    // TODO , Angelegt, Geaendert
+    Beschreibung,
+    Angelegt, Geaendert
   ) = (
     m.Nummer,
     m.Fahrrad,
     m.Datum,
+    m.UnterNr,
     m.Zaehler,
     m.Km,
     m.Schnitt,
-    m.Beschreibung
-    // TODO , ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon), ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon)
+    m.Beschreibung,
+    ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon), ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon)
   );
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
@@ -122,8 +134,8 @@ public class FZ250ModalModel : PageModelBase
     }
     // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
     // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
-    // SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
+    SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
+    SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
   }
 }

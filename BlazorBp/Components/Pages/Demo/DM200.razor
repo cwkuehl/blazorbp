@@ -259,8 +259,7 @@ else
   protected override List<DM200TableRowModel> TableData(TableModelBase<DM200TableRowModel>? m, ValidationMessageStore? messages)
   {
     var rm = m?.ReadModel;
-    var l = DemoService.GetObjektList(rm)
-      .Select(a => DM200TableRowModel.FromObjekt(a)).ToList();
+    var l = DemoService.GetObjektList(rm).Select(a => DM200TableRowModel.FromObjekt(a)).ToList();
     if (m != null && rm != null)
     {
       m.PageCount = rm.PageCount;

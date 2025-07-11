@@ -261,10 +261,8 @@ else
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var r = FactoryService.PrivateService.GetMemoList(daten, rm);
-    var l = r.Ergebnis.Select(a => FZ700TableRowModel.From(a)).ToList();
-    if (!r.Ok)
-      messages?.Add(() => Model, r.GetErrors());
+    var l0 = Get(FactoryService.PrivateService.GetMemoList(daten, rm), messages);
+    var l = l0?.Select(a => FZ700TableRowModel.From(a)).ToList() ?? new List<FZ700TableRowModel>();
     if (m != null && rm != null)
     {
       m.PageCount = rm.PageCount;

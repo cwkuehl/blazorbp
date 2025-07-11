@@ -262,10 +262,8 @@ else
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var r = FactoryService.PrivateService.GetBikeList(daten, rm);
-    var l = r.Ergebnis.Select(a => FZ200TableRowModel.From(a)).ToList();
-    if (!r.Ok)
-      messages?.Add(() => Model, r.GetErrors());
+    var l0 = Get(FactoryService.PrivateService.GetBikeList(daten, rm), messages);
+    var l = l0?.Select(a => FZ200TableRowModel.From(a)).ToList() ?? new List<FZ200TableRowModel>();
     if (m != null && rm != null)
     {
       m.PageCount = rm.PageCount;

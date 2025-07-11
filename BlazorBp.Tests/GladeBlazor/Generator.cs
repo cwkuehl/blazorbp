@@ -302,7 +302,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
       if (!c.Name.StartsWith("Angelegt") && !c.Name.StartsWith("Geaendert"))
       {
         sb.AppendLine($$"""
-    <TableColumn Field="{{Functions.ToFirstUpper(c.Name)}}" SortField="@nameof({{form}}TodoModel.{{Functions.ToFirstUpper(c.Name)}})" TModel="{{form}}Model" TRTable="{{form}}TableRowModel"/>
+    <TableColumn Field="@nameof({{form}}TableRowModel.{{Functions.ToFirstUpper(c.Name)}})" SortField="@nameof({{form}}TodoModel.{{Functions.ToFirstUpper(c.Name)}})" TModel="{{form}}Model" TRTable="{{form}}TableRowModel"/>
 """);
       }
     }
@@ -310,10 +310,10 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
 <CascadingValue Value="this">
 <SortableTable Table="Table" NoData="" FormName="{{form.ToLower()}}" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="{{form}}Model" TRTable="{{form}}TableRowModel">
   <ChildContent>
-{{sb}}    <TableColumn Field="AngelegtAm" SortField="@nameof({{form}}TodoModel.Angelegt_Am)" TModel="{{form}}Model" TRTable="{{form}}TableRowModel"/>
-    <TableColumn Field="AngelegtVon" SortField="@nameof({{form}}TodoModel.Angelegt_Von)" TModel="{{form}}Model" TRTable="{{form}}TableRowModel"/>
-    <TableColumn Field="GeaendertAm" SortField="@nameof({{form}}TodoModel.Geaendert_Am)" TModel="{{form}}Model" TRTable="{{form}}TableRowModel"/>
-    <TableColumn Field="GeaendertVon" SortField="@nameof({{form}}TodoModel.Geaendert_Von)" TModel="{{form}}Model" TRTable="{{form}}TableRowModel"/>
+{{sb}}    <TableColumn Field="@nameof({{form}}TableRowModel.AngelegtAm)" SortField="@nameof({{form}}TodoModel.Angelegt_Am)" TModel="{{form}}Model" TRTable="{{form}}TableRowModel"/>
+    <TableColumn Field="@nameof({{form}}TableRowModel.AngelegtVon)" SortField="@nameof({{form}}TodoModel.Angelegt_Von)" TModel="{{form}}Model" TRTable="{{form}}TableRowModel"/>
+    <TableColumn Field="@nameof({{form}}TableRowModel.GeaendertAm)" SortField="@nameof({{form}}TodoModel.Geaendert_Am)" TModel="{{form}}Model" TRTable="{{form}}TableRowModel"/>
+    <TableColumn Field="@nameof({{form}}TableRowModel.GeaendertVon)" SortField="@nameof({{form}}TodoModel.Geaendert_Von)" TModel="{{form}}Model" TRTable="{{form}}TableRowModel"/>
   </ChildContent>
 </SortableTable>
 </CascadingValue>
@@ -691,10 +691,8 @@ else
 {{sbm}}    });
     if (rm != null)
       rm.PageCount = 0;
-    // TODO var r = FactoryService.PrivateService.GetClientList(daten, rm);
-    var l = r.Ergebnis.Select(a => {{form}}TableRowModel.From(a)).ToList();
-    if (!r.Ok)
-      messages?.Add(() => Model, r.GetErrors());
+    // TODO var l0 = Get(FactoryService.PrivateService.GetClientList(daten, rm), messages);
+    var l = r.Ergebnis?.Select(a => {{form}}TableRowModel.From(a)).ToList() ?? new List<{{form}}TableRowModel>();
     if (m != null && rm != null)
     {
       m.PageCount = rm.PageCount;

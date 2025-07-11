@@ -62,7 +62,7 @@
             <td scope="row"><button type="submit" class="btn btn-secondary btn-sm" formaction="@actionpath?handler=Table_Row" value="@ix" name="Table.SelectedRow" title="Zeile markieren">&gt;</button></td>
             @foreach (var c in Columns.Where(a => a.Visible))
             {
-              <td>@c.Pi.GetValue(r)</td>
+              <td>@FormatForColumn(c.Pi.GetValue(r))</td>
             }
             @if (EditAktion || DeleteAktion || CopyAktion)
             {
@@ -251,5 +251,12 @@
   private string GetFormName()
   {
     return $"""{FormName ?? "form"}t""";
+  }
+
+  private object? FormatForColumn(object? o)
+  {
+    if (o is DateTime ndt && ndt.Hour == 0 && ndt.Minute == 0 && ndt.Second == 0)
+      return ndt.ToString("yyyy-MM-dd");
+    return o;
   }
 }

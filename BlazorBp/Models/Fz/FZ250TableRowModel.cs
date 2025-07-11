@@ -6,49 +6,8 @@ namespace BlazorBp.Models.Fz;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Base;
+using CSBP.Services.Apis.Models.Views;
 using CSBP.Services.Base;
-using static BlazorBp.Base.DialogTypeEnum;
-
-/// <summary>
-/// TodoModel-Klasse für Formular FZ250 Fahrradstände.
-/// TODO Durch passendes Model ersetzen und löschen.
-/// </summary>
-[Serializable]
-public class FZ250TodoModel
-{
-  /// <summary>Holt oder setzt die Spalte Nr..</summary>
-  public string? Nummer { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Fahrrad.</summary>
-  public string? Fahrrad { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Datum.</summary>
-  public string? Datum { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Zähler.</summary>
-  public string? Zaehler { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Km.</summary>
-  public string? Km { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Schnitt.</summary>
-  public string? Schnitt { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Beschreibung.</summary>
-  public string? Beschreibung { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Angelegt_Am.</summary>
-  public DateTime? Angelegt_Am { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Angelegt_Von.</summary>
-  public string? Angelegt_Von { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Geaendert_Am.</summary>
-  public DateTime? Geaendert_Am { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Geaendert_Von.</summary>
-  public string? Geaendert_Von { get; set; }
-}
 
 /// <summary>
 /// Model-Klasse für eine Zeile in der Tabelle von Formular FZ250 Fahrradstände.
@@ -67,24 +26,29 @@ public class FZ250TableRowModel : TableRowModelBase
   public string? Fahrrad { get; set; }
 
   /// <summary>Holt oder setzt Datum.</summary>
-  [Display(Name = "_Datum", Description = "")]
+  [Display(Name = "_Datum", Description = "Datum")]
   //// [Required(ErrorMessage = "Datum muss angegeben werden.")]
-  public string? Datum { get; set; }
+  public DateTime? Datum { get; set; }
+
+  /// <summary>Holt oder setzt die Fahrradstand-Nr.</summary>
+  [Display(Name = "_Nr.", Description = "Nr. bei mehreren Touren pro Tag.")]
+  //// [Required(ErrorMessage = "Datum muss angegeben werden.")]
+  public int UnterNr { get; set; }
 
   /// <summary>Holt oder setzt Zähler.</summary>
   [Display(Name = "_Zähler", Description = "Zählerstand")]
   //// [Required(ErrorMessage = "Zähler muss angegeben werden.")]
-  public string? Zaehler { get; set; }
+  public decimal? Zaehler { get; set; }
 
   /// <summary>Holt oder setzt Km.</summary>
   [Display(Name = "_Km", Description = "Tages- oder Wochen-km")]
   //// [Required(ErrorMessage = "Km muss angegeben werden.")]
-  public string? Km { get; set; }
+  public decimal? Km { get; set; }
 
   /// <summary>Holt oder setzt Schnitt.</summary>
   [Display(Name = "_Schnitt", Description = "Durchschnittsgeschwindigkeit")]
   //// [Required(ErrorMessage = "Schnitt muss angegeben werden.")]
-  public string? Schnitt { get; set; }
+  public decimal? Schnitt { get; set; }
 
   /// <summary>Holt oder setzt Beschreibung.</summary>
   [Display(Name = "_Beschreibung", Description = "Beschreibung")]
@@ -113,17 +77,18 @@ public class FZ250TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
   /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
-  public FZ250TodoModel To(ServiceDaten daten)
+  public VFzFahrradstand To(ServiceDaten daten)
   {
-    return new FZ250TodoModel
+    return new VFzFahrradstand
     {
-      // TODO Mandant_Nr = daten.MandantNr,
-      Nummer = Nummer,
-      Fahrrad = Fahrrad,
-      Datum = Datum,
-      Zaehler = Zaehler,
-      Km = Km,
-      Schnitt = Schnitt,
+      Mandant_Nr = daten.MandantNr,
+      Fahrrad_Uid = Nummer,
+      Bezeichnung = Fahrrad,
+      Datum = Datum ?? daten.Heute,
+      Nr = UnterNr,
+      Zaehler_km = Zaehler ?? 0,
+      Periode_km = Km ?? 0,
+      Periode_Schnitt = Functions.Round(Schnitt) ?? 0,
       Beschreibung = Beschreibung,
       Angelegt_Am = AngelegtAm,
       Angelegt_Von = AngelegtVon,
@@ -134,16 +99,17 @@ public class FZ250TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
-  public static FZ250TableRowModel From(FZ250TodoModel m)
+  public static FZ250TableRowModel From(VFzFahrradstand m)
   {
     return new FZ250TableRowModel
     {
-      Nummer = m.Nummer,
-      Fahrrad = m.Fahrrad,
+      Nummer = m.Fahrrad_Uid,
+      Fahrrad = m.Bezeichnung,
       Datum = m.Datum,
-      Zaehler = m.Zaehler,
-      Km = m.Km,
-      Schnitt = m.Schnitt,
+      UnterNr = m.Nr,
+      Zaehler = m.Zaehler_km,
+      Km = m.Periode_km,
+      Schnitt = Functions.Round(m.Periode_Schnitt),
       Beschreibung = m.Beschreibung,
       AngelegtAm = m.Angelegt_Am,
       AngelegtVon = m.Angelegt_Von,

@@ -4,6 +4,7 @@
 
 namespace BlazorBp.Base;
 
+using BlazorBp.Models;
 using CSBP.Services.Base;
 using CSBP.Services.Base.Csv;
 using Microsoft.AspNetCore.Components;
@@ -330,9 +331,9 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     }
     Init(id, model, table);
 
-    #pragma warning disable CS8604
+#pragma warning disable CS8604
     EditContext = new(Model);
-    #pragma warning restore CS8604
+#pragma warning restore CS8604
     // #pragma warning disable CS0618
     // EditContext.EnableDataAnnotationsValidation();
     // #pragma warning disable CS0618
@@ -406,7 +407,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// <param name="form">Betroffenes Posback-Formular.</param>
   /// <param name="handler">Handler aus Tabellen-Aktion.</param>
   /// <param name="id">Id aus Tabellen-Aktion.</param>
-  public virtual void InitModal(string? form,string? handler, string? id)
+  public virtual void InitModal(string? form, string? handler, string? id)
   {
   }
 
@@ -444,25 +445,33 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     }
     if (handler == "Table_All")
       table.Search = "%%";
+    // if (!string.IsNullOrEmpty(handler))
+    // {
+    //   WriteFormularModel(table.Nr ?? "", null, table);
+    //   Navigation.NavigateTo(HttpContext.Request.Path, true, true); // Query-Parameter handler entfernen.
+    // }
     table.Liste = TableData(table, messages);
     if (table.SelectedPage > table.PageCount)
     {
       table.SelectedPage = table.PageCount;
-      table.Liste = TableData(table, messages);
+      if (string.IsNullOrEmpty(handler))
+        table.Liste = TableData(table, messages);
     }
     if (last || table.SelectedRow > (table.Liste?.Count ?? 0))
       table.SelectedRow = table.Liste?.Count ?? 0;
     if (table.SelectedRow < 1 && (table.Liste?.Count ?? 0) > 0)
       table.SelectedRow = 1;
     if (handler == "Table_Export")
-      {
-        var csv = new CsvWriter();
-        csv.AddCsvLine(["1", "2", "3"]);
-        csv.AddCsvLine(["4", "5", "6"]);
-        //csv.WriteFile();
-      }
+    {
+      var csv = new CsvWriter();
+      csv.AddCsvLine(["1", "2", "3"]);
+      csv.AddCsvLine(["4", "5", "6"]);
+      //csv.WriteFile();
+    }
     WriteFormularModel(table.Nr ?? "", null, table);
     SetRhe();
+    if (!string.IsNullOrEmpty(handler))
+      Navigation.NavigateTo(HttpContext.Request.Path, true, true); // Query-Parameter handler entfernen.
   }
 
   /// <summary>
@@ -509,17 +518,55 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// Extracts possible errors from service result.
   /// </summary>
   /// <param name="r">Affected service result.</param>
+  /// <param name="messages">Affected messages store.</param>
+  /// <typeparam name="T1">Affected result type.</typeparam>
+  /// <returns>Result of service result.</returns>
+  protected T1? Get<T1>(ServiceErgebnis<T1> r, ValidationMessageStore? messages = null)
+  {
+    if (r == null)
+      return default;
+    if (!r.Ok)
+    {
+      if (messages == null)
+        messages = Messages;
+      if (messages != null)
+        foreach (var e in r.Errors)
+          messages.Add(() => Model, e.MessageText);
+    }
+    return r.Ergebnis;
+  }
+
+  /// <summary>
+  /// Extracts possible errors from service result.
+  /// </summary>
+  /// <param name="r">Affected service result.</param>
+  /// <param name="messages">Affected messages store.</param>
   /// <returns>Is it OK or not.</returns>
-  protected bool Get(ServiceErgebnis r)
+  protected bool Get(ServiceErgebnis r, ValidationMessageStore? messages = null)
   {
     if (r == null)
       return false;
     if (r.Ok)
       return true;
-    foreach (var e in r.Errors)
-      Messages?.Add(() => Model, e.MessageText);
+    if (messages == null)
+      messages = Messages;
+    if (messages != null)
+      foreach (var e in r.Errors)
+        messages.Add(() => Model, e.MessageText);
     return false;
   }
+
+  /// <summary>
+  /// Inserts empty entry at the beginning of the list.
+  /// </summary>
+  /// <param name="l">Affected list.</param>
+  /// <returns>List with empty entry.</returns>
+  protected List<ListItem>? InsertEmpty(List<ListItem>? l)
+  {
+    if (l != null)
+      l.Insert(0, new ListItem("", ""));
+    return l;
+   }
 }
 
 /// <summary>

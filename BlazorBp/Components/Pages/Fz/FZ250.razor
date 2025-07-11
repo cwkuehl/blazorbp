@@ -1,4 +1,5 @@
 @page "/fz/fz250/{id?}"
+@using CSBP.Services.Apis.Models.Views
 @inherits BlazorComponentBase<FZ250Model, FZ250TableRowModel>
 @attribute [Authorize(Roles = "User, Admin, Superuser")]
 
@@ -8,17 +9,18 @@
 <CascadingValue Value="this">
 <SortableTable Table="Table" NoData="" FormName="fz250" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="FZ250Model" TRTable="FZ250TableRowModel">
   <ChildContent>
-    <TableColumn Field="Nummer" SortField="@nameof(FZ250TodoModel.Nummer)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
-    <TableColumn Field="Fahrrad" SortField="@nameof(FZ250TodoModel.Fahrrad)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
-    <TableColumn Field="Datum" SortField="@nameof(FZ250TodoModel.Datum)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
-    <TableColumn Field="Zaehler" SortField="@nameof(FZ250TodoModel.Zaehler)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
-    <TableColumn Field="Km" SortField="@nameof(FZ250TodoModel.Km)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
-    <TableColumn Field="Schnitt" SortField="@nameof(FZ250TodoModel.Schnitt)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
-    <TableColumn Field="Beschreibung" SortField="@nameof(FZ250TodoModel.Beschreibung)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
-    <TableColumn Field="AngelegtAm" SortField="@nameof(FZ250TodoModel.Angelegt_Am)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
-    <TableColumn Field="AngelegtVon" SortField="@nameof(FZ250TodoModel.Angelegt_Von)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
-    <TableColumn Field="GeaendertAm" SortField="@nameof(FZ250TodoModel.Geaendert_Am)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
-    <TableColumn Field="GeaendertVon" SortField="@nameof(FZ250TodoModel.Geaendert_Von)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    @* <TableColumn Field="Nummer" SortField="@nameof(VFzFahrradstand.Fahrrad_Uid)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/> *@
+    <TableColumn Field="@nameof(FZ250TableRowModel.Fahrrad)" SortField="@nameof(VFzFahrradstand.Bezeichnung)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="@nameof(FZ250TableRowModel.Datum)" SortField="@nameof(VFzFahrradstand.Datum)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="@nameof(FZ250TableRowModel.UnterNr)" SortField="@nameof(VFzFahrradstand.Nr)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="@nameof(FZ250TableRowModel.Zaehler)" SortField="@nameof(VFzFahrradstand.Zaehler_km)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="@nameof(FZ250TableRowModel.Km)" SortField="@nameof(VFzFahrradstand.Periode_km)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="@nameof(FZ250TableRowModel.Schnitt)" SortField="@nameof(VFzFahrradstand.Periode_Schnitt)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="@nameof(FZ250TableRowModel.Beschreibung)" SortField="@nameof(VFzFahrradstand.Beschreibung)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="@nameof(FZ250TableRowModel.AngelegtAm)" SortField="@nameof(VFzFahrradstand.Angelegt_Am)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="@nameof(FZ250TableRowModel.AngelegtVon)" SortField="@nameof(VFzFahrradstand.Angelegt_Von)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="@nameof(FZ250TableRowModel.GeaendertAm)" SortField="@nameof(VFzFahrradstand.Geaendert_Am)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
+    <TableColumn Field="@nameof(FZ250TableRowModel.GeaendertVon)" SortField="@nameof(VFzFahrradstand.Geaendert_Von)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
   </ChildContent>
 </SortableTable>
 </CascadingValue>
@@ -27,23 +29,14 @@
   <DataAnnotationsValidator/>
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
-  <input type="hidden" name="SubmitControl"/>    <div class="row ms-0 mt-1">
-  </div>
+  <input type="hidden" name="SubmitControl"/>
   <div class="row ms-0 mt-1">
+    <LabelInputValid type="combobox" AutoPostback="x" DataList="Model!.AuswahlFahrrad" For="@(() => Model!.Fahrrad)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="modal-footer mt-2">
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-0" For="@(() => Model!.Schliessen)"/>
   </div>
-  <div class="row ms-0 mt-1">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Fahrradstaende)" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row ms-0 mt-1">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Alle)"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Fahrrad)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Text)" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row ms-0 mt-1">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
-  </div>
-  <!-- TODO btn-primary festlegen -->
 </EditForm>
 
 @if (!string.IsNullOrEmpty(Model!.ModalId))
@@ -52,7 +45,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="lbldetails">TODO @Functions.Iif(Model?.ModalArt == "Table_Edit", "ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "löschen", Functions.Iif(Model?.ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
+        <h5 class="modal-title" id="lbldetails">Fahrradstand @Functions.Iif(Model?.ModalArt == "Table_Edit", "ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "löschen", Functions.Iif(Model?.ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
       </div>
       <div class="modal-body">
@@ -60,24 +53,30 @@
           <DataAnnotationsValidator/>
           <ValidationSummary class="text-danger"/>
           <InputText type="hidden" @bind-Value="ModalModel!.Nr"/>
+          <InputText type="hidden" @bind-Value="ModalModel!.Nummer"/>
           <InputText type="hidden" @bind-Value="ModalModel!.ReadonlyHiddenError"/>
           <input type="hidden" name="SubmitControl"/>
-        <div class="row ms-0 mt-1">
+          <div class="row ms-0 mt-1">
+            @* <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-2"/> *@
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Fahrrad)" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Datum)" VerticalColClass="form-group col-md-4"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.UnterNr)" VerticalColClass="form-group col-md-2"/>
+          </div>
+          <div class="row ms-0 mt-1">
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Zaehler)" VerticalColClass="form-group col-md-4"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Km)" VerticalColClass="form-group col-md-4"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Schnitt)" VerticalColClass="form-group col-md-4"/>
+          </div>
+          <div class="row ms-0 mt-1">
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Beschreibung)" VerticalColClass="form-group col-md-12"/>
+          </div>
+          <div class="row ms-0 mt-1">
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Angelegt)" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Geaendert)" VerticalColClass="form-group col-md-6"/>
           </div>
           <div class="row ms-0 mt-1">
             <SubmitButton class="btn btn-primary col-md-2 me-1" For="@(() => ModalModel!.Ok)"/>
             <button type="button" class="btn btn-secondary col-md-2 me-1" data-bs-dismiss="modal">Abbrechen</button>
-          </div>
-          <div class="row ms-0 mt-1">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Fahrrad)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Datum)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Zaehler)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Km)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Schnitt)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Beschreibung)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Angelegt)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Geaendert)" VerticalColClass="form-group col-md-2"/>
           </div>
         </EditForm>
       </div>
@@ -111,11 +110,11 @@ else
   /// <param name="table">Evtl. gelesenes Table-Model.</param>
   protected override void Init(string? id, FZ250Model? model = null, TableModelBase<FZ250TableRowModel>? table = null)
   {
+    var daten = ServiceDaten;
     if (model != null)
       Model = model;
     if (Model == null)
     {
-      var daten = ServiceDaten;
       Model = new FZ250Model
       {
         Nr = id,
@@ -124,6 +123,8 @@ else
       Model.SetMhrf(DialogTypeEnum.New);
     }
     Model.Nr = id;
+    var l0 = Get(FactoryService.PrivateService.GetBikeList(daten));
+    Model.AuswahlFahrrad = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
     if (table != null)
       Table = table;
     if (Table == null)
@@ -132,7 +133,7 @@ else
         SelectedPage = 1,
         RowsPerPage = 10,
         SelectedRow = 1,
-        SortColumn = $"{nameof(FZ250TodoModel.Nummer)}#+",
+        SortColumn = $"{nameof(VFzFahrradstand.Datum)}#-",
       };
     Table.Nr = id;
 
@@ -163,11 +164,12 @@ else
       return;
 
     // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
-    // var submit = Model.Submit ?? "";
-    // if (submit == "TODO z.B. Import")
-    // {
-    //   var l = SaveUploadFiles("FZ250", "filehochladen");
-    // }
+    var handler = HttpContext.Request.Query["handler"];
+    if (handler == "Table_All")
+    {
+      Model.Fahrrad = null;
+      WriteFormularModel(Model.Nr ?? "0", Model);
+    }
   }
 
   /// <summary>
@@ -247,6 +249,8 @@ else
     if (!string.IsNullOrEmpty(submit))
     {
       valid = EditContext?.Validate() ?? false;
+      if (submit == "Fahrrad" && Table != null)
+        OnTable(Table, Messages);
     }
     if (valid && submit == "OK")
     {
@@ -279,23 +283,8 @@ else
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var r = new ServiceErgebnis<List<FZ250TodoModel>>(new List<FZ250TodoModel>());
-    r.Ergebnis.Add(new FZ250TodoModel()
-    {
-       Nummer = "Nummer1",
-       Fahrrad = "Fahrrad1",
-       Datum = "Datum1",
-       Zaehler = "Zaehler1",
-       Km = "Km1",
-       Schnitt = "Schnitt1",
-       Beschreibung = "Beschreibung1",
-    });
-    if (rm != null)
-      rm.PageCount = 0;
-    // TODO var r = FactoryService.PrivateService.GetClientList(daten, rm);
-    var l = r.Ergebnis.Select(a => FZ250TableRowModel.From(a)).ToList();
-    if (!r.Ok)
-      messages?.Add(() => Model, r.GetErrors());
+    var l0 = Get(FactoryService.PrivateService.GetMileageList(daten, rm, Model.Fahrrad), messages);
+    var l = l0?.Select(a => FZ250TableRowModel.From(a)).ToList() ?? new List<FZ250TableRowModel>();
     if (m != null && rm != null)
     {
       m.PageCount = rm.PageCount;
