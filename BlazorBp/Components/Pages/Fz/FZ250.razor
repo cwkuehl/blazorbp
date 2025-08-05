@@ -31,7 +31,7 @@
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
   <input type="hidden" name="SubmitControl"/>
   <div class="row ms-0 mt-1">
-    <LabelInputValid type="combobox" AutoPostback="x" DataList="Model!.AuswahlFahrrad" For="@(() => Model!.Fahrrad)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="x" type="combobox" DataList="Model!.AuswahlFahrrad" For="@(() => Model!.Fahrrad)" VerticalColClass="form-group col-md-2"/>
   </div>
   <div class="modal-footer mt-2">
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Refresh)"/>
@@ -58,7 +58,7 @@
           <input type="hidden" name="SubmitControl"/>
           <div class="row ms-0 mt-1">
             @* <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-2"/> *@
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Fahrrad)" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid AutoPostback="" type="combobox"DataList="ModalModel!.AuswahlFahrrad" For="@(() => ModalModel!.Fahrrad)" VerticalColClass="form-group col-md-6"/>
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Datum)" VerticalColClass="form-group col-md-4"/>
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.UnterNr)" VerticalColClass="form-group col-md-2"/>
           </div>
@@ -144,7 +144,8 @@ else
         // Beschreibung = null,
       };
     ModalModel.Nr = id;
-      #pragma warning disable CS8604
+    ModalModel.AuswahlFahrrad = l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList();
+    #pragma warning disable CS8604
     ModalEditContext = new(ModalModel);
     #pragma warning restore CS8604
     // #pragma warning disable CS0618
@@ -180,6 +181,7 @@ else
   /// <param name="id">Id aus Tabellen-Aktion.</param>
   public override void InitModal(string? form, string? handler, string? id)
   {
+    var daten = ServiceDaten;
     if (!string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
     {
       var dt = Formular.GetTableDialogType(handler);
@@ -212,20 +214,17 @@ else
       if (msubmit == "OK")
       {
         var dt = Formular.GetTableDialogType(Model.ModalArt);
-        var daten = ServiceDaten;
         var o = ModalModel.To(daten);
-        var r = new ServiceErgebnis();
-        // TODO var r = dt == DialogTypeEnum.Delete
-        //   ? FactoryService.PrivateService.DeleteMemo(daten, o)
-        //   : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
+        var r = dt == DialogTypeEnum.Delete
+          ? FactoryService.PrivateService.DeleteMileage(daten, o)
+          : FactoryService.PrivateService.SaveMileage(daten, o.Fahrrad_Uid, o.Datum, o.Nr, o.Zaehler_km, o.Periode_km, o.Periode_Schnitt, o.Beschreibung);
+        Get(r, ModalMessages);
         if (r.Ok)
         {
           Model.ModalArt = null;
           Model.ModalId = null;
           TableData(Table, ModalMessages);
         }
-        else
-          ModalMessages?.Add(() => ModalModel, r.GetErrors());
       }
       else if (form != "fz250modal")
       {
@@ -254,17 +253,8 @@ else
     }
     if (valid && submit == "OK")
     {
-      var daten = ServiceDaten;
-      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
-      if (r != null)
-      {
-        Get(r);
-        if (r.Ok)
-        {
-          CloseFormular();
-          return;
-        }
-      }
+      CloseFormular();
+      return;
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
     if (submit == "Schließen")

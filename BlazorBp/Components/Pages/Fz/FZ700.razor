@@ -232,17 +232,8 @@ else
     }
     if (valid && submit == "OK")
     {
-      var daten = ServiceDaten;
-      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
-      if (r != null)
-      {
-        Get(r);
-        if (r.Ok)
-        {
-          CloseFormular();
-          return;
-        }
-      }
+      CloseFormular();
+      return;
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
     if (submit == "Schließen")

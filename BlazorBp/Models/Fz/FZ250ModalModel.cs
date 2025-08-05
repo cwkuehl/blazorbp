@@ -126,14 +126,19 @@ public class FZ250ModalModel : PageModelBase
   {
     if (mode == New || mode == Copy)
     {
-      // TODO Nummer = "";
+      UnterNr = 0;
     }
     if (mode == New)
     {
-      // TODO Thema = null;
+      Datum = DateTime.Today;
     }
-    // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
-    // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
+    SetMandatoryHiddenReadonly(nameof(Fahrrad), true, false, mode != New, mode == New);
+    SetMandatoryHiddenReadonly(nameof(Datum), true, false, mode != New, false);
+    SetMandatoryHiddenReadonly(nameof(UnterNr), false, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Zaehler), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Km), true, false, mode == Delete, mode == Edit);
+    SetMandatoryHiddenReadonly(nameof(Schnitt), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Beschreibung), false, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
     SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
     SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
