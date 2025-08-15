@@ -46,6 +46,10 @@ public static class DownloadData
           rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ200TableRowModel>>(s, page, id)?.ReadModel;
           service = 2; // PrivateService
           break;
+        case "FZ250":
+          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ250TableRowModel>>(s, page, id)?.ReadModel;
+          service = 2; // PrivateService
+          break;
         case "FZ700":
           rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ700TableRowModel>>(s, page, id)?.ReadModel;
           service = 2; // PrivateService
