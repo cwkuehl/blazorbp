@@ -12,6 +12,14 @@
       "destination": "wwwroot/lib/jquery/dist"
     },
     {
+      "library": "jqueryui@1.13.2",
+      "destination": "wwwroot/lib/jquery-ui/dist",
+      "files": [
+        "jquery-ui.min.js",
+        "themes/base/jquery-ui.min.css"
+      ]
+    },
+    {
       "library": "jquery-validate@1.21.0",
       "destination": "wwwroot/lib/jquery-validation/dist"
     },

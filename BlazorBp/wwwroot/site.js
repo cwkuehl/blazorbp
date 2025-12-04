@@ -80,6 +80,15 @@ export function onUpdate() {
     if (modals.length)
     {
       // console.log('Modal einblenden');
+      modals.on('shown.bs.modal', function() {
+        $(this).find('.modal-dialog').draggable({
+          handle: ".modal-header"
+        });
+        $(this).find('.modal-content').resizable({
+          minHeight: 300,
+          minWidth: 300
+        });
+      });
       // $('.modal').modal('show');
       modals.modal('hide');
       setTimeout(() => {
