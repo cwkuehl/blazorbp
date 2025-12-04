@@ -90,6 +90,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddEndpointsApiExplorer(); // Entdeckt MapGet-Endpunkte.
 builder.Services.AddSwaggerGen(c =>
 {
+  // Aufruf mit /swagger/v1/swagger.json
   c.SwaggerDoc("v1", new() { Title = "BlazorBp", Version = "v1" });
   var fn = Assembly.GetExecutingAssembly().GetName().Name + ".xml";
   c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, fn));
@@ -213,7 +214,7 @@ app.MapGet("/download/{page}/{id}",
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-  // Aufruf mit /swagger
+  // Aufruf mit /swagger und /swagger/v1/swagger.json
   c.SwaggerEndpoint("v1/swagger.json", "BlazorBp API V1");
   // Bei app.UseSwaggerUI funktioniert automatische Abmeldung mit /auth/logout nicht, wenn RoutePrefix nicht gesetzt ist.
   c.RoutePrefix = "swagger";
