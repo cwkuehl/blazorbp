@@ -26,14 +26,14 @@
           var sort = sc.StartsWith($"{c.SortName}#");
           var v = c.SortName + Functions.Iif(sort, Functions.Iif(desc, "#+", "#-"), "#-");
           var v2 = c.Label + Functions.Iif(sort, Functions.Iif(desc, " ^", " v"), "");
-          <th><button type="submit" class="btn btn-outline-info btn-sm" formaction="@actionpath?handler=Table_Sort" value="@v" name="Table.SortColumn" title="@c.SortTitle">@v2</button></th>
+          <th><button type="submit" class="btn btn-outline-info border-0 btn-sm fw-bold" formaction="@actionpath?handler=Table_Sort" value="@v" name="Table.SortColumn" title="@c.SortTitle">@v2</button></th>
         }
         @if (EditAktion || DeleteAktion || CopyAktion || NewAktion)
         {
           <th>Aktion
             @if (NewAktion)
             {
-              <button type="submit" class="btn btn-outline-info btn-sm ms-1" formaction="@actionpath?handler=Table_New" value="-1" name="Table.ModalId" title="Neuen Datensatz erfassen"><i class="bi bi-file-plus-button"></i></button>
+              <button type="submit" class="btn btn-outline-info border-0 btn-sm ms-1" formaction="@actionpath?handler=Table_New" value="-1" name="Table.ModalId" title="Neuen Datensatz erfassen"><i class="bi bi-file-plus-button"></i></button>
             }
           </th>
         }
@@ -58,7 +58,7 @@
         @foreach (var r in Table.Liste)
         {
           ix++;
-          <tr class="@Functions.Iif(ix == sr, "table-primary", "")">
+          <tr class="@Functions.Iif(ix == sr, "table-info", "")">
             <td scope="row"><button type="submit" class="btn btn-secondary btn-sm" formaction="@actionpath?handler=Table_Row" value="@ix" name="Table.SelectedRow" title="Zeile markieren">&gt;</button></td>
             @foreach (var c in Columns.Where(a => a.Visible))
             {
@@ -69,15 +69,15 @@
               <td>
                 @if (EditAktion)
                 {
-                  <button type="submit" class="btn btn-outline-info btn-sm" formaction="@actionpath?handler=Table_Edit" value="@ix" name="Table.ModalId" title="Datensatz ändern"><i class="bi bi-pencil-button"></i></button>
+                  <button type="submit" class="btn btn-outline-info border-0 btn-sm" formaction="@actionpath?handler=Table_Edit" value="@ix" name="Table.ModalId" title="Datensatz ändern"><i class="bi bi-pencil-button"></i></button>
                 }
                 @if (DeleteAktion)
                 {
-                 <button type="submit" class="btn btn-outline-info btn-sm ms-1" formaction="@actionpath?handler=Table_Delete" value="@ix" name="Table.ModalId" title="Datensatz löschen"><i class="bi bi-file-x-button"></i></button>
+                 <button type="submit" class="btn btn-outline-info border-0 btn-sm ms-1" formaction="@actionpath?handler=Table_Delete" value="@ix" name="Table.ModalId" title="Datensatz löschen"><i class="bi bi-file-x-button"></i></button>
                 }
                 @if (CopyAktion)
                 {
-                  <button type="submit" class="btn btn-outline-info btn-sm ms-1" formaction="@actionpath?handler=Table_Copy" value="@ix" name="Table.ModalId" title="Datensatz kopieren"><i class="bi bi-copy-button"></i></button>
+                  <button type="submit" class="btn btn-outline-info border-0 btn-sm ms-1" formaction="@actionpath?handler=Table_Copy" value="@ix" name="Table.ModalId" title="Datensatz kopieren"><i class="bi bi-copy-button"></i></button>
                 }
               </td>
             }
