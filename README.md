@@ -46,6 +46,8 @@ Folgende Funktionen sind implementiert:
 -Meldungen aus Service-Schicht anzeigen,
 -Layout-Idee: keine Revisionsdaten im Header, sondern in optionalen Tabellen-Spalten und im Formular,
 -Tabelle mit optional einblendbaren Spalten und Speicherung der Einstellungen,
+-Umschalten zwischen Dark und Light Mode per Link.
+-Automatische Größenanpassung der Formulare (app-scale)
 
 TODO Folgende Funktionen sind noch nicht implementiert:
 -dotnet new razorclasslib -o BlazorBp.Components, Vererbung der Component-Klasse,
@@ -56,8 +58,8 @@ TODO Folgende Funktionen sind noch nicht implementiert:
 -Meldungen mit Name des fehlerhaften Steuerelements mit automatischer Fehlermarkierung,
 -Formulare und Steuerelemente mit Eigenschaften für Barrierefreihet (Accessibility) versehen,
 
-Konzept für Barrierfreihet:
--Screereader-Unterstützung für blinde und sehbehinderte Menschen,
+Konzept für Barrierfreiheit:
+-Screenreader-Unterstützung für blinde und sehbehinderte Menschen,
 -Textalternativen für Bilder und Multimediainhalte,
 -Untertitelung und Transskriptionen für Audio- und Videoinhalte,
 -Tastaturbedienbarkeit für Menschen mit eingeschränkter Beweglichkeit (Fokus, Accesskeys, Tabulator-Reihenfolge),
