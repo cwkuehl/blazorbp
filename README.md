@@ -47,7 +47,7 @@ Folgende Funktionen sind implementiert:
 -Layout-Idee: keine Revisionsdaten im Header, sondern in optionalen Tabellen-Spalten und im Formular,
 -Tabelle mit optional einblendbaren Spalten und Speicherung der Einstellungen,
 -Umschalten zwischen Dark und Light Mode per Link.
--Automatische Größenanpassung der Formulare (app-scale)
+-Automatische Größenanpassung der Formulare (font size scaling in html-tag)
 
 TODO Folgende Funktionen sind noch nicht implementiert:
 -dotnet new razorclasslib -o BlazorBp.Components, Vererbung der Component-Klasse,
