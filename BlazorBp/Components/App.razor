@@ -1,5 +1,9 @@
-﻿<!DOCTYPE html>
-<html lang="de" data-bs-theme="dark">
+﻿@using Microsoft.AspNetCore.Components
+@inject NavigationManager Navigation
+
+<!DOCTYPE html>
+<CascadingValue Value="bsmode">
+<html lang="de" id="theme-root" data-bs-theme="@bsmode">
 
 <head>
   <meta charset="utf-8" />
@@ -24,11 +28,45 @@
   <script src="app.js"></script>
   <script src="_framework/blazor.web.js"></script>
 </body>
-
-<footer class="border-top footer text-muted">
-  <div class="container">
-    &copy; 2026 - BlazorBp - <a href="/impressum">Impressum</a>
-  </div>
-</footer>
-
 </html>
+</CascadingValue>
+
+@code {
+  [CascadingParameter]
+  protected HttpContext HttpContext { get; set; } = default!;
+
+  private string bsmode = "";
+
+  protected override void OnInitialized()
+  {
+    // Bootstrap Mode wird durch URL-Parameter bsmode geändert und in der Session gespeichert.
+    var uri = Navigation.Uri;
+    var uriQuery = new Uri(uri).Query;
+    var queryParams = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uriQuery);
+    if (queryParams.ContainsKey("bsmode"))
+    {
+      // Setze den Wert basierend auf dem Parameter
+      bsmode = queryParams["bsmode"].FirstOrDefault()?.ToString() ?? "auto";
+      if (bsmode != "light" && bsmode != "dark")
+      {
+        bsmode = "auto"; // Fallback auf "auto", wenn ungültiger Wert
+      }
+      if (bsmode != "auto" && HttpContext != null)
+      {
+        HttpContext.Session.SetString("bsmode", bsmode);
+      }
+    }
+    else
+    {
+      bsmode = "auto"; // Default-Wert, falls kein Parameter vorhanden ist
+      if (HttpContext != null)
+      {
+        var sessionValue = HttpContext.Session.GetString("bsmode");
+        if (sessionValue == "light" || sessionValue == "dark")
+        {
+          bsmode = sessionValue;
+        }
+      }
+    }
+  }
+}

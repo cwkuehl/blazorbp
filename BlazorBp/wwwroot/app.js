@@ -34,6 +34,8 @@ function submitc(ctrl) {
   // window.onbeforeunload = function() { return "Bitte zuerst abmelden, wenn Sie die Seite verlassen wollen."; }
 }
 
+/** Alle Controls deaktivieren.
+ */
 function disableAllControls() {
   // Alle Formularelemente auf der Seite auswählen
   const controls = document.querySelectorAll('input, select, textarea, button, fieldset, optgroup');
@@ -42,4 +44,25 @@ function disableAllControls() {
   controls.forEach(function(control) {
       control.disabled = true;
   });
+}
+
+/** Ändert oder setzt den Bootstrap Dark Mode.
+ * @param init Bootstrap Dark Mode aus localStorage initialisieren?
+ * @returns Ist der Dark Mode aktiviert, wird true zurückgegeben, sonst false.
+ */
+function darklight(init) {
+  // const root = document.documentElement;
+  const root = document.getElementById("theme-root");
+  var theme = localStorage.getItem('bstheme') || 'light';
+  var dark = theme === 'dark';
+  // var theme = root.getAttribute('data-bs-theme');
+  if (init == null) {
+    // Umschalten
+    dark = !dark;
+  }
+  theme = dark ? 'dark' : 'light';
+  root.setAttribute('data-bs-theme', theme);
+  localStorage.setItem('bstheme', theme);
+  // alert('Dark Mode ' + (dark ? 'aktiviert' : 'deaktiviert') + '.');
+  return dark;
 }

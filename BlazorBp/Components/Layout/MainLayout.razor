@@ -1,5 +1,13 @@
 ﻿@inherits LayoutComponentBase
 @inject IHostEnvironment HostEnvironment
+@inject NavigationManager Navigation
+
+@* <header class="p-2 border-bottom">
+  <label>
+    <input type="checkbox" checked="@(CurrentTheme == Theme.Dark)" onchange="darklight();" />
+    Dark Mode
+  </label>
+</header> *@
 
 <div class="row">
   <div class="col-md-2">
@@ -33,6 +41,14 @@
   </div>
 </div>
 
+<footer class="border-top footer text-muted">
+  <div class="container">
+    &copy; 2026 BlazorBp
+    <a href="/impressum">Impressum</a>
+    <a class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover ms-2" href="@GetUrlWithParameter("bsmode", Functions.Iif(bsmode == "dark", "light", "dark"))">@Functions.Iif(bsmode == "dark", "Light Mode", "Dark Mode")</a>
+  </div>
+</footer>
+
 <PageScript Src="./site.js" />
 
 <div id="blazor-error-ui">
@@ -44,6 +60,9 @@
 @code {
   [CascadingParameter]
   protected HttpContext HttpContext { get; set; } = default!;
+
+  [CascadingParameter]
+  protected string bsmode { get; set; } = default!;
 
   private bool Interactive { get; set; } = Konstanten.Interactive;
 
@@ -65,5 +84,22 @@
     }
     helpurl = $"/help/Csbp-Hilfe.html{form}";
     //// System.Diagnostics.Debug.Write($"Hilfe: {helpurl}");
+  }
+
+  private string GetUrlWithParameter(string key, string value)
+  {
+    var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+
+    // Query-Parameter parsen
+    var query = Microsoft.AspNetCore.WebUtilities
+      .QueryHelpers.ParseQuery(uri.Query)
+      .ToDictionary(x => x.Key, x => (string?)x.Value.ToString());
+
+    // Parameter setzen / überschreiben
+    query[key] = value;
+
+    // Neue URL bauen
+    return Microsoft.AspNetCore.WebUtilities
+      .QueryHelpers.AddQueryString(uri.GetLeftPart(UriPartial.Path), query);
   }
 }
