@@ -4,7 +4,7 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
-      "library": "twitter-bootstrap@5.3.3",
+      "library": "twitter-bootstrap@5.3.8",
       "destination": "wwwroot/lib/bootstrap/dist"
     },
     {
@@ -12,7 +12,7 @@
       "destination": "wwwroot/lib/jquery/dist"
     },
     {
-      "library": "jqueryui@1.13.2",
+      "library": "jqueryui@1.14.1",
       "destination": "wwwroot/lib/jquery-ui/dist",
       "files": [
         "jquery-ui.min.js",
@@ -32,7 +32,7 @@
       "destination": "wwwroot/lib/jquery-validation-unobtrusive/dist"
     },
     {
-      "library": "html-to-image@1.11.11",
+      "library": "html-to-image@1.11.13",
       "destination": "wwwroot/lib/html-to-image/dist"
     }
   ]
