@@ -1,0 +1,185 @@
+@page "/tb/tb100/{id?}"
+@inherits BlazorComponentBase<TB100Model, TableRowModelBase>
+@attribute [Authorize(Roles = "User, Admin, Superuser")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="tb100">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <input type="hidden" name="SubmitControl"/>    <div class="row ms-0 mt-1">
+  </div>
+  <div class="row ms-0 mt-1">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Paste)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Weather)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Download)"/>
+  </div>
+  <div class="row ms-0 mt-1">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Before1)" VerticalColClass="form-group col-md-2"/>
+    @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagramb1)" VerticalColClass="form-group col-md-2"/> *@
+  </div>
+  <div class="row ms-0 mt-1">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Before2)" VerticalColClass="form-group col-md-2"/>
+    @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagramb2)" VerticalColClass="form-group col-md-2"/> *@
+  </div>
+  <div class="row ms-0 mt-1">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Before3)" VerticalColClass="form-group col-md-2"/>
+    @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagramb3)" VerticalColClass="form-group col-md-2"/> *@
+  </div>
+  <div class="row ms-0 mt-1">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Positions)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row ms-0 mt-1">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.New)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Remove)"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Position)" VerticalColClass="form-group col-md-2"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Add)"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Angelegt)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Geaendert)" VerticalColClass="form-group col-md-2"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Posbefore)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Search)"/>
+  </div>
+  <div class="row ms-0 mt-1">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Entry)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row ms-0 mt-1">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search00)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search1)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search2)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search3)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search4)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search5)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search6)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search7)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search100)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search8)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search110)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search9)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search120)" VerticalColClass="form-group col-md-2"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Clear)"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Position2)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row ms-0 mt-1">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.From)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.To)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row ms-0 mt-1">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.First)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Back)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Forward)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Last)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Save)"/>
+  </div>
+  <div class="row ms-0 mt-1">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Date)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row ms-0 mt-1">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.After1)" VerticalColClass="form-group col-md-2"/>
+    @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagrama1)" VerticalColClass="form-group col-md-2"/> *@
+  </div>
+  <div class="row ms-0 mt-1">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.After2)" VerticalColClass="form-group col-md-2"/>
+    @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagrama2)" VerticalColClass="form-group col-md-2"/> *@
+  </div>
+  <div class="row ms-0 mt-1">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.After3)" VerticalColClass="form-group col-md-2"/>
+    @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagrama3)" VerticalColClass="form-group col-md-2"/> *@
+  </div>
+  <div class="row ms-0 mt-1">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
+  </div>
+  <!-- TODO btn-primary festlegen -->
+</EditForm>
+
+@code {
+  /// <summary>True, wenn EditContext ohne Fehler.</summary>
+  private bool valid;
+
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id">Betroffene Id.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id, TB100Model? model = null, TableModelBase<TableRowModelBase>? table = null)
+  {
+    if (model != null)
+      Model = model;
+    if (Model == null)
+    {
+      var daten = ServiceDaten;
+      Model = new TB100Model
+      {
+        Nr = id,
+        // TODO Mandant = daten.MandantNr,
+      };
+      Model.SetMhrf(DialogTypeEnum.New);
+    }
+    Model.Nr = id;
+  }
+
+  /// <summary>
+  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
+  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
+  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    if (OnInitializedFormular("TB100", "Tagebuch - TB100", Id, true))
+      return;
+
+    // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
+    // var submit = Model.Submit ?? "";
+    // if (submit == "TODO z.B. Import")
+    // {
+    //   var l = SaveUploadFiles("TB100", "filehochladen");
+    // }
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// -Wegen Anzeige von Fehlermeldungen darf die Funktion nicht async sein (private async Task Submit()).
+  /// -Speichern des geänderten Models.
+  /// </summary>
+  private void Submit()
+  {
+    if (Model == null || Messages == null)
+      return;
+    var submit = Model.Submit ?? "";
+    if (!string.IsNullOrEmpty(submit))
+    {
+      valid = EditContext?.Validate() ?? false;
+    }
+    if (valid && submit == "OK")
+    {
+      var daten = ServiceDaten;
+      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
+      if (r != null)
+      {
+        Get(r);
+        if (r.Ok)
+        {
+          CloseFormular();
+          return;
+        }
+      }
+    }
+    WriteFormularModel(Model.Nr ?? "0", Model);
+    if (submit == "Schließen")
+    {
+      CloseFormular();
+    }
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData(TB100Model model, TB100Model model0)
+  {
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+  }
+}
