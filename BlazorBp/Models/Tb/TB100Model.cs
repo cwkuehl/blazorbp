@@ -15,6 +15,10 @@ using static BlazorBp.Base.DialogTypeEnum;
 [Serializable]
 public class TB100Model : PageModelBase
 {
+  /// <summary>Holt oder setzt Kopieren.</summary>
+  [Display(Name = "Kopieren", Description = "Kopieren")]
+  public string? Copy { get; set; }
+
   /// <summary>Holt oder setzt Einfügen.</summary>
   [Display(Name = "Einfügen", Description = "Einfügen")]
   public string? Paste { get; set; }
@@ -45,12 +49,15 @@ public class TB100Model : PageModelBase
   /// <summary>Holt oder setzt Datum.</summary>
   [Display(Name = "_Datum", Description = "")]
   //// [Required(ErrorMessage = "Datum muss angegeben werden.")]
-  public string? Date { get; set; }
+  public DateTime? Date { get; set; }
 
   /// <summary>Holt oder setzt Positionen.</summary>
   [Display(Name = "Positionen", Description = "")]
   //// [Required(ErrorMessage = "Positionen muss angegeben werden.")]
   public string? Positions { get; set; }
+
+  /// <summary>Holt oder setzt die Auswahlliste von Positionen.</summary>
+  public List<ListItem>? AuswahlPositions { get; set; } = default!;
 
   /// <summary>Holt oder setzt TB100.new.</summary>
   [Display(Name = "TB100.new", Description = "")]
@@ -66,6 +73,9 @@ public class TB100Model : PageModelBase
   [Display(Name = "Position", Description = "")]
   //// [Required(ErrorMessage = "Position muss angegeben werden.")]
   public string? Position { get; set; }
+
+  /// <summary>Holt oder setzt die Auswahlliste von Positionen.</summary>
+  public List<ListItem>? AuswahlPosition { get; set; } = default!;
 
   /// <summary>Holt oder setzt TB100.add.</summary>
   [Display(Name = "TB100.add", Description = "")]
@@ -137,25 +147,25 @@ public class TB100Model : PageModelBase
   //// [Required(ErrorMessage = " oder  muss angegeben werden.")]
   public string? Search7 { get; set; }
 
-  /// <summary>Holt oder setzt  oder .</summary>
-  [Display(Name = " oder ", Description = "")]
-  //// [Required(ErrorMessage = " oder  muss angegeben werden.")]
-  public string? Search100 { get; set; }
-
   /// <summary>Holt oder setzt ).</summary>
   [Display(Name = ")", Description = "")]
   //// [Required(ErrorMessage = ") muss angegeben werden.")]
   public string? Search8 { get; set; }
 
-  /// <summary>Holt oder setzt  oder .</summary>
-  [Display(Name = " oder ", Description = "")]
-  //// [Required(ErrorMessage = " oder  muss angegeben werden.")]
-  public string? Search110 { get; set; }
-
   /// <summary>Holt oder setzt  und nicht (.</summary>
   [Display(Name = " und nicht (", Description = "")]
   //// [Required(ErrorMessage = " und nicht ( muss angegeben werden.")]
   public string? Search9 { get; set; }
+
+  /// <summary>Holt oder setzt  oder .</summary>
+  [Display(Name = " oder ", Description = "")]
+  //// [Required(ErrorMessage = " oder  muss angegeben werden.")]
+  public string? Search100 { get; set; }
+
+  /// <summary>Holt oder setzt  oder .</summary>
+  [Display(Name = " oder ", Description = "")]
+  //// [Required(ErrorMessage = " oder  muss angegeben werden.")]
+  public string? Search110 { get; set; }
 
   /// <summary>Holt oder setzt ).</summary>
   [Display(Name = ")", Description = "")]
@@ -231,7 +241,7 @@ public class TB100Model : PageModelBase
   /// <param name="mode">Betroffener Modus.</param>
   public void SetMhrf(DialogTypeEnum mode)
   {
-    if (mode == DialogTypeEnum.New || mode == Copy)
+    if (mode == DialogTypeEnum.New || mode == DialogTypeEnum.Copy)
     {
       // TODO Nummer = "";
     }
@@ -239,10 +249,16 @@ public class TB100Model : PageModelBase
     {
       // TODO Thema = null;
     }
-    // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
-    // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
-    // SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
+    SetMandatoryHiddenReadonly(nameof(Before1), false, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Before2), false, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Before3), false, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Date), true, false, false, false);
+    SetMandatoryHiddenReadonly(nameof(Entry), true, false, false, true);
+    SetMandatoryHiddenReadonly(nameof(After1), false, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(After2), false, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(After3), false, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Angelegt), false, false, true);
+    SetMandatoryHiddenReadonly(nameof(Geaendert), false, false, true);
     // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
   }
 }

@@ -12,83 +12,94 @@
   <input type="hidden" name="SubmitControl"/>    <div class="row ms-0 mt-1">
   </div>
   <div class="row ms-0 mt-1">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Copy)"/>
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Paste)"/>
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Weather)"/>
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Download)"/>
   </div>
-  <div class="row ms-0 mt-1">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Before1)" VerticalColClass="form-group col-md-2"/>
-    @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagramb1)" VerticalColClass="form-group col-md-2"/> *@
+  <div class="row ms-0 mt-1 g-1">
+    <div class="col-md-3">
+      <div class="row">
+        <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.Before1)" VerticalColClass="form-group col" class="border-black"/>
+        @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagramb1)" VerticalColClass="form-group col-md-2"/> *@
+      </div>
+      <div class="row mt-1 g-0">
+       <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.Before2)" VerticalColClass="form-group col" class="border-black"/>
+       @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagramb2)" VerticalColClass="form-group col-md-2"/> *@
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.Before3)" VerticalColClass="form-group col" class="border-black"/>
+        @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagramb3)" VerticalColClass="form-group col-md-2"/> *@
+      </div>
+    </div>
+    <div class="col">
+      <div class="row">
+        <LabelInputValid AutoPostback="" For="@(() => Model!.Date)" VerticalColClass="form-group col" class="border-black"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.Entry)" VerticalColClass="form-group col" class="border-black"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid type="listbox" size="3" AutoPostback="" DataList="Model!.AuswahlPositions" For="@(() => Model!.Positions)" VerticalColClass="form-group col"/>
+        <SubmitButton class="btn btn-secondary col-md-1 ms-1" For="@(() => Model!.New)"/>
+        <SubmitButton class="btn btn-secondary col-md-1 ms-1" For="@(() => Model!.Remove)"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <SubmitButton class="btn btn-secondary col-md-2" For="@(() => Model!.Posbefore)"/>
+        <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Position)" DataList="Model!.AuswahlPosition" VerticalColClass="form-group col ms-1"/>
+        <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Add)"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid AutoPostback="" For="@(() => Model!.Angelegt)" VerticalColClass="form-group col"/>
+        <LabelInputValid AutoPostback="" For="@(() => Model!.Geaendert)" VerticalColClass="form-group col ms-1"/>
+        <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Search)"/>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="row">
+        <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.After1)" VerticalColClass="form-group col" class="border-black"/>
+        @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagrama1)" VerticalColClass="form-group col-md-2"/> *@
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.After2)" VerticalColClass="form-group col" class="border-black"/>
+        @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagrama2)" VerticalColClass="form-group col-md-2"/> *@
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.After3)" VerticalColClass="form-group col" class="border-black"/>
+        @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagrama3)" VerticalColClass="form-group col-md-2"/> *@
+      </div>
+    </div>
   </div>
-  <div class="row ms-0 mt-1">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Before2)" VerticalColClass="form-group col-md-2"/>
-    @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagramb2)" VerticalColClass="form-group col-md-2"/> *@
+  <div class="row mt-1 g-1">
+    <LabelInputValid type="label" AutoPostback="" For="@(() => Model!.Search00)" VerticalColClass="form-group col"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Clear)"/>
   </div>
-  <div class="row ms-0 mt-1">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Before3)" VerticalColClass="form-group col-md-2"/>
-    @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagramb3)" VerticalColClass="form-group col-md-2"/> *@
+  <div class="row mt-1 g-1">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search1)" VerticalColClass="form-group col"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search2)" VerticalColClass="form-group col"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search3)" VerticalColClass="form-group col"/>
+    <LabelInputValid type="label" AutoPostback="" For="@(() => Model!.Search4)" VerticalColClass="form-group col"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search5)" VerticalColClass="form-group col"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search6)" VerticalColClass="form-group col"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search7)" VerticalColClass="form-group col"/>
+    <LabelInputValid type="label" AutoPostback="" For="@(() => Model!.Search8)" VerticalColClass="form-group col"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search9)" VerticalColClass="form-group col"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search100)" VerticalColClass="form-group col"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search110)" VerticalColClass="form-group col"/>
+    <LabelInputValid type="label" AutoPostback="" For="@(() => Model!.Search120)" VerticalColClass="form-group col"/>
   </div>
-  <div class="row ms-0 mt-1">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Positions)" VerticalColClass="form-group col-md-2"/>
+  <div class="row mt-1 g-1">
+    <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Position2)" DataList="Model!.AuswahlPosition" VerticalColClass="form-group col"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.From)" VerticalColClass="form-group col"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.To)" VerticalColClass="form-group col"/>
   </div>
-  <div class="row ms-0 mt-1">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.New)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Remove)"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Position)" VerticalColClass="form-group col-md-2"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Add)"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Angelegt)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Geaendert)" VerticalColClass="form-group col-md-2"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Posbefore)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Search)"/>
-  </div>
-  <div class="row ms-0 mt-1">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Entry)" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row ms-0 mt-1">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Search00)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Search1)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Search2)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Search3)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Search4)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Search5)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Search6)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Search7)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Search100)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Search8)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Search110)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Search9)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Search120)" VerticalColClass="form-group col-md-2"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Clear)"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Position2)" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row ms-0 mt-1">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.From)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.To)" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row ms-0 mt-1">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.First)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Back)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Forward)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Last)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Save)"/>
-  </div>
-  <div class="row ms-0 mt-1">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Date)" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row ms-0 mt-1">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.After1)" VerticalColClass="form-group col-md-2"/>
-    @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagrama1)" VerticalColClass="form-group col-md-2"/> *@
-  </div>
-  <div class="row ms-0 mt-1">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.After2)" VerticalColClass="form-group col-md-2"/>
-    @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagrama2)" VerticalColClass="form-group col-md-2"/> *@
-  </div>
-  <div class="row ms-0 mt-1">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.After3)" VerticalColClass="form-group col-md-2"/>
-    @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagrama3)" VerticalColClass="form-group col-md-2"/> *@
-  </div>
-  <div class="row ms-0 mt-1">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
+  <div class="row mt-1 g-1">
+    <SubmitButton class="btn btn-secondary col" For="@(() => Model!.First)"/>
+    <SubmitButton class="btn btn-secondary col ms-1" For="@(() => Model!.Back)"/>
+    <SubmitButton class="btn btn-secondary col ms-1" For="@(() => Model!.Forward)"/>
+    <SubmitButton class="btn btn-secondary col ms-1" For="@(() => Model!.Last)"/>
+    <SubmitButton class="btn btn-secondary col ms-1" For="@(() => Model!.Save)"/>
+    <SubmitButton class="btn btn-secondary col ms-1" For="@(() => Model!.Schliessen)"/>
   </div>
   <!-- TODO btn-primary festlegen -->
 </EditForm>
@@ -118,6 +129,8 @@
       Model.SetMhrf(DialogTypeEnum.New);
     }
     Model.Nr = id;
+    Model.AuswahlPositions = new List<ListItem> { new("MX", "Mexico"), new("CA", "Canada"), new("US", "USA") };
+    Model.AuswahlPosition = new List<ListItem> { new("DE", "Deutschland"), new("CA", "Canada"), new("US", "USA") };
   }
 
   /// <summary>

@@ -12,7 +12,7 @@
 {
   if (string.IsNullOrWhiteSpace(VerticalColClass))
   {
-    <label class="col-form-label col-sm-2 @CssClassLabel" for="@Id">@LabelMu</label>
+    <label class="col-form-label col-md-2 @CssClassLabel" for="@Id">@LabelMu</label>
   }
   else
   {
@@ -21,7 +21,7 @@
 }
 @if (string.IsNullOrWhiteSpace(VerticalColClass) && (!NoLable || !NoValidation))
 {
-  @((MarkupString)"<div class=\"col-sm-6\">")
+  @((MarkupString)"<div class=\"col-md-6\">")
 }
 @if (submit)
 {
@@ -101,7 +101,7 @@ else if (combobox || listbox)
     <input type="hidden" name="@NameAttributeValue" value="@v">
   }
 }
-else
+else if (InputType != "label") // Standard-Input
 {
   <input value="@CurrentValue" @attributes="Attributes2"/>
 }
@@ -117,7 +117,7 @@ else
 {
   if (string.IsNullOrWhiteSpace(VerticalColClass))
   {
-    <div class="col-sm-4 form-control-validation">
+    <div class="col-md-4 form-control-validation">
       <ValidationMessage class="text-danger" For="@For" />
     </div>
   }

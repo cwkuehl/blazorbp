@@ -11,7 +11,7 @@ public static class Konstanten
   public const bool Interactive = false;
 
   /// <summary>Session Timeout in Sekunden.</summary>
-  public const int SESSION_TIMEOUT = 245; // Countdown hat (x - 5) / 2 Sekunden, weil Cookie Expiration erst nach der Hälfte der Zeit verlängert wird.
+  public const int SESSION_TIMEOUT = 485; // Countdown hat (x - 5) / 2 Sekunden, weil Cookie Expiration erst nach der Hälfte der Zeit verlängert wird.
 
   /// <summary>Session Timeout in Sekunden.</summary>
   public const string CLAIM_SID = "123xQp5ß";
