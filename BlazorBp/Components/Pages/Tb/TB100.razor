@@ -9,8 +9,7 @@
   <DataAnnotationsValidator/>
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
-  <input type="hidden" name="SubmitControl"/>    <div class="row ms-0 mt-1">
-  </div>
+  <input type="hidden" name="SubmitControl"/>
   <div class="row ms-0 mt-1">
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Copy)"/>
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Paste)"/>
@@ -103,96 +102,3 @@
   </div>
   <!-- TODO btn-primary festlegen -->
 </EditForm>
-
-@code {
-  /// <summary>True, wenn EditContext ohne Fehler.</summary>
-  private bool valid;
-
-  /// <summary>
-  /// Initialisierung des Models.
-  /// </summary>
-  /// <param name="id">Betroffene Id.</param>
-  /// <param name="model">Evtl. gelesenes Model.</param>
-  /// <param name="table">Evtl. gelesenes Table-Model.</param>
-  protected override void Init(string? id, TB100Model? model = null, TableModelBase<TableRowModelBase>? table = null)
-  {
-    if (model != null)
-      Model = model;
-    if (Model == null)
-    {
-      var daten = ServiceDaten;
-      Model = new TB100Model
-      {
-        Nr = id,
-        // TODO Mandant = daten.MandantNr,
-      };
-      Model.SetMhrf(DialogTypeEnum.New);
-    }
-    Model.Nr = id;
-    Model.AuswahlPositions = new List<ListItem> { new("MX", "Mexico"), new("CA", "Canada"), new("US", "USA") };
-    Model.AuswahlPosition = new List<ListItem> { new("DE", "Deutschland"), new("CA", "Canada"), new("US", "USA") };
-  }
-
-  /// <summary>
-  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
-  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
-  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
-  /// </summary>
-  protected override void OnInitialized()
-  {
-    if (OnInitializedFormular("TB100", "Tagebuch - TB100", Id, true))
-      return;
-
-    // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
-    // var submit = Model.Submit ?? "";
-    // if (submit == "TODO z.B. Import")
-    // {
-    //   var l = SaveUploadFiles("TB100", "filehochladen");
-    // }
-  }
-
-  /// <summary>
-  /// Verarbeitung des Postbacks.
-  /// -Wegen Anzeige von Fehlermeldungen darf die Funktion nicht async sein (private async Task Submit()).
-  /// -Speichern des geänderten Models.
-  /// </summary>
-  private void Submit()
-  {
-    if (Model == null || Messages == null)
-      return;
-    var submit = Model.Submit ?? "";
-    if (!string.IsNullOrEmpty(submit))
-    {
-      valid = EditContext?.Validate() ?? false;
-    }
-    if (valid && submit == "OK")
-    {
-      var daten = ServiceDaten;
-      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
-      if (r != null)
-      {
-        Get(r);
-        if (r.Ok)
-        {
-          CloseFormular();
-          return;
-        }
-      }
-    }
-    WriteFormularModel(Model.Nr ?? "0", Model);
-    if (submit == "Schließen")
-    {
-      CloseFormular();
-    }
-  }
-
-  /// <summary>
-  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
-  /// </summary>
-  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
-  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
-  protected override void CopyNotPostbackData(TB100Model model, TB100Model model0)
-  {
-    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
-  }
-}
