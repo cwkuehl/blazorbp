@@ -32,6 +32,7 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
         Nr = id,
         Date = daten.Heute,
         // TODO Mandant = daten.MandantNr,
+        Focus = nameof(TB100Model.Entry),
       };
       Model.SetMhrf(DialogTypeEnum.New);
     }
