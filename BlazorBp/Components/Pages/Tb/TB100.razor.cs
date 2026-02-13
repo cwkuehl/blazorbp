@@ -32,14 +32,12 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
         Nr = id,
         Date = daten.Heute,
         // TODO Mandant = daten.MandantNr,
-        Focus = nameof(TB100Model.Entry),
+        //Focus = nameof(TB100Model.Entry),
       };
       Model.SetMhrf(DialogTypeEnum.New);
     }
     Model.Nr = id;
-    var l0 = Get(FactoryService.DiaryService.GetPositionList(daten));
-    Model.AuswahlPosition = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
-    Model.AuswahlPositions = new List<ListItem> { new("MX", "Mexico"), new("CA", "Canada"), new("US", "USA") };
+    InitLists();
   }
 
   /// <summary>
@@ -58,6 +56,26 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
     // {
     //   var l = SaveUploadFiles("TB100", "filehochladen");
     // }
+  }
+
+  /// <summary>Initialises the lists.</summary>
+  private void InitLists()
+  {
+    var daten = ServiceDaten;
+    var rl = Get(FactoryService.DiaryService.GetPositionList(daten));
+    Model.AuswahlPosition = InsertEmpty(rl?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
+    Model.AuswahlPositions = new List<ListItem> { new("MX", "Mexico"), new("CA", "Canada"), new("US", "USA") };
+    // var uid = GetText(position);
+    // var rs = AddColumns(position, emptyentry: true);
+    // foreach (var p in rl)
+    //   rs.AppendValues(p.Bezeichnung, p.Uid);
+    // SetText(position, uid);
+    // var uid2 = GetText(position2);
+    // var rs2 = AddColumns(position2, emptyentry: true);
+    // rl.Insert(0, new TbOrt { Uid = "0", Bezeichnung = M0(TB012) });
+    // foreach (var p in rl)
+    //   rs2.AppendValues(p.Bezeichnung, p.Uid);
+    // SetText(position2, uid2);
   }
 
   /// <summary>
@@ -87,6 +105,12 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
           return;
         }
       }
+    }
+    if (submit == "Suche")
+    {
+      var v = !string.IsNullOrEmpty(Model.Searchvisible);
+      Model.Searchvisible = v ? null : "1";
+      Model.SetMhrf(DialogTypeEnum.Edit);
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
     if (submit == "Schließen")

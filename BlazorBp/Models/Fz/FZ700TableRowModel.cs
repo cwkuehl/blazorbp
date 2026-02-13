@@ -26,7 +26,7 @@ public class FZ700TableRowModel : TableRowModelBase
   public string? Thema { get; set; }
 
   /// <summary>Holt oder setzt Notiz.</summary>
-  [Display(Name = "_Notiz", Description = "")]
+  [Display(Name = "_Notiz", Description = "Notiztext")]
   //// [Required(ErrorMessage = "Notiz muss angegeben werden.")]
   public string? Notiz { get; set; }
 

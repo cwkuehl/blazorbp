@@ -30,7 +30,7 @@ public class FZ200ModalModel : PageModelBase
   public List<ListItem>? AuswahlTyp { get; set; }
 
   /// <summary>Holt oder setzt Typ.</summary>
-  [Display(Name = "Typ", Description = "")]
+  [Display(Name = "Typ", Description = "Typ des Fahrrads")]
   [Required(ErrorMessage = "Typ muss angegeben werden.")]
   public string? Typ { get; set; }
 

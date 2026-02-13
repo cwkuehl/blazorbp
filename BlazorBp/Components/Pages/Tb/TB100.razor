@@ -10,11 +10,12 @@
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
   <input type="hidden" name="SubmitControl"/>
+  <InputText type="hidden" @bind-Value="Model!.Searchvisible"/>
   <div class="row ms-0 mt-1">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Copy)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Paste)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Weather)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Download)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-copy-button" For="@(() => Model!.Copy)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-clipboard" For="@(() => Model!.Paste)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-cloud-sun" For="@(() => Model!.Weather)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-download" For="@(() => Model!.Download)"/>
   </div>
   <div class="row ms-0 mt-1 g-1">
     <div class="col-md-3">
@@ -40,13 +41,13 @@
       </div>
       <div class="row mt-1 g-0">
         <LabelInputValid type="listbox" size="3" AutoPostback="" DataList="Model!.AuswahlPositions" For="@(() => Model!.Positions)" VerticalColClass="form-group col"/>
-        <SubmitButton class="btn btn-secondary col-md-1 ms-1" For="@(() => Model!.New)"/>
-        <SubmitButton class="btn btn-secondary col-md-1 ms-1" For="@(() => Model!.Remove)"/>
+        <SubmitButton class="btn btn-secondary col-md-1 ms-1" imageclass="bi bi-file-plus-button" For="@(() => Model!.New)"/>
+        <SubmitButton class="btn btn-secondary col-md-1 ms-1" imageclass="bi bi-file-x-button" For="@(() => Model!.Remove)"/>
       </div>
       <div class="row mt-1 g-0">
         <SubmitButton class="btn btn-secondary col-md-2" For="@(() => Model!.Posbefore)"/>
         <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Position)" DataList="Model!.AuswahlPosition" VerticalColClass="form-group col ms-1"/>
-        <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Add)"/>
+        <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-plus-lg" For="@(() => Model!.Add)"/>
       </div>
       <div class="row mt-1 g-0">
         <LabelInputValid AutoPostback="" For="@(() => Model!.Angelegt)" VerticalColClass="form-group col"/>

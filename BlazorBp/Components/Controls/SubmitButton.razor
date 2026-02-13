@@ -1,15 +1,15 @@
 @using System.Linq.Expressions
 @using System.Reflection
 
-@OnRendering@if (attr) {
-<button @attributes="Attributes2">@NameMu</button>
-}
-else
-{
-<button type="submit" class="@CssClass" name="Model.SubmitControl" value="@Name" title="@Title" accesskey="@Accesskey">@NameMu</button>
+@OnRendering@if (ImageClass == null) {
+  <button @attributes="Attributes2">@NameMu</button>
+} else {
+  <button @attributes="Attributes2"><i class="@ImageClass"></i></button>
 }
 
 @code {
+  // <button type="submit" class="@CssClass" name="Model.SubmitControl" value="@Name" title="@Title" accesskey="@Accesskey">@NameMu</button>
+
   [Parameter]
   public string? Name { get; set; }
 
@@ -29,7 +29,8 @@ else
 
   private string? Accesskey { get; set; }
 
-  private bool attr = true;
+  /// <summary>Wenn das Attribut imageclass angegeben wird, wird statt Text ein Bild angezeigt.</summary>
+  private string? ImageClass { get; set; } = null;
 
   private string? autofocus = null;
 
@@ -76,6 +77,8 @@ else
     Title = obj?.ToString() ?? "";
     AdditionalAttributes.TryGetValue("accesskey", out obj);
     Accesskey = obj?.ToString() ?? "";
+    AdditionalAttributes.TryGetValue("imageclass", out obj);
+    ImageClass = Functions.TrimNull(obj?.ToString());
 
     // Initialisierung für Mehrfach-Rendering.
     autofocus = null;
@@ -145,23 +148,25 @@ else
       NameMu = new MarkupString(Name);
     else
       NameMu = new MarkupString(lbl.Replace($"_{Accesskey}", $"<u>{Accesskey}</u>"));
-    if (attr)
+
+    Attributes2 = new Dictionary<string, object>();
+    foreach (var e in AdditionalAttributes.ToList())
     {
-      Attributes2 = new Dictionary<string, object>();
-      foreach (var e in AdditionalAttributes.ToList())
-        Attributes2.Add(e.Key, e.Value);
-      SetAttribute(Attributes2, "type", "submit");
-      SetAttribute(Attributes2, "name", NameAttributeValue);
-      SetAttribute(Attributes2, "value", Functions.TrimNull(Name));
-      if (hidden)
-        SetAttribute(Attributes2, "hidden", "");
-      else
-      {
-        SetAttribute(Attributes2, "class", Functions.TrimNull(CssClass));
-        SetAttribute(Attributes2, "title", Functions.TrimNull(Title));
-        SetAttribute(Attributes2, "accesskey", Functions.TrimNull(Accesskey));
-        SetAttribute(Attributes2, "autofocus", autofocus);
-      }
+      if (e.Key == "imageclass")
+        continue;
+      Attributes2.Add(e.Key, e.Value);
+    }
+    SetAttribute(Attributes2, "type", "submit");
+    SetAttribute(Attributes2, "name", NameAttributeValue);
+    SetAttribute(Attributes2, "value", Functions.TrimNull(Name));
+    if (hidden)
+      SetAttribute(Attributes2, "hidden", "");
+    else
+    {
+      SetAttribute(Attributes2, "class", Functions.TrimNull(CssClass));
+      SetAttribute(Attributes2, "title", Functions.TrimNull(Title));
+      SetAttribute(Attributes2, "accesskey", Functions.TrimNull(Accesskey));
+      SetAttribute(Attributes2, "autofocus", autofocus);
     }
     //if (Name == "Not Mandatory")
     //  Functions.MachNichts();
