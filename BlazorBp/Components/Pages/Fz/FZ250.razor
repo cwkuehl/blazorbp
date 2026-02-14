@@ -9,7 +9,7 @@
 <CascadingValue Value="this">
 <SortableTable Table="Table" NoData="" FormName="fz250" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="FZ250Model" TRTable="FZ250TableRowModel">
   <ChildContent>
-    @* <TableColumn Field="Nummer" SortField="@nameof(VFzFahrradstand.Fahrrad_Uid)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/> *@
+    @* <TableColumn Field="@nameof(FZ250TableRowModel.Nummer)" SortField="@nameof(VFzFahrradstand.Fahrrad_Uid)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/> *@
     <TableColumn Field="@nameof(FZ250TableRowModel.Fahrrad)" SortField="@nameof(VFzFahrradstand.Bezeichnung)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
     <TableColumn Field="@nameof(FZ250TableRowModel.Datum)" SortField="@nameof(VFzFahrradstand.Datum)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
     <TableColumn Field="@nameof(FZ250TableRowModel.UnterNr)" SortField="@nameof(VFzFahrradstand.Nr)" TModel="FZ250Model" TRTable="FZ250TableRowModel"/>
@@ -211,7 +211,7 @@ else
     else
     {
       var msubmit = ModalModel.Submit ?? "";
-      if (msubmit == "OK")
+      if (msubmit == nameof(ModalModel.Ok))
       {
         var dt = Formular.GetTableDialogType(Model.ModalArt);
         var o = ModalModel.To(daten);
@@ -248,7 +248,7 @@ else
     if (!string.IsNullOrEmpty(submit))
     {
       valid = EditContext?.Validate() ?? false;
-      if (submit == "Fahrrad" && Table != null)
+      if (submit == nameof(Model.Fahrrad) && Table != null)
         OnTable(Table, Messages);
     }
     if (valid && submit == "OK")
@@ -257,7 +257,7 @@ else
       return;
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
-    if (submit == "Schließen")
+    if (submit == nameof(Model.Schliessen))
     {
       CloseFormular();
     }

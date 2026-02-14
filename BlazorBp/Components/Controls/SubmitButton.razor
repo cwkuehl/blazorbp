@@ -97,6 +97,7 @@
       }
       if (string.IsNullOrEmpty(lbl))
         lbl = mb.Name ?? "";
+      Name = mb.Name ?? "";
       var modeltype = mb.DeclaringType;
       var modelprop = modeltype?.GetProperty(mb.Name ?? "");
       var fex = me.Expression as MemberExpression;
@@ -140,12 +141,14 @@
     }
     if (string.IsNullOrEmpty(lbl))
       lbl = "OK";
-    Name = lbl.Replace("_", "");
+    var lbl0 = lbl.Replace("_", "");
+    if (string.IsNullOrEmpty(Name))
+      Name = lbl0;
     var i = lbl.IndexOf("_");
     if (string.IsNullOrEmpty(Accesskey) && i >= 0 && i < lbl.Length - 1)
       Accesskey = lbl.Substring(i + 1, 1);
     if (string.IsNullOrEmpty(Accesskey))
-      NameMu = new MarkupString(Name);
+      NameMu = new MarkupString(lbl0);
     else
       NameMu = new MarkupString(lbl.Replace($"_{Accesskey}", $"<u>{Accesskey}</u>"));
 

@@ -6,6 +6,7 @@ namespace BlazorBp.Models.Tb;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Base;
+using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 
 /// <summary>
@@ -15,14 +16,23 @@ using CSBP.Services.Base;
 public class TB100Model : PageModelBase
 {
   /// <summary>Holt oder setzt einen Wert, der angibt, ob der Suchbereich sichtbar ist.</summary>
-  public string? Searchvisible { get; set; } = null;
+  public bool Searchvisible { get; set; } = false;
+
+  /// <summary>Holt oder setzt einen Wert, der angibt, ob ein vorheriger Eintrag geladen wurde.</summary>
+  public bool OldLoaded { get; set; } = false;
+
+  /// <summary>Holt oder setzt den alten Eintrag.</summary>
+  public TbEintrag? OldEntry { get; set; } = null;
+
+  /// <summary>Holt oder setzt die aktuelle Positionsliste.</summary>
+  public List<TbEintragOrt>? PositionList { get; set; } = null;
 
   /// <summary>Holt oder setzt Kopieren.</summary>
-  [Display(Name = "Kopieren", Description = "Kopieren")]
+  [Display(Name = "Kopieren", Description = "Kopieren des aktuellen Eintrags.")]
   public string? Copy { get; set; }
 
   /// <summary>Holt oder setzt Einfügen.</summary>
-  [Display(Name = "Einfügen", Description = "Einfügen")]
+  [Display(Name = "Einfügen", Description = "Einfügen des kopierten Eintrags.")]
   public string? Paste { get; set; }
 
   /// <summary>Holt oder setzt Wetter.</summary>
@@ -184,15 +194,18 @@ public class TB100Model : PageModelBase
   //// [Required(ErrorMessage = "Position muss angegeben werden.")]
   public string? Position2 { get; set; }
 
+  /// <summary>Holt oder setzt die Auswahlliste von Positionen.</summary>
+  public List<ListItem>? AuswahlPosition2 { get; set; } = default!;
+
   /// <summary>Holt oder setzt Von.</summary>
   [Display(Name = "Von", Description = "Von-Datum für Suche")]
   //// [Required(ErrorMessage = "Von muss angegeben werden.")]
-  public string? From { get; set; }
+  public DateTime? From { get; set; }
 
   /// <summary>Holt oder setzt Bis.</summary>
   [Display(Name = "Bis", Description = "Bis-Datum für Suche")]
   //// [Required(ErrorMessage = "Bis muss angegeben werden.")]
-  public string? To { get; set; }
+  public DateTime? To { get; set; }
 
   /// <summary>Holt oder setzt TB100.first.</summary>
   [Display(Name = "|<", Description = "Sprung zum ersten Eintrag.")]
@@ -251,7 +264,7 @@ public class TB100Model : PageModelBase
     {
       // TODO Thema = null;
     }
-    var h = string.IsNullOrEmpty(Searchvisible);
+    var h = !Searchvisible;
     SetMandatoryHiddenReadonly(nameof(Before1), false, false, true, false);
     SetMandatoryHiddenReadonly(nameof(Before2), false, false, true, false);
     SetMandatoryHiddenReadonly(nameof(Before3), false, false, true, false);

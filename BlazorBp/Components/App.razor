@@ -49,7 +49,7 @@
       bsmode = queryParams["bsmode"].FirstOrDefault()?.ToString() ?? "auto";
       if (bsmode != "light" && bsmode != "dark")
       {
-        bsmode = "auto"; // Fallback auf "auto", wenn ungültiger Wert
+        bsmode = "auto"; // Fallback auf "auto", wenn ungültiger Wert.
       }
       if (bsmode != "auto" && HttpContext != null)
       {
@@ -58,7 +58,7 @@
     }
     else
     {
-      bsmode = "auto"; // Default-Wert, falls kein Parameter vorhanden ist
+      bsmode = "auto"; // Default-Wert, falls kein Parameter vorhanden ist.
       if (HttpContext != null)
       {
         var sessionValue = HttpContext.Session.GetString("bsmode");

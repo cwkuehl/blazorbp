@@ -10,12 +10,12 @@
 <CascadingValue Value="this">
 <SortableTable Table="Table" NoData="" FormName="ag200" EditAktion="true" DeleteAktion="true" CopyAktion="false" NewAktion="@superadmin" TModel="AG200Model" TRTable="AG200TableRowModel">
   <ChildContent>
-    <TableColumn Field="Nummer" SortField="@nameof(Benutzer.Person_Nr)" TModel="AG200Model" TRTable="AG200TableRowModel"/>
-    <TableColumn Field="BenutzerId" SortField="@nameof(Benutzer.Benutzer_ID)" TModel="AG200Model" TRTable="AG200TableRowModel"/>
-    <TableColumn Field="AngelegtAm" SortField="@nameof(Benutzer.Angelegt_Am)" TModel="AG200Model" TRTable="AG200TableRowModel"/>
-    <TableColumn Field="AngelegtVon" SortField="@nameof(Benutzer.Angelegt_Von)" TModel="AG200Model" TRTable="AG200TableRowModel"/>
-    <TableColumn Field="GeaendertAm" SortField="@nameof(Benutzer.Geaendert_Am)" TModel="AG200Model" TRTable="AG200TableRowModel"/>
-    <TableColumn Field="GeaendertVon" SortField="@nameof(Benutzer.Geaendert_Von)" TModel="AG200Model" TRTable="AG200TableRowModel"/>
+    <TableColumn Field="@nameof(AG200TableRowModel.Nummer)" SortField="@nameof(Benutzer.Person_Nr)" TModel="AG200Model" TRTable="AG200TableRowModel"/>
+    <TableColumn Field="@nameof(AG200TableRowModel.BenutzerId)" SortField="@nameof(Benutzer.Benutzer_ID)" TModel="AG200Model" TRTable="AG200TableRowModel"/>
+    <TableColumn Field="@nameof(AG200TableRowModel.AngelegtAm)" SortField="@nameof(Benutzer.Angelegt_Am)" TModel="AG200Model" TRTable="AG200TableRowModel"/>
+    <TableColumn Field="@nameof(AG200TableRowModel.AngelegtVon)" SortField="@nameof(Benutzer.Angelegt_Von)" TModel="AG200Model" TRTable="AG200TableRowModel"/>
+    <TableColumn Field="@nameof(AG200TableRowModel.GeaendertAm)" SortField="@nameof(Benutzer.Geaendert_Am)" TModel="AG200Model" TRTable="AG200TableRowModel"/>
+    <TableColumn Field="@nameof(AG200TableRowModel.GeaendertVon)" SortField="@nameof(Benutzer.Geaendert_Von)" TModel="AG200Model" TRTable="AG200TableRowModel"/>
   </ChildContent>
 </SortableTable>
 </CascadingValue>
@@ -156,17 +156,17 @@ else
       return;
 
     // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
-    var submit = Model.Submit ?? "";
-    if (submit == "Import")
-    {
-      var l = SaveUploadFiles("AG200", "filehochladen");
-      var fn = l.FirstOrDefault();
-      if (!string.IsNullOrEmpty(fn))
-      {
-        if (Get(DemoService.SaveObjektList(fn)))
-          Functions.MachNichts(); // OK
-      }
-    }
+    // var submit = Model.Submit ?? "";
+    // if (submit == nameof(Model.Import))
+    // {
+    //   var l = SaveUploadFiles("AG200", "filehochladen");
+    //   var fn = l.FirstOrDefault();
+    //   if (!string.IsNullOrEmpty(fn))
+    //   {
+    //      if (Get(DemoService.SaveObjektList(fn)))
+    //        Functions.MachNichts(); // OK
+    //   }
+    // }
   }
 
   /// <summary>
@@ -206,7 +206,7 @@ else
     else
     {
       var msubmit = ModalModel.Submit ?? "";
-      if (msubmit == "OK")
+      if (msubmit == nameof(ModalModel.Ok))
       {
         var daten = ServiceDaten;
         var o = ModalModel.To(daten.MandantNr);
@@ -235,18 +235,10 @@ else
   {
     // Alle Submit-Aktionen, die nach dem Rendern der Komponenten ausgeführt werden können.
     // await Task.Delay(1);
-    var msubmit = ModalModel.Submit ?? "";
+    // var msubmit = ModalModel.Submit ?? "";
     var submit = Model.Submit ?? "";
-    if (submit == "Model_ComboBox")
-    {
-      //OnComboBox();
-    }
-    else if (submit == "Model_ListBox")
-    {
-      //OnListBox();
-    }
     WriteFormularModel(Model.Nr ?? "0", Model);
-    if (submit == "Schließen")
+    if (submit == nameof(Model.Schliessen))
     {
       CloseFormular();
     }

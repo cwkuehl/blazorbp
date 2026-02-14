@@ -10,7 +10,6 @@
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
   <input type="hidden" name="SubmitControl"/>
-  <InputText type="hidden" @bind-Value="Model!.Searchvisible"/>
   <div class="row ms-0 mt-1">
     <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-copy-button" For="@(() => Model!.Copy)"/>
     <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-clipboard" For="@(() => Model!.Paste)"/>
@@ -34,7 +33,7 @@
     </div>
     <div class="col">
       <div class="row">
-        <LabelInputValid AutoPostback="" For="@(() => Model!.Date)" VerticalColClass="form-group col" class="border-black"/>
+        <LabelInputValid AutoPostback="x" For="@(() => Model!.Date)" VerticalColClass="form-group col" class="border-black"/>
       </div>
       <div class="row mt-1 g-0">
         <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.Entry)" VerticalColClass="form-group col" class="border-black"/>
@@ -89,7 +88,7 @@
     <LabelInputValid type="label" AutoPostback="" For="@(() => Model!.Search120)" VerticalColClass="form-group col"/>
   </div>
   <div class="row mt-1 g-1">
-    <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Position2)" DataList="Model!.AuswahlPosition" VerticalColClass="form-group col"/>
+    <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Position2)" DataList="Model!.AuswahlPosition2" VerticalColClass="form-group col"/>
     <LabelInputValid AutoPostback="" For="@(() => Model!.From)" VerticalColClass="form-group col"/>
     <LabelInputValid AutoPostback="" For="@(() => Model!.To)" VerticalColClass="form-group col"/>
   </div>

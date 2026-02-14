@@ -556,7 +556,7 @@ else
 
     // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
     // var submit = Model.Submit ?? "";
-    // if (submit == "TODO z.B. Import")
+    // if (submit == nameof(Model.Import))
     // {
     //   var l = SaveUploadFiles("{{form}}", "filehochladen");
     // }
@@ -604,7 +604,7 @@ else
     else
     {
       var msubmit = ModalModel.Submit ?? "";
-      if (msubmit == "OK")
+      if (msubmit == nameof(ModalModel.Ok))
       {
         var dt = Formular.GetTableDialogType(Model.ModalArt);
         var daten = ServiceDaten;
@@ -664,7 +664,7 @@ else
       }
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
-    if (submit == "Schließen")
+    if (submit == nameof(Model.Schliessen))
     {
       CloseFormular();
     }

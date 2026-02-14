@@ -10,14 +10,14 @@
 <CascadingValue Value="this">
 <SortableTable Table="Table" NoData="" FormName="am500" EditAktion="true" DeleteAktion="false" CopyAktion="false" NewAktion="false" TModel="AM500Model" TRTable="AM500TableRowModel">
   <ChildContent>
-    <TableColumn Field="Schluessel" SortField="@nameof(MaParameter.Schluessel)" TModel="AM500Model" TRTable="AM500TableRowModel"/>
-    <TableColumn Field="Wert" SortField="@nameof(MaParameter.Wert)" TModel="AM500Model" TRTable="AM500TableRowModel"/>
-    <TableColumn Field="Beschreibung" SortField="@nameof(MaParameter.Comment)" TModel="AM500Model" TRTable="AM500TableRowModel"/>
-    <TableColumn Field="Standard" SortField="@nameof(MaParameter.Default)" TModel="AM500Model" TRTable="AM500TableRowModel"/>
-    <TableColumn Field="AngelegtAm" SortField="@nameof(MaParameter.Angelegt_Am)" TModel="AM500Model" TRTable="AM500TableRowModel"/>
-    <TableColumn Field="AngelegtVon" SortField="@nameof(MaParameter.Angelegt_Von)" TModel="AM500Model" TRTable="AM500TableRowModel"/>
-    <TableColumn Field="GeaendertAm" SortField="@nameof(MaParameter.Geaendert_Am)" TModel="AM500Model" TRTable="AM500TableRowModel"/>
-    <TableColumn Field="GeaendertVon" SortField="@nameof(MaParameter.Geaendert_Von)" TModel="AM500Model" TRTable="AM500TableRowModel"/>
+    <TableColumn Field="@nameof(AM500TableRowModel.Schluessel)" SortField="@nameof(MaParameter.Schluessel)" TModel="AM500Model" TRTable="AM500TableRowModel"/>
+    <TableColumn Field="@nameof(AM500TableRowModel.Wert)" SortField="@nameof(MaParameter.Wert)" TModel="AM500Model" TRTable="AM500TableRowModel"/>
+    <TableColumn Field="@nameof(AM500TableRowModel.Beschreibung)" SortField="@nameof(MaParameter.Comment)" TModel="AM500Model" TRTable="AM500TableRowModel"/>
+    <TableColumn Field="@nameof(AM500TableRowModel.Standard)" SortField="@nameof(MaParameter.Default)" TModel="AM500Model" TRTable="AM500TableRowModel"/>
+    <TableColumn Field="@nameof(AM500TableRowModel.AngelegtAm)" SortField="@nameof(MaParameter.Angelegt_Am)" TModel="AM500Model" TRTable="AM500TableRowModel"/>
+    <TableColumn Field="@nameof(AM500TableRowModel.AngelegtVon)" SortField="@nameof(MaParameter.Angelegt_Von)" TModel="AM500Model" TRTable="AM500TableRowModel"/>
+    <TableColumn Field="@nameof(AM500TableRowModel.GeaendertAm)" SortField="@nameof(MaParameter.Geaendert_Am)" TModel="AM500Model" TRTable="AM500TableRowModel"/>
+    <TableColumn Field="@nameof(AM500TableRowModel.GeaendertVon)" SortField="@nameof(MaParameter.Geaendert_Von)" TModel="AM500Model" TRTable="AM500TableRowModel"/>
   </ChildContent>
 </SortableTable>
 </CascadingValue>
@@ -187,7 +187,7 @@ else
     else
     {
       var msubmit = ModalModel.Submit ?? "";
-      if (msubmit == "OK" && handler == "Table_Edit")
+      if (msubmit == nameof(ModalModel.Ok) && handler == "Table_Edit")
       {
         var daten = ServiceDaten;
         var o = ModalModel.To(daten.MandantNr);
@@ -218,7 +218,7 @@ else
     var msubmit = ModalModel.Submit ?? "";
     var submit = Model.Submit ?? "";
     WriteFormularModel(Model.Nr ?? "0", Model);
-    if (submit == "Schließen")
+    if (submit == nameof(Model.Schliessen))
     {
       CloseFormular();
     }

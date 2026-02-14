@@ -9,13 +9,13 @@
 <CascadingValue Value="this">
 <SortableTable Table="Table" NoData="" FormName="fz700" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="FZ700Model" TRTable="FZ700TableRowModel">
   <ChildContent>
-    <TableColumn Field="Nummer" SortField="@nameof(FzNotiz.Uid)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
-    <TableColumn Field="Thema" SortField="@nameof(FzNotiz.Thema)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
-    @* <TableColumn Field="Notiz" SortField="@nameof(FzNotiz.Notiz)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/> *@
-    <TableColumn Field="AngelegtAm" SortField="@nameof(FzNotiz.Angelegt_Am)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
-    <TableColumn Field="AngelegtVon" SortField="@nameof(FzNotiz.Angelegt_Von)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
-    <TableColumn Field="GeaendertAm" SortField="@nameof(FzNotiz.Geaendert_Am)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
-    <TableColumn Field="GeaendertVon" SortField="@nameof(FzNotiz.Geaendert_Von)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
+    <TableColumn Field="@nameof(FZ700TableRowModel.Nummer)" SortField="@nameof(FzNotiz.Uid)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
+    <TableColumn Field="@nameof(FZ700TableRowModel.Thema)" SortField="@nameof(FzNotiz.Thema)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
+    @* <TableColumn Field="@nameof(FZ700TableRowModel.Notiz)" SortField="@nameof(FzNotiz.Notiz)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/> *@
+    <TableColumn Field="@nameof(FZ700TableRowModel.AngelegtAm)" SortField="@nameof(FzNotiz.Angelegt_Am)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
+    <TableColumn Field="@nameof(FZ700TableRowModel.AngelegtVon)" SortField="@nameof(FzNotiz.Angelegt_Von)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
+    <TableColumn Field="@nameof(FZ700TableRowModel.GeaendertAm)" SortField="@nameof(FzNotiz.Geaendert_Am)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
+    <TableColumn Field="@nameof(FZ700TableRowModel.GeaendertVon)" SortField="@nameof(FzNotiz.Geaendert_Von)" TModel="FZ700Model" TRTable="FZ700TableRowModel"/>
   </ChildContent>
 </SortableTable>
 </CascadingValue>
@@ -145,7 +145,7 @@ else
 
     // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
     // var submit = Model.Submit ?? "";
-    // if (submit == "TODO z.B. Import")
+    // if (submit == nameof(Model.Import))
     // {
     //   var l = SaveUploadFiles("FZ700", "filehochladen");
     // }
@@ -188,7 +188,7 @@ else
     else
     {
       var msubmit = ModalModel.Submit ?? "";
-      if (msubmit == "OK")
+      if (msubmit == nameof(ModalModel.Ok))
       {
         var dt = Formular.GetTableDialogType(Model.ModalArt);
         var daten = ServiceDaten;
@@ -230,13 +230,8 @@ else
     {
       valid = EditContext?.Validate() ?? false;
     }
-    if (valid && submit == "OK")
-    {
-      CloseFormular();
-      return;
-    }
     WriteFormularModel(Model.Nr ?? "0", Model);
-    if (submit == "Schließen")
+    if (submit == nameof(Model.Schliessen))
     {
       CloseFormular();
     }

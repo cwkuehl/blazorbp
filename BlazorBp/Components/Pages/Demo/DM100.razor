@@ -142,15 +142,15 @@ Zeile 2",
     var submit = Model.Submit ?? "";
     if (!string.IsNullOrEmpty(submit))
       valid = EditContext?.Validate() ?? false;
-    if (submit == "ComboBox")
+    if (submit == nameof(Model.ComboBox))
     {
       System.Diagnostics.Debug.Print($"ComboBox {Model.ComboBox}");
     }
-    else if (submit == "ListBox")
+    else if (submit == nameof(Model.ListBox))
     {
       System.Diagnostics.Debug.Print($"ListBox {Model.ListBox}");
     }
-    else if (submit == "ReadWrite")
+    else if (submit == nameof(Model.ReadWrite))
     {
       Model.SetReadonly(nameof(Model.Button), true);
       Model.SetReadonly(nameof(Model.TextBox), true);
@@ -164,7 +164,7 @@ Zeile 2",
       Model.SetReadonly(nameof(Model.ListBox), true);
       Model.Focus = nameof(Model.ReadOnly);
     }
-    else if (submit == "ReadOnly")
+    else if (submit == nameof(Model.ReadOnly))
     {
       Model.SetReadonly(nameof(Model.Button));
       Model.SetReadonly(nameof(Model.TextBox));
@@ -178,7 +178,7 @@ Zeile 2",
       Model.SetReadonly(nameof(Model.ListBox));
       Model.Focus = nameof(Model.Hidden);
     }
-    else if (submit == "Hidden")
+    else if (submit == nameof(Model.Hidden))
     {
       Model.SetHidden(nameof(Model.Button));
       Model.SetHidden(nameof(Model.TextBox));
@@ -192,7 +192,7 @@ Zeile 2",
       Model.SetHidden(nameof(Model.ListBox));
       Model.Focus = nameof(Model.ReadWrite);
     }
-    else if (submit == "No Color")
+    else if (submit == nameof(Model.Color0))
     {
       Model.SetNoColor(nameof(Model.Button));
       Model.SetNoColor(nameof(Model.TextBox));
@@ -206,7 +206,7 @@ Zeile 2",
       Model.SetNoColor(nameof(Model.ListBox));
       Model.Focus = nameof(Model.Color1);
     }
-    else if (submit == "Color 1")
+    else if (submit == nameof(Model.Color1))
     {
       Model.SetColor1(nameof(Model.Button));
       Model.SetColor1(nameof(Model.TextBox));
@@ -220,7 +220,7 @@ Zeile 2",
       Model.SetColor1(nameof(Model.ListBox));
       Model.Focus = nameof(Model.Color2);
     }
-    else if (submit == "Color 2")
+    else if (submit == nameof(Model.Color2))
     {
       Model.SetColor2(nameof(Model.Button));
       Model.SetColor2(nameof(Model.TextBox));
@@ -234,7 +234,7 @@ Zeile 2",
       Model.SetColor2(nameof(Model.ListBox));
       Model.Focus = nameof(Model.Color3);
     }
-    else if (submit == "Color 3")
+    else if (submit == nameof(Model.Color3))
     {
       Model.SetColor3(nameof(Model.Button));
       Model.SetColor3(nameof(Model.TextBox));
@@ -248,7 +248,7 @@ Zeile 2",
       Model.SetColor3(nameof(Model.ListBox));
       Model.Focus = nameof(Model.Color0);
     }
-    else if (submit == "Mandatory")
+    else if (submit == nameof(Model.Mandatory))
     {
       Model.SetMandatory(nameof(Model.Button));
       Model.SetMandatory(nameof(Model.TextBox));
@@ -262,7 +262,7 @@ Zeile 2",
       Model.SetMandatory(nameof(Model.ListBox));
       Model.Focus = nameof(Model.MandatoryNot);
     }
-    else if (submit == "Not Mandatory")
+    else if (submit == nameof(Model.MandatoryNot))
     {
       Model.SetMandatory(nameof(Model.Button), true);
       Model.SetMandatory(nameof(Model.TextBox), true);
@@ -276,7 +276,7 @@ Zeile 2",
       Model.SetMandatory(nameof(Model.ListBox), true);
       Model.Focus = nameof(Model.Mandatory);
     }
-    else if (submit == "Error")
+    else if (submit == nameof(Model.Error))
     {
       Model.SetError(nameof(Model.Button));
       Model.SetError(nameof(Model.TextBox));
@@ -290,7 +290,7 @@ Zeile 2",
       Model.SetError(nameof(Model.ListBox));
       Model.Focus = nameof(Model.ErrorNot);
     }
-    else if (submit == "No Error")
+    else if (submit == nameof(Model.ErrorNot))
     {
       Model.SetError(nameof(Model.Button), true);
       Model.SetError(nameof(Model.TextBox), true);
@@ -304,7 +304,7 @@ Zeile 2",
       Model.SetError(nameof(Model.ListBox), true);
       Model.Focus = nameof(Model.ErrorMessage);
     }
-    else if (submit == "Error Message")
+    else if (submit == nameof(Model.ErrorMessage))
     {
       #pragma warning disable CS8603
       Messages.Add(() => Model.Button, $"Fehlermeldung für {nameof(Model.Button)}");
@@ -330,12 +330,12 @@ Zeile 2",
       Model.Focus = nameof(Model.Error);
       #pragma warning restore CS8603
     }
-    else if (submit == "Horizontal")
+    else if (submit == nameof(Model.Horizontal))
     {
       Model.VerticalColClass = "";
       Model.Focus = nameof(Model.Vertikal);
     }
-    else if (submit == "Vertikal")
+    else if (submit == nameof(Model.Vertikal))
     {
       Model.VerticalColClass = "form-group col-md-6";
       Model.Focus = nameof(Model.Horizontal);
@@ -345,7 +345,7 @@ Zeile 2",
     //  return CloseFormular();
     //}
     WriteFormularModel(Model.Nr ?? "0", Model);
-    if (submit == "Schließen")
+    if (submit == nameof(Model.Schliessen))
     {
       CloseFormular();
     }

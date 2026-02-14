@@ -9,9 +9,9 @@
 <CascadingValue Value="this">
 <SortableTable Table="Table" NoData="" FormName="dm200" EditAktion="true" DeleteAktion="true" CopyAktion="false" NewAktion="true" TModel="DM200Model" TRTable="DM200TableRowModel">
   <ChildContent>
-    <TableColumn Field="Nummer" SortField="@nameof(Objekt.Id)" TModel="DM200Model" TRTable="DM200TableRowModel"/>
-    <TableColumn Field="Bezeichnung" SortField="@nameof(Objekt.Name)" TModel="DM200Model" TRTable="DM200TableRowModel"/>
-    <TableColumn Field="Beschreibung" SortField="@nameof(Objekt.Description)" TModel="DM200Model" TRTable="DM200TableRowModel"/>
+    <TableColumn Field="@nameof(DM200TableRowModel.Nummer)" SortField="@nameof(Objekt.Id)" TModel="DM200Model" TRTable="DM200TableRowModel"/>
+    <TableColumn Field="@nameof(DM200TableRowModel.Bezeichnung)" SortField="@nameof(Objekt.Name)" TModel="DM200Model" TRTable="DM200TableRowModel"/>
+    <TableColumn Field="@nameof(DM200TableRowModel.Beschreibung)" SortField="@nameof(Objekt.Description)" TModel="DM200Model" TRTable="DM200TableRowModel"/>
   </ChildContent>
 </SortableTable>
 </CascadingValue>
@@ -143,7 +143,7 @@ else
 
     // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
     var submit = Model.Submit ?? "";
-    if (submit == "Import")
+    if (submit == nameof(Model.Import))
     {
       var l = SaveUploadFiles("DM200", "filehochladen");
       var fn = l.FirstOrDefault();
@@ -207,7 +207,7 @@ else
     else
     {
       var msubmit = ModalModel.Submit ?? "";
-      if (msubmit == "OK")
+      if (msubmit == nameof(ModalModel.Ok))
       {
         var o = ModalModel.ToObjekt();
         var r = Model.ModalArt == "Table_Delete" ? DemoService.DeleteObjekt(o) : DemoService.SaveObjekt(o);
@@ -233,18 +233,10 @@ else
   {
     // Alle Submit-Aktionen, die nach dem Rendern der Komponenten ausgeführt werden können.
     // await Task.Delay(1);
-    var msubmit = ModalModel.Submit ?? "";
+    // var msubmit = ModalModel.Submit ?? "";
     var submit = Model.Submit ?? "";
-    if (submit == "Model_ComboBox")
-    {
-      //OnComboBox();
-    }
-    else if (submit == "Model_ListBox")
-    {
-      //OnListBox();
-    }
     WriteFormularModel(Model.Nr ?? "0", Model);
-    if (submit == "Schließen")
+    if (submit == nameof(Model.Schliessen))
     {
       CloseFormular();
     }
