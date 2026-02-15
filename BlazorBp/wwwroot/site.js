@@ -26,7 +26,7 @@ function startCountdown() {
     let remainingSeconds = Math.floor((endTime - new Date()) / 1000);
     const cc = document.getElementById('countdown');
     if (cc)
-      cc.textContent = '' + remainingSeconds + ' s';
+      cc.textContent = sekundenZuHHMMSS(remainingSeconds);
     if (remainingSeconds <= 0) {
       window.onbeforeunload = null;
       // deprecated: window.onunload = function() { console.log('onunload xxx'); return null; }
@@ -35,6 +35,19 @@ function startCountdown() {
     }
   }, 990);
   countdowntime.push(timer);
+}
+
+// Funktion zum Umwandeln von Sekunden in das Format HH:MM:SS.
+function sekundenZuHHMMSS(sekunden) {
+    const stunden = Math.floor(sekunden / 3600);
+    const minuten = Math.floor((sekunden % 3600) / 60);
+    const restSekunden = sekunden % 60;
+
+    return [
+        stunden.toString().padStart(2, '0'),
+        minuten.toString().padStart(2, '0'),
+        restSekunden.toString().padStart(2, '0')
+    ].join(':');
 }
 
 export function onUpdate() {

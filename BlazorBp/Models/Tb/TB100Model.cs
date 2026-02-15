@@ -27,6 +27,9 @@ public class TB100Model : PageModelBase
   /// <summary>Holt oder setzt die aktuelle Positionsliste.</summary>
   public List<TbEintragOrt>? PositionList { get; set; } = null;
 
+  /// <summary>Holt oder setzt die Kopie.</summary>
+  public string? Kopie { get; set; }
+
   /// <summary>Holt oder setzt Kopieren.</summary>
   [Display(Name = "Kopieren", Description = "Kopieren des aktuellen Eintrags.")]
   public string? Copy { get; set; }

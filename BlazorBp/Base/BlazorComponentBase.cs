@@ -568,6 +568,38 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       l.Insert(0, new ListItem("", ""));
     return l;
    }
+
+  /// <summary>
+  /// Gehört der Submit zu einem Datum oder m, h, p?
+  /// </summary>
+  /// <param name="submit">Betroffener Submit.</param>
+  /// <param name="valueSubmit">Submit-Value für Datum.</param>
+  /// <param name="date">Betroffenes Datum.</param>
+  /// <param name="result">Betroffenes Datum oder geändert mit m, h ,p.</param>
+  /// <returns>True, wenn Submit zu Datum oder m, h, p gehört.</returns>
+  protected bool IsDateMhp(string? submit, string? valueSubmit, DateTime? date, out DateTime? result)
+  {
+    result = date;
+    if (string.IsNullOrEmpty(submit) || string.IsNullOrEmpty(valueSubmit))
+      return false;
+    if (submit == valueSubmit)
+      return true;
+    if (submit == $"{valueSubmit}m")
+    {
+      result = date?.AddDays(-1);
+      return true;
+    }
+    if (submit == $"{valueSubmit}h")    {
+      result = DateTime.Today;
+      return true;
+    }
+    if (submit == $"{valueSubmit}p")
+    {
+      result = date?.AddDays(1);
+      return true;
+    }
+    return false;
+  }
 }
 
 /// <summary>

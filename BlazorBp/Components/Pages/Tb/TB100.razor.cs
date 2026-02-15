@@ -118,7 +118,7 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
     tb = r.Get(FactoryService.DiaryService.GetEntry(daten, d.Value.AddYears(1)));
     Model.After3 = tb?.Eintrag;
     InitPositions( Model.OldEntry.Positions);
-    // if (!before1.Visible)
+    // TODO if (!before1.Visible)
     //   ShowWeather();
     return r;
   }
@@ -256,10 +256,21 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
         }
       }
     }
-    else if (submit == nameof(Model.Date))
+    else if (submit == nameof(Model.Copy))
     {
+      Model.Kopie = Model.Entry;
+    }
+    else if (submit == nameof(Model.Paste))
+    {
+      Model.Entry = Model.Kopie;
+    }
+    else if (IsDateMhp(submit, nameof(Model.Date), Model.Date, out var d))
+    {
+      if (d.HasValue)
+        Model.Date = d;
       BearbeiteEintraege();
-      Model.Focus = nameof(Model.Date);
+      if (submit == nameof(Model.Date))
+        Model.Focus = nameof(Model.Date);
     }
     else if (submit == nameof(Model.Search))
     {
@@ -291,5 +302,6 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
     model.OldEntry = model0.OldEntry;
     model.PositionList = model0.PositionList;
     model.AuswahlPositions = model0.AuswahlPositions;
+    model.Kopie = model0.Kopie;
   }
 }

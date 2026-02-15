@@ -50,6 +50,7 @@ Folgende Funktionen sind implementiert:
 -Automatische Größenanpassung der Formulare (font size scaling in html-tag)
 
 TODO Folgende Funktionen sind noch nicht implementiert:
+-Aktualisieren des Dialogs bei Undo und Redo (z.B. TB100).
 -dotnet new razorclasslib -o BlazorBp.Components, Vererbung der Component-Klasse,
 -Postback mit abhängigen Auswahllisten,
 -Undo und Redo in Formularen,
