@@ -259,6 +259,28 @@ public class TB100Model : PageModelBase
   public string? Schliessen { get; set; }
 
   /// <summary>
+  /// Clears the search data.
+  /// </summary>
+  public void ClearSearch()
+  {
+    Search1 = "%%";
+    Search2 = "%%";
+    Search3 = "%%";
+    Search4 = null;
+    Search5 = "%%";
+    Search6 = "%%";
+    Search7 = "%%";
+    Search8 = null;
+    Search9 = "%%";
+    Search100 = "%%";
+    Search110  = "%%";
+    Search120 = null;
+    Position2 = null;
+    From = Functions.IsLinux() ? DateTime.Today.AddYears(-1) : null;
+    To = DateTime.Today;
+  }
+
+  /// <summary>
   /// Gets the search array.
   /// </summary>
   /// <returns>Search array.</returns>

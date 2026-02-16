@@ -37,7 +37,7 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
         //Focus = nameof(TB100Model.Entry),
       };
       Model.SetMhrf(DialogTypeEnum.New);
-      ClearSearch();
+      Model.ClearSearch();
       Model.Date = DateTime.Today;
       Model.OldEntry.Datum = Model.Date.Value;
       BearbeiteEintraege(false);
@@ -185,28 +185,6 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
   }
 
   /// <summary>
-  /// Clears the search data.
-  /// </summary>
-  private void ClearSearch()
-  {
-    Model.Search1 = "%%";
-    Model.Search2 = "%%";
-    Model.Search3 = "%%";
-    Model.Search4 = null;
-    Model.Search5 = "%%";
-    Model.Search6 = "%%";
-    Model.Search7 = "%%";
-    Model.Search8 = null;
-    Model.Search9 = "%%";
-    Model.Search100 = "%%";
-    Model.Search110  = "%%";
-    Model.Search120 = null;
-    Model.Position2 = null;
-    Model.From = Functions.IsLinux() ? DateTime.Today.AddYears(-1) : null;
-    Model.To = DateTime.Today;
-  }
-
-  /// <summary>
   /// Searches for next fitting entry in search direction.
   /// </summary>
   /// <param name="stelle">Affected search direction.</param>
@@ -239,34 +217,23 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
     {
       valid = EditContext?.Validate() ?? false;
     }
-    if (valid && submit == "OK")
-    {
-      var daten = ServiceDaten;
-      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
-      if (r != null)
-      {
-        Get(r);
-        if (r.Ok)
-        {
-          CloseFormular();
-          return;
-        }
-      }
-    }
-    else if (submit == nameof(Model.Copy))
+    if (submit == nameof(Model.Copy))
     {
       Model.Kopie = Model.Entry;
     }
     else if (submit == nameof(Model.Paste))
     {
       Model.Entry = Model.Kopie;
+      BearbeiteEintraege(true, false);
     }
     else if (submit == nameof(Model.Weather))
     {
+      // TODO Wetterdaten anzeigen.
       Model.Weathervisible = !Model.Weathervisible;
     }
     else if (submit == nameof(Model.Download))
     {
+      // TODO Importieren der Rabp-Daten ins Tagebuch.
       // var d = date.ValueNn;
       // var t = Get(FactoryService.DiaryService.GetApiDiaryList(ServiceDaten, d));
       // if (t == null)
@@ -332,6 +299,79 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
       if (submit == nameof(Model.Date))
         Model.Focus = nameof(Model.Date);
     }
+    else if (submit == nameof(Model.New))
+    {
+      // TODO Formular TB210 Position öffnen
+      // Start(typeof(TB210Position), TB210_title, DialogTypeEnum.New, null, csbpparent: this);
+    }
+    else if (submit == nameof(Model.Add))
+    {
+      // TODO Formular TB110 Date öffnen
+      // var uid = GetText(position);
+      // if (string.IsNullOrEmpty(uid))
+      //   return;
+      // var o = positionList.FirstOrDefault(a => a.Ort_Uid == uid);
+      // if (o != null)
+      // {
+      //   var p = new Tuple<string, DateTime>(o.Ort_Uid, o.Datum_Bis);
+      //   var to = Start(typeof(TB110Date), TB110_title, DialogTypeEnum.Edit, p, modal: true, csbpparent: this) as DateTime?;
+      //   if (to.HasValue)
+      //   {
+      //     if (to.Value >= date.ValueNn)
+      //       o.Datum_Bis = to.Value;
+      //     else
+      //       o.Datum_Von = to.Value;
+      //   }
+      //   InitPositions();
+      //   return;
+      // }
+      // var k = Get(FactoryService.DiaryService.GetPosition(ServiceDaten, uid));
+      // if (k != null)
+      // {
+      //   var p = new TbEintragOrt
+      //   {
+      //     Mandant_Nr = k.Mandant_Nr,
+      //     Ort_Uid = k.Uid,
+      //     Datum_Von = date.ValueNn,
+      //     Datum_Bis = date.ValueNn,
+      //     Description = k.Bezeichnung,
+      //     Latitude = k.Breite,
+      //     Longitude = k.Laenge,
+      //     Height = k.Hoehe,
+      //     Memo = k.Notiz,
+      //   };
+      //   positionList.Add(p);
+      //   InitPositions();
+      // }
+    }
+    else if (submit == nameof(Model.Posbefore))
+    {
+      // TODO Positionen vom Vortag übernehmen
+      // var yd = date.ValueNn.AddDays(-1);
+      // var r = FactoryService.DiaryService.GetEntry(ServiceDaten, yd, true);
+      // if (r.Ok && r.Ergebnis != null)
+      // {
+      //   foreach (var p in r.Ergebnis.Positions ?? new List<TbEintragOrt>())
+      //   {
+      //     if (positionList.FirstOrDefault(a => a.Ort_Uid == p.Ort_Uid) == null)
+      //     {
+      //       if (p.Datum_Bis == yd)
+      //         p.Datum_Bis = p.Datum_Bis.AddDays(1);
+      //       positionList.Add(p);
+      //     }
+      //   }
+      //   InitPositions();
+      // }
+    }
+    else if (submit == nameof(Model.Remove))
+    {
+      // TODO Position entfernen.
+      // var uid = GetText(positions);
+      // if (string.IsNullOrEmpty(uid) || !positionList.Any(a => a.Ort_Uid == uid))
+      //   return;
+      // positionList = positionList.Where(a => a.Ort_Uid != uid).ToList();
+      // InitPositions();
+    }
     else if (submit == nameof(Model.Search))
     {
       Model.Searchvisible = !Model.Searchvisible;
@@ -339,8 +379,34 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
     }
     else if (submit == nameof(Model.Clear))
     {
-      ClearSearch();
+      Model.ClearSearch();
       BearbeiteEintraege(true, false);
+    }
+    else if (submit == nameof(Model.First))
+    {
+      SearchEntry(CSBP.Services.Apis.Enums.SearchDirectionEnum.First);
+    }
+    else if (submit == nameof(Model.Back))
+    {
+      SearchEntry(CSBP.Services.Apis.Enums.SearchDirectionEnum.Back);
+    }
+    else if (submit == nameof(Model.Forward))
+    {
+      SearchEntry(CSBP.Services.Apis.Enums.SearchDirectionEnum.Forward);
+    }
+    else if (submit == nameof(Model.Last))
+    {
+      SearchEntry(CSBP.Services.Apis.Enums.SearchDirectionEnum.Last);
+    }
+    else if (IsDateMhp(submit, nameof(Model.From), Model.From, out var df))
+    {
+      if (df.HasValue)
+        Model.From = df;
+    }
+    else if (IsDateMhp(submit, nameof(Model.To), Model.To, out var dt))
+    {
+      if (dt.HasValue)
+        Model.To = dt;
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
     if (submit == nameof(Model.Schliessen))
