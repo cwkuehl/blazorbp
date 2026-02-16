@@ -48,6 +48,14 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
   }
 
   /// <summary>
+  /// Aktualisierung nach Undo/Redo.
+  /// </summary>
+  protected override void Refresh()
+  {
+    BearbeiteEintraege(false);
+  }
+
+  /// <summary>
   /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
   /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
   /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.

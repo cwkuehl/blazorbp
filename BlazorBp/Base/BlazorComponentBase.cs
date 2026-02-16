@@ -331,6 +331,11 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       }
     }
     Init(id, model, table);
+    if (HttpContext.Session?.GetBoolean("Refresh") ?? false)
+    {
+      HttpContext.Session?.SetBoolean("Refresh", false);
+      Refresh();
+    }
 
 #pragma warning disable CS8604
     EditContext = new(Model);
@@ -387,6 +392,13 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// <param name="model">Evtl. gelesenes Model.</param>
   /// <param name="table">Evtl. gelesenes Table-Model.</param>
   protected virtual void Init(string? id, T? model = null, TableModelBase<V>? table = null)
+  {
+  }
+
+  /// <summary>
+  /// Aktualisierung nach Undo/Redo.
+  /// </summary>
+  protected virtual void Refresh()
   {
   }
 
