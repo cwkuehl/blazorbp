@@ -620,7 +620,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
 public static class BlazorComponentBaseStatic
 {
   /// <summary>
-  /// Lesen des Models eine Formular-Instanz.
+  /// Lesen des Table-Models einer Formular-Instanz.
   /// </summary>
   /// <param name="session">Betroffene Session.</param>
   /// <param name="form">Betroffener Formularname.</param>
@@ -628,6 +628,18 @@ public static class BlazorComponentBaseStatic
   public static U? ReadFormularTableModel<U>(ISession session, string form, string id)
   {
     var model = session.GetObjectFromJson<U>($"{form}.Table.{id}");
+    return model;
+  }
+
+  /// <summary>
+  /// Lesen des Form-Models einer Formular-Instanz.
+  /// </summary>
+  /// <param name="session">Betroffene Session.</param>
+  /// <param name="form">Betroffener Formularname.</param>
+  /// <param name="id">Betroffene ID.</param>
+  public static U? ReadFormularFormModel<U>(ISession session, string form, string id)
+  {
+    var model = session.GetObjectFromJson<U>($"{form}.Form.{id}");
     return model;
   }
 }

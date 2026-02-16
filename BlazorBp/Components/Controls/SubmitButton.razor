@@ -2,14 +2,16 @@
 @using System.Reflection
 
 @OnRendering@if (ImageClass == null) {
-  <button @attributes="Attributes2">@NameMu</button>
-} else {
+  if (string.IsNullOrEmpty(Href)) { // Standard-Button
+    <button @attributes="Attributes2">@NameMu</button>
+  } else { // Link
+    <a @attributes="Attributes2" href="@Href" download="@Download" target="=_top">@NameMu</a>
+  }
+} else { // Button mit Bild
   <button @attributes="Attributes2"><i class="@ImageClass"></i></button>
 }
 
 @code {
-  // <button type="submit" class="@CssClass" name="Model.SubmitControl" value="@Name" title="@Title" accesskey="@Accesskey">@NameMu</button>
-
   [Parameter]
   public string? Name { get; set; }
 
@@ -31,6 +33,12 @@
 
   /// <summary>Wenn das Attribut imageclass angegeben wird, wird statt Text ein Bild angezeigt.</summary>
   private string? ImageClass { get; set; } = null;
+
+  /// <summary>Holt oder setzt das Attribut href für einen Link.</summary>
+  private string? Href { get; set; } = null;
+
+  /// <summary>Holt oder setzt das Attribut download für einen Link.</summary>
+  private string? Download { get; set; } = null;
 
   private string? autofocus = null;
 
@@ -79,6 +87,10 @@
     Accesskey = obj?.ToString() ?? "";
     AdditionalAttributes.TryGetValue("imageclass", out obj);
     ImageClass = Functions.TrimNull(obj?.ToString());
+    AdditionalAttributes.TryGetValue("href", out obj);
+    Href = obj?.ToString() ?? "";
+    AdditionalAttributes.TryGetValue("download", out obj);
+    Download = obj?.ToString() ?? "";
 
     // Initialisierung für Mehrfach-Rendering.
     autofocus = null;
@@ -159,9 +171,14 @@
         continue;
       Attributes2.Add(e.Key, e.Value);
     }
-    SetAttribute(Attributes2, "type", "submit");
-    SetAttribute(Attributes2, "name", NameAttributeValue);
-    SetAttribute(Attributes2, "value", Functions.TrimNull(Name));
+    if (string.IsNullOrEmpty(Href))
+    {
+      SetAttribute(Attributes2, "type", "submit");
+      SetAttribute(Attributes2, "name", NameAttributeValue);
+      SetAttribute(Attributes2, "value", Functions.TrimNull(Name));
+    }
+    else if (string.IsNullOrEmpty(Download))
+      Download = "download.txt";
     if (hidden)
       SetAttribute(Attributes2, "hidden", "");
     else

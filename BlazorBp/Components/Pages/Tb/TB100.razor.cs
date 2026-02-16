@@ -207,16 +207,6 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
   }
 
   /// <summary>
-  /// Gets the search array.
-  /// </summary>
-  /// <returns>Search array.</returns>
-  private string?[] GetSearchArray()
-  {
-    var search = new string?[] { Model?.Search1, Model?.Search2, Model?.Search3, Model?.Search5, Model?.Search6, Model?.Search7, Model?.Search9, Model?.Search100, Model?.Search110 };
-    return search;
-    }
-
-  /// <summary>
   /// Searches for next fitting entry in search direction.
   /// </summary>
   /// <param name="stelle">Affected search direction.</param>
@@ -226,9 +216,8 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
       return;
     BearbeiteEintraege(true, false);
     var daten = ServiceDaten;
-    var puid = Model.Position2;
-    var d = Get(FactoryService.DiaryService.SearchDate(daten, stelle, Model.Date ?? daten.Heute, GetSearchArray(),
-      puid, Model.From ?? daten.Heute, Model.To ?? daten.Heute));
+    var d = Get(FactoryService.DiaryService.SearchDate(daten, stelle, Model.Date ?? daten.Heute, Model.GetSearchArray(),
+      Model.Position2, Model.From ?? daten.Heute, Model.To ?? daten.Heute));
     if (d.HasValue)
     {
       Model.Date = d;
@@ -272,6 +261,69 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
     {
       Model.Entry = Model.Kopie;
     }
+    else if (submit == nameof(Model.Weather))
+    {
+      Model.Weathervisible = !Model.Weathervisible;
+    }
+    else if (submit == nameof(Model.Download))
+    {
+      // var d = date.ValueNn;
+      // var t = Get(FactoryService.DiaryService.GetApiDiaryList(ServiceDaten, d));
+      // if (t == null)
+      //   return;
+      // if (t.Item2.Count() <= 0)
+      // {
+      //   // TODO Translate messages.
+      //   ShowInfo("Keine Rabp-Daten gefunden.");
+      //   return;
+      // }
+      // var sb = new StringBuilder();
+      // sb.AppendLine(@$"""Rabp-Version {t.Item1}  {t.Item2.Count()} {Functions.Iif(t.Item2.Count() == 1, "Eintrag", "Einträge")} vor {d:yyyy-MM-dd}""");
+      // foreach (var item in t.Item2)
+      // {
+      //   sb.AppendLine($"{item.Datum:yyyy-MM-dd} {item.Eintrag}");
+      // }
+      // sb.AppendLine("Importieren der Rabp-Daten ins Tagebuch?");
+      // if (ShowYesNoQuestion(sb.ToString()))
+      // {
+      //   BearbeiteEintraege(); // Save
+      //   if (!Get(FactoryService.DiaryService.ReplicateDiaryList(ServiceDaten, t.Item2)))
+      //     return;
+      //   BearbeiteEintraege(false); // Reload
+      // }
+      // var s = @$"Löschen der Rabp-Daten?";
+      // if (ShowYesNoQuestion(s))
+      //   Get(FactoryService.DiaryService.GetApiDiaryList(ServiceDaten, d, true));
+    }
+    else if (submit == nameof(Model.Save))
+    {
+      // Bericht erzeugen mit Link.
+      // BearbeiteEintraege(true, false);
+      // var puid = GetText(position2);
+      // var pfad = ParameterGui.TempPath;
+      // var datei = Functions.GetDateiname(M0(TB005), true, true, "txt");
+      // var daten = ServiceDaten;
+      // UiTools.SaveFile(daten, Get(FactoryService.DiaryService.GetDiaryReport(daten, GetSearchArray(),
+      //   puid, from.Value, to.Value)), pfad, datei);
+      // var statusMessage = "";
+      // var client = CSBP.Services.NonService.HttpClientFactory.CreateClient();
+      // var uri = new Uri(Navigation.Uri);
+      // var baseUrl = $"{uri.Scheme}://{uri.Host}{(uri.IsDefaultPort ? "" : $":{uri.Port}")}";
+      // client.BaseAddress = new Uri(baseUrl);
+      // try
+      // {
+      //     // Hier könntest du auch eine externe API oder einen internen Endpunkt ansprechen.
+      //     var response = client.GetAsync($"/download/TB100/{Model.Nr}").GetAwaiter().GetResult();
+      //     if (response.IsSuccessStatusCode)
+      //       statusMessage = "API call successful!";
+      //     else
+      //       statusMessage = "API call failed with status: " + response.StatusCode;
+      // }
+      // catch (Exception ex)
+      // {
+      //   statusMessage = "Error: " + ex.Message;
+      // }
+    }
     else if (IsDateMhp(submit, nameof(Model.Date), Model.Date, out var d))
     {
       if (d.HasValue)
@@ -305,11 +357,12 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
   protected override void CopyNotPostbackData(TB100Model model, TB100Model model0)
   {
     model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+    model.Kopie = model0.Kopie;
+    model.Weathervisible = model0.Weathervisible;
     model.Searchvisible = model0.Searchvisible;
     model.OldLoaded = model0.OldLoaded;
     model.OldEntry = model0.OldEntry;
     model.PositionList = model0.PositionList;
     model.AuswahlPositions = model0.AuswahlPositions;
-    model.Kopie = model0.Kopie;
   }
 }

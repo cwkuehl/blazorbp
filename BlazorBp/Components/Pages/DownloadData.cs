@@ -8,6 +8,7 @@ using BlazorBp.Base;
 using BlazorBp.Models.Ag;
 using BlazorBp.Models.Demo;
 using BlazorBp.Models.Fz;
+using BlazorBp.Models.Tb;
 using BlazorBp.Services.Apis;
 using CSBP.Services.Base;
 using CSBP.Services.Factory;
@@ -30,7 +31,8 @@ public static class DownloadData
     if (!string.IsNullOrEmpty(page) && !string.IsNullOrEmpty(id) && ds != null && s != null)
     {
       page = page.ToUpper();
-      TableReadModel? rm;
+      TableReadModel? rm = null;
+      PageModelBase? pm = null;
       var service = -1;
       switch (page)
       {
@@ -54,11 +56,16 @@ public static class DownloadData
           rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ700TableRowModel>>(s, page, id)?.ReadModel;
           service = 2; // PrivateService
           break;
+        case "TB100":
+          pm = BlazorComponentBaseStatic.ReadFormularFormModel<TB100Model>(s, page, id);
+          service = 3; // DiaryService
+          break;
         default:
           rm = null;
+          pm = null;
           break;
       }
-      if (rm != null && service > 0)
+      if ((rm != null || pm != null) && service > 0)
       {
         var daten = new ServiceDaten(s.GetUserDaten());
         ServiceErgebnis<string>? r;
@@ -73,6 +80,18 @@ public static class DownloadData
             break;
           case 2:
             r = FactoryService.PrivateService.GetCsvString(daten, page, rm);
+            break;
+          case 3:
+            r = null;
+            if (pm is TB100Model model)
+            {
+              var r2 = FactoryService.DiaryService.GetDiaryReport(daten, model.GetSearchArray(), model.Position2, model.From, model.To);
+              if (r2.Ok && r2.Ergebnis != null)
+              {
+                var csv2 = string.Join(Environment.NewLine, r2.Ergebnis);
+                r = new ServiceErgebnis<string>(csv2);
+              }
+            }
             break;
           default:
             r = null;

@@ -15,6 +15,12 @@ using CSBP.Services.Base;
 [Serializable]
 public class TB100Model : PageModelBase
 {
+  /// <summary>Holt oder setzt die Kopie.</summary>
+  public string? Kopie { get; set; }
+
+  /// <summary>Holt oder setzt einen Wert, der angibt, ob der Suchbereich sichtbar ist.</summary>
+  public bool Weathervisible { get; set; } = false;
+
   /// <summary>Holt oder setzt einen Wert, der angibt, ob der Suchbereich sichtbar ist.</summary>
   public bool Searchvisible { get; set; } = false;
 
@@ -26,9 +32,6 @@ public class TB100Model : PageModelBase
 
   /// <summary>Holt oder setzt die aktuelle Positionsliste.</summary>
   public List<TbEintragOrt>? PositionList { get; set; } = null;
-
-  /// <summary>Holt oder setzt die Kopie.</summary>
-  public string? Kopie { get; set; }
 
   /// <summary>Holt oder setzt Kopieren.</summary>
   [Display(Name = "Kopieren", Description = "Kopieren des aktuellen Eintrags.")]
@@ -43,7 +46,7 @@ public class TB100Model : PageModelBase
   public string? Weather { get; set; }
 
   /// <summary>Holt oder setzt Download.</summary>
-  [Display(Name = "Download", Description = "Download")]
+  [Display(Name = "Download", Description = "Importieren der Rabp-Daten ins Tagebuch")]
   public string? Download { get; set; }
 
   /// <summary>Holt oder setzt 1 Tag vorher.</summary>
@@ -116,6 +119,21 @@ public class TB100Model : PageModelBase
   [Display(Name = "P. Vortag", Description = "Positionen vom Vortag hinzufügen.")]
   //// [Required(ErrorMessage = "P. Vortag muss angegeben werden.")]
   public string? Posbefore { get; set; }
+
+  /// <summary>Holt oder setzt 1 Tag danach.</summary>
+  [Display(Name = "1 Tag danach", Description = "Eintrag vom Folgetag")]
+  //// [Required(ErrorMessage = "1 Tag danach muss angegeben werden.")]
+  public string? After1 { get; set; }
+
+  /// <summary>Holt oder setzt 1 Monat danach.</summary>
+  [Display(Name = "1 Monat danach", Description = "1 Monat danach")]
+  //// [Required(ErrorMessage = "1 Monat danach muss angegeben werden.")]
+  public string? After2 { get; set; }
+
+  /// <summary>Holt oder setzt 1 Jahr danach.</summary>
+  [Display(Name = "1 Jahr danach", Description = "Eintrag nach einem Jahr")]
+  //// [Required(ErrorMessage = "1 Jahr danach muss angegeben werden.")]
+  public string? After3 { get; set; }
 
   /// <summary>Holt oder setzt TB100.search.</summary>
   [Display(Name = "Suche", Description = "Such-Bereich ein- bzw. ausblenden.")]
@@ -235,25 +253,20 @@ public class TB100Model : PageModelBase
   //// [Required(ErrorMessage = "TB100.save muss angegeben werden.")]
   public string? Save { get; set; }
 
-  /// <summary>Holt oder setzt 1 Tag danach.</summary>
-  [Display(Name = "1 Tag danach", Description = "Eintrag vom Folgetag")]
-  //// [Required(ErrorMessage = "1 Tag danach muss angegeben werden.")]
-  public string? After1 { get; set; }
-
-  /// <summary>Holt oder setzt 1 Monat danach.</summary>
-  [Display(Name = "1 Monat danach", Description = "1 Monat danach")]
-  //// [Required(ErrorMessage = "1 Monat danach muss angegeben werden.")]
-  public string? After2 { get; set; }
-
-  /// <summary>Holt oder setzt 1 Jahr danach.</summary>
-  [Display(Name = "1 Jahr danach", Description = "Eintrag nach einem Jahr")]
-  //// [Required(ErrorMessage = "1 Jahr danach muss angegeben werden.")]
-  public string? After3 { get; set; }
-
   /// <summary>Holt oder setzt Schließen.</summary>
   [Display(Name = "Schließen", Description = "Schließen")]
   //// [Required(ErrorMessage = "Schließen muss angegeben werden.")]
   public string? Schliessen { get; set; }
+
+  /// <summary>
+  /// Gets the search array.
+  /// </summary>
+  /// <returns>Search array.</returns>
+  public string?[] GetSearchArray()
+  {
+    var search = new string?[] { Search1, Search2, Search3, Search5, Search6, Search7, Search9, Search100, Search110 };
+    return search;
+  }
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>
@@ -268,6 +281,7 @@ public class TB100Model : PageModelBase
       // TODO Thema = null;
     }
     var h = !Searchvisible;
+    SetMandatoryHiddenReadonly(nameof(Download), false, true, false, false);
     SetMandatoryHiddenReadonly(nameof(Before1), false, false, true, false);
     SetMandatoryHiddenReadonly(nameof(Before2), false, false, true, false);
     SetMandatoryHiddenReadonly(nameof(Before3), false, false, true, false);

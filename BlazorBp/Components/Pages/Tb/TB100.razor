@@ -97,7 +97,7 @@
     <SubmitButton class="btn btn-secondary col ms-1" For="@(() => Model!.Back)"/>
     <SubmitButton class="btn btn-secondary col ms-1" For="@(() => Model!.Forward)"/>
     <SubmitButton class="btn btn-secondary col ms-1" For="@(() => Model!.Last)"/>
-    <SubmitButton class="btn btn-secondary col ms-1" For="@(() => Model!.Save)"/>
+    <SubmitButton class="btn btn-secondary col ms-1" href="@($"/download/TB100/{Model!.Nr}")" download="tagebuch.txt" For="@(() => Model!.Save)"/>
     <SubmitButton class="btn btn-secondary col ms-1" For="@(() => Model!.Schliessen)"/>
   </div>
   <!-- TODO btn-primary festlegen -->
