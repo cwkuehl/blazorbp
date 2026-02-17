@@ -351,7 +351,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
     sbr.Append($$"""
 @page "/{{area.ToLower()}}/{{form.ToLower()}}/{id?}"
 @inherits BlazorComponentBase<{{form}}Model, {{rowmodel}}>
-@attribute [Authorize(Roles = "User, Admin, Superuser")]
+@attribute [Authorize(Roles = "User, Admin, Superadmin")]
 
 <SectionContent SectionName="title">@Title</SectionContent>
 <PageTitle>@Title</PageTitle>

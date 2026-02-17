@@ -8,7 +8,7 @@ else
     <tbody>
       <tr><td>Mandant</td><td>@userDaten.MandantNr</td></tr>
       <tr><td>Benutzer</td><td>@userDaten.BenutzerId</td></tr>
-      <tr><td>Rolle</td><td>@string.Join(", ", userDaten.Rollen)</td></tr>
+      <tr><td>Rollen</td><td>@string.Join(", ", userDaten.Rollen)</td></tr>
     </tbody>
   </table>
   <EditForm Enhance method="post" Model="Model" OnSubmit="Submit" FormName="formheader">

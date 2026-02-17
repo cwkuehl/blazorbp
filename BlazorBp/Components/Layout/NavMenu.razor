@@ -33,14 +33,14 @@
       <NavLink class="nav-link" href="fz/fz200" title="Fahrräder" aria-label="Fahrräder"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Fahrräder</NavLink>
     </div>
   </AuthorizeView>
+  <AuthorizeView Roles="@UserDaten.RoleAdmin">
   <NavLink class="nav-link ms-1" href="#" title="Menü Demo" data-bs-toggle="collapse" data-bs-target="#submenudemo" aria-expanded="false" aria-controls="submenudemo"><span class="bi bi-screwdriver-nav-menu" aria-hidden="true"></span>Demo</NavLink>
   <div class="collapse show ms-3" id="submenudemo">
     <NavLink class="nav-link" href="demo/dm010" title="Statisches Server Side Rendering testen" aria-label="SSR testen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>SSR</NavLink>
-    <AuthorizeView Roles="@UserDaten.RoleAdmin">
       <NavLink class="nav-link" href="demo/dm100" title="Steuerelemente testen" aria-label="Steuerelemente testen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Steuerelemente</NavLink>
       <NavLink class="nav-link" href="demo/dm200" title="Tabelle testen" aria-label="Tabelle testen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Tabelle</NavLink>
-    </AuthorizeView>
   </div>
+  </AuthorizeView>
 </div>
 <OpenForms/>
 

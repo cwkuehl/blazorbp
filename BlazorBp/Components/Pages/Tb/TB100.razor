@@ -1,6 +1,6 @@
 @page "/tb/tb100/{id?}"
 @inherits BlazorComponentBase<TB100Model, TableRowModelBase>
-@attribute [Authorize(Roles = "User, Admin, Superuser")]
+@attribute [Authorize(Roles = "User, Admin, Superadmin")]
 
 <SectionContent SectionName="title">@Title</SectionContent>
 <PageTitle>@Title</PageTitle>

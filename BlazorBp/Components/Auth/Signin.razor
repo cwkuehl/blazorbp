@@ -39,7 +39,7 @@
   protected override void OnInitialized()
   {
     // Wegen static SSR KEIN async! Das Model muss sofort vorhanden sein.
-    //await Task.Delay(1);
+    // await Task.Delay(1);
     if (Model == null)
     {
       Model = new UserInfo
