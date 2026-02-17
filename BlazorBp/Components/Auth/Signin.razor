@@ -3,9 +3,9 @@
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Id"/>
   <div class="row mt-1">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Client)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Username)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid type="password" AutoPostback="" For="@(() => Model!.Password)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Client)" VerticalColClass="form-group col-md-2 fw-bold"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Username)" VerticalColClass="form-group col-md-2 fw-bold"/>
+    <LabelInputValid type="password" AutoPostback="" For="@(() => Model!.Password)" VerticalColClass="form-group col-md-2 fw-bold"/>
   </div>
   <button class="btn btn-primary mb-1 mt-1" type="submit">Anmelden</button>
 </EditForm>

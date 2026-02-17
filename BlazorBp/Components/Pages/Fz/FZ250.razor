@@ -58,8 +58,8 @@
           <input type="hidden" name="SubmitControl"/>
           <div class="row ms-0 mt-1">
             @* <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-2"/> *@
-            <LabelInputValid AutoPostback="" type="combobox"DataList="ModalModel!.AuswahlFahrrad" For="@(() => ModalModel!.Fahrrad)" VerticalColClass="form-group col-md-6"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Datum)" VerticalColClass="form-group col-md-4"/>
+            <LabelInputValid AutoPostback="" type="combobox"DataList="ModalModel!.AuswahlFahrrad" For="@(() => ModalModel!.Fahrrad)" VerticalColClass="form-group col-md-4"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Datum)" VerticalColClass="form-group col"/>
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.UnterNr)" VerticalColClass="form-group col-md-2"/>
           </div>
           <div class="row ms-0 mt-1">
@@ -226,6 +226,10 @@ else
           TableData(Table, ModalMessages);
         }
       }
+      else if (IsDateMhp(msubmit, nameof(ModalModel.Datum), ModalModel.Datum, out var d))
+      {
+        ModalModel.Datum = d;
+      }
       else if (form != "fz250modal")
       {
         Model.ModalArt = null;
@@ -251,11 +255,11 @@ else
       if (submit == nameof(Model.Fahrrad) && Table != null)
         OnTable(Table, Messages);
     }
-    if (valid && submit == "OK")
+    @* if (valid && submit == "OK")
     {
       CloseFormular();
       return;
-    }
+    } *@
     WriteFormularModel(Model.Nr ?? "0", Model);
     if (submit == nameof(Model.Schliessen))
     {

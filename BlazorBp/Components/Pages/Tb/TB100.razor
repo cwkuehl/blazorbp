@@ -33,15 +33,15 @@
     </div>
     <div class="col">
       <div class="row g-0">
-        <LabelInputValid AutoPostback="x" For="@(() => Model!.Date)" VerticalColClass="form-group col" class="border-black"/>
+        <LabelInputValid AutoPostback="x" For="@(() => Model!.Date)" accesskey=" mhp" VerticalColClass="form-group col" class="border-black"/>
       </div>
       <div class="row mt-1 g-0">
         <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.Entry)" VerticalColClass="form-group col" class="border-black"/>
       </div>
       <div class="row mt-1 g-0">
         <LabelInputValid type="listbox" size="3" AutoPostback="" DataList="Model!.AuswahlPositions" For="@(() => Model!.Positions)" VerticalColClass="form-group col"/>
-        <SubmitButton class="btn btn-secondary col-md-1 ms-1" imageclass="bi bi-file-plus-button" For="@(() => Model!.New)"/>
         <SubmitButton class="btn btn-secondary col-md-1 ms-1" imageclass="bi bi-file-x-button" For="@(() => Model!.Remove)"/>
+        <SubmitButton class="btn btn-secondary col-md-1 ms-1" imageclass="bi bi-file-plus-button" For="@(() => Model!.New)"/>
       </div>
       <div class="row mt-1 g-0">
         <SubmitButton class="btn btn-secondary col-md-2" For="@(() => Model!.Posbefore)"/>
@@ -100,5 +100,4 @@
     <SubmitButton class="btn btn-secondary col ms-1" href="@($"/download/TB100/{Model!.Nr}")" download="tagebuch.txt" For="@(() => Model!.Save)"/>
     <SubmitButton class="btn btn-secondary col ms-1" For="@(() => Model!.Schliessen)"/>
   </div>
-  <!-- TODO btn-primary festlegen -->
 </EditForm>

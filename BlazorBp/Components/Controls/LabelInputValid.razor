@@ -138,7 +138,7 @@ else if (InputType != "label") // Standard-Input
 }
 @if (!hidden && InputType == "date")
 {
-  <button class="btn btn-secondary col-md-1 ms-1" type="submit" name="@NameAttributeValueSubmit" value="@(ValueSubmit)m" title="Datum minus 1 Tag">-</button>
-  <button class="btn btn-secondary col-md-1 ms-1" type="submit" name="@NameAttributeValueSubmit" value="@(ValueSubmit)h" title="Heutiges Datum">h</button>
-  <button class="btn btn-secondary col-md-1 ms-1" type="submit" name="@NameAttributeValueSubmit" value="@(ValueSubmit)p" title="Datum plus 1 Tag">+</button>
+  <button class="btn btn-secondary col-md-1 ms-1" type="submit" name="@NameAttributeValueSubmit" value="@(ValueSubmit)m" title="Datum minus 1 Tag" accesskey="@accesskey1">-</button>
+  <button class="btn btn-secondary col-md-1 ms-1" type="submit" name="@NameAttributeValueSubmit" value="@(ValueSubmit)h" title="Heutiges Datum" accesskey="@accesskey2">h</button>
+  <button class="btn btn-secondary col-md-1 ms-1" type="submit" name="@NameAttributeValueSubmit" value="@(ValueSubmit)p" title="Datum plus 1 Tag" accesskey="@accesskey3">+</button>
 }

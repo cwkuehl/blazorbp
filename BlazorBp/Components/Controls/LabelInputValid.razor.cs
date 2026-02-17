@@ -111,6 +111,12 @@ public partial class LabelInputValid<TItem> : ComponentBase
 
   private bool listbox = false;
 
+  private string? accesskey1 = null;
+
+  private string? accesskey2 = null;
+
+  private string? accesskey3 = null;
+
   private string? onchange = null;
 
   private string? autofocus = null;
@@ -340,6 +346,13 @@ public partial class LabelInputValid<TItem> : ComponentBase
       lbl = "Label";
     if (checkbox)
       lbl += "&nbsp;&nbsp;";
+    if (InputType == "date" && !string.IsNullOrEmpty(Accesskey) && Accesskey.Length > 3)
+    {
+      accesskey1 = Functions.TrimNull(Accesskey.Substring(1, 1));
+      accesskey2 = Functions.TrimNull(Accesskey.Substring(2, 1));
+      accesskey3 = Functions.TrimNull(Accesskey.Substring(3, 1));
+      Accesskey = Functions.TrimNull(Accesskey.Substring(0, 1));
+    }
     if (string.IsNullOrEmpty(Accesskey))
     {
       var i = lbl.IndexOf("_");

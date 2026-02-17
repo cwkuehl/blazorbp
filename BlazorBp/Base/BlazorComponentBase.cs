@@ -75,6 +75,8 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     get
     {
       var ud = HttpContext?.Session.GetUserDaten();
+      if (ud == null)
+        OpenEmptyPage();
       return new ServiceDaten(ud);
     }
   }
