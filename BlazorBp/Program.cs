@@ -114,7 +114,12 @@ else
 //     options.SchemaName = "dbo";
 //     options.TableName = "TestCache";
 // });
-builder.Services.AddSession();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(Konstanten.SESSION_TIMEOUT);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 builder.Services.AddSingleton<IDemoService, DemoService>();
 builder.Services.AddHttpClient("HttpClientWithSSLUntrusted").ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
