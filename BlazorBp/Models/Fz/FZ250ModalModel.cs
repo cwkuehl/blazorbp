@@ -17,7 +17,7 @@ using static BlazorBp.Base.DialogTypeEnum;
 public class FZ250ModalModel : PageModelBase
 {
   /// <summary>Holt oder setzt Nr..</summary>
-  [Display(Name = "Fahrrad-Nr.", Description = "Fahrradstand-Nr.")]
+  [Display(Name = "Fahrradstand-Nr.", Description = "Fahrradstand-Nr.")]
   //// [Required(ErrorMessage = "Nr. muss angegeben werden.")]
   public string? Nummer { get; set; }
 

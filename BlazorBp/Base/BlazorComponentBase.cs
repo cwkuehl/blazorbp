@@ -419,7 +419,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// <summary>
   /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
   /// </summary>
-  /// <param name="form">Betroffenes Posback-Formular.</param>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
   /// <param name="handler">Handler aus Tabellen-Aktion.</param>
   /// <param name="id">Id aus Tabellen-Aktion.</param>
   public virtual void InitModal(string? form, string? handler, string? id)

@@ -101,3 +101,42 @@
     <SubmitButton class="btn btn-secondary col ms-1" For="@(() => Model!.Schliessen)"/>
   </div>
 </EditForm>
+
+@if (!string.IsNullOrEmpty(Model!.ModalId))
+{
+<div class="modal xxxfade" id="idmodal" tabindex="-1" role="dialog" aria-labelledby="lbldetails" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="lbldetails">Datum der Position</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+      </div>
+      <div class="modal-body">
+        <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="Submit" FormName="tb100modal">
+          <DataAnnotationsValidator/>
+          <ValidationSummary class="text-danger"/>
+          <InputText type="hidden" @bind-Value="ModalModel!.Nr"/>
+          <InputText type="hidden" @bind-Value="ModalModel!.ReadonlyHiddenError"/>
+          <input type="hidden" name="SubmitControl"/>
+          <div class="row ms-0 mt-1">
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-3"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Bezeichnung)" VerticalColClass="form-group col-md-9"/>
+          </div>
+          <div class="row ms-0 mt-1">
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Datum)" VerticalColClass="form-group col"/>
+          </div>
+          <div class="row ms-0 mt-1">
+            <SubmitButton class="btn btn-primary col-md-2 me-1" For="@(() => ModalModel!.Ok)"/>
+            <button type="button" class="btn btn-secondary col-md-2 me-1" data-bs-dismiss="modal">Abbrechen</button>
+          </div>
+        </EditForm>
+      </div>
+    </div>
+  </div>
+</div>
+}
+else
+{
+  <EditForm Enhance method="post" EditContext="ModalEditContext" FormName="tb100modal">
+  </EditForm>
+}

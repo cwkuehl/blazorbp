@@ -4,6 +4,8 @@ using BlazorBp.Models.Tb;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using CSBP.Services.Factory;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace BlazorBp.Components.Pages.Tb;
 
@@ -12,6 +14,16 @@ namespace BlazorBp.Components.Pages.Tb;
 /// </summary>
 public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
 {
+  /// <summary>Holt oder setzt das Modal-Model.</summary>
+  [SupplyParameterFromForm]
+  protected TB100ModalModel ModalModel { get; set; } = default!;
+
+  /// <summary>Betroffener EditContext.</summary>
+  protected EditContext? ModalEditContext;
+
+  /// <summary>Betroffener ValidationMessageStore.</summary>
+  protected ValidationMessageStore? ModalMessages;
+
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
 
@@ -45,6 +57,21 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
     }
     Model.Nr = id;
     InitLists();
+
+    if (ModalModel == null)
+      ModalModel = new TB100ModalModel
+      {
+        // TODO Nummer = "1",
+        // Beschreibung = null,
+      };
+    ModalModel.Nr = id;
+    #pragma warning disable CS8604
+    ModalEditContext = new(ModalModel);
+    #pragma warning restore CS8604
+    // #pragma warning disable CS0618
+    // ModalEditContext.EnableDataAnnotationsValidation();
+    // #pragma warning disable CS0618
+    ModalMessages = new(ModalEditContext);
   }
 
   /// <summary>
@@ -213,6 +240,7 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
     if (Model == null || Messages == null)
       return;
     var submit = Model.Submit ?? "";
+    var msubmit = ModalModel.Submit ?? "";
     if (!string.IsNullOrEmpty(submit))
     {
       valid = EditContext?.Validate() ?? false;
@@ -342,17 +370,40 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
         var o = Model.PositionList.FirstOrDefault(a => a.Ort_Uid == uid);
         if (o != null)
         {
-          // TODO Formular TB110 Date öffnen
-          // var p = new Tuple<string, DateTime>(o.Ort_Uid, o.Datum_Bis);
-          // var to = Start(typeof(TB110Date), TB110_title, DialogTypeEnum.Edit, p, modal: true, csbpparent: this) as DateTime?;
-          // if (to.HasValue)
-          // {
-          //   if (to.Value >= date.ValueNn)
-          //     o.Datum_Bis = to.Value;
-          //   else
-          //     o.Datum_Von = to.Value;
-          // }
-          InitPositions();
+          if (string.IsNullOrEmpty(msubmit))
+          {
+            // Formular TB110 Date öffnen
+            ModalModel.SetMhrf(DialogTypeEnum.New);
+            ModalModel.From(o);
+            Model.ModalArt = "Table_New";
+            Model.ModalId = o.Ort_Uid;
+          }
+          else if (msubmit == nameof(ModalModel.Ok))
+          {
+            // InitModal("tb100", "Table_New", o.Ort_Uid);
+            var to = ModalModel.Datum;
+            if (to.HasValue)
+            {
+              if (to.Value >= Model.Date.Value)
+                o.Datum_Bis = to.Value;
+              else
+                o.Datum_Von = to.Value;
+            }
+            InitPositions();
+            //// Formular TB110 Date schließen.
+            Model.ModalArt = null;
+            Model.ModalId = null;
+          }
+          else if (IsDateMhp(msubmit, nameof(ModalModel.Datum), ModalModel.Datum, out var dm))
+          {
+            ModalModel.Datum = dm;
+          }
+          else
+          {
+            // Formular TB110 Date schließen.
+            Model.ModalArt = null;
+            Model.ModalId = null;
+          }
         }
         else
         {
