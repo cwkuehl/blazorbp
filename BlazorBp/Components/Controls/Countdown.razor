@@ -1,6 +1,10 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-@if (!string.IsNullOrEmpty(Model))
+@if (string.IsNullOrEmpty(Model))
+{
+  <a class="btn btn-secondary fw-bold" href="/">Anmelden</a>
+}
+else
 {
 <EditForm Enhance method="post" Model="Model" OnSubmit="Submit" FormName="formlogout">
   <input type="hidden" id="countdowninterval" value="@Sekunden"/>
