@@ -31,6 +31,10 @@ else if (textarea)
 {
   <textarea @attributes="Attributes2">@CurrentValue</textarea>
 }
+else if (canvas)
+{
+  <canvas @attributes="Attributes2" width="400" height="200"></canvas>
+}
 else if (InputType == "date")
 {
   <input @attributes="Attributes2"/>

@@ -54,15 +54,27 @@ public class TB100Model : PageModelBase
   //// [Required(ErrorMessage = "1 Tag vorher muss angegeben werden.")]
   public string? Before1 { get; set; }
 
+  /// <summary>Holt oder setzt die Temperatur.</summary>
+  [Display(Name = "Temperatur °C", Description = "Temperatur-Kurve zum ausgewählten Datum")]
+  public string? Diagramb1 { get; set; }
+
   /// <summary>Holt oder setzt 1 Monat vorher.</summary>
   [Display(Name = "1 Monat vorher", Description = "Eintrag vor einem Monat")]
   //// [Required(ErrorMessage = "1 Monat vorher muss angegeben werden.")]
   public string? Before2 { get; set; }
 
+  /// <summary>Holt oder setzt den Luftdruck.</summary>
+  [Display(Name = "Luftdruck hPa", Description = "Luftdruck-Kurve zum ausgewählten Datum")]
+  public string? Diagramb2 { get; set; }
+  
   /// <summary>Holt oder setzt 1 Jahr vorher.</summary>
   [Display(Name = "1 Jahr vorher", Description = "Eintrag vor einem Jahr")]
   //// [Required(ErrorMessage = "1 Jahr vorher muss angegeben werden.")]
   public string? Before3 { get; set; }
+
+  /// <summary>Holt oder setzt die relative Luftfeuchtigkeit.</summary>
+  [Display(Name = "Rel. Luftfeucht. %", Description = "Relative Luftfeuchtigkeit-Kurve zum ausgewählten Datum")]
+  public string? Diagramb3 { get; set; }
 
   /// <summary>Holt oder setzt Datum.</summary>
   [Display(Name = "_Datum", Description = "Datum zum Tagebuch-Eintrag")]
@@ -125,15 +137,27 @@ public class TB100Model : PageModelBase
   //// [Required(ErrorMessage = "1 Tag danach muss angegeben werden.")]
   public string? After1 { get; set; }
 
+  /// <summary>Holt oder setzt den Niederschlag.</summary>
+  [Display(Name = "Niederschlag mm", Description = "Niederschlags-Kurve zum ausgewählten Datum")]
+  public string? Diagrama1 { get; set; }
+
   /// <summary>Holt oder setzt 1 Monat danach.</summary>
   [Display(Name = "1 Monat danach", Description = "1 Monat danach")]
   //// [Required(ErrorMessage = "1 Monat danach muss angegeben werden.")]
   public string? After2 { get; set; }
 
+  /// <summary>Holt oder setzt die Windgeschwindigkeit.</summary>
+  [Display(Name = "Windgeschwindigkeit km/h", Description = "Windgeschwindigkeit-Kurve zum ausgewählten Datum")]
+  public string? Diagrama2 { get; set; }
+
   /// <summary>Holt oder setzt 1 Jahr danach.</summary>
   [Display(Name = "1 Jahr danach", Description = "Eintrag nach einem Jahr")]
   //// [Required(ErrorMessage = "1 Jahr danach muss angegeben werden.")]
   public string? After3 { get; set; }
+
+  /// <summary>Holt oder setzt die Windrichtung.</summary>
+  [Display(Name = "Windrichtung °", Description = "Windrichtungs-Kurve zum ausgewählten Datum")]
+  public string? Diagrama3 { get; set; }
 
   /// <summary>Holt oder setzt TB100.search.</summary>
   [Display(Name = "Suche", Description = "Such-Bereich ein- bzw. ausblenden.")]

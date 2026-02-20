@@ -1,4 +1,5 @@
 using BlazorBp.Base;
+using BlazorBp.Components.Controls;
 using BlazorBp.Models;
 using BlazorBp.Models.Tb;
 using CSBP.Services.Apis.Models;
@@ -26,6 +27,9 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
 
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
+
+  /// <summary>Holt oder setzt die Canvas-Daten.</summary>
+  private string CanvasDaten = "";
 
   /// <summary>
   /// Initialisierung des Models.
@@ -58,10 +62,18 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
     Model.Nr = id;
     InitLists();
 
+    var compiler = new CanvasCompiler()
+      .AddControl("Diagramb1")
+      .SetFillStyle("lightblue")
+      .FillRect(50, 50, 200, 100)
+      .SetFillStyle("black")
+      .FillText("Hallo Canvas!", 60, 110);
+    CanvasDaten = compiler.Compile();
+
     if (ModalModel == null)
       ModalModel = new TB100ModalModel
       {
-        // TODO Nummer = "1",
+        // Nummer = "1",
         // Beschreibung = null,
       };
     ModalModel.Nr = id;

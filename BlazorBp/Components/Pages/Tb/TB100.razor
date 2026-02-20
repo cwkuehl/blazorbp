@@ -19,16 +19,29 @@
   <div class="row ms-0 mt-1 g-1">
     <div class="col-md-3">
       <div class="row g-0">
-        <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.Before1)" VerticalColClass="form-group col" class="border-black"/>
-        @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagramb1)" VerticalColClass="form-group col-md-2"/> *@
+        @if (Model.Weathervisible) {
+          <LabelInputValid type="canvas" AutoPostback="" For="@(() => Model!.Diagramb1)" VerticalColClass="form-group col" class="w-100 border border-dark rounded"/>
+          @* <canvas id="Diagramb1" class="w-100 border border-dark rounded" width="400" height="200"></canvas> *@
+          <InputText type="hidden" @bind-Value="Model!.Before1"/>
+        } else {
+          <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.Before1)" VerticalColClass="form-group col" class="border-black"/>
+        }
       </div>
       <div class="row mt-1 g-0">
-       <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.Before2)" VerticalColClass="form-group col" class="border-black"/>
-       @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagramb2)" VerticalColClass="form-group col-md-2"/> *@
+        @if (Model.Weathervisible) {
+          <LabelInputValid type="canvas" AutoPostback="" For="@(() => Model!.Diagramb2)" VerticalColClass="form-group col" class="w-100 border border-dark rounded"/>
+          <InputText type="hidden" @bind-Value="Model!.Before2"/>
+        } else {
+          <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.Before2)" VerticalColClass="form-group col" class="border-black"/>
+        }
       </div>
       <div class="row mt-1 g-0">
-        <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.Before3)" VerticalColClass="form-group col" class="border-black"/>
-        @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagramb3)" VerticalColClass="form-group col-md-2"/> *@
+        @if (Model.Weathervisible) {
+          <LabelInputValid type="canvas" AutoPostback="" For="@(() => Model!.Diagramb3)" VerticalColClass="form-group col" class="w-100 border border-dark rounded"/>
+          <InputText type="hidden" @bind-Value="Model!.Before3"/>
+        } else {
+          <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.Before3)" VerticalColClass="form-group col" class="border-black"/>
+        }
       </div>
     </div>
     <div class="col">
@@ -56,16 +69,28 @@
     </div>
     <div class="col-md-3">
       <div class="row g-0">
-        <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.After1)" VerticalColClass="form-group col" class="border-black"/>
-        @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagrama1)" VerticalColClass="form-group col-md-2"/> *@
+        @if (Model.Weathervisible) {
+          <LabelInputValid type="canvas" AutoPostback="" For="@(() => Model!.Diagrama1)" VerticalColClass="form-group col" class="w-100 border border-dark rounded"/>
+          <InputText type="hidden" @bind-Value="Model!.After1"/>
+        } else {
+          <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.After1)" VerticalColClass="form-group col" class="border-black"/>
+        }
       </div>
       <div class="row mt-1 g-0">
-        <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.After2)" VerticalColClass="form-group col" class="border-black"/>
-        @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagrama2)" VerticalColClass="form-group col-md-2"/> *@
+        @if (Model.Weathervisible) {
+          <LabelInputValid type="canvas" AutoPostback="" For="@(() => Model!.Diagrama2)" VerticalColClass="form-group col" class="w-100 border border-dark rounded"/>
+          <InputText type="hidden" @bind-Value="Model!.After2"/>
+        } else {
+          <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.After2)" VerticalColClass="form-group col" class="border-black"/>
+        }
       </div>
       <div class="row mt-1 g-0">
-        <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.After3)" VerticalColClass="form-group col" class="border-black"/>
-        @* <LabelInputValid AutoPostback="" For="@(() => Model!.Diagrama3)" VerticalColClass="form-group col-md-2"/> *@
+        @if (Model.Weathervisible) {
+          <LabelInputValid type="canvas" AutoPostback="" For="@(() => Model!.Diagrama3)" VerticalColClass="form-group col" class="w-100 border border-dark rounded"/>
+          <InputText type="hidden" @bind-Value="Model!.After3"/>
+        } else {
+          <LabelInputValid rows="5" AutoPostback="" For="@(() => Model!.After3)" VerticalColClass="form-group col" class="border-black"/>
+        }
       </div>
     </div>
   </div>
@@ -140,3 +165,7 @@ else
   <EditForm Enhance method="post" EditContext="ModalEditContext" FormName="tb100modal">
   </EditForm>
 }
+
+<script type="application/json" id="canvasdata">
+@((MarkupString)CanvasDaten)
+</script>

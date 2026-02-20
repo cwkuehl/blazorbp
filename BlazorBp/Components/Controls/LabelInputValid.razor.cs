@@ -111,6 +111,8 @@ public partial class LabelInputValid<TItem> : ComponentBase
 
   private bool listbox = false;
 
+  private bool canvas = false;
+
   private string? accesskey1 = null;
 
   private string? accesskey2 = null;
@@ -176,6 +178,7 @@ public partial class LabelInputValid<TItem> : ComponentBase
     var radio = InputType == "radio";
     combobox = InputType == "combobox";
     listbox = InputType == "listbox";
+    canvas = InputType == "canvas";
     hidden = InputType == "hidden";
     AdditionalAttributes.TryGetValue("step", out obj);
     currency = string.IsNullOrEmpty(obj?.ToString()) ? 0 : 2;
@@ -389,7 +392,7 @@ public partial class LabelInputValid<TItem> : ComponentBase
         SetAttribute(Attributes2, "hidden", "");
       else if (submit || checkbox || radio)
       {
-        SetAttribute(Attributes2, "type", InputType);
+        SetAttribute(Attributes2, "type", canvas ? null : InputType);
         SetAttribute(Attributes2, "hidden", "");
       }
       else
@@ -398,10 +401,10 @@ public partial class LabelInputValid<TItem> : ComponentBase
     else
     {
       SetAttribute(Attributes2, "class", CssClass);
-      SetAttribute(Attributes2, "type", InputType);
+      SetAttribute(Attributes2, "type", canvas ? null : InputType);
       SetAttribute(Attributes2, submit || checkbox || radio || combobox || listbox ? "disabled" : "readonly", disabled ? "" : null);
       SetAttribute(Attributes2, "id", Id);
-      SetAttribute(Attributes2, "accesskey", Accesskey);
+      SetAttribute(Attributes2, "accesskey", canvas ? null : Accesskey);
       SetAttribute(Attributes2, "title", Title);
       if (InputType == "text")
         SetAttribute(Attributes2, "placeholder", lbl.Replace("_", ""));
@@ -427,8 +430,8 @@ public partial class LabelInputValid<TItem> : ComponentBase
     }
     if (radio)
       SetAttribute(Attributes2, "id", null);
-    //if (NameAttributeValue == "Model.Button")
-    //  Functions.MachNichts();
+    if (canvas)
+      SetAttribute(Attributes2, "id", name);
   }
 
   private bool TryParseValueFromString(string? value, out string result, out string validationErrorMessage)

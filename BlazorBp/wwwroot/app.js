@@ -66,3 +66,48 @@ function darklight(init) {
   // alert('Dark Mode ' + (dark ? 'aktiviert' : 'deaktiviert') + '.');
   return dark;
 }
+
+/** Ändert oder setzt den Bootstrap Dark Mode.
+ * @param dataid Bootstrap Dark Mode aus localStorage initialisieren?
+ * @returns nichts.
+ */
+function parseCanvasdata(dataid) {
+  dataid = dataid || "canvasdata";
+  const datactl = document.getElementById(dataid);
+  if (datactl == null)
+    return null;
+  const raw = datactl.textContent;
+  // console.log('Canvas-Daten: ' + raw);
+  const controls = JSON.parse(raw);
+  if (controls == null)
+    return null;
+  for (const c of controls) {
+    const canvas = document.getElementById(c.Canvasid);
+    if (canvas == null)
+      continue;
+    const ctx = canvas.getContext("2d");
+    if (ctx == null)
+      continue;
+    const commands = c.Commands;
+    if (commands == null)
+      continue;
+    for (const command of commands) {
+      switch (command.Cmd) {
+        case "setFillStyle":
+          ctx.fillStyle = command.Args.color;
+          break;
+        case "fillRect":
+          ctx.fillRect(command.Args.x, command.Args.y, command.Args.w, command.Args.h);
+          break;
+        case "strokeRect":
+          ctx.strokeRect(command.Args.x, command.Args.y, command.Args.w, command.Args.h);
+          break;
+        case "fillText":
+          ctx.fillText(command.Args.text, command.Args.x, command.Args.y);
+          break;
+        default:
+          console.warn("Unknown command:", command.Cmd);
+      }
+    }
+  }
+}

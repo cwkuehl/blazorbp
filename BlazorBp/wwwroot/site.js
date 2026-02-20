@@ -61,6 +61,7 @@ export function onUpdate() {
   else
     window.onbeforeunload = null;
   $(document).ready(function() {
+    parseCanvasdata(); // Diagramme zeichnen.
     // darklight(true); // Dark Mode aus localStorage initialisieren.
     // Suche nach dem Element mit dem Attribut 'autofocus' und setze den Fokus darauf.
     $('[autofocus]').first().focus();
