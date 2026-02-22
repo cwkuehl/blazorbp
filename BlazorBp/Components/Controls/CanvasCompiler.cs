@@ -1,3 +1,7 @@
+// <copyright file="CanvasCompiler.cs" company="cwkuehl.de">
+// Copyright (c) cwkuehl.de. All rights reserved.
+// </copyright>
+
 namespace BlazorBp.Components.Controls;
 
 using System.Text.Json;
@@ -114,6 +118,131 @@ public class CanvasCompiler
     {
       Cmd = "fillText",
       Args = new() { ["text"] = text, ["x"] = x, ["y"] = y }
+    });
+    return this;
+  }
+
+  /// <summary>
+  /// Fügt einen Befehl zum Setzen der Strichfarbe für das aktuelle Canvas-Steuerelement hinzu.
+  /// </summary>
+  /// <param name="color">Die Strichfarbe als String.</param>
+  /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
+  public CanvasCompiler SetStrokeStyle(string color)
+  {
+    _control?.Commands.Add(new CanvasCommand
+    {
+      Cmd = "setStrokeStyle",
+      Args = new() { ["color"] = color }
+    });
+    return this;
+  }
+
+  /// <summary>
+  /// Startet einen Pfad für das aktuelle Canvas-Steuerelement.
+  /// </summary>
+  /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
+  public CanvasCompiler BeginPath()
+  {
+    _control?.Commands.Add(new CanvasCommand
+    {
+      Cmd = "beginPath",
+      Args = new()
+    });
+    return this;
+  }
+
+  /// <summary>
+  /// Bewegt den aktuellen Pfad zum angegebenen Punkt.
+  /// </summary>
+  /// <param name="x">Die x-Koordinate des Punktes.</param>
+  /// <param name="y">Die y-Koordinate des Punktes.</param>
+  /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
+  public CanvasCompiler MoveTo(decimal x, decimal y)
+  {
+    _control?.Commands.Add(new CanvasCommand
+    {
+      Cmd = "moveTo",
+      Args = new() { ["x"] = x, ["y"] = y }
+    });
+    return this;
+  }
+
+  /// <summary>
+  /// Zeichnet eine Linie vom aktuellen Pfad zum angegebenen Punkt.
+  /// </summary>
+  /// <param name="x">Die x-Koordinate des Punktes.</param>
+  /// <param name="y">Die y-Koordinate des Punktes.</param>
+  /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
+  public CanvasCompiler LineTo(decimal x, decimal y)
+  {
+    _control?.Commands.Add(new CanvasCommand
+    {
+      Cmd = "lineTo",
+      Args = new() { ["x"] = x, ["y"] = y }
+    });
+    return this;
+  }
+
+  /// <summary>
+  /// Zeichnet den aktuellen Pfad für das aktuelle Canvas-Steuerelement.
+  /// </summary>
+  /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
+  public CanvasCompiler Stroke()
+  {
+    _control?.Commands.Add(new CanvasCommand
+    {
+      Cmd = "stroke",
+      Args = new()
+    });
+    return this;
+  }
+
+  /// <summary>
+  /// Fügt einen Befehl zum Setzen der Schriftart für das aktuelle Canvas-Steuerelement hinzu.
+  /// </summary>
+  /// <param name="font">Die Schriftart als String, z.B. bold 40px Arial.</param>
+  /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
+  public CanvasCompiler SetFont(string font)
+  {
+    _control?.Commands.Add(new CanvasCommand
+    {
+      Cmd = "setFont",
+      Args = new() { ["font"] = font }
+    });
+    return this;
+  }
+
+  /// <summary>
+  /// Dreht das aktuelle Canvas-Steuerelement um den angegebenen Winkel.
+  /// </summary>
+  /// <param name="angle">Der Winkel in Radiant.</param>
+  /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
+  public CanvasCompiler Rotate(decimal angle)
+  {
+    _control?.Commands.Add(new CanvasCommand
+    {
+      Cmd = "rotate",
+      Args = new() { ["angle"] = angle }
+    });
+    return this;
+  }
+
+  /// <summary>
+  /// zeichnet einen Bogen zum angegebenen Punkt mit dem aktuellen Pfad für das aktuelle Canvas-Steuerelement.
+  /// </summary>
+  /// <param name="x">Die x-Koordinate des Punktes.</param>
+  /// <param name="y">Die y-Koordinate des Punktes.</param>
+  /// <param name="radius">Der Radius des Bogens.</param>
+  /// <param name="startangle">Der Startwinkel des Bogens in Radiant.</param>
+  /// <param name="endangle">Der Endwinkel des Bogens in Radiant.</param>
+  /// <param name="anticlockwise">Gibt an, ob der Bogen im Uhrzeigersinn oder gegen den Uhrzeigersinn gezeichnet wird.</param>
+  /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
+  public CanvasCompiler Arc(decimal x, decimal y, decimal radius, decimal startangle, decimal endangle, bool anticlockwise = false)
+  {
+    _control?.Commands.Add(new CanvasCommand
+    {
+      Cmd = "arc",
+      Args = new() { ["x"] = x, ["y"] = y, ["radius"] = radius, ["startangle"] = startangle, ["endangle"] = endangle, ["anticlockwise"] = anticlockwise }
     });
     return this;
   }

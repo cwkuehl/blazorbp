@@ -62,14 +62,6 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
     Model.Nr = id;
     InitLists();
 
-    var compiler = new CanvasCompiler()
-      .AddControl("Diagramb1")
-      .SetFillStyle("lightblue")
-      .FillRect(50, 50, 200, 100)
-      .SetFillStyle("black")
-      .FillText("Hallo Canvas!", 60, 110);
-    CanvasDaten = compiler.Compile();
-
     if (ModalModel == null)
       ModalModel = new TB100ModalModel
       {
@@ -164,9 +156,9 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
     Model.After2 = tb?.Eintrag;
     tb = r.Get(FactoryService.DiaryService.GetEntry(daten, d.Value.AddYears(1)));
     Model.After3 = tb?.Eintrag;
-    InitPositions( Model.OldEntry.Positions);
-    // TODO if (!before1.Visible)
-    //   ShowWeather();
+    InitPositions(Model.OldEntry.Positions);
+    if (Model.Weathervisible)
+       ShowWeather();
     return r;
   }
 
@@ -242,6 +234,74 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
     }
   }
 
+  /// <summary>Show weather data.</summary>
+  /// <param name="init">Initial call or not.</param>
+  private void ShowWeather(bool init = false)
+  {
+    var daten = ServiceDaten;
+    var puid = Model.Positions ?? Model.PositionList?.FirstOrDefault()?.Ort_Uid;
+    var date = Model.Date ?? daten.Heute;
+    List<KeyValuePair<string, decimal>> templist = [];
+    List<KeyValuePair<string, decimal>> preslist = [];
+    List<KeyValuePair<string, decimal>> rhumlist = [];
+    List<KeyValuePair<string, decimal>> prcplist = [];
+    List<KeyValuePair<string, decimal>> wspdlist = [];
+    List<KeyValuePair<string, decimal>> wdirlist = [];
+    if (string.IsNullOrEmpty(puid))
+    {
+      if (init)
+      {
+        #pragma warning disable CS8603
+        Messages?.Add(() => Model.Positions, $"Für Wetterdaten muss eine Position zugeordnet werden.");
+        #pragma warning restore CS8603
+      }
+      return;
+    }
+    var r = Get(FactoryService.DiaryService.GetWeatherList(daten, date, puid));
+    foreach (var w in r ?? [])
+    {
+      templist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Temp));
+      preslist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Pres));
+      rhumlist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Rhum));
+      prcplist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Prcp));
+      wspdlist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Wspd));
+      wdirlist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Wdir));
+    }
+    var ctx = new CanvasCompiler();
+    {
+      ctx.AddControl(nameof(Model.Diagramb1));
+      var list = templist;
+      var avg = list == null || !list.Any() ? 0m : list.Average(a => a.Value);
+      var tf = 6;
+      var tt = 22;
+      var list2 = templist?.Where(a => Functions.ToInt32(a.Key) >= tf && Functions.ToInt32(a.Key) <= tt).ToList();
+      var avg2 = list2 == null || !list2.Any() ? 0m : list2.Average(a => a.Value);
+      Diagram.OnDiagramaDraw(ctx, "Temperatur °C", templist, $"Ø {avg:0.000} °C", $"Ø {avg2:0.000} °C ({tf}-{tt} Uhr)");
+    }
+    {
+      ctx.AddControl(nameof(Model.Diagramb2));
+      Diagram.OnDiagramaDraw(ctx, "Luftdruck hPa", preslist);
+    }
+    {
+      ctx.AddControl(nameof(Model.Diagramb3));
+      Diagram.OnDiagramaDraw(ctx, "Rel. Luftfeucht. %", rhumlist);
+    }
+    {
+      ctx.AddControl(nameof(Model.Diagrama1));
+      Diagram.OnDiagramaDraw(ctx, "Niederschlag mm", prcplist);
+    }
+    {
+      ctx.AddControl(nameof(Model.Diagrama2));
+      Diagram.OnDiagramaDraw(ctx, "Windgeschwindigkeit km/h", wspdlist);
+    }
+    {
+      ctx.AddControl(nameof(Model.Diagrama3));
+      Diagram.OnDiagramaDraw(ctx, "Windrichtung °", wdirlist);
+    }
+    CanvasDaten = ctx.Compile();
+    //// diagramb1.Window.InvalidateRect(new Gdk.Rectangle(0, 0, diagramb1.Window.Width, diagramb1.Window.Height), true);
+  }
+
   /// <summary>
   /// Verarbeitung des Postbacks.
   /// -Wegen Anzeige von Fehlermeldungen darf die Funktion nicht async sein (private async Task Submit()).
@@ -268,8 +328,10 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
     }
     else if (submit == nameof(Model.Weather))
     {
-      // TODO Wetterdaten anzeigen.
+      // Wetterdaten anzeigen.
       Model.Weathervisible = !Model.Weathervisible;
+      if (Model.Weathervisible)
+        ShowWeather();
     }
     else if (submit == nameof(Model.Download))
     {

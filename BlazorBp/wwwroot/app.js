@@ -77,6 +77,8 @@ function parseCanvasdata(dataid) {
   if (datactl == null)
     return null;
   const raw = datactl.textContent;
+  if (raw == null || raw.trim() === '')
+    return null;
   // console.log('Canvas-Daten: ' + raw);
   const controls = JSON.parse(raw);
   if (controls == null)
@@ -104,6 +106,30 @@ function parseCanvasdata(dataid) {
           break;
         case "fillText":
           ctx.fillText(command.Args.text, command.Args.x, command.Args.y);
+          break;
+        case "setStrokeStyle":
+          ctx.strokeStyle = command.Args.color;
+          break;
+        case "beginPath":
+          ctx.beginPath();
+          break;
+        case "moveTo":
+          ctx.moveTo(command.Args.x, command.Args.y);
+          break;
+        case "lineTo":
+          ctx.lineTo(command.Args.x, command.Args.y);
+          break;
+        case "stroke":
+          ctx.stroke();
+          break;
+        case "setFont":
+          ctx.font = command.Args.font;
+          break;
+        case "rotate":
+          ctx.rotate(command.Args.angle);
+          break;
+        case "arc":
+          ctx.arc(command.Args.x, command.Args.y, command.Args.radius, command.Args.startangle, command.Args.endangle, command.Args.anticlockwise);
           break;
         default:
           console.warn("Unknown command:", command.Cmd);
