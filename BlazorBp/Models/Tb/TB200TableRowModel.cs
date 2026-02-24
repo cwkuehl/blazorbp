@@ -6,49 +6,9 @@ namespace BlazorBp.Models.Tb;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Base;
+using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorBp.Base.DialogTypeEnum;
-
-/// <summary>
-/// TodoModel-Klasse für Formular TB200 Positionen.
-/// TODO Durch passendes Model ersetzen und löschen.
-/// </summary>
-[Serializable]
-public class TB200TodoModel
-{
-  /// <summary>Holt oder setzt die Spalte Nr..</summary>
-  public string? Nummer { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Bezeichnung.</summary>
-  public string? Bezeichnung { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Breite.</summary>
-  public string? Breite { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Notiz.</summary>
-  public string? Notiz { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Länge.</summary>
-  public string? Laenge { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Höhe.</summary>
-  public string? Hoehe { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Zeitzone.</summary>
-  public string? Zeitzone { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Angelegt_Am.</summary>
-  public DateTime? Angelegt_Am { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Angelegt_Von.</summary>
-  public string? Angelegt_Von { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Geaendert_Am.</summary>
-  public DateTime? Geaendert_Am { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Geaendert_Von.</summary>
-  public string? Geaendert_Von { get; set; }
-}
 
 /// <summary>
 /// Model-Klasse für eine Zeile in der Tabelle von Formular TB200 Positionen.
@@ -113,17 +73,17 @@ public class TB200TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
   /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
-  public TB200TodoModel To(ServiceDaten daten)
+  public TbOrt To(ServiceDaten daten)
   {
-    return new TB200TodoModel
+    return new TbOrt
     {
       // TODO Mandant_Nr = daten.MandantNr,
-      Nummer = Nummer,
+      Uid = Nummer,
       Bezeichnung = Bezeichnung,
-      Breite = Breite,
+      Breite = Functions.ToDecimal(Breite) ?? 0m,
       Notiz = Notiz,
-      Laenge = Laenge,
-      Hoehe = Hoehe,
+      Laenge = Functions.ToDecimal(Laenge) ?? 0m,
+      Hoehe = Functions.ToDecimal(Hoehe) ?? 0m,
       Zeitzone = Zeitzone,
       Angelegt_Am = AngelegtAm,
       Angelegt_Von = AngelegtVon,
@@ -134,19 +94,19 @@ public class TB200TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
-  public static TB200TableRowModel From(TB200TodoModel m)
+  public static TB200TableRowModel From(TbOrt m)
   {
     return new TB200TableRowModel
     {
-      Nummer = m.Nummer,
+      Nummer = m.Uid,
       Bezeichnung = m.Bezeichnung,
-      Breite = m.Breite,
+      Breite = Functions.ToString(m.Breite),
       Notiz = m.Notiz,
-      Laenge = m.Laenge,
-      Hoehe = m.Hoehe,
+      Laenge = Functions.ToString(m.Laenge),
+      Hoehe = Functions.ToString(m.Hoehe),
       Zeitzone = m.Zeitzone,
       AngelegtAm = m.Angelegt_Am,
-      AngelegtVon = m.Angelegt_Von,
+      AngelegtVon = m.Angelegt_Von, 
       GeaendertAm = m.Geaendert_Am,
       GeaendertVon = m.Geaendert_Von,
     };

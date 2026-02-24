@@ -1,4 +1,5 @@
 @page "/tb/tb200/{id?}"
+@using CSBP.Services.Apis.Models
 @inherits BlazorComponentBase<TB200Model, TB200TableRowModel>
 @attribute [Authorize(Roles = "User, Admin, Superadmin")]
 
@@ -8,17 +9,17 @@
 <CascadingValue Value="this">
 <SortableTable Table="Table" NoData="" FormName="tb200" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="TB200Model" TRTable="TB200TableRowModel">
   <ChildContent>
-    <TableColumn Field="@nameof(TB200TableRowModel.Nummer)" SortField="@nameof(TB200TodoModel.Nummer)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
-    <TableColumn Field="@nameof(TB200TableRowModel.Bezeichnung)" SortField="@nameof(TB200TodoModel.Bezeichnung)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
-    <TableColumn Field="@nameof(TB200TableRowModel.Breite)" SortField="@nameof(TB200TodoModel.Breite)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
-    <TableColumn Field="@nameof(TB200TableRowModel.Notiz)" SortField="@nameof(TB200TodoModel.Notiz)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
-    <TableColumn Field="@nameof(TB200TableRowModel.Laenge)" SortField="@nameof(TB200TodoModel.Laenge)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
-    <TableColumn Field="@nameof(TB200TableRowModel.Hoehe)" SortField="@nameof(TB200TodoModel.Hoehe)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
-    <TableColumn Field="@nameof(TB200TableRowModel.Zeitzone)" SortField="@nameof(TB200TodoModel.Zeitzone)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
-    <TableColumn Field="@nameof(TB200TableRowModel.AngelegtAm)" SortField="@nameof(TB200TodoModel.Angelegt_Am)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
-    <TableColumn Field="@nameof(TB200TableRowModel.AngelegtVon)" SortField="@nameof(TB200TodoModel.Angelegt_Von)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
-    <TableColumn Field="@nameof(TB200TableRowModel.GeaendertAm)" SortField="@nameof(TB200TodoModel.Geaendert_Am)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
-    <TableColumn Field="@nameof(TB200TableRowModel.GeaendertVon)" SortField="@nameof(TB200TodoModel.Geaendert_Von)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.Nummer)" SortField="@nameof(TbOrt.Uid)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.Bezeichnung)" SortField="@nameof(TbOrt.Bezeichnung)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.Breite)" SortField="@nameof(TbOrt.Breite)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.Notiz)" SortField="@nameof(TbOrt.Notiz)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.Laenge)" SortField="@nameof(TbOrt.Laenge)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.Hoehe)" SortField="@nameof(TbOrt.Hoehe)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.Zeitzone)" SortField="@nameof(TbOrt.Zeitzone)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.AngelegtAm)" SortField="@nameof(TbOrt.Angelegt_Am)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.AngelegtVon)" SortField="@nameof(TbOrt.Angelegt_Von)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.GeaendertAm)" SortField="@nameof(TbOrt.Geaendert_Am)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.GeaendertVon)" SortField="@nameof(TbOrt.Geaendert_Von)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
   </ChildContent>
 </SortableTable>
 </CascadingValue>
@@ -27,20 +28,19 @@
   <DataAnnotationsValidator/>
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
-  <input type="hidden" name="SubmitControl"/>    <div class="row ms-0 mt-1">
-  </div>
-  <div class="row ms-0 mt-1">
+  <input type="hidden" name="SubmitControl"/>
+  <div class="row mt-1 g-0">
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Refresh)"/>
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Chart)"/>
   </div>
-  <div class="row ms-0 mt-1">
+  <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="" For="@(() => Model!.Positions)" VerticalColClass="form-group col-md-2"/>
   </div>
-  <div class="row ms-0 mt-1">
+  <div class="row mt-1 g-0">
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.All)"/>
     <LabelInputValid AutoPostback="" For="@(() => Model!.Search)" VerticalColClass="form-group col-md-2"/>
   </div>
-  <div class="row ms-0 mt-1">
+  <div class="row mt-1 g-0">
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
   </div>
   <!-- TODO btn-primary festlegen -->
@@ -62,16 +62,7 @@
           <InputText type="hidden" @bind-Value="ModalModel!.Nr"/>
           <InputText type="hidden" @bind-Value="ModalModel!.ReadonlyHiddenError"/>
           <input type="hidden" name="SubmitControl"/>
-        <div class="row ms-0 mt-1">
-          </div>
-          <div class="row ms-0 mt-1">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Notiz)" VerticalColClass="form-group col-md-2"/>
-          </div>
-          <div class="row ms-0 mt-1">
-            <SubmitButton class="btn btn-primary col-md-2 me-1" For="@(() => ModalModel!.Ok)"/>
-            <button type="button" class="btn btn-secondary col-md-2 me-1" data-bs-dismiss="modal">Abbrechen</button>
-          </div>
-          <div class="row ms-0 mt-1">
+          <div class="row mt-1 g-0">
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-2"/>
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Bezeichnung)" VerticalColClass="form-group col-md-2"/>
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Breite)" VerticalColClass="form-group col-md-2"/>
@@ -80,6 +71,13 @@
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Laenge)" VerticalColClass="form-group col-md-2"/>
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Hoehe)" VerticalColClass="form-group col-md-2"/>
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Zeitzone)" VerticalColClass="form-group col-md-2"/>
+          </div>
+          <div class="row mt-1 g-0">
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Notiz)" VerticalColClass="form-group col-md-2"/>
+          </div>
+          <div class="row mt-1 g-0">
+            <SubmitButton class="btn btn-primary col-md-2 me-1" For="@(() => ModalModel!.Ok)"/>
+            <button type="button" class="btn btn-secondary col-md-2 me-1" data-bs-dismiss="modal">Abbrechen</button>
           </div>
         </EditForm>
       </div>
@@ -134,7 +132,7 @@ else
         SelectedPage = 1,
         RowsPerPage = 10,
         SelectedRow = 1,
-        SortColumn = $"{nameof(TB200TodoModel.Nummer)}#+",
+        SortColumn = $"{nameof(TbOrt.Bezeichnung)}#+",
       };
     Table.Nr = id;
 
@@ -281,16 +279,16 @@ else
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var r = new ServiceErgebnis<List<TB200TodoModel>>(new List<TB200TodoModel>());
-    r.Ergebnis.Add(new TB200TodoModel()
+    var r = new ServiceErgebnis<List<TbOrt>>(new List<TbOrt>());
+    r.Ergebnis.Add(new TbOrt()
     {
-       Notiz = "Notiz1",
-       Nummer = "Nummer1",
+       Uid = "Nummer1",
        Bezeichnung = "Bezeichnung1",
-       Breite = "Breite1",
-       Laenge = "Laenge1",
-       Hoehe = "Hoehe1",
+       Breite = 1.0m,
+       Laenge = 1.1m,
+       Hoehe = 1.3m,
        Zeitzone = "Zeitzone1",
+       Notiz = "Notiz1",
     });
     if (rm != null)
       rm.PageCount = 0;

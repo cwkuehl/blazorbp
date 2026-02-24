@@ -6,6 +6,7 @@ namespace BlazorBp.Models.Tb;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Base;
+using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorBp.Base.DialogTypeEnum;
 
@@ -28,7 +29,22 @@ public class TB200ModalModel : PageModelBase
   /// <summary>Holt oder setzt Breite.</summary>
   [Display(Name = "_Breite", Description = "")]
   //// [Required(ErrorMessage = "Breite muss angegeben werden.")]
-  public string? Breite { get; set; }
+  public decimal Breite { get; set; }
+
+  /// <summary>Holt oder setzt Länge.</summary>
+  [Display(Name = "_Länge", Description = "")]
+  //// [Required(ErrorMessage = "Länge muss angegeben werden.")]
+  public decimal Laenge { get; set; }
+
+  /// <summary>Holt oder setzt Höhe.</summary>
+  [Display(Name = "_Höhe", Description = "")]
+  //// [Required(ErrorMessage = "Höhe muss angegeben werden.")]
+  public decimal Hoehe { get; set; }
+
+  /// <summary>Holt oder setzt Zeitzone.</summary>
+  [Display(Name = "_Zeitzone", Description = "Zeitzone")]
+  //// [Required(ErrorMessage = "Zeitzone muss angegeben werden.")]
+  public string? Zeitzone { get; set; }
 
   /// <summary>Holt oder setzt Notiz.</summary>
   [Display(Name = "_Notiz", Description = "")]
@@ -55,28 +71,13 @@ public class TB200ModalModel : PageModelBase
   //// [Required(ErrorMessage = "Abbrechen muss angegeben werden.")]
   public string? Abbrechen { get; set; }
 
-  /// <summary>Holt oder setzt Länge.</summary>
-  [Display(Name = "_Länge", Description = "")]
-  //// [Required(ErrorMessage = "Länge muss angegeben werden.")]
-  public string? Laenge { get; set; }
-
-  /// <summary>Holt oder setzt Höhe.</summary>
-  [Display(Name = "_Höhe", Description = "")]
-  //// [Required(ErrorMessage = "Höhe muss angegeben werden.")]
-  public string? Hoehe { get; set; }
-
-  /// <summary>Holt oder setzt Zeitzone.</summary>
-  [Display(Name = "_Zeitzone", Description = "Zeitzone")]
-  //// [Required(ErrorMessage = "Zeitzone muss angegeben werden.")]
-  public string? Zeitzone { get; set; }
-
   /// <summary>Kopiert die Werte in ein Model.</summary>
   /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
   /// <returns>Das kopierte Model.</returns>
-  public TB200TodoModel To(ServiceDaten daten) => new()
+  public TbOrt To(ServiceDaten daten) => new()
   {
-    // TODO Mandant_Nr = daten.MandantNr,
-    Nummer = Nummer,
+    Mandant_Nr = daten.MandantNr,
+    Uid = Nummer,
     Bezeichnung = Bezeichnung,
     Breite = Breite,
     Notiz = Notiz,
@@ -92,20 +93,22 @@ public class TB200ModalModel : PageModelBase
     Nummer,
     Bezeichnung,
     Breite,
-    Notiz,
     Laenge,
     Hoehe,
-    Zeitzone
-    // TODO , Angelegt, Geaendert
+    Zeitzone,
+    Notiz,
+    Angelegt,
+    Geaendert
   ) = (
     m.Nummer,
     m.Bezeichnung,
-    m.Breite,
+    Functions.ToDecimal(m.Breite) ?? 0m,
+    Functions.ToDecimal(m.Laenge) ?? 0m,
+    Functions.ToDecimal(m.Hoehe) ?? 0m,
+    m.Zeitzone,
     m.Notiz,
-    m.Laenge,
-    m.Hoehe,
-    m.Zeitzone
-    // TODO , ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon), ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon)
+    ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon),
+    ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon)
   );
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
@@ -114,11 +117,11 @@ public class TB200ModalModel : PageModelBase
   {
     if (mode == New || mode == Copy)
     {
-      // TODO Nummer = "";
+      Nummer = "";
     }
     if (mode == New)
     {
-      // TODO Thema = null;
+      Bezeichnung = null;
     }
     // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
     // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);

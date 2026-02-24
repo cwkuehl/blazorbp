@@ -361,10 +361,11 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
   <input type="hidden" name="SubmitControl"/>
+
 """);
     var controls = GetControls(root.Children, a => a.Children.Count <= 0);
     Control? parent = null;
-    sb.AppendLine($"""    <div class="row ms-0 mt-1">""");
+    sb.AppendLine($"""  <div class="row mt-1 g-0">""");
     foreach (var c in controls)
     {
       var n = c.Text.Replace("_", "");
@@ -372,7 +373,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
       {
         parent = c.Parent;
         sb.AppendLine($"  </div>");
-        sb.AppendLine($"""  <div class="row ms-0 mt-1">""");
+        sb.AppendLine($"""  <div class="row mt-1 g-0">""");
       }
       if (c.Type == "GtkButton")
       {
@@ -415,7 +416,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
       parent = null;
       sb.Length = 0;
       sb.AppendLine($"""
-        <div class="row ms-0 mt-1">
+          <div class="row mt-1 g-0">
 """);
       foreach (var c in controls)
       {
@@ -424,7 +425,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
         {
           parent = c.Parent;
           sb.AppendLine($"          </div>");
-          sb.AppendLine($"""          <div class="row ms-0 mt-1">""");
+          sb.AppendLine($"""          <div class="row mt-1 g-0">""");
         }
         if (c.Type == "GtkButton")
         {
