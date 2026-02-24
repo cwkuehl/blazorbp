@@ -1,0 +1,316 @@
+@page "/tb/tb200/{id?}"
+@inherits BlazorComponentBase<TB200Model, TB200TableRowModel>
+@attribute [Authorize(Roles = "User, Admin, Superadmin")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<CascadingValue Value="this">
+<SortableTable Table="Table" NoData="" FormName="tb200" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="TB200Model" TRTable="TB200TableRowModel">
+  <ChildContent>
+    <TableColumn Field="@nameof(TB200TableRowModel.Nummer)" SortField="@nameof(TB200TodoModel.Nummer)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.Bezeichnung)" SortField="@nameof(TB200TodoModel.Bezeichnung)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.Breite)" SortField="@nameof(TB200TodoModel.Breite)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.Notiz)" SortField="@nameof(TB200TodoModel.Notiz)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.Laenge)" SortField="@nameof(TB200TodoModel.Laenge)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.Hoehe)" SortField="@nameof(TB200TodoModel.Hoehe)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.Zeitzone)" SortField="@nameof(TB200TodoModel.Zeitzone)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.AngelegtAm)" SortField="@nameof(TB200TodoModel.Angelegt_Am)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.AngelegtVon)" SortField="@nameof(TB200TodoModel.Angelegt_Von)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.GeaendertAm)" SortField="@nameof(TB200TodoModel.Geaendert_Am)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.GeaendertVon)" SortField="@nameof(TB200TodoModel.Geaendert_Von)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+  </ChildContent>
+</SortableTable>
+</CascadingValue>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="tb200">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <input type="hidden" name="SubmitControl"/>    <div class="row ms-0 mt-1">
+  </div>
+  <div class="row ms-0 mt-1">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Chart)"/>
+  </div>
+  <div class="row ms-0 mt-1">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Positions)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row ms-0 mt-1">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.All)"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Search)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row ms-0 mt-1">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
+  </div>
+  <!-- TODO btn-primary festlegen -->
+</EditForm>
+
+@if (!string.IsNullOrEmpty(Model!.ModalId))
+{
+<div class="modal xxxfade" id="idmodal" tabindex="-1" role="dialog" aria-labelledby="lbldetails" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="lbldetails">TODO @Functions.Iif(Model?.ModalArt == "Table_Edit", "ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "löschen", Functions.Iif(Model?.ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+      </div>
+      <div class="modal-body">
+        <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="Submit" FormName="tb200modal">
+          <DataAnnotationsValidator/>
+          <ValidationSummary class="text-danger"/>
+          <InputText type="hidden" @bind-Value="ModalModel!.Nr"/>
+          <InputText type="hidden" @bind-Value="ModalModel!.ReadonlyHiddenError"/>
+          <input type="hidden" name="SubmitControl"/>
+        <div class="row ms-0 mt-1">
+          </div>
+          <div class="row ms-0 mt-1">
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Notiz)" VerticalColClass="form-group col-md-2"/>
+          </div>
+          <div class="row ms-0 mt-1">
+            <SubmitButton class="btn btn-primary col-md-2 me-1" For="@(() => ModalModel!.Ok)"/>
+            <button type="button" class="btn btn-secondary col-md-2 me-1" data-bs-dismiss="modal">Abbrechen</button>
+          </div>
+          <div class="row ms-0 mt-1">
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Bezeichnung)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Breite)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Angelegt)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Geaendert)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Laenge)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Hoehe)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Zeitzone)" VerticalColClass="form-group col-md-2"/>
+          </div>
+        </EditForm>
+      </div>
+    </div>
+  </div>
+</div>
+}
+else
+{
+  <EditForm Enhance method="post" EditContext="ModalEditContext" FormName="tb200modal">
+  </EditForm>
+}
+
+@code {
+  [SupplyParameterFromForm]
+  protected TB200ModalModel ModalModel { get; set; } = default!;
+
+  /// <summary>Betroffener EditContext.</summary>
+  protected EditContext? ModalEditContext;
+
+  /// <summary>Betroffener ValidationMessageStore.</summary>
+  protected ValidationMessageStore? ModalMessages;
+  /// <summary>True, wenn EditContext ohne Fehler.</summary>
+  private bool valid;
+
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id">Betroffene Id.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id, TB200Model? model = null, TableModelBase<TB200TableRowModel>? table = null)
+  {
+    if (model != null)
+      Model = model;
+    if (Model == null)
+    {
+      var daten = ServiceDaten;
+      Model = new TB200Model
+      {
+        Nr = id,
+        // TODO Mandant = daten.MandantNr,
+      };
+      Model.SetMhrf(DialogTypeEnum.New);
+    }
+    Model.Nr = id;
+    if (table != null)
+      Table = table;
+    if (Table == null)
+      Table = new TableModelBase<TB200TableRowModel>
+      {
+        SelectedPage = 1,
+        RowsPerPage = 10,
+        SelectedRow = 1,
+        SortColumn = $"{nameof(TB200TodoModel.Nummer)}#+",
+      };
+    Table.Nr = id;
+
+    if (ModalModel == null)
+      ModalModel = new TB200ModalModel
+      {
+        // TODO Nummer = "1",
+        // Beschreibung = null,
+      };
+    ModalModel.Nr = id;
+      #pragma warning disable CS8604
+    ModalEditContext = new(ModalModel);
+    #pragma warning restore CS8604
+    // #pragma warning disable CS0618
+    // ModalEditContext.EnableDataAnnotationsValidation();
+    // #pragma warning disable CS0618
+    ModalMessages = new(ModalEditContext);
+  }
+
+  /// <summary>
+  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
+  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
+  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    if (OnInitializedFormular("TB200", "Positionen - TB200", Id, true))
+      return;
+
+    // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
+    // var submit = Model.Submit ?? "";
+    // if (submit == nameof(Model.Import))
+    // {
+    //   var l = SaveUploadFiles("TB200", "filehochladen");
+    // }
+  }
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  public override void InitModal(string? form, string? handler, string? id)
+  {
+    if (!string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
+    {
+      var dt = Formular.GetTableDialogType(handler);
+      if (dt == DialogTypeEnum.New)
+      {
+        ModalModel.SetMhrf(DialogTypeEnum.New);
+        Model.ModalArt = handler;
+        Model.ModalId = id;
+      }
+      else
+      {
+        var i = Functions.ToInt32(id);
+        if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
+        {
+          var l = TableData(Table, ModalMessages);
+          var ds = l.Skip(i - 1).FirstOrDefault();
+          if (ds != null)
+          {
+            ModalModel.From(ds);
+            ModalModel.SetMhrf(dt);
+            Model.ModalArt = handler;
+            Model.ModalId = id;
+          }
+        }
+      }
+    }
+    else
+    {
+      var msubmit = ModalModel.Submit ?? "";
+      if (msubmit == nameof(ModalModel.Ok))
+      {
+        var dt = Formular.GetTableDialogType(Model.ModalArt);
+        var daten = ServiceDaten;
+        var o = ModalModel.To(daten);
+        var r = new ServiceErgebnis();
+        // TODO var r = dt == DialogTypeEnum.Delete
+        //   ? FactoryService.PrivateService.DeleteMemo(daten, o)
+        //   : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
+        if (r.Ok)
+        {
+          Model.ModalArt = null;
+          Model.ModalId = null;
+          TableData(Table, ModalMessages);
+        }
+        else
+          ModalMessages?.Add(() => ModalModel, r.GetErrors());
+      }
+      else if (form != "tb200modal")
+      {
+        Model.ModalArt = null;
+        Model.ModalId = null;
+      }
+    }
+    WriteFormularModel(Model.Nr ?? "0", Model);
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// -Wegen Anzeige von Fehlermeldungen darf die Funktion nicht async sein (private async Task Submit()).
+  /// -Speichern des geänderten Models.
+  /// </summary>
+  private void Submit()
+  {
+    if (Model == null || Messages == null)
+      return;
+    var submit = Model.Submit ?? "";
+    if (!string.IsNullOrEmpty(submit))
+    {
+      valid = EditContext?.Validate() ?? false;
+    }
+    if (valid && submit == "OK")
+    {
+      var daten = ServiceDaten;
+      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
+      if (r != null)
+      {
+        Get(r);
+        if (r.Ok)
+        {
+          CloseFormular();
+          return;
+        }
+      }
+    }
+    WriteFormularModel(Model.Nr ?? "0", Model);
+    if (submit == nameof(Model.Schliessen))
+    {
+      CloseFormular();
+    }
+  }
+
+  /// <summary>
+  /// Bereitstellen der Tabellen-Daten mit Berücksichtigung der Filterung, Sortierung und Paginierung.
+  /// </summary>
+  /// <param name="m">Betroffenes TableRowModel.</param>
+  /// <param name="messages">Betroffene Fehlermeldungen.</param>
+  /// <returns>Tabellen-Daten als Liste.</returns>
+  protected override List<TB200TableRowModel> TableData(TableModelBase<TB200TableRowModel>? m, ValidationMessageStore? messages)
+  {
+    var rm = m?.ReadModel;
+    var daten = ServiceDaten;
+    var r = new ServiceErgebnis<List<TB200TodoModel>>(new List<TB200TodoModel>());
+    r.Ergebnis.Add(new TB200TodoModel()
+    {
+       Notiz = "Notiz1",
+       Nummer = "Nummer1",
+       Bezeichnung = "Bezeichnung1",
+       Breite = "Breite1",
+       Laenge = "Laenge1",
+       Hoehe = "Hoehe1",
+       Zeitzone = "Zeitzone1",
+    });
+    if (rm != null)
+      rm.PageCount = 0;
+    // TODO var l0 = Get(FactoryService.PrivateService.GetClientList(daten, rm), messages);
+    var l = r.Ergebnis?.Select(a => TB200TableRowModel.From(a)).ToList() ?? new List<TB200TableRowModel>();
+    if (m != null && rm != null)
+    {
+      m.PageCount = rm.PageCount;
+      m.Liste = l;
+    }
+    return l;
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData(TB200Model model, TB200Model model0)
+  {
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+  }
+}
