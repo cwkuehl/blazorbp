@@ -30,20 +30,13 @@
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
   <input type="hidden" name="SubmitControl"/>
   <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Refresh)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Chart)"/>
-  </div>
-  <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="" For="@(() => Model!.Positions)" VerticalColClass="form-group col-md-2"/>
   </div>
-  <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.All)"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Search)" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
+  <div class="modal-footer mt-2">
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Chart)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Refresh)"/>
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
   </div>
-  <!-- TODO btn-primary festlegen -->
 </EditForm>
 
 @if (!string.IsNullOrEmpty(Model!.ModalId))
@@ -52,7 +45,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="lbldetails">TODO @Functions.Iif(Model?.ModalArt == "Table_Edit", "ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "löschen", Functions.Iif(Model?.ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
+        <h5 class="modal-title" id="lbldetails">Position @Functions.Iif(Model?.ModalArt == "Table_Edit", "ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "löschen", Functions.Iif(Model?.ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
       </div>
       <div class="modal-body">
@@ -75,7 +68,7 @@
           <div class="row mt-1 g-0">
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Notiz)" VerticalColClass="form-group col-md-2"/>
           </div>
-          <div class="row mt-1 g-0">
+          <div class="modal-footer mt-2">
             <SubmitButton class="btn btn-primary col-md-2 me-1" For="@(() => ModalModel!.Ok)"/>
             <button type="button" class="btn btn-secondary col-md-2 me-1" data-bs-dismiss="modal">Abbrechen</button>
           </div>
@@ -119,7 +112,6 @@ else
       Model = new TB200Model
       {
         Nr = id,
-        // TODO Mandant = daten.MandantNr,
       };
       Model.SetMhrf(DialogTypeEnum.New);
     }
@@ -137,13 +129,9 @@ else
     Table.Nr = id;
 
     if (ModalModel == null)
-      ModalModel = new TB200ModalModel
-      {
-        // TODO Nummer = "1",
-        // Beschreibung = null,
-      };
+      ModalModel = new TB200ModalModel();
     ModalModel.Nr = id;
-      #pragma warning disable CS8604
+    #pragma warning disable CS8604
     ModalEditContext = new(ModalModel);
     #pragma warning restore CS8604
     // #pragma warning disable CS0618
@@ -250,8 +238,8 @@ else
     }
     if (valid && submit == "OK")
     {
-      var daten = ServiceDaten;
-      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
+      @* var daten = ServiceDaten;
+      var r = FactoryService.DiaryService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
       if (r != null)
       {
         Get(r);
@@ -260,7 +248,7 @@ else
           CloseFormular();
           return;
         }
-      }
+      } *@
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
     if (submit == nameof(Model.Schliessen))

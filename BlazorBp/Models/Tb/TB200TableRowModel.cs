@@ -77,7 +77,7 @@ public class TB200TableRowModel : TableRowModelBase
   {
     return new TbOrt
     {
-      // TODO Mandant_Nr = daten.MandantNr,
+      Mandant_Nr = daten.MandantNr,
       Uid = Nummer,
       Bezeichnung = Bezeichnung,
       Breite = Functions.ToDecimal(Breite) ?? 0m,

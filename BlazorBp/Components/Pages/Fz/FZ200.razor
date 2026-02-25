@@ -233,7 +233,7 @@ else
     }
     if (valid && submit == "OK")
     {
-      var daten = ServiceDaten;
+      @* var daten = ServiceDaten;
       var r = new ServiceErgebnis();
       if (r != null)
       {
@@ -243,7 +243,7 @@ else
           CloseFormular();
           return;
         }
-      }
+      } *@
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
     if (submit == nameof(Model.Schliessen))

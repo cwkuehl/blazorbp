@@ -320,11 +320,11 @@ public class TB100Model : PageModelBase
   {
     if (mode == DialogTypeEnum.New || mode == DialogTypeEnum.Copy)
     {
-      // TODO Nummer = "";
+      // Nummer = "";
     }
     if (mode == DialogTypeEnum.New)
     {
-      // TODO Thema = null;
+      // Thema = null;
     }
     var h = !Searchvisible;
     SetMandatoryHiddenReadonly(nameof(Download), false, true, false, false);
