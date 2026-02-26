@@ -14,6 +14,10 @@
       "args": [],
       "cwd": "${workspaceFolder}/BlazorBp",
       "stopAtEntry": false,
+      "justMyCode": true,
+      "symbolOptions": {
+        "searchMicrosoftSymbolServer": true
+      },
       // Aktivieren Sie das Starten eines Webbrowsers, wenn ASP.NET Core gestartet wird. Weitere Informationen: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
       "serverReadyAction": {
         "action": "openExternally",
