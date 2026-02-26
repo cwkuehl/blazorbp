@@ -15,11 +15,6 @@ using static BlazorBp.Base.DialogTypeEnum;
 [Serializable]
 public class TB200Model : PageModelBase
 {
-  /// <summary>Holt oder setzt Positionen.</summary>
-  [Display(Name = "_Positionen", Description = "Positionen")]
-  //// [Required(ErrorMessage = "Positionen muss angegeben werden.")]
-  public string? Positions { get; set; }
-
   /// <summary>Holt oder setzt Chart oder Karte.</summary>
   [Display(Name = "Karte", Description = "Aufruf der Position in einer Karte")]
   //// [Required(ErrorMessage = "Chart oder Karte muss angegeben werden.")]
@@ -34,6 +29,9 @@ public class TB200Model : PageModelBase
   [Display(Name = "Schließen", Description = "Schließen")]
   //// [Required(ErrorMessage = "Schließen muss angegeben werden.")]
   public string? Schliessen { get; set; }
+
+  /// <summary>Holt oder setzt den Link für Map.</summary>
+  public string? MapHref { get; set; } = default!;
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>

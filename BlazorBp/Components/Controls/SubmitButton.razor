@@ -7,8 +7,12 @@
   } else { // Link
     <a @attributes="Attributes2" href="@Href" download="@Download" target="=_top">@NameMu</a>
   }
-} else { // Button mit Bild
-  <button @attributes="Attributes2"><i class="@ImageClass"></i></button>
+} else {
+  if (string.IsNullOrEmpty(Href)) { // Button mit Bild
+    <button @attributes="Attributes2"><i class="@ImageClass"></i></button>
+  } else { // Link mit Bild
+    <a @attributes="Attributes2" href="@Href" download="@Download" target="=_top"><i class="@ImageClass"></i></a>
+  }
 }
 
 @code {

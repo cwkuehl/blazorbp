@@ -466,6 +466,7 @@ else
     if (modalroot != null)
     {
       sbr.Append($$"""
+  /// <summary>Holt oder setzt das Modal-Model.</summary>
   [SupplyParameterFromForm]
   protected {{form}}ModalModel ModalModel { get; set; } = default!;
 

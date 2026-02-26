@@ -91,15 +91,16 @@ public class TableModelBase<T>
   /// <param name="Request">Betroffener Request.</param>
   /// <param name="handler">Betroffener Handler bzw. Formname.</param>
   /// <param name="columns">Liste der Spalten.</param>///
-  public void GetSubmit(HttpRequest? Request, string? handler = null, List<Column>? columns = null)
+  /// <returns>True, wenn ein Zeilenwechsel erkannt wurde, sonst false.</returns>
+  public bool GetSubmit(HttpRequest? Request, string? handler = null, List<Column>? columns = null)
   {
     if (Request == null)
-      return;
+      return false;
     Handler = Request.Query["handler"];
     if (Request.Method == "POST")
     {
       if (handler != null && handler != Request.Form["_handler"])
-        return;
+        return false;
       if (Request.Form["SubmitControl"] == nameof(Search))
         Handler = null;
       if (columns != null)
@@ -112,9 +113,13 @@ public class TableModelBase<T>
         }
       }
       SortColumn = GetLastValue(Request.Form["Table.SortColumn"]);
+      var sr0 = SelectedRow;
       SelectedRow = Functions.ToNullableInt32(GetLastValue(Request.Form["Table.SelectedRow"])) ?? -1;
       ModalId = GetLastValue(Request.Form["Table.ModalId"]);
+      if (SelectedRow != sr0)
+        return true;
     }
+    return false;
   }
 
   /// <summary>

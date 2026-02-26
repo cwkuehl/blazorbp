@@ -92,13 +92,13 @@
       <button type="submit" class="btn btn-secondary" formaction="@actionpath?handler=Table_Prev" value="Prev" name="Table.Prev" title="Vorherige Seite">&lt;</button>
     </div>
     <div class="col-md-1">
-      <input class="form-control" type="text" readonly="readonly" value="@Table!.SelectedPage" name="Table.SelectedPage"/>
+      <input class="form-control" type="text" readonly="readonly" value="@Table!.SelectedPage" name="Table.SelectedPage" title="Aktuelle Seitennummer"/>
     </div>
     <div class="col-md-1">
       <label class="control-label"> von </label>
     </div>
     <div class="col-md-1">
-      <input class="form-control" type="text" readonly="readonly" value="@Table!.PageCount" name="Table.PageCount"/>
+      <input class="form-control" type="text" readonly="readonly" value="@Table!.PageCount" name="Table.PageCount" title="Anzahl der Seiten"/>
     </div>
     <div class="form-group col-md-1 mt-1">
       <button type="submit" class="btn btn-secondary" formaction="@actionpath?handler=Table_Next" value="Next" name="Table.Next" title="Nächste Seite">&gt;</button>
@@ -106,7 +106,7 @@
     </div>
     <div class="form-group col-md-1">
       @* <button type="submit" class="btn btn-secondary" formaction="@actionpath?handler=Table_Export" value="Export" name="Table.Export" title="Die Daten aller Seiten in csv-Datei exportieren.">Export</button> *@
-      <a id="exportCsv" class="btn btn-secondary" href="@($"/download/{FormName}/{Table!.Nr}")" title="Alle ausgewählten Zeilen als csv-Datei exportieren." download="Export.csv" target="=_top">CSV-Export</a>
+      <a id="exportCsv" class="btn btn-secondary" href="@($"/download/{FormName}/{Table!.Nr}")" title="Alle ausgewählten Zeilen als csv-Datei exportieren." download="Export.csv" target="=_top">Export</a>
     </div>
     <div class="form-group col-md-1">
       <LabelInputValid type="combobox" AutoPostback="x" DataList="Table!.AuswahlRowsPerPage" For="@(() => Table!.RowsPerPage)" NoLabel="true" NoValidation="true"/>
@@ -243,8 +243,8 @@
   {
     if (Table == null || Parent == null)
       return;
-    Table.GetSubmit(HttpContext?.Request, GetFormName(), Columns);
-    Parent.OnTable(Table, Messages);
+    var rowchanged = Table.GetSubmit(HttpContext?.Request, GetFormName(), Columns);
+    Parent.OnTable(Table, Messages, rowchanged);
     // Parent.TableData(Table);
   }
 

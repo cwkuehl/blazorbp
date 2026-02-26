@@ -12,10 +12,10 @@
     <TableColumn Field="@nameof(TB200TableRowModel.Nummer)" SortField="@nameof(TbOrt.Uid)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
     <TableColumn Field="@nameof(TB200TableRowModel.Bezeichnung)" SortField="@nameof(TbOrt.Bezeichnung)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
     <TableColumn Field="@nameof(TB200TableRowModel.Breite)" SortField="@nameof(TbOrt.Breite)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
-    <TableColumn Field="@nameof(TB200TableRowModel.Notiz)" SortField="@nameof(TbOrt.Notiz)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
     <TableColumn Field="@nameof(TB200TableRowModel.Laenge)" SortField="@nameof(TbOrt.Laenge)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
-    <TableColumn Field="@nameof(TB200TableRowModel.Hoehe)" SortField="@nameof(TbOrt.Hoehe)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    @* <TableColumn Field="@nameof(TB200TableRowModel.Hoehe)" SortField="@nameof(TbOrt.Hoehe)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
     <TableColumn Field="@nameof(TB200TableRowModel.Zeitzone)" SortField="@nameof(TbOrt.Zeitzone)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
+    <TableColumn Field="@nameof(TB200TableRowModel.Notiz)" SortField="@nameof(TbOrt.Notiz)" TModel="TB200Model" TRTable="TB200TableRowModel"/> *@
     <TableColumn Field="@nameof(TB200TableRowModel.AngelegtAm)" SortField="@nameof(TbOrt.Angelegt_Am)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
     <TableColumn Field="@nameof(TB200TableRowModel.AngelegtVon)" SortField="@nameof(TbOrt.Angelegt_Von)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
     <TableColumn Field="@nameof(TB200TableRowModel.GeaendertAm)" SortField="@nameof(TbOrt.Geaendert_Am)" TModel="TB200Model" TRTable="TB200TableRowModel"/>
@@ -28,12 +28,10 @@
   <DataAnnotationsValidator/>
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <InputText type="hidden" @bind-Value="Model!.MapHref"/>
   <input type="hidden" name="SubmitControl"/>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Positions)" VerticalColClass="form-group col-md-2"/>
-  </div>
   <div class="modal-footer mt-2">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Chart)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-map" href="@Model!.MapHref" For="@(() => Model!.Chart)"/>
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Refresh)"/>
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
   </div>
@@ -85,6 +83,7 @@ else
 }
 
 @code {
+  /// <summary>Holt oder setzt das Modal-Model.</summary>
   [SupplyParameterFromForm]
   protected TB200ModalModel ModalModel { get; set; } = default!;
 
@@ -93,6 +92,11 @@ else
 
   /// <summary>Betroffener ValidationMessageStore.</summary>
   protected ValidationMessageStore? ModalMessages;
+
+  @* /// <summary>Holt oder setzt den Link für Map.</summary>
+  [SupplyParameterFromForm]
+  protected string? MapHref { get; set; } = default!;
+ *@
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
 
@@ -267,27 +271,27 @@ else
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var r = new ServiceErgebnis<List<TbOrt>>(new List<TbOrt>());
-    r.Ergebnis.Add(new TbOrt()
-    {
-       Uid = "Nummer1",
-       Bezeichnung = "Bezeichnung1",
-       Breite = 1.0m,
-       Laenge = 1.1m,
-       Hoehe = 1.3m,
-       Zeitzone = "Zeitzone1",
-       Notiz = "Notiz1",
-    });
-    if (rm != null)
-      rm.PageCount = 0;
-    // TODO var l0 = Get(FactoryService.PrivateService.GetClientList(daten, rm), messages);
-    var l = r.Ergebnis?.Select(a => TB200TableRowModel.From(a)).ToList() ?? new List<TB200TableRowModel>();
+    var l0 = Get(FactoryService.DiaryService.GetPositionList(daten, rm), messages);
+    var l = l0?.Select(a => TB200TableRowModel.From(a)).ToList() ?? new List<TB200TableRowModel>();
     if (m != null && rm != null)
     {
       m.PageCount = rm.PageCount;
       m.Liste = l;
     }
     return l;
+  }
+
+  /// <summary>
+  /// Verarbeitung bei geänderter Zeile.
+  /// </summary>
+  /// <param name="row">Betroffene Tabellen-Zeile-Daten.</param>
+  /// <param name="selrow">Betroffene Tabellen-Zeile-Nummer.</param>
+  /// <param name="messages">Betroffene Fehlermeldungen.</param>
+  /// <returns>True, wenn am Model etwas geändert wurde, sonst false.</returns>
+  protected override bool OnRowChanged(TB200TableRowModel? row, int selrow, ValidationMessageStore? messages)
+  {
+    Model.MapHref = row == null ? null : $"https://www.openstreetmap.org/#map=19/{Functions.ToString(Functions.ToDecimal(row.Breite, 5), 5, Functions.CultureInfoEn)}/{Functions.ToString(Functions.ToDecimal(row.Laenge, 5), 5, Functions.CultureInfoEn)}";
+    return true;
   }
 
   /// <summary>

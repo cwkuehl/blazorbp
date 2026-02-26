@@ -363,7 +363,13 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     {
       if (Table != null) // && !(Table.Liste?.Any() ?? false))
       {
-        TableData(Table, Messages);
+        if (Table.Liste == null)
+        {
+          TableData(Table, Messages);
+          var sr = Table.SelectedRow ?? 0;
+          var row = sr > 0 && Table.Liste != null && Table.Liste.Count >= sr ? Table.Liste[sr - 1] : null;
+          OnRowChanged(row, sr, Messages);
+        }
       }
       WriteFormularModel(Model?.Nr ?? "0", Model, Table); // Nach Init beides schreiben.
     }
@@ -418,6 +424,18 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   }
 
   /// <summary>
+  /// Verarbeitung bei geänderter Zeile.
+  /// </summary>
+  /// <param name="row">Betroffene Tabellen-Zeile-Daten.</param>
+  /// <param name="selrow">Betroffene Tabellen-Zeile-Nummer.</param>
+  /// <param name="messages">Betroffene Fehlermeldungen.</param>
+  /// <returns>True, wenn am Model etwas geändert wurde, sonst false.</returns>
+  protected virtual bool OnRowChanged(V? row, int selrow, ValidationMessageStore? messages)
+  {
+    return false;
+  }
+
+  /// <summary>
   /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
   /// </summary>
   /// <param name="form">Betroffenes Postback-Formular.</param>
@@ -432,7 +450,8 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// </summary>
   /// <param name="table">Betroffene Tabellen-Daten.</param>
   /// <param name="messages">Betroffene Fehlermeldungen.</param>
-  public void OnTable(TableModelBase<V> table, ValidationMessageStore? messages)
+  /// <param name="rowchange">True, wenn die Zeile geändert wurde, sonst false.</param>
+  public void OnTable(TableModelBase<V> table, ValidationMessageStore? messages, bool rowchange = true)
   {
     // if (table == null)
     // {
@@ -440,6 +459,8 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     //   return;
     // }
     var handler = table.Handler;
+    var selpage = table.SelectedPage;
+    var selrow = table.SelectedRow;
     if (handler == "Table_First")
     {
       table.SelectedPage = 1;
@@ -477,6 +498,13 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       table.SelectedRow = table.Liste?.Count ?? 0;
     if (table.SelectedRow < 1 && (table.Liste?.Count ?? 0) > 0)
       table.SelectedRow = 1;
+    if (rowchange || selpage != table.SelectedPage || selrow != table.SelectedRow)
+    {
+      var sr = table.SelectedRow ?? 0;
+      var row = sr > 0 && table.Liste != null && table.Liste.Count >= sr ? table.Liste[sr - 1] : null;
+      if (OnRowChanged(row, sr, messages))
+        WriteFormularModel(Model?.Nr ?? "0", Model, null);
+    }
     if (handler == "Table_Export")
     {
       var csv = new CsvWriter();
