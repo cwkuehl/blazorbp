@@ -55,20 +55,26 @@
           <input type="hidden" name="SubmitControl"/>
           <div class="row mt-1 g-0">
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Bezeichnung)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Breite)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Angelegt)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Geaendert)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Laenge)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Hoehe)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Zeitzone)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Bezeichnung)" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Notiz)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Breite)" VerticalColClass="form-group col-md-4"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Laenge)" VerticalColClass="form-group col-md-4 ms-1"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Hoehe)" VerticalColClass="form-group col ms-1"/>
           </div>
-          <div class="modal-footer mt-2">
-            <SubmitButton class="btn btn-primary col-md-2 me-1" For="@(() => ModalModel!.Ok)"/>
-            <button type="button" class="btn btn-secondary col-md-2 me-1" data-bs-dismiss="modal">Abbrechen</button>
+          <div class="row mt-1 g-0">
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Angelegt)" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Geaendert)" VerticalColClass="form-group col ms-1"/>
+          </div>
+          <div class="row mt-1 g-0">
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Zeitzone)" VerticalColClass="form-group col"/>
+          </div>
+          <div class="row mt-1 g-0">
+            <LabelInputValid rows="5" AutoPostback="" For="@(() => ModalModel!.Notiz)" VerticalColClass="form-group col"/>
+          </div>
+          <div class="modal-footer mt-2 p-0">
+            <SubmitButton class="btn btn-primary col-md-2" For="@(() => ModalModel!.Ok)"/>
+            <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button>
           </div>
         </EditForm>
       </div>

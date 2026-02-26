@@ -123,10 +123,15 @@ public class TB200ModalModel : PageModelBase
     {
       Bezeichnung = null;
     }
-    // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
-    // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
-    // SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Bezeichnung), true, false, mode == Delete, mode == New);
+    SetMandatoryHiddenReadonly(nameof(Breite), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Laenge), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Hoehe), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Zeitzone), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Notiz), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
+    SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
+    SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
   }
 }
