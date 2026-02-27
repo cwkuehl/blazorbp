@@ -13,7 +13,7 @@
   <InputText type="hidden" @bind-Value="Table!.SortColumn"/>
   <InputText type="hidden" @bind-Value="Table!.VisibleColumns"/>
   <input type="hidden" name="SubmitControl"/>
-  <table class="table table-striped">
+  <table class="table table-striped table-hover table-sm">
     <thead>
       <tr>
         <th>#</th>
@@ -86,8 +86,8 @@
       </tbody>
     }
   </table>
-  <div class="row">
-    <div class="form-group col-md-1 mt-1">
+  <div class="row mt-0 g-1">
+    <div class="form-group col-md-1">
       <button type="submit" class="btn btn-secondary" formaction="@actionpath?handler=Table_First" value="First" name="Table.First" title="Erste Seite">|&lt;</button>
       <button type="submit" class="btn btn-secondary" formaction="@actionpath?handler=Table_Prev" value="Prev" name="Table.Prev" title="Vorherige Seite">&lt;</button>
     </div>
@@ -100,7 +100,7 @@
     <div class="col-md-1">
       <input class="form-control" type="text" readonly="readonly" value="@Table!.PageCount" name="Table.PageCount" title="Anzahl der Seiten"/>
     </div>
-    <div class="form-group col-md-1 mt-1">
+    <div class="form-group col-md-1">
       <button type="submit" class="btn btn-secondary" formaction="@actionpath?handler=Table_Next" value="Next" name="Table.Next" title="Nächste Seite">&gt;</button>
       <button type="submit" class="btn btn-secondary" formaction="@actionpath?handler=Table_Last" value="Last" name="Table.Last" title="Letzte Seite">&gt;|</button>
     </div>
