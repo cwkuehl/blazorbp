@@ -24,6 +24,9 @@ public class Formular
   /// <summary>Holt oder setzt die betroffene ID.</summary>
   public string? Id { get; set; }
 
+  /// <summary>Holt oder setzt einen Wert, ob das Formular initialisiert werden sollen.</summary>
+  public bool Init { get; set; }
+
   /// <summary>
   /// Liefert die URL für das Formular.
   /// </summary>

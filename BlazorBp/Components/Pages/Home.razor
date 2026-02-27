@@ -69,12 +69,13 @@
             Navigation.NavigateTo("/index");
             return;
           }
+          var parm = "?init=1";
           if (string.IsNullOrEmpty(f.Area))
-            Navigation.NavigateTo($"/{f.Action}/{f.Id ?? ""}", true, true);
+            Navigation.NavigateTo($"/{f.Action}/{f.Id ?? ""}{parm}", true, true);
           else
           {
             // Redirect mit Id gibt immer Exception.
-            Navigation.NavigateTo($"/{f.Area}/{f.Action}/{f.Id ?? ""}", true, true);
+            Navigation.NavigateTo($"/{f.Area}/{f.Action}/{f.Id ?? ""}{parm}", true, true);
           }
         }
       }

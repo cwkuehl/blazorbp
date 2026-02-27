@@ -196,12 +196,13 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     }
     if (f == null)
       return OpenEmptyPage();
+    var parm = f.Init ? "?init=1" : $"";
     if (string.IsNullOrEmpty(f.Area))
-      Navigation.NavigateTo($"/{f.Action}/{f.Id ?? ""}", true, true);
+      Navigation.NavigateTo($"/{f.Action}/{f.Id ?? ""}{parm}", true, true);
     else
     {
       // Redirect mit Id gibt immer Exception.
-      Navigation.NavigateTo($"/{f.Area}/{f.Action}/{f.Id ?? ""}", true, true);
+      Navigation.NavigateTo($"/{f.Area}/{f.Action}/{f.Id ?? ""}{parm}", true, true);
     }
     return null;
   }
@@ -231,7 +232,10 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
         {
           f = uc.Formulare.LastOrDefault();
           if (f != null)
+          {
+            f.Init = true; // Damit wird in OnInitializedFormular erkannt, dass das Formular schon existiert.
             return OpenFormular(f);
+          }
         }
       }
       return OpenEmptyPage();
@@ -303,7 +307,14 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     T? model = null;
     TableModelBase<V>? table = null;
     if (Postback == 0 || Postback == 2)
+    {
       model = ReadFormularModel(id); // Bei Model-Postback ist kein Read notwendig.
+      if (!string.IsNullOrEmpty(model?.ModalId) && (HttpContext?.Request?.QueryString.HasValue ?? false)
+        && HttpContext.Request.QueryString.Value?.Contains("init=1") == true) 
+      {
+        model.ModalId = null; // Unterformular nicht anzeigen.
+      }
+    }
     if (Postback == 0 || Postback == 1)
       table = ReadFormularTableModel(id); // Der Table-Postback wird im SortableTable verarbeitet.
     if (Postback == 1 && Model != null)
