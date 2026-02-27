@@ -11,63 +11,62 @@
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
   <InputText type="hidden" @bind-Value="Model!.VerticalColClass"/>
   <input type="hidden" name="SubmitControl"/>
-  <div class="row mt-1">
+  <div class="row mt-1 g-0">
     <LabelInputValid type="submit" class="btn btn-secondary" For="@(() => Model!.Button)" VerticalColClass="@Model.VerticalColClass"/>
   </div>
-  <div class="row mt-1">
+  <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="x" For="@(() => Model!.TextBox)" VerticalColClass="@Model.VerticalColClass"/>
   </div>
-  <div class="row mt-1">
+  <div class="row mt-1 g-0">
     <LabelInputValid rows="5" AutoPostback="x" For="@(() => Model!.TextArea)" VerticalColClass="@Model.VerticalColClass"/>
   </div>
-  <div class="row mt-1">
+  <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="x" For="@(() => Model!.NumberBox)" VerticalColClass="@Model.VerticalColClass"/>
   </div>
-  <div class="row mt-1">
+  <div class="row mt-1 g-0">
     <LabelInputValid step="0.01" AutoPostback="x" For="@(() => Model!.CurrencyBox)" VerticalColClass="@Model.VerticalColClass"/>
   </div>
-  <div class="row mt-1">
+  <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="x" For="@(() => Model!.DateBox)" VerticalColClass="@Model.VerticalColClass"/>
   </div>
-  <div class="row mt-1">
+  <div class="row mt-1 g-0">
     <LabelInputValid type="checkbox" TrailingLabel="true" AutoPostback="x" For="@(() => Model!.CheckBox)" VerticalColClass="@Model.VerticalColClass"/>
   </div>
-  <div class="row mt-1">
+  <div class="row mt-1 g-0">
     <LabelInputValid type="radio" DataList="Model!.AuswahlRadioButton" AutoPostback="x" For="@(() => Model!.RadioButton)" VerticalColClass="@Model.VerticalColClass"/>
   </div>
-  <div class="row mt-1">
+  <div class="row mt-1 g-0">
     <LabelInputValid type="combobox" AutoPostback="x" DataList="Model!.AuswahlComboBox" For="@(() => Model!.ComboBox)" VerticalColClass="@Model.VerticalColClass"/>
   </div>
-  <div class="row mt-1">
+  <div class="row mt-1 g-0">
     <LabelInputValid type="listbox" size="3" AutoPostback="x" DataList="Model!.AuswahlListBox" For="@(() => Model!.ListBox)" VerticalColClass="@Model.VerticalColClass"/>
   </div>
-  <div class="row ms-1 mt-1">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.ReadWrite)"/>
-    <SubmitButton class="btn btn-primary col-md-2 me-1" For="@(() => Model!.ReadOnly)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Hidden)"/>
+  <div class="row mt-1 g-0">
+    <SubmitButton class="btn btn-secondary col-md-2" For="@(() => Model!.ReadWrite)"/>
+    <SubmitButton class="btn btn-primary col-md-2 ms-1" For="@(() => Model!.ReadOnly)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Hidden)"/>
   </div>
-  <div class="row ms-1 mt-1">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Color0)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Color1)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Color2)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Color3)"/>
+  <div class="row mt-1 g-0">
+    <SubmitButton class="btn btn-secondary col-md-2" For="@(() => Model!.Color0)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Color1)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Color2)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Color3)"/>
   </div>
-  <div class="row ms-1 mt-1">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Mandatory)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.MandatoryNot)"/>
+  <div class="row mt-1 g-0">
+    <SubmitButton class="btn btn-secondary col-md-2" For="@(() => Model!.Mandatory)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.MandatoryNot)"/>
   </div>
-  <div class="row ms-1 mt-1">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Error)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.ErrorNot)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.ErrorMessage)"/>
+  <div class="row mt-1 g-0">
+    <SubmitButton class="btn btn-secondary col-md-2" For="@(() => Model!.Error)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.ErrorNot)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.ErrorMessage)"/>
   </div>
-  <div class="row ms-1 mt-1">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Horizontal)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Vertikal)"/>
+  <div class="row mt-1 g-0">
+    <SubmitButton class="btn btn-secondary col-md-2" For="@(() => Model!.Horizontal)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Vertikal)"/>
   </div>
-  <div class="modal-footer mt-2">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
-    @* <SubmitButton class="btn btn-secondary col-md-2 me-1" value="_OK" title="Zum Drücken."/> *@
+  <div class="modal-footer mt-2 p-0">
+    <SubmitButton class="btn btn-secondary col-md-2" For="@(() => Model!.Schliessen)"/>
   </div>
 </EditForm>
 @if(valid)

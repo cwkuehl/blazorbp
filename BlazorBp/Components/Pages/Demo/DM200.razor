@@ -21,15 +21,15 @@
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
   <input type="hidden" name="SubmitControl"/>
-  <div class="row mt-1">
+  <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="x" For="@(() => Model!.TextBox)" VerticalColClass=""/>
   </div>
-  <div class="row ms-1 mt-1">
-    <input type="file" class="btn btn-secondary col-md-6 me-1" value="" name="filehochladen" id="filehochladen" multiple="multiple"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Import)"/>
+  <div class="row mt-1 g-0">
+    <input type="file" class="btn btn-secondary col-md-6" value="" name="filehochladen" id="filehochladen" multiple="multiple"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Import)"/>
   </div>
-  <div class="modal-footer mt-2">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
+  <div class="modal-footer mt-2 p-0">
+    <SubmitButton class="btn btn-secondary col-md-2" For="@(() => Model!.Schliessen)"/>
   </div>
 </EditForm>
 
@@ -51,13 +51,12 @@
           <input type="hidden" name="SubmitControl"/>
           <div class="row mt-1">
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-4"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Bezeichnung)" VerticalColClass="form-group col-md-4"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Beschreibung)" VerticalColClass="form-group col-md-4"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Bezeichnung)" VerticalColClass="form-group col-md-4 ms-1"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Beschreibung)" VerticalColClass="form-group col ms-1"/>
           </div>
-          <div class="modal-footer mt-2">
-            <SubmitButton class="btn btn-primary col-md-2 me-1" For="@(() => ModalModel!.Ok)"/>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-            @* <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => ModalModel!.Schliessen)"/> *@
+          <div class="modal-footer mt-2 p-0">
+            <SubmitButton class="btn btn-primary col-md-2" For="@(() => ModalModel!.Ok)"/>
+            <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button>
           </div>
         </EditForm>
       </div>

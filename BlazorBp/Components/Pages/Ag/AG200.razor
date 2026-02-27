@@ -25,11 +25,8 @@
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
   <input type="hidden" name="SubmitControl"/>
-  @* <div class="row mt-1">
-    <LabelInputValid AutoPostback="x" For="@(() => Model!.TextBox)" VerticalColClass=""/>
-  </div> *@
-  <div class="modal-footer mt-2">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
+  <div class="modal-footer mt-2 p-0">
+    <SubmitButton class="btn btn-secondary col-md-2" For="@(() => Model!.Schliessen)"/>
   </div>
 </EditForm>
 
@@ -49,25 +46,24 @@
           <InputText type="hidden" @bind-Value="ModalModel!.Nr"/>
           <InputText type="hidden" @bind-Value="ModalModel!.ReadonlyHiddenError"/>
           <input type="hidden" name="SubmitControl"/>
-          <div class="row mt-1">
+          <div class="row mt-1 g-0">
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-6"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.BenutzerId)" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.BenutzerId)" VerticalColClass="form-group col ms-1"/>
           </div>
-          <div class="row mt-1">
+          <div class="row mt-1 g-0">
             <LabelInputValid type="password" AutoPostback="" For="@(() => ModalModel!.Kennwort)" VerticalColClass="form-group col-md-6"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Geburt)" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Geburt)" VerticalColClass="form-group col ms-1"/>
           </div>
-          <div class="row mt-1">
+          <div class="row mt-1 g-0">
             <LabelInputValid type="radio" AutoPostback="" DataList="ModalModel!.AuswahlBerechtigung" For="@(() => ModalModel!.Berechtigung)" VerticalColClass="form-group col-md-12"/>
           </div>
-          <div class="row mt-1">
+          <div class="row mt-1 g-0">
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Angelegt)" VerticalColClass="form-group col-md-6"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Geaendert)" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Geaendert)" VerticalColClass="form-group col ms-1"/>
           </div>
-          <div class="modal-footer mt-2">
-            <SubmitButton class="btn btn-primary col-md-2 me-1" For="@(() => ModalModel!.Ok)"/>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-            @* <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => ModalModel!.Schliessen)"/> *@
+          <div class="modal-footer mt-2 p-0">
+            <SubmitButton class="btn btn-primary col-md-2" For="@(() => ModalModel!.Ok)"/>
+            <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button>
           </div>
         </EditForm>
       </div>
@@ -221,6 +217,10 @@ else
         }
         else
           ModalMessages?.Add(() => ModalModel, r.GetErrors());
+      }
+      else if (IsDateMhp(msubmit, nameof(ModalModel.Geburt), ModalModel.Geburt, out var d))
+      {
+        ModalModel.Geburt = d;
       }
       else if (form != "ag200modal")
       {
