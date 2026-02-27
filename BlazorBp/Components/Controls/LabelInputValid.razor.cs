@@ -62,6 +62,9 @@ public partial class LabelInputValid<TItem> : ComponentBase
   /// <summary>CSS-Class für Input (Eine Kombination von modified, valid, invalid).</summary>
   private string CssClass { get; set; } = "";
 
+  /// <summary>Step für Input mit Dezimalwerten.</summary>
+  private string Step { get; set; } = "";
+
   /// <summary>Aktueller Wert (public für Reflection).</summary>
   public TItem CurrentValue { get; set; } = default!;
 
@@ -123,6 +126,7 @@ public partial class LabelInputValid<TItem> : ComponentBase
 
   private string? autofocus = null;
 
+  /// <summary>Anzahl der Nachkommastellen für die Darstellung von Decimal-Werten.</summary>
   private int currency = 0;
 
   /// <summary>Anzahl der Renderns.</summary>
@@ -181,7 +185,8 @@ public partial class LabelInputValid<TItem> : ComponentBase
     canvas = InputType == "canvas";
     hidden = InputType == "hidden";
     AdditionalAttributes.TryGetValue("step", out obj);
-    currency = string.IsNullOrEmpty(obj?.ToString()) ? 0 : 2;
+    Step = obj?.ToString() ?? "";
+    currency = Step == "0.1" ? 1 : Step == "0.01" ? 2 : Step == "0.001" ? 3 : Step == "0.0001" ? 4 : Step == "0.00001" ? 5 : 0;
     AdditionalAttributes.TryGetValue("rows", out obj);
     var textarearows = obj?.ToString() ?? "";
     AdditionalAttributes.TryGetValue("cols", out obj);
@@ -432,6 +437,11 @@ public partial class LabelInputValid<TItem> : ComponentBase
       SetAttribute(Attributes2, "id", null);
     if (canvas)
       SetAttribute(Attributes2, "id", name);
+    if (InputType == "number" && !string.IsNullOrEmpty(Step))
+    {
+      SetAttribute(Attributes2, "step", Step);
+      SetAttribute(Attributes2, "lang", "de");
+    }
   }
 
   private bool TryParseValueFromString(string? value, out string result, out string validationErrorMessage)

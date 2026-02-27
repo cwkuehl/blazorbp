@@ -58,16 +58,16 @@
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Bezeichnung)" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Breite)" VerticalColClass="form-group col-md-4"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Laenge)" VerticalColClass="form-group col-md-4 ms-1"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Hoehe)" VerticalColClass="form-group col ms-1"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Breite)" VerticalColClass="form-group col-md-4" Step="0.00001"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Laenge)" VerticalColClass="form-group col-md-4 ms-1" Step="0.00001"/>
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Hoehe)" VerticalColClass="form-group col ms-1" Step="0.01"/>
           </div>
           <div class="row mt-1 g-0">
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Angelegt)" VerticalColClass="form-group col-md-6"/>
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Geaendert)" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Zeitzone)" VerticalColClass="form-group col"/>
+            <LabelInputValid AutoPostback="" type="combobox" DataList="ModalModel!.AuswahlZeitzone" For="@(() => ModalModel!.Zeitzone)" VerticalColClass="form-group col"/>
           </div>
           <div class="row mt-1 g-0">
             <LabelInputValid rows="5" AutoPostback="" For="@(() => ModalModel!.Notiz)" VerticalColClass="form-group col"/>
@@ -99,10 +99,6 @@ else
   /// <summary>Betroffener ValidationMessageStore.</summary>
   protected ValidationMessageStore? ModalMessages;
 
-  @* /// <summary>Holt oder setzt den Link für Map.</summary>
-  [SupplyParameterFromForm]
-  protected string? MapHref { get; set; } = default!;
- *@
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
 
@@ -114,11 +110,11 @@ else
   /// <param name="table">Evtl. gelesenes Table-Model.</param>
   protected override void Init(string? id, TB200Model? model = null, TableModelBase<TB200TableRowModel>? table = null)
   {
+    var daten = ServiceDaten;
     if (model != null)
       Model = model;
     if (Model == null)
     {
-      var daten = ServiceDaten;
       Model = new TB200Model
       {
         Nr = id,
@@ -141,6 +137,8 @@ else
     if (ModalModel == null)
       ModalModel = new TB200ModalModel();
     ModalModel.Nr = id;
+    var l0 = Get(FactoryService.DiaryService.GetTimezoneList(daten));
+    ModalModel.AuswahlZeitzone = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
     #pragma warning disable CS8604
     ModalEditContext = new(ModalModel);
     #pragma warning restore CS8604
@@ -210,10 +208,11 @@ else
         var dt = Formular.GetTableDialogType(Model.ModalArt);
         var daten = ServiceDaten;
         var o = ModalModel.To(daten);
-        var r = new ServiceErgebnis();
-        // TODO var r = dt == DialogTypeEnum.Delete
-        //   ? FactoryService.PrivateService.DeleteMemo(daten, o)
-        //   : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
+        var r = dt == DialogTypeEnum.Delete
+          ? FactoryService.DiaryService.DeletePosition(daten, o)
+          : FactoryService.DiaryService.SavePosition(daten, o.Uid, o.Bezeichnung,
+              Functions.ToString(o.Breite, 5), Functions.ToString(o.Laenge, 5),
+              Functions.ToString(o.Hoehe, 2), o.Zeitzone, o.Notiz);
         if (r.Ok)
         {
           Model.ModalArt = null;

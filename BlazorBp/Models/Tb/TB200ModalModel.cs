@@ -23,23 +23,26 @@ public class TB200ModalModel : PageModelBase
 
   /// <summary>Holt oder setzt Bezeichnung.</summary>
   [Display(Name = "_Bezeichnung", Description = "")]
-  //// [Required(ErrorMessage = "Bezeichnung muss angegeben werden.")]
+  [Required(ErrorMessage = "Bezeichnung muss angegeben werden.")]
   public string? Bezeichnung { get; set; }
 
   /// <summary>Holt oder setzt Breite.</summary>
   [Display(Name = "_Breite", Description = "")]
-  //// [Required(ErrorMessage = "Breite muss angegeben werden.")]
+  [Required(ErrorMessage = "Breite muss angegeben werden.")]
   public decimal Breite { get; set; }
 
   /// <summary>Holt oder setzt Länge.</summary>
   [Display(Name = "_Länge", Description = "")]
-  //// [Required(ErrorMessage = "Länge muss angegeben werden.")]
+  [Required(ErrorMessage = "Länge muss angegeben werden.")]
   public decimal Laenge { get; set; }
 
   /// <summary>Holt oder setzt Höhe.</summary>
   [Display(Name = "_Höhe", Description = "")]
   //// [Required(ErrorMessage = "Höhe muss angegeben werden.")]
   public decimal Hoehe { get; set; }
+
+  /// <summary>Holt oder setzt die Auswahlliste von Zeitzone.</summary>
+  public List<ListItem>? AuswahlZeitzone { get; set; } = default!;
 
   /// <summary>Holt oder setzt Zeitzone.</summary>
   [Display(Name = "_Zeitzone", Description = "Zeitzone")]
