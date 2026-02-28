@@ -6,6 +6,7 @@ namespace BlazorBp.Components.Pages;
 
 using BlazorBp.Base;
 using BlazorBp.Models.Ag;
+using BlazorBp.Models.Am;
 using BlazorBp.Models.Demo;
 using BlazorBp.Models.Fz;
 using BlazorBp.Models.Tb;
@@ -40,6 +41,14 @@ public static class DownloadData
           rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<AG100TableRowModel>>(s, page, id)?.ReadModel;
           service = 1; // ClientService
           break;
+        case "AG200":
+          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<AG200TableRowModel>>(s, page, id)?.ReadModel;
+          service = 1; // ClientService
+          break;
+        case "AM500":
+          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<AM500TableRowModel>>(s, page, id)?.ReadModel;
+          service = 1; // ClientService
+          break;
         case "DM200":
           rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<DM200TableRowModel>>(s, page, id)?.ReadModel;
           service = 0; // DemoService
@@ -58,6 +67,10 @@ public static class DownloadData
           break;
         case "TB100":
           pm = BlazorComponentBaseStatic.ReadFormularFormModel<TB100Model>(s, page, id);
+          service = 3; // DiaryService
+          break;
+        case "TB200":
+          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<TB200TableRowModel>>(s, page, id)?.ReadModel;
           service = 3; // DiaryService
           break;
         default:
@@ -92,6 +105,8 @@ public static class DownloadData
                 r = new ServiceErgebnis<string>(csv2);
               }
             }
+            else
+              r = FactoryService.DiaryService.GetCsvString(daten, page, rm);
             break;
           default:
             r = null;
