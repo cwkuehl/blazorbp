@@ -9,6 +9,7 @@ using CSBP.Services.Base;
 using CSBP.Services.Base.Csv;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.Extensions.Primitives;
 
 /// <summary>
 /// Basis-Klasse für alle Blazor-Formulare.
@@ -55,6 +56,18 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// <summary>Betroffener ValidationMessageStore.</summary>
   protected ValidationMessageStore? Messages;
 
+  /// <summary>Betroffener modaler EditContext.</summary>
+  protected EditContext? ModalEditContext;
+
+  /// <summary>Betroffener modaler ValidationMessageStore.</summary>
+  protected ValidationMessageStore? ModalMessages;
+
+  /// <summary>Betroffener 2. modaler EditContext.</summary>
+  protected EditContext? Modal2EditContext;
+
+  /// <summary>Betroffener 2. modaler ValidationMessageStore.</summary>
+  protected ValidationMessageStore? Modal2Messages;
+
   /// <summary>Navigation-Manager zum Navigieren.</summary>
   [Inject]
   protected NavigationManager Navigation { get; set; } = default!;
@@ -79,6 +92,16 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       if (ud == null)
         OpenEmptyPage();
       return new ServiceDaten(ud);
+    }
+  }
+
+  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
+  protected override void OnParametersSet()
+  {
+    if (Model != null)
+    {
+      EditContext = new(Model);
+      Messages = new(EditContext);
     }
   }
 
@@ -309,10 +332,11 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     if (Postback == 0 || Postback == 2)
     {
       model = ReadFormularModel(id); // Bei Model-Postback ist kein Read notwendig.
-      if (!string.IsNullOrEmpty(model?.ModalId) && (HttpContext.Request.QueryString.HasValue)
+      if ((!string.IsNullOrEmpty(model?.ModalId) || !string.IsNullOrEmpty(model?.Modal2Id))
         && HttpContext.Request.QueryString.Value?.Contains("init=1") == true) 
       {
-        model.ModalId = null; // Unterformular nicht anzeigen.
+        model.ModalId = null; // Unterformulare nicht anzeigen.
+        model.Modal2Id = null;
       }
     }
     if (Postback == 0 || Postback == 1)
@@ -351,23 +375,25 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       Refresh();
     }
 
-#pragma warning disable CS8604
-    EditContext = new(Model);
-#pragma warning restore CS8604
-    // #pragma warning disable CS0618
-    // EditContext.EnableDataAnnotationsValidation();
-    // #pragma warning disable CS0618
-    Messages = new(EditContext);
+//     #pragma warning disable CS8604
+//     EditContext = new(Model);
+//     #pragma warning restore CS8604
+//     // #pragma warning disable CS0618
+//     // EditContext.EnableDataAnnotationsValidation();
+//     // #pragma warning disable CS0618
+//     Messages = new(EditContext);
 
-    if (Model != null && Table != null)
+    if (Model != null) // && Table != null)
     {
       // Öffnen und schließen eines modalen Dialogs.
       if (HttpContext.Request.Method == "POST")
       {
-        var handler = HttpContext.Request.Query["handler"];
-        var form = HttpContext.Request.Form["_handler"];
-        var modalid = HttpContext.Request.Form["Table.ModalId"];
-        InitModal(form, handler, modalid);
+        var handler = HttpContext.Request.Query["handler"].FirstOrDefault()?.ToString() ?? "";
+        var form = HttpContext.Request.Form["_handler"].FirstOrDefault()?.ToString() ?? "";
+        var modalid = TableData == null ? null : HttpContext.Request.Form["Table.ModalId"].FirstOrDefault();
+        var modal2id = Model?.Modal2Id;
+        if (form.EndsWith("modal") || !string.IsNullOrEmpty(modalid))
+          HandleModal(form, handler, modalid, modal2id);
       }
     }
     if (Postback == 0)
@@ -452,7 +478,8 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// <param name="form">Betroffenes Postback-Formular.</param>
   /// <param name="handler">Handler aus Tabellen-Aktion.</param>
   /// <param name="id">Id aus Tabellen-Aktion.</param>
-  public virtual void InitModal(string? form, string? handler, string? id)
+  /// <param name="id2">Id aus 2. modalen Dialog.</param>
+  public virtual void HandleModal(string? form, string? handler, string? id, string? id2)
   {
   }
 

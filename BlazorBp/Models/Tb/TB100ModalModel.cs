@@ -72,7 +72,8 @@ public class TB100ModalModel : PageModelBase
   {
     if (mode == New)
     {
-      Datum = DateTime.Today;
+      if (!Datum.HasValue)
+        Datum = DateTime.Today;
     }
     SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
     SetMandatoryHiddenReadonly(nameof(Bezeichnung), true, false, true, false);

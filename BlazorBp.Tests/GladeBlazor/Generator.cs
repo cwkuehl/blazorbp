@@ -466,15 +466,9 @@ else
     if (modalroot != null)
     {
       sbr.Append($$"""
-  /// <summary>Holt oder setzt das Modal-Model.</summary>
+  /// <summary>Holt oder setzt das 1. Modal-Model.</summary>
   [SupplyParameterFromForm]
   protected {{form}}ModalModel ModalModel { get; set; } = default!;
-
-  /// <summary>Betroffener EditContext.</summary>
-  protected EditContext? ModalEditContext;
-
-  /// <summary>Betroffener ValidationMessageStore.</summary>
-  protected ValidationMessageStore? ModalMessages;
 
 """);
     }
@@ -575,7 +569,8 @@ else
   /// <param name="form">Betroffenes Postback-Formular.</param>
   /// <param name="handler">Handler aus Tabellen-Aktion.</param>
   /// <param name="id">Id aus Tabellen-Aktion.</param>
-  public override void InitModal(string? form, string? handler, string? id)
+  /// <param name="id2">Id aus 2. modalen Dialog.</param>
+  public override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
     if (!string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
     {

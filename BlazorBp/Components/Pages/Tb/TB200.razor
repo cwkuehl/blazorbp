@@ -37,70 +37,24 @@
   </div>
 </EditForm>
 
-@if (!string.IsNullOrEmpty(Model!.ModalId))
-{
-<div class="modal xxxfade" id="idmodal" tabindex="-1" role="dialog" aria-labelledby="lbldetails" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="lbldetails">Position @Functions.Iif(Model?.ModalArt == "Table_Edit", "ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "löschen", Functions.Iif(Model?.ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
-      </div>
-      <div class="modal-body">
-        <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="Submit" FormName="tb200modal">
-          <DataAnnotationsValidator/>
-          <ValidationSummary class="text-danger"/>
-          <InputText type="hidden" @bind-Value="ModalModel!.Nr"/>
-          <InputText type="hidden" @bind-Value="ModalModel!.ReadonlyHiddenError"/>
-          <input type="hidden" name="SubmitControl"/>
-          <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Bezeichnung)" VerticalColClass="form-group col ms-1"/>
-          </div>
-          <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Breite)" VerticalColClass="form-group col-md-4" Step="0.00001"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Laenge)" VerticalColClass="form-group col-md-4 ms-1" Step="0.00001"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Hoehe)" VerticalColClass="form-group col ms-1" Step="0.01"/>
-          </div>
-          <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Angelegt)" VerticalColClass="form-group col-md-6"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Geaendert)" VerticalColClass="form-group col ms-1"/>
-          </div>
-          <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" type="combobox" DataList="ModalModel!.AuswahlZeitzone" For="@(() => ModalModel!.Zeitzone)" VerticalColClass="form-group col"/>
-          </div>
-          <div class="row mt-1 g-0">
-            <LabelInputValid rows="5" AutoPostback="" For="@(() => ModalModel!.Notiz)" VerticalColClass="form-group col"/>
-          </div>
-          <div class="modal-footer mt-2 p-0">
-            <SubmitButton class="btn btn-primary col-md-2" For="@(() => ModalModel!.Ok)"/>
-            <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button>
-          </div>
-        </EditForm>
-      </div>
-    </div>
-  </div>
-</div>
-}
-else
-{
-  <EditForm Enhance method="post" EditContext="ModalEditContext" FormName="tb200modal">
-  </EditForm>
-}
+<TB210 TB210Model="TB210Model" ModalId="@Model.ModalId" ModalArt="@Model.ModalArt" ModalEditContext="@ModalEditContext" ModalMessages="@ModalMessages"/>
 
 @code {
-  /// <summary>Holt oder setzt das Modal-Model.</summary>
+  /// <summary>Holt oder setzt das Modal2-Model.</summary>
   [SupplyParameterFromForm]
-  protected TB200ModalModel ModalModel { get; set; } = default!;
+  protected TB200ModalModel TB210Model { get; set; } = default!;
 
-  /// <summary>Betroffener EditContext.</summary>
-  protected EditContext? ModalEditContext;
-
-  /// <summary>Betroffener ValidationMessageStore.</summary>
-  protected ValidationMessageStore? ModalMessages;
+  /// <summary>Holt oder setzt das Modal1.</summary>
+  private TB210 Modal1 = default!;
 
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
+
+  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
+  protected override void OnParametersSet()
+  {
+    base.OnParametersSet();
+  }
 
   /// <summary>
   /// Initialisierung des Models.
@@ -133,19 +87,25 @@ else
         SortColumn = $"{nameof(TbOrt.Bezeichnung)}#+",
       };
     Table.Nr = id;
-
-    if (ModalModel == null)
-      ModalModel = new TB200ModalModel();
-    ModalModel.Nr = id;
+    if (TB210Model == null)
+      TB210Model = new TB200ModalModel();
+    TB210Model.Nr = id;
     var l0 = Get(FactoryService.DiaryService.GetTimezoneList(daten));
-    ModalModel.AuswahlZeitzone = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
-    #pragma warning disable CS8604
-    ModalEditContext = new(ModalModel);
-    #pragma warning restore CS8604
-    // #pragma warning disable CS0618
-    // ModalEditContext.EnableDataAnnotationsValidation();
-    // #pragma warning disable CS0618
-    ModalMessages = new(ModalEditContext);
+    TB210Model.AuswahlZeitzone = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
+    if (TB210Model != null)
+    {
+      // Zu spät in Funktion OnParametersSet() wegen ModalMessages, deshalb hier.
+      ModalEditContext = new(TB210Model);
+      ModalMessages = new(ModalEditContext);
+    }
+  }
+
+  /// <summary>
+  /// Aktualisierung nach Undo/Redo.
+  /// </summary>
+  protected override void Refresh()
+  {
+    TableData(Table, ModalMessages);
   }
 
   /// <summary>
@@ -172,14 +132,15 @@ else
   /// <param name="form">Betroffenes Postback-Formular.</param>
   /// <param name="handler">Handler aus Tabellen-Aktion.</param>
   /// <param name="id">Id aus Tabellen-Aktion.</param>
-  public override void InitModal(string? form, string? handler, string? id)
+  /// <param name="id2">Id aus 2. modalen Dialog.</param>
+  public override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
     if (!string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
     {
       var dt = Formular.GetTableDialogType(handler);
       if (dt == DialogTypeEnum.New)
       {
-        ModalModel.SetMhrf(DialogTypeEnum.New);
+        TB210Model.SetMhrf(DialogTypeEnum.New);
         Model.ModalArt = handler;
         Model.ModalId = id;
       }
@@ -192,8 +153,8 @@ else
           var ds = l.Skip(i - 1).FirstOrDefault();
           if (ds != null)
           {
-            ModalModel.From(ds);
-            ModalModel.SetMhrf(dt);
+            TB210Model.From(ds);
+            TB210Model.SetMhrf(dt);
             Model.ModalArt = handler;
             Model.ModalId = id;
           }
@@ -202,12 +163,13 @@ else
     }
     else
     {
-      var msubmit = ModalModel.Submit ?? "";
-      if (msubmit == nameof(ModalModel.Ok))
+      var msubmit = TB210Model.Submit ?? "";
+      if (msubmit == nameof(TB210Model.Ok))
       {
+        Modal1?.ModalSubmit();
         var dt = Formular.GetTableDialogType(Model.ModalArt);
         var daten = ServiceDaten;
-        var o = ModalModel.To(daten);
+        var o = TB210Model.To(daten);
         var r = dt == DialogTypeEnum.Delete
           ? FactoryService.DiaryService.DeletePosition(daten, o)
           : FactoryService.DiaryService.SavePosition(daten, o.Uid, o.Bezeichnung,
@@ -217,12 +179,12 @@ else
         {
           Model.ModalArt = null;
           Model.ModalId = null;
-          TableData(Table, ModalMessages);
+          Refresh();
         }
         else
-          ModalMessages?.Add(() => ModalModel, r.GetErrors());
+          ModalMessages?.Add(() => TB210Model, r.GetErrors());
       }
-      else if (form != "tb200modal")
+      else if (form != "tb210modal")
       {
         Model.ModalArt = null;
         Model.ModalId = null;

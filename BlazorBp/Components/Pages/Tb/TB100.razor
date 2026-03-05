@@ -137,7 +137,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
       </div>
       <div class="modal-body">
-        <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="Submit" FormName="tb100modal">
+        <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="Submit" FormName="tb110modal">
           <DataAnnotationsValidator/>
           <ValidationSummary class="text-danger"/>
           <InputText type="hidden" @bind-Value="ModalModel!.Nr"/>
@@ -162,9 +162,11 @@
 }
 else
 {
-  <EditForm Enhance method="post" EditContext="ModalEditContext" FormName="tb100modal">
+  <EditForm Enhance method="post" EditContext="ModalEditContext" FormName="tb110modal">
   </EditForm>
 }
+
+<TB210 TB210Model="TB210Model" ModalId="@Model.Modal2Id" ModalArt="@Model.ModalArt" ModalEditContext="@Modal2EditContext" ModalMessages="@Modal2Messages"/>
 
 <script type="application/json" id="canvasdata">
 @((MarkupString)CanvasDaten)

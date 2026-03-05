@@ -6,7 +6,6 @@ using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using CSBP.Services.Factory;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 
 namespace BlazorBp.Components.Pages.Tb;
 
@@ -19,17 +18,26 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
   [SupplyParameterFromForm]
   protected TB100ModalModel ModalModel { get; set; } = default!;
 
-  /// <summary>Betroffener EditContext.</summary>
-  protected EditContext? ModalEditContext;
-
-  /// <summary>Betroffener ValidationMessageStore.</summary>
-  protected ValidationMessageStore? ModalMessages;
+  /// <summary>Holt oder setzt das Modal2-Model.</summary>
+  [SupplyParameterFromForm]
+  protected TB200ModalModel TB210Model { get; set; } = default!;
 
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
 
   /// <summary>Holt oder setzt die Canvas-Daten.</summary>
   private string CanvasDaten = "";
+
+  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
+  protected override void OnParametersSet()
+  {
+    base.OnParametersSet();
+    if (ModalModel != null)
+    {
+      ModalEditContext = new(ModalModel);
+      ModalMessages = new(ModalEditContext);
+    }
+  }
 
   /// <summary>
   /// Initialisierung des Models.
@@ -69,13 +77,126 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
         // Beschreibung = null,
       };
     ModalModel.Nr = id;
-    #pragma warning disable CS8604
-    ModalEditContext = new(ModalModel);
-    #pragma warning restore CS8604
-    // #pragma warning disable CS0618
-    // ModalEditContext.EnableDataAnnotationsValidation();
-    // #pragma warning disable CS0618
-    ModalMessages = new(ModalEditContext);
+    if (TB210Model == null)
+      TB210Model = new TB200ModalModel();
+    TB210Model.Nr = id;
+    var l0 = Get(FactoryService.DiaryService.GetTimezoneList(daten));
+    TB210Model.AuswahlZeitzone = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
+    if (TB210Model != null)
+    {
+      Modal2EditContext = new(TB210Model);
+      Modal2Messages = new(Modal2EditContext);
+    }
+  }
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  /// <param name="id2">Id aus 2. modalen Dialog.</param>
+  public override void HandleModal(string? form, string? handler, string? id, string? id2)
+  {
+    if (form == "tb110modal")
+    {
+      if (!string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
+      {
+        var dt = Formular.GetTableDialogType(handler);
+        if (dt == DialogTypeEnum.New)
+        {
+          ModalModel.SetMhrf(dt);
+          Model.ModalArt = handler;
+          Model.ModalId = id;
+        }
+      }
+      else
+      {
+        var msubmit = ModalModel.Submit ?? "";
+        var uid = Model.Position;
+        if (!string.IsNullOrEmpty(uid) && Model.Date.HasValue && Model.PositionList != null)
+        {
+          var o = Model.PositionList?.FirstOrDefault(a => a.Ort_Uid == uid);
+          if (o != null)
+          {
+            if (string.IsNullOrEmpty(msubmit))
+            {
+              // Formular TB110 Date öffnen
+              ModalModel.From(o);
+              HandleModal("tb110modal", "Table_New", o.Ort_Uid, null);
+            }
+            else if (msubmit == nameof(ModalModel.Ok))
+            {
+              var to = ModalModel.Datum;
+              if (to.HasValue)
+              {
+                if (to.Value >= Model.Date.Value)
+                  o.Datum_Bis = to.Value;
+                else
+                  o.Datum_Von = to.Value;
+              }
+              InitPositions();
+              //// Formular TB110 Date schließen.
+              Model.ModalArt = null;
+              Model.ModalId = null;
+            }
+            else if (IsDateMhp(msubmit, nameof(ModalModel.Datum), ModalModel.Datum, out var dm))
+            {
+              ModalModel.Datum = dm;
+            }
+            else
+            {
+              // Formular TB110 Date schließen.
+              Model.ModalArt = null;
+              Model.ModalId = null;
+            }
+          }
+        }
+      }
+    }
+    else if (form == "tb210modal")
+    {
+      if (!string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id2))
+      {
+        var dt = Formular.GetTableDialogType(handler);
+        if (dt == DialogTypeEnum.New)
+        {
+          TB210Model.SetMhrf(dt);
+          Model.ModalArt = handler;
+          Model.Modal2Id = id2;
+        }
+      }
+      else
+      {
+        var msubmit = TB210Model.Submit ?? "";
+        if (msubmit == nameof(TB210Model.Ok))
+        {
+          var dt = Formular.GetTableDialogType(Model.ModalArt);
+          var daten = ServiceDaten;
+          var o = TB210Model.To(daten);
+          var r = dt == DialogTypeEnum.Delete
+            ? FactoryService.DiaryService.DeletePosition(daten, o)
+            : FactoryService.DiaryService.SavePosition(daten, o.Uid, o.Bezeichnung,
+                Functions.ToString(o.Breite, 5), Functions.ToString(o.Laenge, 5),
+                Functions.ToString(o.Hoehe, 2), o.Zeitzone, o.Notiz);
+          if (r.Ok)
+          {
+            Model.ModalArt = null;
+            Model.Modal2Id = null;
+            Refresh();
+          }
+          else
+            Modal2Messages?.Add(() => TB210Model, r.GetErrors());
+        }
+      }
+    }
+    else
+    {
+      Model.ModalArt = null;
+      Model.ModalId = null;
+      Model.Modal2Id = null;
+    }
+    WriteFormularModel(Model.Nr ?? "0", Model);
   }
 
   /// <summary>
@@ -84,6 +205,7 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
   protected override void Refresh()
   {
     BearbeiteEintraege(false);
+    InitLists();
   }
 
   /// <summary>
@@ -404,8 +526,8 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
     }
     else if (submit == nameof(Model.New))
     {
-      // TODO Formular TB210 Position öffnen
-      // Start(typeof(TB210Position), TB210_title, DialogTypeEnum.New, null, csbpparent: this);
+      // Formular TB210 Position öffnen
+      HandleModal("tb210modal", "Table_New", null, "1");
     }
     else if (submit == nameof(Model.Remove) && Model.PositionList != null)
     {
@@ -447,36 +569,8 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
           if (string.IsNullOrEmpty(msubmit))
           {
             // Formular TB110 Date öffnen
-            ModalModel.SetMhrf(DialogTypeEnum.New);
             ModalModel.From(o);
-            Model.ModalArt = "Table_New";
-            Model.ModalId = o.Ort_Uid;
-          }
-          else if (msubmit == nameof(ModalModel.Ok))
-          {
-            // InitModal("tb100", "Table_New", o.Ort_Uid);
-            var to = ModalModel.Datum;
-            if (to.HasValue)
-            {
-              if (to.Value >= Model.Date.Value)
-                o.Datum_Bis = to.Value;
-              else
-                o.Datum_Von = to.Value;
-            }
-            InitPositions();
-            //// Formular TB110 Date schließen.
-            Model.ModalArt = null;
-            Model.ModalId = null;
-          }
-          else if (IsDateMhp(msubmit, nameof(ModalModel.Datum), ModalModel.Datum, out var dm))
-          {
-            ModalModel.Datum = dm;
-          }
-          else
-          {
-            // Formular TB110 Date schließen.
-            Model.ModalArt = null;
-            Model.ModalId = null;
+            HandleModal("tb110modal", "Table_New", o.Ort_Uid, null);
           }
         }
         else

@@ -29,19 +29,11 @@ public class PageModelBase
   /// <summary>Holt oder setzt die Art des modalen Dialogs (Neu, Bearbeiten, Löschen).</summary>
   public string? ModalArt { get; set; }
 
-  private string? _modalId = null;
-
   /// <summary>Holt oder setzt die Id im modalen Dialogs.</summary>
-  public string? ModalId
-  {
-    get { return _modalId; }
-    set
-    {
-      if (value == "3")
-        Functions.MachNichts();
-      _modalId = value;
-    }
-  }
+  public string? ModalId { get; set; } = default;
+
+  /// <summary>Holt oder setzt die Id im 2. modalen Dialogs.</summary>
+  public string? Modal2Id { get; set; } = default;
 
   /// <summary>Holt oder setzt das Control mit dem Fokus. (Bezeichnung aus Model)</summary>
   public string? Focus { get; set; } = default;
