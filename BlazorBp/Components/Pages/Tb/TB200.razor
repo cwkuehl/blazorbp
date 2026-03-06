@@ -42,7 +42,7 @@
 @code {
   /// <summary>Holt oder setzt das Modal2-Model.</summary>
   [SupplyParameterFromForm]
-  protected TB200ModalModel TB210Model { get; set; } = default!;
+  protected TB210Model TB210Model { get; set; } = default!;
 
   /// <summary>Holt oder setzt das Modal1.</summary>
   private TB210 Modal1 = default!;
@@ -88,7 +88,7 @@
       };
     Table.Nr = id;
     if (TB210Model == null)
-      TB210Model = new TB200ModalModel();
+      TB210Model = new TB210Model();
     TB210Model.Nr = id;
     var l0 = Get(FactoryService.DiaryService.GetTimezoneList(daten));
     TB210Model.AuswahlZeitzone = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());

@@ -7,15 +7,14 @@ namespace BlazorBp.Models.Tb;
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Base;
 using CSBP.Services.Apis.Models;
-using CSBP.Services.Apis.Models.Views;
 using CSBP.Services.Base;
 using static BlazorBp.Base.DialogTypeEnum;
 
 /// <summary>
-/// Model-Klasse für das modale Formular TB100 Datum der Position.
+/// Model-Klasse für das modale Formular TB110 Datum der Position.
 /// </summary>
 [Serializable]
-public class TB100ModalModel : PageModelBase
+public class TB110Model : PageModelBase
 {
   /// <summary>Holt oder setzt Nr..</summary>
   [Display(Name = "Positions-Nr.", Description = "Positions-Nr.")]

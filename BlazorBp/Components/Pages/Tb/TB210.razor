@@ -1,10 +1,13 @@
 @code {
+  /// <summary>Holt oder setzt das Model.</summary>
   [Parameter]
-  public TB200ModalModel? TB210Model { get; set; } // = new TB200ModalModel();
+  public TB210Model? TB210Model { get; set; }
 
+  /// <summary>Holt oder setzt die Id im modalen Dialogs.</summary>
   [Parameter]
   public string? ModalId { get; set; }
 
+  /// <summary>Holt oder setzt die Art des modalen Dialogs (Neu, Bearbeiten, Löschen).</summary>
   [Parameter]
   public string? ModalArt { get; set; }
 

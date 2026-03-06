@@ -1,0 +1,79 @@
+@code {
+  /// <summary>Holt oder setzt das Model.</summary>
+  [Parameter]
+  public TB110Model? TB110Model { get; set; }
+
+  /// <summary>Holt oder setzt die Id im modalen Dialogs.</summary>
+  [Parameter]
+  public string? ModalId { get; set; }
+
+  /// <summary>Holt oder setzt die Art des modalen Dialogs (Neu, Bearbeiten, Löschen).</summary>
+  [Parameter]
+  public string? ModalArt { get; set; }
+
+  /// <summary>Betroffener EditContext.</summary>
+  [Parameter]
+  public EditContext? ModalEditContext { get; set; }
+
+  /// <summary>Betroffener ValidationMessageStore.</summary>
+  [Parameter]
+  public ValidationMessageStore? ModalMessages { get; set; }
+}
+
+@if (string.IsNullOrEmpty(ModalId))
+{
+  <EditForm Enhance method="post" EditContext="ModalEditContext" FormName="tb110modal"></EditForm>
+}
+else
+{
+<div class="modal xxxfade" id="idmodal" tabindex="-1" role="dialog" aria-labelledby="lbldetails" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="lbldetails">Datum der Position</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+      </div>
+      <div class="modal-body">
+        <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="ModalSubmit" FormName="tb110modal">
+          <DataAnnotationsValidator/>
+          <ValidationSummary class="text-danger"/>
+          <InputText type="hidden" @bind-Value="TB110Model!.Nr"/>
+          <InputText type="hidden" @bind-Value="TB110Model!.ReadonlyHiddenError"/>
+          <input type="hidden" name="SubmitControl"/>
+          <div class="row mt-1 g-0">
+            <LabelInputValid AutoPostback="" For="@(() => TB110Model!.Nummer)" VerticalColClass="form-group col-md-3"/>
+            <LabelInputValid AutoPostback="" For="@(() => TB110Model!.Bezeichnung)" VerticalColClass="form-group col ms-1"/>
+          </div>
+          <div class="row mt-1 g-0">
+            <LabelInputValid AutoPostback="" For="@(() => TB110Model!.Datum)" VerticalColClass="form-group col"/>
+          </div>
+          <div class="modal-footer mt-2 p-0">
+            <SubmitButton class="btn btn-primary col-md-2" For="@(() => TB110Model!.Ok)"/>
+            <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button>
+          </div>
+        </EditForm>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+@code {
+  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
+  protected override void OnParametersSet()
+  {
+  }
+
+  /// <summary>Initialisierung der Komponente.</summary>
+  protected override void OnInitialized()
+  {
+  }
+    
+  public void ModalSubmit()
+  {
+    if (TB110Model != null)
+    {
+      Functions.MachNichts();
+    }
+  }
+}

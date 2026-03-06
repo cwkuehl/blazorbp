@@ -127,44 +127,7 @@
   </div>
 </EditForm>
 
-@if (!string.IsNullOrEmpty(Model!.ModalId))
-{
-<div class="modal xxxfade" id="idmodal" tabindex="-1" role="dialog" aria-labelledby="lbldetails" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="lbldetails">Datum der Position</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
-      </div>
-      <div class="modal-body">
-        <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="Submit" FormName="tb110modal">
-          <DataAnnotationsValidator/>
-          <ValidationSummary class="text-danger"/>
-          <InputText type="hidden" @bind-Value="ModalModel!.Nr"/>
-          <InputText type="hidden" @bind-Value="ModalModel!.ReadonlyHiddenError"/>
-          <input type="hidden" name="SubmitControl"/>
-          <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-3"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Bezeichnung)" VerticalColClass="form-group col ms-1"/>
-          </div>
-          <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Datum)" VerticalColClass="form-group col"/>
-          </div>
-          <div class="modal-footer mt-2 p-0">
-            <SubmitButton class="btn btn-primary col-md-2" For="@(() => ModalModel!.Ok)"/>
-            <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button>
-          </div>
-        </EditForm>
-      </div>
-    </div>
-  </div>
-</div>
-}
-else
-{
-  <EditForm Enhance method="post" EditContext="ModalEditContext" FormName="tb110modal">
-  </EditForm>
-}
+<TB110 TB110Model="TB110Model" ModalId="@Model.ModalId" ModalArt="@Model.ModalArt" ModalEditContext="@ModalEditContext" ModalMessages="@ModalMessages"/>
 
 <TB210 TB210Model="TB210Model" ModalId="@Model.Modal2Id" ModalArt="@Model.ModalArt" ModalEditContext="@Modal2EditContext" ModalMessages="@Modal2Messages"/>
 

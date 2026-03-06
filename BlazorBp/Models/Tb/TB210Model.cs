@@ -11,10 +11,10 @@ using CSBP.Services.Base;
 using static BlazorBp.Base.DialogTypeEnum;
 
 /// <summary>
-/// Model-Klasse für das modale Formular TB200 Positionen.
+/// Model-Klasse für das modale Formular TB210 Positione.
 /// </summary>
 [Serializable]
-public class TB200ModalModel : PageModelBase
+public class TB210Model : PageModelBase
 {
   /// <summary>Holt oder setzt Nr..</summary>
   [Display(Name = "Nr.", Description = "")]
