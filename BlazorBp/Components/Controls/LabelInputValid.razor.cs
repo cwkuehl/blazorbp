@@ -48,12 +48,16 @@ public partial class LabelInputValid<TItem> : ComponentBase
   /// <summary>Holt oder setzt die zu generierenden Attribute.</summary>
   private IDictionary<string, object>? Attributes2 { get; set; }
 
+  /// <summary>Holt oder setzt die ID des Steuerelements für die Fehlermeldung der Validierung.</summary>
   private string? Id { get; set; }
 
+  /// <summary>Holt oder setzt den Accesskey.</summary>
   private string? Accesskey { get; set; }
 
+  /// <summary>Holt oder setzt den Tooltip.</summary>
   private string? Title { get; set; }
 
+  /// <summary>Holt oder setzt das Label mit Accesskey.</summary>
   private MarkupString LabelMu { get; set; } = new();
 
   /// <summary>CSS-Class für Label.</summary>

@@ -17,7 +17,7 @@ Folgende Funktionen sind implementiert:
 -Autopostback für Input und Select mit minimalem Javascript realisiert,
 -Kurz nach dem Postback werden alle Steuerelemente disabled, um Doppelklicks zu verhindern,
 -Felder sperren und verstecken,
--Fehler-Felder markieren,
+-Meldungen mit Name des fehlerhaften Steuerelements mit automatischer Fehlermarkierung,
 -Hintergrundfarbe der Steuerelemente lässt sich auswählen,
 -Fokus setzen,
 -Default-Schaltfläche (mit Javascript und class btn-primary),
@@ -27,7 +27,7 @@ Folgende Funktionen sind implementiert:
 -Werte im Model speichern, die nicht per Postback aus dem Formular kommen,
 -MVC-AuthController für Globale Funktionen,
 -Tabellen mit Blättern, Spalten-Sortierung, Filtern, CSV-Export (Datei herunterladen)
--modale Dialoge mit Components,
+-modale Dialoge als Components mit eigenem Model, aber Steuerlogik im Hauptformular,
 -Anzeige der Restzeit für den Ablauf der Sitzung und automatische Abmeldung,
 -dynamischer Link zu Hilfe-Seite des aktuellen Formulars,
 -Drucken des aktuellen Formulars,
@@ -53,10 +53,8 @@ Folgende Funktionen sind implementiert:
 TODO Folgende Funktionen sind noch nicht implementiert:
 -dotnet new razorclasslib -o BlazorBp.Components, Vererbung der Component-Klasse,
 -Postback mit abhängigen Auswahllisten,
--Undo und Redo in Formularen,
 -Meldungen und Entscheidungen,
 -TagHelper-Implementierung für Email, File, Time, Bust mit Demo-Seite,
--Meldungen mit Name des fehlerhaften Steuerelements mit automatischer Fehlermarkierung,
 -Formulare und Steuerelemente mit Eigenschaften für Barrierefreihet (Accessibility) versehen,
 
 Konzept für Barrierfreiheit:
