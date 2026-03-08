@@ -135,7 +135,7 @@
   /// <param name="id2">Id aus 2. modalen Dialog.</param>
   public override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
-    if (!string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
+    if (form == "tb200t" && !string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
     {
       var dt = Formular.GetTableDialogType(handler);
       if (dt == DialogTypeEnum.New)
