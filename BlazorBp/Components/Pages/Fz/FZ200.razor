@@ -32,55 +32,20 @@
   </div>
 </EditForm>
 
-@if (!string.IsNullOrEmpty(Model!.ModalId))
-{
-<div class="modal xxxfade" id="idmodal" tabindex="-1" role="dialog" aria-labelledby="lbldetails" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="lbldetails">Fahrrad @Functions.Iif(Model?.ModalArt == "Table_Edit", "ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "löschen", Functions.Iif(Model?.ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
-      </div>
-      <div class="modal-body">
-        <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="Submit" FormName="fz200modal">
-          <DataAnnotationsValidator/>
-          <ValidationSummary class="text-danger"/>
-          <InputText type="hidden" @bind-Value="ModalModel!.Nr"/>
-          <InputText type="hidden" @bind-Value="ModalModel!.ReadonlyHiddenError"/>
-          <input type="hidden" name="SubmitControl"/>
-          <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Bezeichnung)" VerticalColClass="form-group col ms-1"/>
-          </div>
-          <div class="row mt-1 g-0">
-            <LabelInputValid type="radio" AutoPostback="" DataList="ModalModel!.AuswahlTyp" For="@(() => ModalModel!.Typ)" VerticalColClass="form-group col-md-2"/>
-          </div>
-          <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Angelegt)" VerticalColClass="form-group col-md-6"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Geaendert)" VerticalColClass="form-group col ms-1"/>
-          </div>
-          <div class="modal-footer mt-2 p-0">
-            <SubmitButton class="btn btn-primary col-md-2" For="@(() => ModalModel!.Ok)"/>
-            <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button>
-          </div>
-        </EditForm>
-      </div>
-    </div>
-  </div>
-</div>
-}
-else
-{
-  <EditForm Enhance method="post" EditContext="ModalEditContext" FormName="fz200modal">
-  </EditForm>
-}
+<FZ210 FZ210Model="FZ210Model" ModalId="@Model.ModalId" ModalArt="@Model.ModalArt" ModalEditContext="@ModalEditContext" ModalMessages="@ModalMessages"/>
 
 @code {
   [SupplyParameterFromForm]
-  protected FZ200ModalModel ModalModel { get; set; } = default!;
+  protected FZ210Model FZ210Model { get; set; } = default!;
 
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
+
+  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
+  protected override void OnParametersSet()
+  {
+    base.OnParametersSet();
+  }
 
   /// <summary>
   /// Initialisierung des Models.
@@ -114,21 +79,28 @@ else
       };
     Table.Nr = id;
 
-    if (ModalModel == null)
-      ModalModel = new FZ200ModalModel();
-    ModalModel.Nr = id;
-    ModalModel.AuswahlTyp = new List<ListItem>
+    if (FZ210Model == null)
+      FZ210Model = new FZ210Model();
+    FZ210Model.Nr = id;
+    FZ210Model.AuswahlTyp = new List<ListItem>
     {
       new(Functions.ToString((int)CSBP.Services.Apis.Enums.BikeTypeEnum.Tour), CSBP.Services.Resources.Messages.Enum_bike_tour),
       new(Functions.ToString((int)CSBP.Services.Apis.Enums.BikeTypeEnum.Weekly), CSBP.Services.Resources.Messages.Enum_bike_weekly),
     };
-    #pragma warning disable CS8604
-    ModalEditContext = new(ModalModel);
-    #pragma warning restore CS8604
-    // #pragma warning disable CS0618
-    // ModalEditContext.EnableDataAnnotationsValidation();
-    // #pragma warning disable CS0618
-    ModalMessages = new(ModalEditContext);
+    if (FZ210Model != null)
+    {
+      // Zu spät in Funktion OnParametersSet() wegen ModalMessages, deshalb hier.
+      ModalEditContext = new(FZ210Model);
+      ModalMessages = new(ModalEditContext);
+    }
+  }
+
+  /// <summary>
+  /// Aktualisierung nach Undo/Redo.
+  /// </summary>
+  protected override void Refresh()
+  {
+    TableData(Table, Messages);
   }
 
   /// <summary>
@@ -158,12 +130,12 @@ else
   /// <param name="id2">Id aus 2. modalen Dialog.</param>
   public override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
-    if (!string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
+    if (form == "fz200t" && !string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
     {
       var dt = Formular.GetTableDialogType(handler);
       if (dt == DialogTypeEnum.New)
       {
-        ModalModel.SetMhrf(DialogTypeEnum.New);
+        FZ210Model.SetMhrf(DialogTypeEnum.New);
         Model.ModalArt = handler;
         Model.ModalId = id;
       }
@@ -176,8 +148,8 @@ else
           var ds = l.Skip(i - 1).FirstOrDefault();
           if (ds != null)
           {
-            ModalModel.From(ds);
-            ModalModel.SetMhrf(dt);
+            FZ210Model.From(ds);
+            FZ210Model.SetMhrf(dt);
             Model.ModalArt = handler;
             Model.ModalId = id;
           }
@@ -186,12 +158,12 @@ else
     }
     else
     {
-      var msubmit = ModalModel.Submit ?? "";
-      if (msubmit == nameof(ModalModel.Ok))
+      var msubmit = FZ210Model.Submit ?? "";
+      if (msubmit == nameof(FZ210Model.Ok))
       {
         var dt = Formular.GetTableDialogType(Model.ModalArt);
         var daten = ServiceDaten;
-        var o = ModalModel.To(daten);
+        var o = FZ210Model.To(daten);
         var r = dt == DialogTypeEnum.Delete
           ? FactoryService.PrivateService.DeleteBike(daten, o)
           : FactoryService.PrivateService.SaveBike(daten, o.Uid, o.Bezeichnung, o.Typ);
@@ -202,9 +174,9 @@ else
           TableData(Table, ModalMessages);
         }
         else
-          ModalMessages?.Add(() => ModalModel, r.GetErrors());
+          ModalMessages?.Add(() => FZ210Model, r.GetErrors());
       }
-      else if (form != "fz200modal")
+      else if (form != "fz210modal")
       {
         Model.ModalArt = null;
         Model.ModalId = null;

@@ -1,4 +1,4 @@
-// <copyright file="FZ200ModalModel.cs" company="cwkuehl.de">
+// <copyright file="FZ210Model.cs" company="cwkuehl.de">
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
@@ -14,7 +14,7 @@ using static BlazorBp.Base.DialogTypeEnum;
 /// Model-Klasse für das modale Formular FZ200 Fahrräder.
 /// </summary>
 [Serializable]
-public class FZ200ModalModel : PageModelBase
+public class FZ210Model : PageModelBase
 {
   /// <summary>Holt oder setzt Nr..</summary>
   [Display(Name = "Nr.", Description = "Fahrrad-Nr.")]

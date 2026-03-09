@@ -1,0 +1,84 @@
+@code {
+  /// <summary>Holt oder setzt das Model.</summary>
+  [Parameter]
+  public FZ210Model? FZ210Model { get; set; }
+
+  /// <summary>Holt oder setzt die Id im modalen Dialogs.</summary>
+  [Parameter]
+  public string? ModalId { get; set; }
+
+  /// <summary>Holt oder setzt die Art des modalen Dialogs (Neu, Bearbeiten, Löschen).</summary>
+  [Parameter]
+  public string? ModalArt { get; set; }
+
+  /// <summary>Betroffener EditContext.</summary>
+  [Parameter]
+  public EditContext? ModalEditContext { get; set; }
+
+  /// <summary>Betroffener ValidationMessageStore.</summary>
+  [Parameter]
+  public ValidationMessageStore? ModalMessages { get; set; }
+}
+
+@if (string.IsNullOrEmpty(ModalId))
+{
+  <EditForm Enhance method="post" EditContext="ModalEditContext" FormName="fz210modal"></EditForm>
+}
+else
+{
+<div class="modal xxxfade" id="idmodal" tabindex="-1" role="dialog" aria-labelledby="lbldetails" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="lbldetails">Fahrrad @Functions.Iif(ModalArt == "Table_Edit", "ändern", Functions.Iif(ModalArt == "Table_Delete", "löschen", Functions.Iif(ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+      </div>
+      <div class="modal-body">
+        <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="ModalSubmit" FormName="fz210modal">
+          <DataAnnotationsValidator/>
+          <ValidationSummary class="text-danger"/>
+          <InputText type="hidden" @bind-Value="FZ210Model!.Nr"/>
+          <InputText type="hidden" @bind-Value="FZ210Model!.ReadonlyHiddenError"/>
+          <input type="hidden" name="SubmitControl"/>
+          <div class="row mt-1 g-0">
+            <LabelInputValid AutoPostback="" For="@(() => FZ210Model!.Nummer)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => FZ210Model!.Bezeichnung)" VerticalColClass="form-group col ms-1"/>
+          </div>
+          <div class="row mt-1 g-0">
+            <LabelInputValid type="radio" AutoPostback="" DataList="FZ210Model!.AuswahlTyp" For="@(() => FZ210Model!.Typ)" VerticalColClass="form-group col-md-2"/>
+          </div>
+          <div class="row mt-1 g-0">
+            <LabelInputValid AutoPostback="" For="@(() => FZ210Model!.Angelegt)" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid AutoPostback="" For="@(() => FZ210Model!.Geaendert)" VerticalColClass="form-group col ms-1"/>
+          </div>
+          <div class="modal-footer mt-2 p-0">
+            <SubmitButton class="btn btn-primary col-md-2" For="@(() => FZ210Model!.Ok)"/>
+            <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button>
+          </div>
+        </EditForm>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+@code {
+  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
+  protected override void OnParametersSet()
+  {
+  }
+
+  /// <summary>Initialisierung der Komponente.</summary>
+  protected override void OnInitialized()
+  {
+  }
+ 
+  /// <summary>Submit-Methode für das modale Formular wird fast nie aufgerufen.</summary>
+ public void ModalSubmit()
+  {
+    if (FZ210Model != null)
+    {
+      Functions.MachNichts();
+    }
+  }
+}
