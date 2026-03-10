@@ -643,7 +643,7 @@ else
         {
           Model.ModalArt = null;
           Model.ModalId = null;
-          TableData(Table, ModalMessages);
+          Refresh();
         }
         else
           ModalMessages?.Add(() => ModalModel, r.GetErrors());
