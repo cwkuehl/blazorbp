@@ -58,6 +58,7 @@ public class Generator
     }
     var area = Functions.ToFirstUpper(Directory.GetParent(file)?.Name, true);
     var form = Path.GetFileName(file).Left(5).ToUpper();
+    var form2 = modalfile != null ? Path.GetFileName(modalfile).Left(5).ToUpper() : null;
     var title = ReadResource(resxml, $"{form}.title") ?? form;
     var table = GetControls(root.Children, a => a.Type == "GtkTreeView").FirstOrDefault();
     var sorttable = "";
@@ -71,7 +72,7 @@ public class Generator
       rowcontrols = GenerateModel(genpath, modalroot, area, form, title, "TableRow");
       sorttable = GenerateTableModels(genpath, rowcontrols, area, form, title, table.Text);
     }
-    GenerateRazor(genpath, root, modalroot, rowcontrols, area, form, title, sorttable);
+    GenerateRazor(genpath, root, modalroot, rowcontrols, area, form, form2, title, sorttable);
   }
 
   /// <summary>
@@ -340,10 +341,19 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
   /// Razor-Datei erzeugen.
   /// </summary>
   /// <param name="genpath">Betroffener Basis-Pfad zum Generieren.</param>
-  private static void GenerateRazor(string genpath, Control root, Control? modalroot, List<Control>? rowcontrols, string area, string form, string title, string sorttable)
+  /// <param name="root">Root-Control für das Formular.</param>
+  /// <param name="modalroot">Root-Control für das modale Formular.</param>
+  /// <param name="rowcontrols">Controls für die Tabellenzeile.</param>
+  /// <param name="area">Betroffene Area.</param>
+  /// <param name="form">Betroffenes Formular.</param>
+  /// <param name="form2">Betroffenes modales Formular.</param>
+  /// <param name="title">Betroffener Titel.</param>
+  /// <param name="sorttable">Sortierbare Tabelle.</param>
+  private static void GenerateRazor(string genpath, Control root, Control? modalroot, List<Control>? rowcontrols, string area, string form, string? form2, string title, string sorttable)
   {
     var sbr = new StringBuilder();
     var sb = new StringBuilder();
+    var sb2 = new StringBuilder(); // für Modal-Steuerelement
     var sbm = new StringBuilder();
     var rowmodel = modalroot == null ? "TableRowModelBase" : $"{form}TableRowModel";
     var first = rowcontrols == null ? null : rowcontrols.First().Name.ToFirstUpper();
@@ -468,13 +478,31 @@ else
       sbr.Append($$"""
   /// <summary>Holt oder setzt das 1. Modal-Model.</summary>
   [SupplyParameterFromForm]
-  protected {{form}}ModalModel ModalModel { get; set; } = default!;
+  protected {{form2}}Model {{form2}}Model { get; set; } = default!;
 
 """);
     }
     sbr.Append($$"""
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
+
+  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
+  protected override void OnParametersSet()
+  {
+    base.OnParametersSet();
+""");
+    if (modalroot != null)
+    {
+      sbr.Append($$"""
+    if ({{form2}}Model != null)
+    {
+      ModalEditContext = new({{form2}}Model);
+      ModalMessages = new(ModalEditContext);
+    }
+""");
+    }
+    sbr.Append($$"""
+  }
 
   /// <summary>
   /// Initialisierung des Models.
@@ -527,17 +555,18 @@ else
         // Beschreibung = null,
       };
     ModalModel.Nr = id;
-    #pragma warning disable CS8604
-    ModalEditContext = new(ModalModel);
-    #pragma warning restore CS8604
-    // #pragma warning disable CS0618
-    // ModalEditContext.EnableDataAnnotationsValidation();
-    // #pragma warning disable CS0618
-    ModalMessages = new(ModalEditContext);
 
 """);
     }
     sbr.Append($$"""
+  }
+
+  /// <summary>
+  /// Aktualisierung nach Undo/Redo.
+  /// </summary>
+  protected override void Refresh()
+  {
+    // TODO TableData(Table, Messages);
   }
 
   /// <summary>

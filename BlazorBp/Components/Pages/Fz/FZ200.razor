@@ -45,6 +45,12 @@
   protected override void OnParametersSet()
   {
     base.OnParametersSet();
+    if (FZ210Model != null)
+    {
+      // Zu spät in Funktion OnParametersSet() wegen ModalMessages, deshalb hier.
+      ModalEditContext = new(FZ210Model);
+      ModalMessages = new(ModalEditContext);
+    }
   }
 
   /// <summary>
@@ -87,12 +93,6 @@
       new(Functions.ToString((int)CSBP.Services.Apis.Enums.BikeTypeEnum.Tour), CSBP.Services.Resources.Messages.Enum_bike_tour),
       new(Functions.ToString((int)CSBP.Services.Apis.Enums.BikeTypeEnum.Weekly), CSBP.Services.Resources.Messages.Enum_bike_weekly),
     };
-    if (FZ210Model != null)
-    {
-      // Zu spät in Funktion OnParametersSet() wegen ModalMessages, deshalb hier.
-      ModalEditContext = new(FZ210Model);
-      ModalMessages = new(ModalEditContext);
-    }
   }
 
   /// <summary>

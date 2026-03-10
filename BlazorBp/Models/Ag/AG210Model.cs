@@ -1,4 +1,4 @@
-// <copyright file="AG200ModalModel.cs" company="cwkuehl.de">
+// <copyright file="AG210Model.cs" company="cwkuehl.de">
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
@@ -11,10 +11,10 @@ using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 
 /// <summary>
-/// Model-Klasse für das modale Formular AG200 Benutzer.
+/// Model-Klasse für das modale Formular AG210 Benutzer.
 /// </summary>
 [Serializable]
-public class AG200ModalModel : PageModelBase
+public class AG210Model : PageModelBase
 {
   /// <summary>Holt oder setzt die Nummer.</summary>
   [Display(Name = "_Nr.", Description = "Die Nummer des Mandanten kann nicht geändert werden.")]

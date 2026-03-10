@@ -372,6 +372,11 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     if (HttpContext.Session?.GetBoolean("Refresh") ?? false)
     {
       HttpContext.Session?.SetBoolean("Refresh", false);
+      if (model != null)
+      {
+        model.ModalId = null; // Unterformulare nicht anzeigen.
+        model.Modal2Id = null;
+      }
       Refresh();
     }
 

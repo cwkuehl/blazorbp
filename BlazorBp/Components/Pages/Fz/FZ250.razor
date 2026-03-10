@@ -97,6 +97,18 @@ else
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
 
+  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
+  protected override void OnParametersSet()
+  {
+    base.OnParametersSet();
+    @* if (FZ260Model != null)
+    {
+      // Zu spät in Funktion OnParametersSet() wegen ModalMessages, deshalb hier.
+      ModalEditContext = new(FZ260Model);
+      ModalMessages = new(ModalEditContext);
+    } *@
+  }
+
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>

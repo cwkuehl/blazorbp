@@ -93,6 +93,14 @@
   }
 
   /// <summary>
+  /// Aktualisierung nach Undo/Redo.
+  /// </summary>
+  protected override void Refresh()
+  {
+    TableData(Table, Messages);
+  }
+
+  /// <summary>
   /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
   /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
   /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
@@ -173,7 +181,7 @@
           else
             ModalMessages?.Add(() => AG110Model, r.GetErrors());
         }
-        else if (form != "ag100modal")
+        else if (form != "ag110modal")
         {
           Model.ModalArt = null;
           Model.ModalId = null;
