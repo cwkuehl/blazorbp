@@ -534,7 +534,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     if (table.SelectedPage > table.PageCount)
     {
       table.SelectedPage = table.PageCount;
-      if (string.IsNullOrEmpty(handler))
+      if (string.IsNullOrEmpty(handler) || handler == "Table_Next")
         table.Liste = TableData(table, messages);
     }
     if (last || table.SelectedRow > (table.Liste?.Count ?? 0))
