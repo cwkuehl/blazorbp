@@ -1,4 +1,4 @@
-// <copyright file="AM500ModalModel.cs" company="cwkuehl.de">
+// <copyright file="AM510Model.cs" company="cwkuehl.de">
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
@@ -14,7 +14,7 @@ using CSBP.Services.Base;
 /// Model-Klasse für das modale Formular AM500 Einstellungen.
 /// </summary>
 [Serializable]
-public class AM500ModalModel : PageModelBase
+public class AM510Model : PageModelBase
 {
   /// <summary>Holt oder setzt den Schlüssel.</summary>
   [Display(Name = "_Schlüssel", Description = "Der Schlüssel kann nicht geändert werden.")]
