@@ -63,13 +63,13 @@ public class Generator
     var table = GetControls(root.Children, a => a.Type == "GtkTreeView").FirstOrDefault();
     var sorttable = "";
     List<Control>? rowcontrols = null;
-    GenerateModel(genpath, root, area, form, title, "");
-    GenerateModel(genpath, modalroot, area, form, title, "Modal");
+    GenerateModel(genpath, root, area, form, null, title, "");
+    GenerateModel(genpath, modalroot, area, form2, form, title, "Modal");
     if (modalroot != null)
     {
       if (table == null)
         throw new Exception("Table fehlt.");
-      rowcontrols = GenerateModel(genpath, modalroot, area, form, title, "TableRow");
+      rowcontrols = GenerateModel(genpath, modalroot, area, form, null, title, "TableRow");
       sorttable = GenerateTableModels(genpath, rowcontrols, area, form, title, table.Text);
     }
     GenerateRazor(genpath, root, modalroot, rowcontrols, area, form, form2, title, sorttable);
@@ -79,7 +79,7 @@ public class Generator
   /// Model erzeugen.
   /// </summary>
   /// <param name="genpath">Betroffener Basis-Pfad zum Generieren.</param>
-  private static List<Control> GenerateModel(string genpath, Control? root, string area, string form, string title, string prefix)
+  private static List<Control> GenerateModel(string genpath, Control? root, string area, string? form, string? form0, string title, string prefix)
   {
     if (root == null)
       return new();
@@ -89,6 +89,7 @@ public class Generator
     var besch = "das ";
     if (prefix == "Modal")
     {
+      prefix = "";
       modal = true;
       besch = "das modale ";
     }
@@ -235,14 +236,14 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
   /// <summary>Kopiert die Werte in ein Model.</summary>
   /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
   /// <returns>Das kopierte Model.</returns>
-  public {{form}}TodoModel To(ServiceDaten daten) => new()
+  public {{form0}}TodoModel To(ServiceDaten daten) => new()
   {
     // TODO Mandant_Nr = daten.MandantNr,
 {{sbt4}}  };
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
-  public void From({{form}}TableRowModel m) =>
+  public void From({{form0}}TableRowModel m) =>
   (
 {{sbt5.ToString()[..^2]}}
     // TODO , Angelegt, Geaendert
@@ -351,10 +352,10 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
   /// <param name="sorttable">Sortierbare Tabelle.</param>
   private static void GenerateRazor(string genpath, Control root, Control? modalroot, List<Control>? rowcontrols, string area, string form, string? form2, string title, string sorttable)
   {
-    var sbr = new StringBuilder();
+    var sbr = new StringBuilder(); // für Haupt-Formular razor
     var sb = new StringBuilder();
-    var sb2 = new StringBuilder(); // für Modal-Steuerelement
-    var sbm = new StringBuilder();
+    var sbr2 = new StringBuilder(); // für Modal-Formular
+    var sbm = new StringBuilder(); // für TodoModel
     var rowmodel = modalroot == null ? "TableRowModelBase" : $"{form}TableRowModel";
     var first = rowcontrols == null ? null : rowcontrols.First().Name.ToFirstUpper();
 
@@ -404,21 +405,52 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
     if (modalroot != null)
     {
       sbr.Append($$"""
-@if (!string.IsNullOrEmpty(Model!.ModalId))
+<{{form2}} {{form2}}Model="{{form2}}Model" ModalId="@Model.ModalId" ModalArt="@Model.ModalArt" ModalEditContext="@ModalEditContext" ModalMessages="@ModalMessages"/>
+
+
+""");
+      sbr2.Append($$"""
+@code {
+  /// <summary>Holt oder setzt das Model.</summary>
+  [Parameter]
+  public {{form2}}Model? {{form2}}Model { get; set; }
+
+  /// <summary>Holt oder setzt die Id im modalen Dialogs.</summary>
+  [Parameter]
+  public string? ModalId { get; set; }
+
+  /// <summary>Holt oder setzt die Art des modalen Dialogs (Neu, Bearbeiten, Löschen).</summary>
+  [Parameter]
+  public string? ModalArt { get; set; }
+
+  /// <summary>Betroffener EditContext.</summary>
+  [Parameter]
+  public EditContext? ModalEditContext { get; set; }
+
+  /// <summary>Betroffener ValidationMessageStore.</summary>
+  [Parameter]
+  public ValidationMessageStore? ModalMessages { get; set; }
+}
+
+@if (string.IsNullOrEmpty(ModalId))
+{
+  <EditForm Enhance method="post" EditContext="ModalEditContext" FormName="{{form2?.ToLower()}}modal"></EditForm>
+}
+else
 {
 <div class="modal xxxfade" id="idmodal" tabindex="-1" role="dialog" aria-labelledby="lbldetails" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="lbldetails">TODO @Functions.Iif(Model?.ModalArt == "Table_Edit", "ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "löschen", Functions.Iif(Model?.ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
+        <h5 class="modal-title" id="lbldetails">TODO @Functions.Iif(ModalArt == "Table_Edit", "ändern", Functions.Iif(ModalArt == "Table_Delete", "löschen", Functions.Iif(ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
       </div>
       <div class="modal-body">
-        <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="Submit" FormName="{{form.ToLower()}}modal">
+        <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="ModalSubmit" FormName="{{form2?.ToLower()}}modal">
           <DataAnnotationsValidator/>
           <ValidationSummary class="text-danger"/>
-          <InputText type="hidden" @bind-Value="ModalModel!.Nr"/>
-          <InputText type="hidden" @bind-Value="ModalModel!.ReadonlyHiddenError"/>
+          <InputText type="hidden" @bind-Value="{{form2}}Model!.Nr"/>
+          <InputText type="hidden" @bind-Value="{{form2}}Model!.ReadonlyHiddenError"/>
           <input type="hidden" name="SubmitControl"/>
 
 """);
@@ -442,30 +474,45 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
           if (c.Name == "abbrechen")
             sb.AppendLine($$"""            <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button>""");
           else
-            sb.AppendLine($$"""            <SubmitButton class="btn btn-{{Functions.Iif(c.Name == "ok", "primary", "secondary")}} col-md-2 ms-1" For="@(() => ModalModel!.{{Functions.ToFirstUpper(c.Name)}})"/>""");
+            sb.AppendLine($$"""            <SubmitButton class="btn btn-{{Functions.Iif(c.Name == "ok", "primary", "secondary")}} col-md-2 ms-1" For="@(() => {{form2}}Model!.{{Functions.ToFirstUpper(c.Name)}})"/>""");
         }
         else
         {
-          sb.AppendLine($$"""            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.{{Functions.ToFirstUpper(c.Name)}})" VerticalColClass="form-group col-md-2"/>""");
+          sb.AppendLine($$"""            <LabelInputValid AutoPostback="" For="@(() => {{form2}}Model!.{{Functions.ToFirstUpper(c.Name)}})" VerticalColClass="form-group col-md-2"/>""");
           if (c.Name != "angelegt" && c.Name != "geaendert")
             sbm.AppendLine($$"""       {{Functions.ToFirstUpper(c.Name)}} = "{{Functions.ToFirstUpper(c.Name)}}1",""");
         }
       }
       sb.AppendLine($"          </div>");
-      sbr.Append(sb);
-      sbr.Append($$"""
+      sbr2.Append(sb);
+      sbr2.Append($$"""
         </EditForm>
       </div>
     </div>
   </div>
 </div>
 }
-else
-{
-  <EditForm Enhance method="post" EditContext="ModalEditContext" FormName="{{form.ToLower()}}modal">
-  </EditForm>
-}
 
+@code {
+  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
+  protected override void OnParametersSet()
+  {
+  }
+
+  /// <summary>Initialisierung der Komponente.</summary>
+  protected override void OnInitialized()
+  {
+  }
+ 
+  /// <summary>Submit-Methode für das modale Formular wird fast nie aufgerufen.</summary>
+ public void ModalSubmit()
+  {
+    if ({{form2}}Model != null)
+    {
+      Functions.MachNichts();
+    }
+  }
+}
 
 """);
     }
@@ -502,6 +549,7 @@ else
 """);
     }
     sbr.Append($$"""
+
   }
 
   /// <summary>
@@ -548,13 +596,13 @@ else
     {
       sbr.Append($$"""
 
-    if (ModalModel == null)
-      ModalModel = new {{form}}ModalModel
+    if ({{form2}}Model == null)
+      {{form2}}Model = new {{form2}}Model
       {
         // TODO Nummer = "1",
         // Beschreibung = null,
       };
-    ModalModel.Nr = id;
+    {{form2}}Model.Nr = id;
 
 """);
     }
@@ -601,58 +649,67 @@ else
   /// <param name="id2">Id aus 2. modalen Dialog.</param>
   public override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
-    if (!string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
+    if (form == "{{form.ToLower()}}t" || form == "{{form2?.ToLower()}}modal")
     {
-      var dt = Formular.GetTableDialogType(handler);
-      if (dt == DialogTypeEnum.New)
+      if (form == "{{form.ToLower()}}t" && !string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
       {
-        ModalModel.SetMhrf(DialogTypeEnum.New);
-        Model.ModalArt = handler;
-        Model.ModalId = id;
+        var dt = Formular.GetTableDialogType(handler);
+        if (dt == DialogTypeEnum.New)
+        {
+          {{form2}}Model.SetMhrf(DialogTypeEnum.New);
+          Model.ModalArt = handler;
+          Model.ModalId = id;
+        }
+        else
+        {
+          var i = Functions.ToInt32(id);
+          if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
+          {
+            var l = TableData(Table, ModalMessages);
+            var ds = l.Skip(i - 1).FirstOrDefault();
+            if (ds != null)
+            {
+              {{form2}}Model.From(ds);
+              {{form2}}Model.SetMhrf(dt);
+              Model.ModalArt = handler;
+              Model.ModalId = id;
+            }
+          }
+        }
       }
       else
       {
-        var i = Functions.ToInt32(id);
-        if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
+        var msubmit = {{form2}}Model.Submit ?? "";
+        if (msubmit == nameof({{form2}}Model.Ok))
         {
-          var l = TableData(Table, ModalMessages);
-          var ds = l.Skip(i - 1).FirstOrDefault();
-          if (ds != null)
+          var dt = Formular.GetTableDialogType(Model.ModalArt);
+          var daten = ServiceDaten;
+          var o = {{form2}}Model.To(daten);
+          var r = new ServiceErgebnis();
+          // TODO var r = dt == DialogTypeEnum.Delete
+          //   ? FactoryService.PrivateService.DeleteMemo(daten, o)
+          //   : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
+          if (r.Ok)
           {
-            ModalModel.From(ds);
-            ModalModel.SetMhrf(dt);
-            Model.ModalArt = handler;
-            Model.ModalId = id;
+            Model.ModalArt = null;
+            Model.ModalId = null;
+            Refresh();
           }
+          else
+            ModalMessages?.Add(() => {{form2}}Model, r.GetErrors());
+        }
+        else if (form != "{{form2?.ToLower()}}modal")
+        {
+          Model.ModalArt = null;
+          Model.ModalId = null;
         }
       }
     }
     else
     {
-      var msubmit = ModalModel.Submit ?? "";
-      if (msubmit == nameof(ModalModel.Ok))
-      {
-        var dt = Formular.GetTableDialogType(Model.ModalArt);
-        var daten = ServiceDaten;
-        var o = ModalModel.To(daten);
-        var r = new ServiceErgebnis();
-        // TODO var r = dt == DialogTypeEnum.Delete
-        //   ? FactoryService.PrivateService.DeleteMemo(daten, o)
-        //   : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
-        if (r.Ok)
-        {
-          Model.ModalArt = null;
-          Model.ModalId = null;
-          Refresh();
-        }
-        else
-          ModalMessages?.Add(() => ModalModel, r.GetErrors());
-      }
-      else if (form != "{{form.ToLower()}}modal")
-      {
-        Model.ModalArt = null;
-        Model.ModalId = null;
-      }
+      Model.ModalArt = null;
+      Model.ModalId = null;
+      Model.Modal2Id = null;
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
   }
@@ -690,10 +747,10 @@ else
       }
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
-    if (submit == nameof(Model.Schliessen))
-    {
-      CloseFormular();
-    }
+    // TODO if (submit == nameof(Model.Abbrechen))
+    // {
+    //   CloseFormular();
+    // }
   }
 
 """);
@@ -746,6 +803,8 @@ else
     var path = Path.Combine(genpath, "Components", "Pages", area);
     Directory.CreateDirectory(path);
     File.WriteAllText(Path.Combine(path, $"{form}.razor"), sbr.ToString());
+    if (modalroot != null)
+      File.WriteAllText(Path.Combine(path, $"{form2}.razor"), sbr2.ToString());
   }
 
   private static void ParseGlade(Control root, string file, XmlDocument resxml)
