@@ -1,4 +1,4 @@
-// <copyright file="FZ250ModalModel.cs" company="cwkuehl.de">
+// <copyright file="FZ260Model.cs" company="cwkuehl.de">
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
@@ -11,10 +11,10 @@ using CSBP.Services.Base;
 using static BlazorBp.Base.DialogTypeEnum;
 
 /// <summary>
-/// Model-Klasse für das modale Formular FZ250 Fahrradstände.
+/// Model-Klasse für das modale Formular FZ260 Fahrradstand.
 /// </summary>
 [Serializable]
-public class FZ250ModalModel : PageModelBase
+public class FZ260Model : PageModelBase
 {
   /// <summary>Holt oder setzt Nr..</summary>
   [Display(Name = "Fahrradstand-Nr.", Description = "Fahrradstand-Nr.")]

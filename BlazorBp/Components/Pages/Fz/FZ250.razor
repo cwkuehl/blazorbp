@@ -39,60 +39,11 @@
   </div>
 </EditForm>
 
-@if (!string.IsNullOrEmpty(Model!.ModalId))
-{
-<div class="modal xxxfade" id="idmodal" tabindex="-1" role="dialog" aria-labelledby="lbldetails" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="lbldetails">Fahrradstand @Functions.Iif(Model?.ModalArt == "Table_Edit", "ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "löschen", Functions.Iif(Model?.ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
-      </div>
-      <div class="modal-body">
-        <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="Submit" FormName="fz250modal">
-          <DataAnnotationsValidator/>
-          <ValidationSummary class="text-danger"/>
-          <InputText type="hidden" @bind-Value="ModalModel!.Nr"/>
-          <InputText type="hidden" @bind-Value="ModalModel!.Nummer"/>
-          <InputText type="hidden" @bind-Value="ModalModel!.ReadonlyHiddenError"/>
-          <input type="hidden" name="SubmitControl"/>
-          <div class="row mt-1 g-0">
-            @* <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-2"/> *@
-            <LabelInputValid AutoPostback="" type="combobox"DataList="ModalModel!.AuswahlFahrrad" For="@(() => ModalModel!.Fahrrad)" VerticalColClass="form-group col-md-4"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Datum)" VerticalColClass="form-group col ms-1"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.UnterNr)" VerticalColClass="form-group col-md-2 ms-1"/>
-          </div>
-          <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Zaehler)" VerticalColClass="form-group col-md-4"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Km)" VerticalColClass="form-group col-md-4 ms-1"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Schnitt)" VerticalColClass="form-group col ms-1"/>
-          </div>
-          <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Beschreibung)" VerticalColClass="form-group col-md-12"/>
-          </div>
-          <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Angelegt)" VerticalColClass="form-group col-md-6"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Geaendert)" VerticalColClass="form-group col ms-1"/>
-          </div>
-          <div class="modal-footer mt-2 p-0">
-            <SubmitButton class="btn btn-primary col-md-2" For="@(() => ModalModel!.Ok)"/>
-            <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button>
-          </div>
-        </EditForm>
-      </div>
-    </div>
-  </div>
-</div>
-}
-else
-{
-  <EditForm Enhance method="post" EditContext="ModalEditContext" FormName="fz250modal">
-  </EditForm>
-}
+<FZ260 FZ260Model="FZ260Model" ModalId="@Model.ModalId" ModalArt="@Model.ModalArt" ModalEditContext="@ModalEditContext" ModalMessages="@ModalMessages"/>
 
 @code {
   [SupplyParameterFromForm]
-  protected FZ250ModalModel ModalModel { get; set; } = default!;
+  protected FZ260Model FZ260Model { get; set; } = default!;
 
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
@@ -101,12 +52,11 @@ else
   protected override void OnParametersSet()
   {
     base.OnParametersSet();
-    @* if (FZ260Model != null)
+    if (FZ260Model != null)
     {
-      // Zu spät in Funktion OnParametersSet() wegen ModalMessages, deshalb hier.
       ModalEditContext = new(FZ260Model);
       ModalMessages = new(ModalEditContext);
-    } *@
+    }
   }
 
   /// <summary>
@@ -143,12 +93,12 @@ else
       };
     Table.Nr = id;
 
-    if (ModalModel == null)
-      ModalModel = new FZ250ModalModel();
-    ModalModel.Nr = id;
-    ModalModel.AuswahlFahrrad = l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList();
+    if (FZ260Model == null)
+      FZ260Model = new FZ260Model();
+    FZ260Model.Nr = id;
+    FZ260Model.AuswahlFahrrad = l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList();
     #pragma warning disable CS8604
-    ModalEditContext = new(ModalModel);
+    ModalEditContext = new(FZ260Model);
     #pragma warning restore CS8604
     // #pragma warning disable CS0618
     // ModalEditContext.EnableDataAnnotationsValidation();
@@ -192,60 +142,69 @@ else
   /// <param name="id2">Id aus 2. modalen Dialog.</param>
   public override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
-    var daten = ServiceDaten;
-    if (!string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
+    if (form == "fz250t" || form == "fz260modal")
     {
-      var dt = Formular.GetTableDialogType(handler);
-      if (dt == DialogTypeEnum.New)
+      var daten = ServiceDaten;
+      if (form == "fz250t" && !string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
       {
-        ModalModel.SetMhrf(DialogTypeEnum.New);
-        Model.ModalArt = handler;
-        Model.ModalId = id;
+        var dt = Formular.GetTableDialogType(handler);
+        if (dt == DialogTypeEnum.New)
+        {
+          FZ260Model.SetMhrf(DialogTypeEnum.New);
+          Model.ModalArt = handler;
+          Model.ModalId = id;
+        }
+        else
+        {
+          var i = Functions.ToInt32(id);
+          if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
+          {
+            var l = TableData(Table, ModalMessages);
+            var ds = l.Skip(i - 1).FirstOrDefault();
+            if (ds != null)
+            {
+              FZ260Model.From(ds);
+              FZ260Model.SetMhrf(dt);
+              Model.ModalArt = handler;
+              Model.ModalId = id;
+            }
+          }
+        }
       }
       else
       {
-        var i = Functions.ToInt32(id);
-        if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
+        var msubmit = FZ260Model.Submit ?? "";
+        if (msubmit == nameof(FZ260Model.Ok))
         {
-          var l = TableData(Table, ModalMessages);
-          var ds = l.Skip(i - 1).FirstOrDefault();
-          if (ds != null)
+          var dt = Formular.GetTableDialogType(Model.ModalArt);
+          var o = FZ260Model.To(daten);
+          var r = dt == DialogTypeEnum.Delete
+            ? FactoryService.PrivateService.DeleteMileage(daten, o)
+            : FactoryService.PrivateService.SaveMileage(daten, o.Fahrrad_Uid, o.Datum, o.Nr, o.Zaehler_km, o.Periode_km, o.Periode_Schnitt, o.Beschreibung);
+          Get(r, ModalMessages);
+          if (r.Ok)
           {
-            ModalModel.From(ds);
-            ModalModel.SetMhrf(dt);
-            Model.ModalArt = handler;
-            Model.ModalId = id;
+            Model.ModalArt = null;
+            Model.ModalId = null;
+            Refresh();
           }
+        }
+        else if (IsDateMhp(msubmit, nameof(FZ260Model.Datum), FZ260Model.Datum, out var d))
+        {
+          FZ260Model.Datum = d;
+        }
+        else if (form != "fz250modal")
+        {
+          Model.ModalArt = null;
+          Model.ModalId = null;
         }
       }
     }
     else
     {
-      var msubmit = ModalModel.Submit ?? "";
-      if (msubmit == nameof(ModalModel.Ok))
-      {
-        var dt = Formular.GetTableDialogType(Model.ModalArt);
-        var o = ModalModel.To(daten);
-        var r = dt == DialogTypeEnum.Delete
-          ? FactoryService.PrivateService.DeleteMileage(daten, o)
-          : FactoryService.PrivateService.SaveMileage(daten, o.Fahrrad_Uid, o.Datum, o.Nr, o.Zaehler_km, o.Periode_km, o.Periode_Schnitt, o.Beschreibung);
-        Get(r, ModalMessages);
-        if (r.Ok)
-        {
-          Model.ModalArt = null;
-          Model.ModalId = null;
-          Refresh();
-        }
-      }
-      else if (IsDateMhp(msubmit, nameof(ModalModel.Datum), ModalModel.Datum, out var d))
-      {
-        ModalModel.Datum = d;
-      }
-      else if (form != "fz250modal")
-      {
-        Model.ModalArt = null;
-        Model.ModalId = null;
-      }
+      Model.ModalArt = null;
+      Model.ModalId = null;
+      Model.Modal2Id = null;
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
   }
