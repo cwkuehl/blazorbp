@@ -135,60 +135,69 @@
   /// <param name="id2">Id aus 2. modalen Dialog.</param>
   public override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
-    if (form == "tb200t" && !string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
+    if (form == "tb200t" || form == "tb210modal")
     {
-      var dt = Formular.GetTableDialogType(handler);
-      if (dt == DialogTypeEnum.New)
+      if (form == "tb200t" && !string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
       {
-        TB210Model.SetMhrf(DialogTypeEnum.New);
-        Model.ModalArt = handler;
-        Model.ModalId = id;
+        var dt = Formular.GetTableDialogType(handler);
+        if (dt == DialogTypeEnum.New)
+        {
+          TB210Model.SetMhrf(DialogTypeEnum.New);
+          Model.ModalArt = handler;
+          Model.ModalId = id;
+        }
+        else
+        {
+          var i = Functions.ToInt32(id);
+          if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
+          {
+            var l = TableData(Table, ModalMessages);
+            var ds = l.Skip(i - 1).FirstOrDefault();
+            if (ds != null)
+            {
+              TB210Model.From(ds);
+              TB210Model.SetMhrf(dt);
+              Model.ModalArt = handler;
+              Model.ModalId = id;
+            }
+          }
+        }
       }
       else
       {
-        var i = Functions.ToInt32(id);
-        if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
+        var msubmit = TB210Model.Submit ?? "";
+        if (msubmit == nameof(TB210Model.Ok))
         {
-          var l = TableData(Table, ModalMessages);
-          var ds = l.Skip(i - 1).FirstOrDefault();
-          if (ds != null)
+          Modal1?.ModalSubmit();
+          var dt = Formular.GetTableDialogType(Model.ModalArt);
+          var daten = ServiceDaten;
+          var o = TB210Model.To(daten);
+          var r = dt == DialogTypeEnum.Delete
+            ? FactoryService.DiaryService.DeletePosition(daten, o)
+            : FactoryService.DiaryService.SavePosition(daten, o.Uid, o.Bezeichnung,
+                Functions.ToString(o.Breite, 5), Functions.ToString(o.Laenge, 5),
+                Functions.ToString(o.Hoehe, 2), o.Zeitzone, o.Notiz);
+          if (r.Ok)
           {
-            TB210Model.From(ds);
-            TB210Model.SetMhrf(dt);
-            Model.ModalArt = handler;
-            Model.ModalId = id;
+            Model.ModalArt = null;
+            Model.ModalId = null;
+            Refresh();
           }
+          else
+            ModalMessages?.Add(() => TB210Model, r.GetErrors());
+        }
+        else if (form != "tb210modal")
+        {
+          Model.ModalArt = null;
+          Model.ModalId = null;
         }
       }
     }
     else
     {
-      var msubmit = TB210Model.Submit ?? "";
-      if (msubmit == nameof(TB210Model.Ok))
-      {
-        Modal1?.ModalSubmit();
-        var dt = Formular.GetTableDialogType(Model.ModalArt);
-        var daten = ServiceDaten;
-        var o = TB210Model.To(daten);
-        var r = dt == DialogTypeEnum.Delete
-          ? FactoryService.DiaryService.DeletePosition(daten, o)
-          : FactoryService.DiaryService.SavePosition(daten, o.Uid, o.Bezeichnung,
-              Functions.ToString(o.Breite, 5), Functions.ToString(o.Laenge, 5),
-              Functions.ToString(o.Hoehe, 2), o.Zeitzone, o.Notiz);
-        if (r.Ok)
-        {
-          Model.ModalArt = null;
-          Model.ModalId = null;
-          Refresh();
-        }
-        else
-          ModalMessages?.Add(() => TB210Model, r.GetErrors());
-      }
-      else if (form != "tb210modal")
-      {
-        Model.ModalArt = null;
-        Model.ModalId = null;
-      }
+      Model.ModalArt = null;
+      Model.ModalId = null;
+      Model.Modal2Id = null;
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
   }

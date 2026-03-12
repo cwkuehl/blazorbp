@@ -31,59 +31,25 @@
   </div>
 </EditForm>
 
-@if (!string.IsNullOrEmpty(Model!.ModalId))
-{
-<div class="modal xxxfade" id="idmodal" tabindex="-1" role="dialog" aria-labelledby="lbldetails" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="lbldetails">Notiz @Functions.Iif(Model?.ModalArt == "Table_Edit", "ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "löschen", Functions.Iif(Model?.ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
-      </div>
-      <div class="modal-body">
-        <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="Submit" FormName="fz700modal">
-          <DataAnnotationsValidator/>
-          <ValidationSummary class="text-danger"/>
-          <InputText type="hidden" @bind-Value="ModalModel!.Nr"/>
-          <InputText type="hidden" @bind-Value="ModalModel!.ReadonlyHiddenError"/>
-          <InputText type="hidden" @bind-Value="ModalModel!.Xml"/>
-          <input type="hidden" name="SubmitControl"/>
-          <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Thema)" VerticalColClass="form-group col-md ms-1"/>
-          </div>
-          <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" rows="10" For="@(() => ModalModel!.Notiz)" VerticalColClass="form-group col"/>
-          </div>
-          <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" rows="10" For="@(() => ModalModel!.Tabelle)" VerticalColClass="form-group col"/>
-          </div>
-          <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Angelegt)" VerticalColClass="form-group col-md-6"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Geaendert)" VerticalColClass="form-group col ms-1"/>
-          </div>
-          <div class="modal-footer mt-2 p-0">
-            <SubmitButton class="btn btn-primary col-md-2" For="@(() => ModalModel!.Ok)"/>
-            <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button>
-          </div>
-        </EditForm>
-      </div>
-    </div>
-  </div>
-</div>
-}
-else
-{
-  <EditForm Enhance method="post" EditContext="ModalEditContext" FormName="fz700modal">
-  </EditForm>
-}
+<FZ710 FZ710Model="FZ710Model" ModalId="@Model.ModalId" ModalArt="@Model.ModalArt" ModalEditContext="@ModalEditContext" ModalMessages="@ModalMessages"/>
 
 @code {
   [SupplyParameterFromForm]
-  protected FZ700ModalModel ModalModel { get; set; } = default!;
+  protected FZ710Model FZ710Model { get; set; } = default!;
 
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
+
+  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
+  protected override void OnParametersSet()
+  {
+    base.OnParametersSet();
+    if (FZ710Model != null)
+    {
+      ModalEditContext = new(FZ710Model);
+      ModalMessages = new(ModalEditContext);
+    }
+  }
 
   /// <summary>
   /// Initialisierung des Models.
@@ -116,16 +82,9 @@ else
       };
     Table.Nr = id;
 
-    if (ModalModel == null)
-      ModalModel = new FZ700ModalModel();
-    ModalModel.Nr = id;
-    #pragma warning disable CS8604
-    ModalEditContext = new(ModalModel);
-    #pragma warning restore CS8604
-    // #pragma warning disable CS0618
-    // ModalEditContext.EnableDataAnnotationsValidation();
-    // #pragma warning disable CS0618
-    ModalMessages = new(ModalEditContext);
+    if (FZ710Model == null)
+      FZ710Model = new FZ710Model();
+    FZ710Model.Nr = id;
   }
 
   /// <summary>
@@ -163,59 +122,68 @@ else
   /// <param name="id2">Id aus 2. modalen Dialog.</param>
   public override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
-    if (!string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
+    if (form == "fz700t" || form == "fz710modal")
     {
-      var dt = Formular.GetTableDialogType(handler);
-      if (dt == DialogTypeEnum.New)
+      if (form == "fz700t" && !string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
       {
-        ModalModel.SetMhrf(DialogTypeEnum.New);
-        Model.ModalArt = handler;
-        Model.ModalId = id;
+        var dt = Formular.GetTableDialogType(handler);
+        if (dt == DialogTypeEnum.New)
+        {
+          FZ710Model.SetMhrf(DialogTypeEnum.New);
+          Model.ModalArt = handler;
+          Model.ModalId = id;
+        }
+        else
+        {
+          var i = Functions.ToInt32(id);
+          if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
+          {
+            var l = TableData(Table, ModalMessages);
+            var ds = l.Skip(i - 1).FirstOrDefault();
+            if (ds != null)
+            {
+              FZ710Model.From(ds);
+              FZ710Model.SetMhrf(dt);
+              Model.ModalArt = handler;
+              Model.ModalId = id;
+            }
+          }
+        }
       }
       else
       {
-        var i = Functions.ToInt32(id);
-        if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
+        var msubmit = FZ710Model.Submit ?? "";
+        if (msubmit == nameof(FZ710Model.Ok))
         {
-          var l = TableData(Table, ModalMessages);
-          var ds = l.Skip(i - 1).FirstOrDefault();
-          if (ds != null)
+          var dt = Formular.GetTableDialogType(Model.ModalArt);
+          var daten = ServiceDaten;
+          var o = FZ710Model.To(daten);
+          var xml = Functions.Base64Decode(FZ710Model.Xml);
+          xml = FZ710Model.SetMemo(xml, o.Notiz);
+          var r = dt == DialogTypeEnum.Delete
+            ? FactoryService.PrivateService.DeleteMemo(daten, o)
+            : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
+          if (r.Ok)
           {
-            ModalModel.From(ds);
-            ModalModel.SetMhrf(dt);
-            Model.ModalArt = handler;
-            Model.ModalId = id;
+            Model.ModalArt = null;
+            Model.ModalId = null;
+            Refresh();
           }
+          else
+            ModalMessages?.Add(() => FZ710Model, r.GetErrors());
+        }
+        else if (form != "fz710modal")
+        {
+          Model.ModalArt = null;
+          Model.ModalId = null;
         }
       }
     }
     else
     {
-      var msubmit = ModalModel.Submit ?? "";
-      if (msubmit == nameof(ModalModel.Ok))
-      {
-        var dt = Formular.GetTableDialogType(Model.ModalArt);
-        var daten = ServiceDaten;
-        var o = ModalModel.To(daten);
-        var xml = Functions.Base64Decode(ModalModel.Xml);
-        xml = FZ700ModalModel.SetMemo(xml, o.Notiz);
-        var r = dt == DialogTypeEnum.Delete
-          ? FactoryService.PrivateService.DeleteMemo(daten, o)
-          : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
-        if (r.Ok)
-        {
-          Model.ModalArt = null;
-          Model.ModalId = null;
-          Refresh();
-        }
-        else
-          ModalMessages?.Add(() => ModalModel, r.GetErrors());
-      }
-      else if (form != "fz700modal")
-      {
-        Model.ModalArt = null;
-        Model.ModalId = null;
-      }
+      Model.ModalArt = null;
+      Model.ModalId = null;
+      Model.Modal2Id = null;
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
   }
