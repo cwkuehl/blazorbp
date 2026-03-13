@@ -6,73 +6,9 @@ namespace BlazorBp.Models.Wp;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Base;
+using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorBp.Base.DialogTypeEnum;
-
-/// <summary>
-/// TodoModel-Klasse für Formular WP200 Wertpapiere.
-/// TODO Durch passendes Model ersetzen und löschen.
-/// </summary>
-[Serializable]
-public class WP200TodoModel
-{
-  /// <summary>Holt oder setzt die Spalte Nr..</summary>
-  public string? Nummer { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Bezeichnung.</summary>
-  public string? Bezeichnung { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Provider.</summary>
-  public string? Provider { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Kürzel.</summary>
-  public string? Kuerzel { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Status.</summary>
-  public string? Status { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Aktueller Kurs.</summary>
-  public string? AktKurs { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Stop-Kurs.</summary>
-  public string? StopKurs { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Kursziel.</summary>
-  public string? SignalKurs1 { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Letztes Muster.</summary>
-  public string? Muster { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Typ.</summary>
-  public string? Typ { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Währung.</summary>
-  public string? Waehrung { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Sortierung.</summary>
-  public string? Sortierung { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Relation.</summary>
-  public string? Relation { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Notiz.</summary>
-  public string? Notiz { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Anlage erstellen.</summary>
-  public string? Anlage { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Angelegt_Am.</summary>
-  public DateTime? Angelegt_Am { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Angelegt_Von.</summary>
-  public string? Angelegt_Von { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Geaendert_Am.</summary>
-  public DateTime? Geaendert_Am { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Geaendert_Von.</summary>
-  public string? Geaendert_Von { get; set; }
-}
 
 /// <summary>
 /// Model-Klasse für eine Zeile in der Tabelle von Formular WP200 Wertpapiere.
@@ -177,26 +113,26 @@ public class WP200TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
   /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
-  public WP200TodoModel To(ServiceDaten daten)
+  public WpWertpapier To(ServiceDaten daten)
   {
-    return new WP200TodoModel
+    return new WpWertpapier
     {
-      // TODO Mandant_Nr = daten.MandantNr,
-      Nummer = Nummer,
+      // Mandant_Nr = daten.MandantNr,
+      Uid = Nummer,
       Bezeichnung = Bezeichnung,
-      Provider = Provider,
+      Datenquelle = Provider,
       Kuerzel = Kuerzel,
       Status = Status,
-      AktKurs = AktKurs,
-      StopKurs = StopKurs,
-      SignalKurs1 = SignalKurs1,
-      Muster = Muster,
-      Typ = Typ,
-      Waehrung = Waehrung,
-      Sortierung = Sortierung,
-      Relation = Relation,
+      CurrentPrice = Functions.ToDecimal(AktKurs),
+      StopPrice = Functions.ToDecimal(StopKurs),
+      SignalPrice1 = Functions.ToDecimal(SignalKurs1),
+      Pattern = Muster,
+      Type = Typ,
+      Currency = Waehrung,
+      Sorting = Sortierung,
+      Relation_Uid = Relation,
       Notiz = Notiz,
-      Anlage = Anlage,
+      // Anlage = Anlage,
       Angelegt_Am = AngelegtAm,
       Angelegt_Von = AngelegtVon,
       Geaendert_Am = GeaendertAm,
@@ -206,25 +142,25 @@ public class WP200TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
-  public static WP200TableRowModel From(WP200TodoModel m)
+  public static WP200TableRowModel From(WpWertpapier m)
   {
     return new WP200TableRowModel
     {
-      Nummer = m.Nummer,
+      Nummer = m.Uid,
       Bezeichnung = m.Bezeichnung,
-      Provider = m.Provider,
+      Provider = m.Datenquelle,
       Kuerzel = m.Kuerzel,
-      Status = m.Status,
-      AktKurs = m.AktKurs,
-      StopKurs = m.StopKurs,
-      SignalKurs1 = m.SignalKurs1,
-      Muster = m.Muster,
-      Typ = m.Typ,
-      Waehrung = m.Waehrung,
-      Sortierung = m.Sortierung,
-      Relation = m.Relation,
+      Status = CsbpBase.GetStockState(m.Status, m.Kuerzel),
+      AktKurs = Functions.ToString(m.CurrentPrice),
+      StopKurs = Functions.ToString(m.StopPrice),
+      SignalKurs1 = Functions.ToString(m.SignalPrice1),
+      Muster = m.Pattern,
+      Typ = m.Type,
+      Waehrung = m.Currency,
+      Sortierung = m.Sorting,
+      Relation = m.Relation_Uid,
       Notiz = m.Notiz,
-      Anlage = m.Anlage,
+      Anlage = "false",
       AngelegtAm = m.Angelegt_Am,
       AngelegtVon = m.Angelegt_Von,
       GeaendertAm = m.Geaendert_Am,

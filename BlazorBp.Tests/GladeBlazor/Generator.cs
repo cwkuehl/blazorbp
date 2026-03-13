@@ -157,6 +157,7 @@ namespace BlazorBp.Models.{{area}};
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Base;
+using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorBp.Base.DialogTypeEnum;
 
@@ -361,6 +362,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
 
     sbr.Append($$"""
 @page "/{{area.ToLower()}}/{{form.ToLower()}}/{id?}"
+@using CSBP.Services.Apis.Models
 @inherits BlazorComponentBase<{{form}}Model, {{rowmodel}}>
 @attribute [Authorize(Roles = "User, Admin, Superadmin")]
 

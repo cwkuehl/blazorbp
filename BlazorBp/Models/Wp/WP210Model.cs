@@ -6,6 +6,7 @@ namespace BlazorBp.Models.Wp;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Base;
+using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorBp.Base.DialogTypeEnum;
 
@@ -113,24 +114,24 @@ public class WP210Model : PageModelBase
   /// <summary>Kopiert die Werte in ein Model.</summary>
   /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
   /// <returns>Das kopierte Model.</returns>
-  public WP200TodoModel To(ServiceDaten daten) => new()
+  public WpWertpapier To(ServiceDaten daten) => new()
   {
     // TODO Mandant_Nr = daten.MandantNr,
-    Nummer = Nummer,
+    Uid = Nummer,
     Bezeichnung = Bezeichnung,
-    Provider = Provider,
+    Datenquelle = Provider,
     Kuerzel = Kuerzel,
     Status = Status,
-    AktKurs = AktKurs,
-    StopKurs = StopKurs,
-    SignalKurs1 = SignalKurs1,
-    Muster = Muster,
-    Typ = Typ,
-    Waehrung = Waehrung,
-    Sortierung = Sortierung,
-    Relation = Relation,
+    CurrentPrice = Functions.ToDecimal(AktKurs),
+    StopPrice = Functions.ToDecimal(StopKurs),
+    SignalPrice1 = Functions.ToDecimal(SignalKurs1),
+    Pattern = Muster,
+    Type = Typ,
+    Currency = Waehrung,
+    Sorting = Sortierung,
+    Relation_Uid = Relation,
     Notiz = Notiz,
-    Anlage = Anlage,
+    // Anlage = Anlage,
   };
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
