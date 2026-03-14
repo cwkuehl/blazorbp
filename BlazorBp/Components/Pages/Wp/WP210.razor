@@ -30,7 +30,7 @@ else
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="lbldetails">TODO @Functions.Iif(ModalArt == "Table_Edit", "ändern", Functions.Iif(ModalArt == "Table_Delete", "löschen", Functions.Iif(ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
+        <h5 class="modal-title" id="lbldetails">Wertpapier @Functions.Iif(ModalArt == "Table_Edit", "ändern", Functions.Iif(ModalArt == "Table_Delete", "löschen", Functions.Iif(ModalArt == "Table_Copy", "kopieren", "erfassen")))</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
       </div>
       <div class="modal-body">
@@ -41,31 +41,43 @@ else
           <InputText type="hidden" @bind-Value="WP210Model!.ReadonlyHiddenError"/>
           <input type="hidden" name="SubmitControl"/>
           <div class="row mt-1 g-0">
+            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Nummer)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Bezeichnung)" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Notiz)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Provider)" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Kuerzel)" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
+            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Status)" VerticalColClass="form-group col"/>
+          </div>
+          <div class="row mt-1 g-0">
+            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.AktKurs)" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.StopKurs)" VerticalColClass="form-group col ms-1"/>
+          </div>
+          <div class="row mt-1 g-0">
+            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.SignalKurs1)" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Muster)" VerticalColClass="form-group col ms-1"/>
+          </div>
+          <div class="row mt-1 g-0">
+            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Typ)" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Waehrung)" VerticalColClass="form-group col ms-1"/>
+          </div>
+          <div class="row mt-1 g-0">
+            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Sortierung)" VerticalColClass="form-group col-md-4"/>
+            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Relation)" VerticalColClass="form-group col ms-1"/>
+          </div>
+          <div class="row mt-1 g-0">
+            <LabelInputValid rows="3" AutoPostback="" For="@(() => WP210Model!.Notiz)" VerticalColClass="form-group col"/>
+          </div>
+          <div class="row mt-1 g-0">
+            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Angelegt)" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Geaendert)" VerticalColClass="form-group col ms-1"/>
+          </div>
+          <div class="row mt-1 g-0">
+            <LabelInputValid type="checkbox" AutoPostback="" For="@(() => WP210Model!.Anlage)" VerticalColClass="form-group col-md-4"/>
             <SubmitButton class="btn btn-primary col-md-2 ms-1" For="@(() => WP210Model!.Ok)"/>
             <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button>
-          </div>
-          <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Nummer)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Bezeichnung)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Provider)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Kuerzel)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Status)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.AktKurs)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.StopKurs)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.SignalKurs1)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Muster)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Typ)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Waehrung)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Sortierung)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Relation)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Angelegt)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Geaendert)" VerticalColClass="form-group col-md-2"/>
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Anlage)" VerticalColClass="form-group col-md-2"/>
           </div>
         </EditForm>
       </div>

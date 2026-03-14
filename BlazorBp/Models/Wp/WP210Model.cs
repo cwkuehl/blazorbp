@@ -99,7 +99,7 @@ public class WP210Model : PageModelBase
   /// <summary>Holt oder setzt Anlage erstellen.</summary>
   [Display(Name = "Anlage erstellen", Description = "Soll für das Wertpapier auch eine Anlage erstellt werden?")]
   //// [Required(ErrorMessage = "Anlage erstellen muss angegeben werden.")]
-  public string? Anlage { get; set; }
+  public bool Anlage { get; set; }
 
   /// <summary>Holt oder setzt OK.</summary>
   [Display(Name = "_OK", Description = "Dialog mit Speichern schließen")]
@@ -152,8 +152,9 @@ public class WP210Model : PageModelBase
     Sortierung,
     Relation,
     Notiz,
-    Anlage
-    // TODO , Angelegt, Geaendert
+    Anlage,
+    Angelegt,
+    Geaendert
   ) = (
     m.Nummer,
     m.Bezeichnung,
@@ -169,8 +170,9 @@ public class WP210Model : PageModelBase
     m.Sortierung,
     m.Relation,
     m.Notiz,
-    m.Anlage
-    // TODO , ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon), ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon)
+    false,
+    ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon),
+    ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon)
   );
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
@@ -179,16 +181,25 @@ public class WP210Model : PageModelBase
   {
     if (mode == New || mode == Copy)
     {
-      // TODO Nummer = "";
+      Anlage = true;
     }
-    if (mode == New)
-    {
-      // TODO Thema = null;
-    }
-    // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
-    // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
-    // SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Nummer), false, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Bezeichnung), true, false, mode == Delete, mode != New);
+    SetMandatoryHiddenReadonly(nameof(Provider), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Kuerzel), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Status), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(AktKurs), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(StopKurs), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(SignalKurs1), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Muster), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Typ), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Waehrung), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Sortierung), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Relation), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Notiz), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
+    SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
+    SetMandatoryHiddenReadonly(nameof(Anlage), false, mode == Delete, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
   }
 }

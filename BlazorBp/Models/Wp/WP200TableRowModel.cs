@@ -86,11 +86,6 @@ public class WP200TableRowModel : TableRowModelBase
   //// [Required(ErrorMessage = "Notiz muss angegeben werden.")]
   public string? Notiz { get; set; }
 
-  /// <summary>Holt oder setzt Anlage erstellen.</summary>
-  [Display(Name = "Anlage erstellen", Description = "Soll für das Wertpapier auch eine Anlage erstellt werden?")]
-  //// [Required(ErrorMessage = "Anlage erstellen muss angegeben werden.")]
-  public string? Anlage { get; set; }
-
   /// <summary>Holt oder setzt Angelegt am.</summary>
   [Display(Name = "Angelegt am", Description = "Der Zeitpunkt der Anlage")]
   //// [Required(ErrorMessage = "Angelegt am muss angegeben werden.")]
@@ -132,7 +127,6 @@ public class WP200TableRowModel : TableRowModelBase
       Sorting = Sortierung,
       Relation_Uid = Relation,
       Notiz = Notiz,
-      // Anlage = Anlage,
       Angelegt_Am = AngelegtAm,
       Angelegt_Von = AngelegtVon,
       Geaendert_Am = GeaendertAm,
@@ -160,7 +154,6 @@ public class WP200TableRowModel : TableRowModelBase
       Sortierung = m.Sorting,
       Relation = m.Relation_Uid,
       Notiz = m.Notiz,
-      Anlage = "false",
       AngelegtAm = m.Angelegt_Am,
       AngelegtVon = m.Angelegt_Von,
       GeaendertAm = m.Geaendert_Am,

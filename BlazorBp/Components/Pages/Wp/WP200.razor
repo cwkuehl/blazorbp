@@ -9,21 +9,20 @@
 <CascadingValue Value="this">
 <SortableTable Table="Table" NoData="" FormName="wp200" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="WP200Model" TRTable="WP200TableRowModel">
   <ChildContent>
-    <TableColumn Field="@nameof(WP200TableRowModel.Nummer)" SortField="@nameof(WpWertpapier.Uid)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
+    @* <TableColumn Field="@nameof(WP200TableRowModel.Nummer)" SortField="@nameof(WpWertpapier.Uid)" TModel="WP200Model" TRTable="WP200TableRowModel"/> *@
+    <TableColumn Field="@nameof(WP200TableRowModel.Sortierung)" SortField="@nameof(WpWertpapier.Sorting)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
     <TableColumn Field="@nameof(WP200TableRowModel.Bezeichnung)" SortField="@nameof(WpWertpapier.Bezeichnung)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
+    <TableColumn Field="@nameof(WP200TableRowModel.Status)" SortField="@nameof(WpWertpapier.Status)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
     <TableColumn Field="@nameof(WP200TableRowModel.Provider)" SortField="@nameof(WpWertpapier.Datenquelle)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
     <TableColumn Field="@nameof(WP200TableRowModel.Kuerzel)" SortField="@nameof(WpWertpapier.Kuerzel)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
-    <TableColumn Field="@nameof(WP200TableRowModel.Status)" SortField="@nameof(WpWertpapier.Status)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
-    <TableColumn Field="@nameof(WP200TableRowModel.AktKurs)" SortField="@nameof(WpWertpapier.CurrentPrice)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
-    <TableColumn Field="@nameof(WP200TableRowModel.StopKurs)" SortField="@nameof(WpWertpapier.StopPrice)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
-    <TableColumn Field="@nameof(WP200TableRowModel.SignalKurs1)" SortField="@nameof(WpWertpapier.SignalPrice1)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
-    <TableColumn Field="@nameof(WP200TableRowModel.Muster)" SortField="@nameof(WpWertpapier.Pattern)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
     <TableColumn Field="@nameof(WP200TableRowModel.Typ)" SortField="@nameof(WpWertpapier.Type)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
+    <TableColumn Field="@nameof(WP200TableRowModel.AktKurs)" SortField="@nameof(WpWertpapier.CurrentPrice)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
+    @* <TableColumn Field="@nameof(WP200TableRowModel.StopKurs)" SortField="@nameof(WpWertpapier.StopPrice)" TModel="WP200Model" TRTable="WP200TableRowModel"/> *@
+    @* <TableColumn Field="@nameof(WP200TableRowModel.SignalKurs1)" SortField="@nameof(WpWertpapier.SignalPrice1)" TModel="WP200Model" TRTable="WP200TableRowModel"/> *@
+    <TableColumn Field="@nameof(WP200TableRowModel.Muster)" SortField="@nameof(WpWertpapier.Pattern)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
     <TableColumn Field="@nameof(WP200TableRowModel.Waehrung)" SortField="@nameof(WpWertpapier.Currency)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
-    <TableColumn Field="@nameof(WP200TableRowModel.Sortierung)" SortField="@nameof(WpWertpapier.Sorting)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
-    <TableColumn Field="@nameof(WP200TableRowModel.Relation)" SortField="@nameof(WpWertpapier.Relation_Uid)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
-    <TableColumn Field="@nameof(WP200TableRowModel.Notiz)" SortField="@nameof(WpWertpapier.Notiz)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
-    @* <TableColumn Field="@nameof(WP200TableRowModel.Anlage)" SortField="@nameof(WpWertpapier.Anlage)" TModel="WP200Model" TRTable="WP200TableRowModel"/> *@
+    @* <TableColumn Field="@nameof(WP200TableRowModel.Relation)" SortField="@nameof(WpWertpapier.Relation_Uid)" TModel="WP200Model" TRTable="WP200TableRowModel"/> *@
+    @* <TableColumn Field="@nameof(WP200TableRowModel.Notiz)" SortField="@nameof(WpWertpapier.Notiz)" TModel="WP200Model" TRTable="WP200TableRowModel"/> *@
     <TableColumn Field="@nameof(WP200TableRowModel.AngelegtAm)" SortField="@nameof(WpWertpapier.Angelegt_Am)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
     <TableColumn Field="@nameof(WP200TableRowModel.AngelegtVon)" SortField="@nameof(WpWertpapier.Angelegt_Von)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
     <TableColumn Field="@nameof(WP200TableRowModel.GeaendertAm)" SortField="@nameof(WpWertpapier.Geaendert_Am)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
@@ -271,7 +270,7 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var r = new ServiceErgebnis<List<WpWertpapier>>(new List<WpWertpapier>());
+    @* var r = new ServiceErgebnis<List<WpWertpapier>>(new List<WpWertpapier>());
     r.Ergebnis.Add(new WpWertpapier()
     {
        Notiz = "Notiz1",
@@ -291,9 +290,9 @@
        // Anlage = "Anlage1",
     });
     if (rm != null)
-      rm.PageCount = 0;
-    // TODO var l0 = Get(FactoryService.PrivateService.GetClientList(daten, rm), messages);
-    var l = r.Ergebnis?.Select(a => WP200TableRowModel.From(a)).ToList() ?? new List<WP200TableRowModel>();
+      rm.PageCount = 0; *@
+    var l0 = Get(FactoryService.StockService.GetStockList(daten, rm), messages);
+    var l = l0?.Select(a => WP200TableRowModel.From(a)).ToList() ?? new List<WP200TableRowModel>();
     if (m != null && rm != null)
     {
       m.PageCount = rm.PageCount;
