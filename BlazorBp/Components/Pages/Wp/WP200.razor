@@ -39,11 +39,6 @@
   <div class="row mt-1 g-0">
   </div>
   <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Refresh)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Floppy)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Chart)"/>
-  </div>
-  <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="" For="@(() => Model!.Wertpapiere)" VerticalColClass="form-group col-md-2"/>
   </div>
   <div class="row mt-1 g-0">
@@ -56,12 +51,17 @@
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Berechnen)"/>
     <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" VerticalColClass="form-group col-md-2"/>
     <LabelInputValid AutoPostback="" For="@(() => Model!.Konfiguration)" VerticalColClass="form-group col-md-2"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Abbrechen)"/>
   </div>
   <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="" For="@(() => Model!.Status)" VerticalColClass="form-group col-md-2"/>
   </div>
-  <!-- TODO btn-primary festlegen -->
+  <div class="modal-footer mt-2">
+    @* <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-map" href="@Model!.MapHref" For="@(() => Model!.Chart)"/> *@
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Chart)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Floppy)"/>
+    <SubmitButton class="btn btn-primary col-md-2 me-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
+  </div>
 </EditForm>
 
 <WP210 WP210Model="WP210Model" ModalId="@Model.ModalId" ModalArt="@Model.ModalArt" ModalEditContext="@ModalEditContext" ModalMessages="@ModalMessages"/>
@@ -254,7 +254,7 @@
       }
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
-    if (submit == nameof(Model.Abbrechen))
+    if (submit == nameof(Model.Schliessen))
     {
       CloseFormular();
     }

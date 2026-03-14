@@ -65,8 +65,18 @@
     <SubmitButton class="btn btn-secondary col-md-2" For="@(() => Model!.Horizontal)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Vertikal)"/>
   </div>
+  <div class="row mt-1 g-0">
+    @{var list = new List<string> {"bi-house-door-nav-menu", "bi-incognito-nav-menu", "bi-file-nav-menu", "bi-dot-nav-menu", "bi-screwdriver-nav-menu", "bi-question-circle-fill-nav-menu", "bi-printer-fill-nav-menu", "bi-box-arrow-right-nav-menu", "bi-person-nav-menu", "bi-arrow-left-nav-menu", "bi-arrow-right-nav-menu", "bi-copy-button", "bi-file-plus-button", "bi-pencil-button", "bi-file-x-button", "bi-clipboard", "bi-cloud-sun", "bi-download", "bi-plus-lg", "bi-dash-lg", "bi-map", "bi-arrow-clockwise", "bi-x-lg"};
+    var ms = "";
+    }
+    @foreach (var bi in list)
+    {
+      <button class="btn btn-secondary col-md-1 @ms" type="submit" name="Model.SubmitControl" value="Refresh" title="@bi">@bi<i class="bi @bi"></i></button>
+      ms = "ms-1";
+    }
+  </div>
   <div class="modal-footer mt-2 p-0">
-    <SubmitButton class="btn btn-secondary col-md-2" For="@(() => Model!.Schliessen)"/>
+    <SubmitButton class="btn btn-secondary col-md-2" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
   </div>
 </EditForm>
 @if(valid)

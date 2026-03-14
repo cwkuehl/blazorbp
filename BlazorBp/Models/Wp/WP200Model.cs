@@ -75,10 +75,9 @@ public class WP200Model : PageModelBase
   //// [Required(ErrorMessage = "Konfiguration muss angegeben werden.")]
   public string? Konfiguration { get; set; }
 
-  /// <summary>Holt oder setzt Abbrechen.</summary>
-  [Display(Name = "Abbre_chen", Description = "Dialog ohne Speichern schließen")]
-  //// [Required(ErrorMessage = "Abbrechen muss angegeben werden.")]
-  public string? Abbrechen { get; set; }
+  /// <summary>Holt oder setzt Schließen.</summary>
+  [Display(Name = "Schließen", Description = "Schließen")]
+  public string? Schliessen { get; set; }
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>

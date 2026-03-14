@@ -27,7 +27,6 @@ public class TB200Model : PageModelBase
 
   /// <summary>Holt oder setzt Schließen.</summary>
   [Display(Name = "Schließen", Description = "Schließen")]
-  //// [Required(ErrorMessage = "Schließen muss angegeben werden.")]
   public string? Schliessen { get; set; }
 
   /// <summary>Holt oder setzt den Link für Map.</summary>
