@@ -71,7 +71,7 @@
     }
     @foreach (var bi in list)
     {
-      <button class="btn btn-secondary col-md-1 @ms" type="submit" name="Model.SubmitControl" value="Refresh" title="@bi">@bi<i class="bi @bi"></i></button>
+      <button class="btn btn-secondary col-md-1 mt-1 @ms" type="submit" name="Model.SubmitControl" value="Refresh" title="@bi">@bi<i class="bi @bi"></i></button>
       ms = "ms-1";
     }
   </div>
@@ -125,6 +125,12 @@ Zeile 2",
     Model.AuswahlListBox = new List<ListItem> { new("MX", "Mexico"), new("CA", "Canada"), new("US", "USA") };
     // await Task.Delay(1);
     // await _context.Movie.ToListAsync();
+  }
+
+  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
+  protected override void OnParametersSet()
+  {
+    base.OnParametersSet();
   }
 
   /// <summary>
