@@ -30,11 +30,6 @@ public class WP200Model : PageModelBase
   //// [Required(ErrorMessage = "Chart oder Karte muss angegeben werden.")]
   public string? Chart { get; set; }
 
-  /// <summary>Holt oder setzt Wertpapiere.</summary>
-  [Display(Name = "_Wertpapiere", Description = "Wertpapiere")]
-  //// [Required(ErrorMessage = "Wertpapiere muss angegeben werden.")]
-  public string? Wertpapiere { get; set; }
-
   /// <summary>Holt oder setzt Status.</summary>
   [Display(Name = "Status", Description = "")]
   //// [Required(ErrorMessage = "Status muss angegeben werden.")]
@@ -85,13 +80,13 @@ public class WP200Model : PageModelBase
   {
     if (mode == New || mode == Copy)
     {
-      // TODO Nummer = "";
+      // Nummer = "";
     }
     if (mode == New)
     {
-      // TODO Thema = null;
+      // Thema = null;
     }
-    // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
+    // SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
     // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
     // SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
     // SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);

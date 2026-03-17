@@ -35,11 +35,7 @@
   <DataAnnotationsValidator/>
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
-  <input type="hidden" name="SubmitControl"/>
-  <div class="row mt-1 g-0">
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Wertpapiere)" VerticalColClass="form-group col-md-2"/>
+  <input type="hidden" name="SubmitControl"/>  <div class="row mt-1 g-0">
   </div>
   <div class="row mt-1 g-0">
     <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Alle)"/>
@@ -57,10 +53,10 @@
   </div>
   <div class="modal-footer mt-2">
     @* <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-map" href="@Model!.MapHref" For="@(() => Model!.Chart)"/> *@
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Chart)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Floppy)"/>
-    <SubmitButton class="btn btn-primary col-md-2 me-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Chart)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Floppy)"/>
+    <SubmitButton class="btn btn-primary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
   </div>
 </EditForm>
 
@@ -70,17 +66,14 @@
   /// <summary>Holt oder setzt das 1. Modal-Model.</summary>
   [SupplyParameterFromForm]
   protected WP210Model WP210Model { get; set; } = default!;
+
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
 
   /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
   protected override void OnParametersSet()
   {
-    base.OnParametersSet();    if (WP210Model != null)
-    {
-      ModalEditContext = new(WP210Model);
-      ModalMessages = new(ModalEditContext);
-    }
+    base.OnParametersSet();
   }
 
   /// <summary>
@@ -91,15 +84,14 @@
   /// <param name="table">Evtl. gelesenes Table-Model.</param>
   protected override void Init(string? id, WP200Model? model = null, TableModelBase<WP200TableRowModel>? table = null)
   {
+    var daten = ServiceDaten;
     if (model != null)
       Model = model;
     if (Model == null)
     {
-      var daten = ServiceDaten;
       Model = new WP200Model
       {
         Nr = id,
-        // TODO Mandant = daten.MandantNr,
       };
       Model.SetMhrf(DialogTypeEnum.New);
     }
@@ -115,14 +107,22 @@
         SortColumn = $"{nameof(WpWertpapier.Bezeichnung)}#+",
       };
     Table.Nr = id;
-
     if (WP210Model == null)
       WP210Model = new WP210Model
       {
-        // TODO Nummer = "1",
-        // Beschreibung = null,
+        // Nummer = "1",
       };
     WP210Model.Nr = id;
+    var l0 = Get(FactoryService.StockService.GetStateList(daten));
+    WP210Model.AuswahlStatus = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
+    if (WP210Model != null)
+    {
+      ModalEditContext = new(WP210Model);
+      #pragma warning disable CS0618
+      ModalEditContext.EnableDataAnnotationsValidation();
+      #pragma warning restore CS0618
+      ModalMessages = new(ModalEditContext);
+    }
   }
 
   /// <summary>
@@ -130,7 +130,7 @@
   /// </summary>
   protected override void Refresh()
   {
-    // TODO TableData(Table, Messages);
+    TableData(Table, Messages);
   }
 
   /// <summary>
@@ -191,15 +191,26 @@
       else
       {
         var msubmit = WP210Model.Submit ?? "";
-        if (msubmit == nameof(WP210Model.Ok))
+        var mvalid = false;
+        if (!string.IsNullOrEmpty(msubmit))
+        {
+          mvalid = ModalEditContext?.Validate() ?? false;
+          if (!mvalid && WP210Model != null)
+          {
+            // Doppelte Meldungen verhindern.
+            ModalEditContext = new(WP210Model);
+            ModalMessages = new(ModalEditContext);
+          }
+        }
+        if (mvalid && msubmit == nameof(WP210Model.Ok) && WP210Model != null)
         {
           var dt = Formular.GetTableDialogType(Model.ModalArt);
           var daten = ServiceDaten;
           var o = WP210Model.To(daten);
           var r = new ServiceErgebnis();
-          // TODO var r = dt == DialogTypeEnum.Delete
-          //   ? FactoryService.PrivateService.DeleteMemo(daten, o)
-          //   : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
+          r = dt == DialogTypeEnum.Delete
+            ? FactoryService.StockService.DeleteStock(daten, o)
+            : FactoryService.StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, WP210Model.Anlage);
           if (r.Ok)
           {
             Model.ModalArt = null;
@@ -209,7 +220,7 @@
           else
             ModalMessages?.Add(() => WP210Model, r.GetErrors());
         }
-        else if (form != "wp210modal")
+        else if (msubmit == nameof(WP210Model.Abbrechen) || form != "wp210modal")
         {
           Model.ModalArt = null;
           Model.ModalId = null;

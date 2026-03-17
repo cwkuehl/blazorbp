@@ -23,18 +23,21 @@ public class WP210Model : PageModelBase
 
   /// <summary>Holt oder setzt Bezeichnung.</summary>
   [Display(Name = "_Bezeichnung", Description = "Bezeichnung")]
-  //// [Required(ErrorMessage = "Bezeichnung muss angegeben werden.")]
+  [Required(ErrorMessage = "Bezeichnung muss angegeben werden.")]
   public string? Bezeichnung { get; set; }
 
   /// <summary>Holt oder setzt Provider.</summary>
   [Display(Name = "_Provider", Description = "Provider für Kursabfrage")]
-  //// [Required(ErrorMessage = "Provider muss angegeben werden.")]
+  [Required(ErrorMessage = "Provider muss angegeben werden.")]
   public string? Provider { get; set; }
 
   /// <summary>Holt oder setzt Kürzel.</summary>
   [Display(Name = "_Kürzel", Description = "Kürzel für Kursabfrage beim Provider")]
-  //// [Required(ErrorMessage = "Kürzel muss angegeben werden.")]
+  [Required(ErrorMessage = "Kürzel muss angegeben werden.")]
   public string? Kuerzel { get; set; }
+
+  /// <summary>Holt oder setzt die Auswahlliste von Status.</summary>
+  public List<ListItem>? AuswahlStatus { get; set; } = default!;
 
   /// <summary>Holt oder setzt Status.</summary>
   [Display(Name = "_Status", Description = "Status für Berechnung")]

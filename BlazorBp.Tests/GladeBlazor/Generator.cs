@@ -391,7 +391,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
       if (c.Type == "GtkButton")
       {
         if (!IgnoreControl(c))
-          sb.AppendLine($$"""    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.{{Functions.ToFirstUpper(c.Name)}})"/>""");
+          sb.AppendLine($$"""    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.{{Functions.ToFirstUpper(c.Name)}})"/>""");
       }
       else
         sb.AppendLine($$"""    <LabelInputValid AutoPostback="" For="@(() => Model!.{{Functions.ToFirstUpper(c.Name)}})" VerticalColClass="form-group col-md-2"/>""");
