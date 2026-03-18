@@ -45,7 +45,7 @@ else
             <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Bezeichnung)" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Provider)" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid type="combobox" AutoPostback="" For="@(() => WP210Model!.Provider)" DataList="WP210Model!.AuswahlProvider" VerticalColClass="form-group col-md-6"/>
             <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Kuerzel)" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
@@ -65,7 +65,7 @@ else
           </div>
           <div class="row mt-1 g-0">
             <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Sortierung)" VerticalColClass="form-group col-md-4"/>
-            <LabelInputValid AutoPostback="" For="@(() => WP210Model!.Relation)" VerticalColClass="form-group col ms-1"/>
+            <LabelInputValid type="combobox" AutoPostback="" For="@(() => WP210Model!.Relation)" DataList="WP210Model!.AuswahlRelation" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
             <LabelInputValid rows="3" AutoPostback="" For="@(() => WP210Model!.Notiz)" VerticalColClass="form-group col"/>

@@ -26,6 +26,9 @@ public class WP210Model : PageModelBase
   [Required(ErrorMessage = "Bezeichnung muss angegeben werden.")]
   public string? Bezeichnung { get; set; }
 
+  /// <summary>Holt oder setzt die Auswahlliste von Provider.</summary>
+  public List<ListItem>? AuswahlProvider { get; set; } = default!;
+
   /// <summary>Holt oder setzt Provider.</summary>
   [Display(Name = "_Provider", Description = "Provider für Kursabfrage")]
   [Required(ErrorMessage = "Provider muss angegeben werden.")]
@@ -78,6 +81,9 @@ public class WP210Model : PageModelBase
   [Display(Name = "Sortierun_g", Description = "Zeichenkette für Sortierung")]
   //// [Required(ErrorMessage = "Sortierung muss angegeben werden.")]
   public string? Sortierung { get; set; }
+
+  /// <summary>Holt oder setzt die Auswahlliste von Relation.</summary>
+  public List<ListItem>? AuswahlRelation { get; set; } = default!;
 
   /// <summary>Holt oder setzt Relation.</summary>
   [Display(Name = "_Relation", Description = "Relation zu anderem Wertpapier, z.B. Index")]
@@ -139,7 +145,7 @@ public class WP210Model : PageModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
-  public void From(WP200TableRowModel m) =>
+  public void From(WpWertpapier m) =>
   (
     Nummer,
     Bezeichnung,
@@ -159,23 +165,23 @@ public class WP210Model : PageModelBase
     Angelegt,
     Geaendert
   ) = (
-    m.Nummer,
+    m.Uid,
     m.Bezeichnung,
-    m.Provider,
+    m.Datenquelle,
     m.Kuerzel,
     m.Status,
-    m.AktKurs,
-    m.StopKurs,
-    m.SignalKurs1,
-    m.Muster,
-    m.Typ,
-    m.Waehrung,
-    m.Sortierung,
-    m.Relation,
+    Functions.ToString(m.CurrentPrice),
+    Functions.ToString(m.StopPrice),
+    Functions.ToString(m.SignalPrice1),
+    m.Pattern,
+    m.Type,
+    m.Currency,
+    m.Sorting,
+    m.Relation_Uid,
     m.Notiz,
     false,
-    ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon),
-    ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon)
+    ModelBase.FormatDateOf(m.Angelegt_Am, m.Angelegt_Von),
+    ModelBase.FormatDateOf(m.Geaendert_Am, m.Geaendert_Von)
   );
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
@@ -191,9 +197,9 @@ public class WP210Model : PageModelBase
     SetMandatoryHiddenReadonly(nameof(Provider), true, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Kuerzel), true, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Status), true, false, mode == Delete, false);
-    SetMandatoryHiddenReadonly(nameof(AktKurs), false, false, mode == Delete, false);
-    SetMandatoryHiddenReadonly(nameof(StopKurs), false, false, mode == Delete, false);
-    SetMandatoryHiddenReadonly(nameof(SignalKurs1), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(AktKurs), false, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(StopKurs), false, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(SignalKurs1), false, false, true, false);
     SetMandatoryHiddenReadonly(nameof(Muster), false, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Typ), false, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Waehrung), false, false, mode == Delete, false);
