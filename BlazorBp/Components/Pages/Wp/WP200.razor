@@ -38,18 +38,14 @@
   <input type="hidden" name="SubmitControl"/>  <div class="row mt-1 g-0">
   </div>
   <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Alle)"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Bezeichnung)" VerticalColClass="form-group col-md-2"/>
     <LabelInputValid AutoPostback="" For="@(() => Model!.Muster)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Auchinaktiv)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid type="checkbox" AutoPostback="" For="@(() => Model!.Auchinaktiv)" VerticalColClass="form-group col-md-2 ms-1"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" VerticalColClass="form-group col-md-2 ms-1"/>
+    <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Konfiguration)" DataList="Model!.AuswahlKonfiguration" VerticalColClass="form-group col ms-1"/>
   </div>
   <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Berechnen)"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Konfiguration)" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Status)" VerticalColClass="form-group col-md-2"/>
+    <SubmitButton class="btn btn-secondary col-md-2" For="@(() => Model!.Berechnen)"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Status)" VerticalColClass="form-group col ms-1"/>
   </div>
   <div class="modal-footer mt-2">
     @* <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-map" href="@Model!.MapHref" For="@(() => Model!.Chart)"/> *@
@@ -94,7 +90,7 @@
       {
         Nr = id,
       };
-      Model.SetMhrf(DialogTypeEnum.New);
+      Model.SetMhrf(DialogTypeEnum.New, daten);
     }
     Model.Nr = id;
     if (table != null)
@@ -114,10 +110,17 @@
         // Nummer = "1",
       };
     WP210Model.Nr = id;
-    if (Model != null)
+    ////if (Model != null)
+    ////{
+    EditContext = new(Model);
+    Messages = new(EditContext);
+    ////}
+    var lk = Get(FactoryService.StockService.GetConfigurationList(daten, true, null));
+    Model.AuswahlKonfiguration = InsertEmpty(lk?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
+    if (string.IsNullOrEmpty(Model.Konfiguration))
     {
-      EditContext = new(Model);
-      Messages = new(EditContext);
+      Model.Konfiguration = (Model.AuswahlKonfiguration?.FirstOrDefault(a => a.Value.StartsWith(" "))
+        ?? Model.AuswahlKonfiguration?.FirstOrDefault())?.Key;
     }
     var l0 = Get(FactoryService.StockService.GetStateList(daten));
     WP210Model.AuswahlStatus = l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
@@ -154,11 +157,12 @@
       return;
 
     // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
-    // var submit = Model.Submit ?? "";
-    // if (submit == nameof(Model.Import))
-    // {
-    //   var l = SaveUploadFiles("WP200", "filehochladen");
-    // }
+    var handler = HttpContext.Request.Query["handler"];
+    if (handler == "Table_All")
+    {
+      Model.SetMhrf(DialogTypeEnum.Copy, ServiceDaten);
+      WriteFormularModel(Model.Nr ?? "0", Model);
+    }
   }
 
   /// <summary>
@@ -262,6 +266,11 @@
     if (!string.IsNullOrEmpty(submit))
     {
       valid = EditContext?.Validate() ?? false;
+    }
+    if (IsDateMhp(submit, nameof(Model.Bis), Model.Bis, out var d))
+    {
+      if (d.HasValue)
+        Model.Bis = d;
     }
     if (valid && submit == "OK")
     {

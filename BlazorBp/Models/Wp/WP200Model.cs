@@ -35,16 +35,6 @@ public class WP200Model : PageModelBase
   //// [Required(ErrorMessage = "Status muss angegeben werden.")]
   public string? Status { get; set; }
 
-  /// <summary>Holt oder setzt Alle.</summary>
-  [Display(Name = "A_lle", Description = "Selektionskriterien zurücksetzen")]
-  //// [Required(ErrorMessage = "Alle muss angegeben werden.")]
-  public string? Alle { get; set; }
-
-  /// <summary>Holt oder setzt Suche.</summary>
-  [Display(Name = "_Suche", Description = "Suche in allen Textfeldern")]
-  //// [Required(ErrorMessage = "Suche muss angegeben werden.")]
-  public string? Bezeichnung { get; set; }
-
   /// <summary>Holt oder setzt Muster.</summary>
   [Display(Name = "_Muster", Description = "Zu suchendes Muster")]
   //// [Required(ErrorMessage = "Muster muss angegeben werden.")]
@@ -53,7 +43,7 @@ public class WP200Model : PageModelBase
   /// <summary>Holt oder setzt auch inaktive.</summary>
   [Display(Name = "auch inaktive", Description = "Sollen auch inaktive Wertpapiere angezeigt werden?")]
   //// [Required(ErrorMessage = "auch inaktive muss angegeben werden.")]
-  public string? Auchinaktiv { get; set; }
+  public bool Auchinaktiv { get; set; }
 
   /// <summary>Holt oder setzt Bewertungen berechnen.</summary>
   [Display(Name = "Bewertungen berechnen", Description = "Soll die Bewertung für jedes aktive Wertpapier berechnet werden?")]
@@ -63,7 +53,10 @@ public class WP200Model : PageModelBase
   /// <summary>Holt oder setzt Bis.</summary>
   [Display(Name = "B_is", Description = "")]
   //// [Required(ErrorMessage = "Bis muss angegeben werden.")]
-  public string? Bis { get; set; }
+  public DateTime? Bis { get; set; }
+
+  /// <summary>Holt oder setzt die Auswahlliste von Konfiguration.</summary>
+  public List<ListItem>? AuswahlKonfiguration { get; set; } = default!;
 
   /// <summary>Holt oder setzt Konfiguration.</summary>
   [Display(Name = "_Konfiguration", Description = "Konfiguration für Bewertung festlegen")]
@@ -76,20 +69,18 @@ public class WP200Model : PageModelBase
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>
-  public void SetMhrf(DialogTypeEnum mode)
+  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
+  public void SetMhrf(DialogTypeEnum mode, ServiceDaten daten)
   {
     if (mode == New || mode == Copy)
     {
-      // Nummer = "";
+      Muster = "%%";
+      Bis = daten.Heute;
     }
     if (mode == New)
     {
-      // Thema = null;
+      Auchinaktiv = false;
     }
-    // SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
-    // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
-    // SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Status), false, false, true, false);
   }
 }

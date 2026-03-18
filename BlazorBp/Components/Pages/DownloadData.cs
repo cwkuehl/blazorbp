@@ -10,6 +10,7 @@ using BlazorBp.Models.Am;
 using BlazorBp.Models.Demo;
 using BlazorBp.Models.Fz;
 using BlazorBp.Models.Tb;
+using BlazorBp.Models.Wp;
 using BlazorBp.Services.Apis;
 using CSBP.Services.Base;
 using CSBP.Services.Factory;
@@ -73,6 +74,10 @@ public static class DownloadData
           rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<TB200TableRowModel>>(s, page, id)?.ReadModel;
           service = 3; // DiaryService
           break;
+        case "WP200":
+          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<WP200TableRowModel>>(s, page, id)?.ReadModel;
+          service = 4; // StockService
+          break;
         default:
           rm = null;
           pm = null;
@@ -107,6 +112,9 @@ public static class DownloadData
             }
             else
               r = FactoryService.DiaryService.GetCsvString(daten, page, rm);
+            break;
+          case 4:
+            r = FactoryService.StockService.GetCsvString(daten, page, rm);
             break;
           default:
             r = null;
