@@ -51,7 +51,7 @@ else
           <div class="modal-footer mt-2 p-0">
             <SubmitButton class="btn btn-primary col-md-2" For="@(() => AG110Model!.Ok)"/>
             <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button>
-            @* <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => AG110Model!.Schliessen)"/> *@
+            @* <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => AG110Model!.Schliessen)"/> *@
           </div>
         </EditForm>
       </div>
@@ -61,11 +61,6 @@ else
 }
 
 @code {
-  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
-  protected override void OnParametersSet()
-  {
-  }
-
   /// <summary>Initialisierung der Komponente.</summary>
   protected override void OnInitialized()
   {

@@ -48,7 +48,7 @@
     <LabelInputValid AutoPostback="" For="@(() => Model!.Status)" VerticalColClass="form-group col ms-1"/>
   </div>
   <div class="modal-footer mt-2">
-    @* <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-map" href="@Model!.MapHref" For="@(() => Model!.Chart)"/> *@
+    @* <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-map" href="@Model!.MapHref" For="@(() => Model!.Chart)"/> *@
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Chart)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Floppy)"/>
     <SubmitButton class="btn btn-primary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
@@ -65,13 +65,6 @@
 
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
-
-  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
-  protected override void OnParametersSet()
-  {
-    // Zu spät für Fehlermeldung in Funktion Init.
-    // base.OnParametersSet();
-  }
 
   /// <summary>
   /// Initialisierung des Models.
@@ -110,11 +103,7 @@
         // Nummer = "1",
       };
     WP210Model.Nr = id;
-    ////if (Model != null)
-    ////{
-    EditContext = new(Model);
-    Messages = new(EditContext);
-    ////}
+    InitEditContext(Model, WP210Model);
     var lk = Get(FactoryService.StockService.GetConfigurationList(daten, true, null));
     Model.AuswahlKonfiguration = InsertEmpty(lk?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
     if (string.IsNullOrEmpty(Model.Konfiguration))
@@ -128,14 +117,6 @@
     WP210Model.AuswahlProvider = l1?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
     var l2 = Get(FactoryService.StockService.GetStockList(daten));
     WP210Model.AuswahlRelation = InsertEmpty(l2?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
-    if (WP210Model != null)
-    {
-      ModalEditContext = new(WP210Model);
-      #pragma warning disable CS0618
-      ModalEditContext.EnableDataAnnotationsValidation();
-      #pragma warning restore CS0618
-      ModalMessages = new(ModalEditContext);
-    }
   }
 
   /// <summary>
@@ -213,11 +194,10 @@
         if (!string.IsNullOrEmpty(msubmit))
         {
           mvalid = ModalEditContext?.Validate() ?? false;
-          if (!mvalid && WP210Model != null)
+          if (!mvalid)
           {
             // Doppelte Meldungen verhindern.
-            ModalEditContext = new(WP210Model);
-            ModalMessages = new(ModalEditContext);
+            InitEditContext(null, WP210Model);
           }
         }
         if (mvalid && msubmit == nameof(WP210Model.Ok) && WP210Model != null)

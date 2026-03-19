@@ -39,17 +39,6 @@
   /// <summary>Ist der Benutzer Superadmin?</summary>
   private bool superadmin = false;
 
-  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
-  protected override void OnParametersSet()
-  {
-    base.OnParametersSet();
-    if (AG210Model != null)
-    {
-      ModalEditContext = new(AG210Model);
-      ModalMessages = new(ModalEditContext);
-    }
-  }
-
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -89,6 +78,7 @@
       };
     AG210Model.Nr = id;
     AG210Model.AuswahlBerechtigung = new List<ListItem> { new("0", "Benutzer"), new("1", "Admin"), new("2", "SuperAdmin") };
+    InitEditContext(Model, AG210Model);
     var daten = ServiceDaten;
     superadmin = daten != null && daten.Daten.Rollen.Contains(UserDaten.RoleSuperadmin);
   }

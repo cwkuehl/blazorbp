@@ -125,7 +125,7 @@ public class WP210Model : PageModelBase
   /// <returns>Das kopierte Model.</returns>
   public WpWertpapier To(ServiceDaten daten) => new()
   {
-    // TODO Mandant_Nr = daten.MandantNr,
+    Mandant_Nr = daten.MandantNr,
     Uid = Nummer,
     Bezeichnung = Bezeichnung,
     Datenquelle = Provider,

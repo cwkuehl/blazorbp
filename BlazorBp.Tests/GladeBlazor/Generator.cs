@@ -496,11 +496,6 @@ else
 }
 
 @code {
-  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
-  protected override void OnParametersSet()
-  {
-  }
-
   /// <summary>Initialisierung der Komponente.</summary>
   protected override void OnInitialized()
   {
@@ -535,25 +530,6 @@ else
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
 
-  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
-  protected override void OnParametersSet()
-  {
-    base.OnParametersSet();
-""");
-    if (modalroot != null)
-    {
-      sbr.Append($$"""
-    if ({{form2}}Model != null)
-    {
-      ModalEditContext = new({{form2}}Model);
-      ModalMessages = new(ModalEditContext);
-    }
-""");
-    }
-    sbr.Append($$"""
-
-  }
-
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -577,7 +553,12 @@ else
     Model.Nr = id;
 
 """);
-    if (modalroot != null)
+    if (modalroot == null)
+      sbr.Append($$"""
+    InitEditContext(Model);
+
+""");
+    else
     {
       sbr.Append($$"""
     if (table != null)
@@ -591,13 +572,6 @@ else
         SortColumn = $"{nameof({{form}}TodoModel.{{first}})}#+",
       };
     Table.Nr = id;
-
-""");
-    }
-    if (modalroot != null)
-    {
-      sbr.Append($$"""
-
     if ({{form2}}Model == null)
       {{form2}}Model = new {{form2}}Model
       {
@@ -605,6 +579,7 @@ else
         // Beschreibung = null,
       };
     {{form2}}Model.Nr = id;
+    InitEditContext(Model, {{form2}}Model);
 
 """);
     }

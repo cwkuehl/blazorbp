@@ -97,12 +97,28 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   }
 
   /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
-  protected override void OnParametersSet()
+  /// <param name="model">Betroffenes Model für den EditContext und Messages.</param>
+  /// <param name="modalmodel">Betroffenes Model für den modalen ModalEditContext und ModalMessages.</param>
+  /// <param name="modal2model">Betroffenes Model für 2. modalen Modal2EditContext und Modal2Messages.</param>
+  protected void InitEditContext(object? model = null, object? modalmodel = null, object? modal2model = null)
   {
-    if (Model != null)
+    if (model != null)
     {
-      EditContext = new(Model);
+      EditContext = new(model);
+      // #pragma warning disable CS0618
+      // EditContext.EnableDataAnnotationsValidation();
+      // #pragma warning disable CS0618
       Messages = new(EditContext);
+    }
+    if (modalmodel != null)
+    {
+      ModalEditContext = new(modalmodel);
+      ModalMessages = new(ModalEditContext);
+    }
+    if (modal2model != null)
+    {
+      Modal2EditContext = new(modal2model);
+      Modal2Messages = new(Modal2EditContext);
     }
   }
 

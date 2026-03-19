@@ -20,8 +20,8 @@
     <LabelInputValid type="password" AutoPostback="" For="@(() => Model!.KennwortNeu2)" VerticalColClass="form-group col-md-2"/>
   </div>
   <div class="modal-footer mt-2">
-    <SubmitButton class="btn btn-primary col-md-2 me-1" For="@(() => Model!.Ok)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
+    <SubmitButton class="btn btn-primary col-md-2 ms-1" For="@(() => Model!.Ok)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
   </div>
 </EditForm>
 
@@ -50,6 +50,7 @@
       Model.SetMhrf(DialogTypeEnum.New);
     }
     Model.Nr = id;
+    InitEditContext(Model);
   }
 
   /// <summary>
@@ -76,6 +77,11 @@
     if (!string.IsNullOrEmpty(submit))
     {
       valid = EditContext?.Validate() ?? false;
+      if (!valid)
+      {
+        // Doppelte Meldungen verhindern.
+        // InitEditContext(Model);
+      }
       if (valid && Model.KennwortNeu != Model.KennwortNeu2)
       {
         #pragma warning disable CS8603

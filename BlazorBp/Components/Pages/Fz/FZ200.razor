@@ -27,8 +27,8 @@
   <input type="hidden" name="SubmitControl"/>  <div class="row ms-0 mt-1">
   </div>
   <div class="modal-footer mt-2 p-0">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-0" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
   </div>
 </EditForm>
 
@@ -40,18 +40,6 @@
 
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
-
-  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
-  protected override void OnParametersSet()
-  {
-    base.OnParametersSet();
-    if (FZ210Model != null)
-    {
-      // Zu spät in Funktion OnParametersSet() wegen ModalMessages, deshalb hier.
-      ModalEditContext = new(FZ210Model);
-      ModalMessages = new(ModalEditContext);
-    }
-  }
 
   /// <summary>
   /// Initialisierung des Models.
@@ -84,10 +72,10 @@
         SortColumn = $"{nameof(FzFahrrad.Bezeichnung)}#+",
       };
     Table.Nr = id;
-
     if (FZ210Model == null)
       FZ210Model = new FZ210Model();
     FZ210Model.Nr = id;
+    InitEditContext(Model, FZ210Model);
     FZ210Model.AuswahlTyp = new List<ListItem>
     {
       new(Functions.ToString((int)CSBP.Services.Apis.Enums.BikeTypeEnum.Tour), CSBP.Services.Resources.Messages.Enum_bike_tour),

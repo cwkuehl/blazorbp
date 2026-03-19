@@ -120,17 +120,12 @@ Zeile 2",
         ListBox = "MX",
       };
     Model.Nr = id;
+    InitEditContext(Model);
     Model.AuswahlRadioButton = new List<ListItem> { new("A", "ABC"), new("D", "DEF"), new("G", "GHI") };
     Model.AuswahlComboBox = new List<ListItem> { new("MX", "Mexico"), new("CA", "Canada"), new("US", "USA") };
     Model.AuswahlListBox = new List<ListItem> { new("MX", "Mexico"), new("CA", "Canada"), new("US", "USA") };
     // await Task.Delay(1);
     // await _context.Movie.ToListAsync();
-  }
-
-  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
-  protected override void OnParametersSet()
-  {
-    base.OnParametersSet();
   }
 
   /// <summary>

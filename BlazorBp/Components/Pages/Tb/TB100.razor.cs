@@ -28,17 +28,6 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
   /// <summary>Holt oder setzt die Canvas-Daten.</summary>
   private string CanvasDaten = "";
 
-  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
-  protected override void OnParametersSet()
-  {
-    base.OnParametersSet();
-    if (TB110Model != null)
-    {
-      ModalEditContext = new(TB110Model);
-      ModalMessages = new(ModalEditContext);
-    }
-  }
-
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -80,13 +69,9 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
     if (TB210Model == null)
       TB210Model = new TB210Model();
     TB210Model.Nr = id;
+    InitEditContext(Model, TB110Model, TB210Model);
     var l0 = Get(FactoryService.DiaryService.GetTimezoneList(daten));
     TB210Model.AuswahlZeitzone = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
-    if (TB210Model != null)
-    {
-      Modal2EditContext = new(TB210Model);
-      Modal2Messages = new(Modal2EditContext);
-    }
   }
 
   /// <summary>

@@ -48,17 +48,6 @@
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
 
-  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
-  protected override void OnParametersSet()
-  {
-    base.OnParametersSet();
-    if (FZ260Model != null)
-    {
-      ModalEditContext = new(FZ260Model);
-      ModalMessages = new(ModalEditContext);
-    }
-  }
-
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -95,14 +84,8 @@
     if (FZ260Model == null)
       FZ260Model = new FZ260Model();
     FZ260Model.Nr = id;
+    InitEditContext(Model, FZ260Model);
     FZ260Model.AuswahlFahrrad = l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList();
-    #pragma warning disable CS8604
-    ModalEditContext = new(FZ260Model);
-    #pragma warning restore CS8604
-    // #pragma warning disable CS0618
-    // ModalEditContext.EnableDataAnnotationsValidation();
-    // #pragma warning disable CS0618
-    ModalMessages = new(ModalEditContext);
   }
 
   /// <summary>

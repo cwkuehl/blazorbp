@@ -31,7 +31,7 @@
     <LabelInputValid AutoPostback="x" For="@(() => Model!.TextBox)" VerticalColClass=""/>
   </div> *@
   <div class="modal-footer mt-2">
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" For="@(() => Model!.Schliessen)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
   </div>
 </EditForm>
 
@@ -40,17 +40,6 @@
 @code {
   [SupplyParameterFromForm]
   protected AM510Model AM510Model { get; set; } = default!;
-
-  /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
-  protected override void OnParametersSet()
-  {
-    base.OnParametersSet();
-    if (AM510Model != null)
-    {
-      ModalEditContext = new(AM510Model);
-      ModalMessages = new(ModalEditContext);
-    }
-  }
 
   /// <summary>
   /// Initialisierung des Models.
@@ -82,10 +71,10 @@
       };
     Model.Nr = id;
     Table.Nr = id;
-
     if (AM510Model == null)
       AM510Model = new AM510Model();
     AM510Model.Nr = id;
+    InitEditContext(Model, AM510Model);
   }
 
   /// <summary>
