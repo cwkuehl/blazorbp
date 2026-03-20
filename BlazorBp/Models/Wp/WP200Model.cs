@@ -25,14 +25,12 @@ public class WP200Model : PageModelBase
   //// [Required(ErrorMessage = "Importieren und Exportieren muss angegeben werden.")]
   public string? Floppy { get; set; }
 
-  /// <summary>Holt oder setzt Chart oder Karte.</summary>
-  [Display(Name = "Chart oder Karte", Description = "Chart oder Karte")]
-  //// [Required(ErrorMessage = "Chart oder Karte muss angegeben werden.")]
+  /// <summary>Holt oder setzt Chart.</summary>
+  [Display(Name = "Chart", Description = "Chart zum ausgewählten Wertpapier anzeigen")]
   public string? Chart { get; set; }
 
   /// <summary>Holt oder setzt Status.</summary>
   [Display(Name = "Status", Description = "")]
-  //// [Required(ErrorMessage = "Status muss angegeben werden.")]
   public string? Status { get; set; }
 
   /// <summary>Holt oder setzt Muster.</summary>

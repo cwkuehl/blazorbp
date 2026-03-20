@@ -38,8 +38,8 @@
   <input type="hidden" name="SubmitControl"/>  <div class="row mt-1 g-0">
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Muster)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid type="checkbox" AutoPostback="" For="@(() => Model!.Auchinaktiv)" VerticalColClass="form-group col-md-2 ms-1"/>
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.Muster)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid type="checkbox" AutoPostback="x" For="@(() => Model!.Auchinaktiv)" VerticalColClass="form-group col-md-2 ms-1"/>
     <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" VerticalColClass="form-group col-md-2 ms-1"/>
     <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Konfiguration)" DataList="Model!.AuswahlKonfiguration" VerticalColClass="form-group col ms-1"/>
   </div>
@@ -49,8 +49,8 @@
   </div>
   <div class="modal-footer mt-2">
     @* <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-map" href="@Model!.MapHref" For="@(() => Model!.Chart)"/> *@
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Chart)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Floppy)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-map" For="@(() => Model!.Chart)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-floppy" For="@(() => Model!.Floppy)"/>
     <SubmitButton class="btn btn-primary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
   </div>
@@ -247,14 +247,33 @@
     {
       valid = EditContext?.Validate() ?? false;
     }
+    if (submit == nameof(Model.Auchinaktiv) || submit == nameof(Model.Muster))
+    {
+      Refresh();
+    }
     if (IsDateMhp(submit, nameof(Model.Bis), Model.Bis, out var d))
     {
       if (d.HasValue)
         Model.Bis = d;
     }
-    if (valid && submit == "OK")
+    if (valid && submit == nameof(Model.Berechnen))
     {
-      CloseFormular();
+      var daten = ServiceDaten;
+      var rm = Table?.ReadModel;
+      var state = new System.Text.StringBuilder();
+      var cancel = new System.Text.StringBuilder();
+      var r0 = FactoryService.StockService.CalculateStocks(ServiceDaten, null, Model.Muster,
+          null, Model.Bis ?? daten.Heute, Model.Auchinaktiv, rm?.Search, Model.Konfiguration, state, cancel);
+      if (!Get(r0))
+        Refresh();
+    }
+    if (submit == nameof(Model.Chart))
+    {
+      // TODO Formular WP100 Chart aufrufen.
+    }
+    if (submit == nameof(Model.Floppy))
+    {
+      // TODO Formular WP220 für Import und Export aufrufen.
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
     if (submit == nameof(Model.Schliessen))
@@ -273,28 +292,7 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    @* var r = new ServiceErgebnis<List<WpWertpapier>>(new List<WpWertpapier>());
-    r.Ergebnis.Add(new WpWertpapier()
-    {
-       Notiz = "Notiz1",
-       Uid = "Nummer1",
-       Bezeichnung = "Bezeichnung1",
-       Datenquelle = "Provider1",
-       Kuerzel = "Kuerzel1",
-       Status = "Status1",
-       CurrentPrice = 123.45m,
-       StopPrice = 234.56m,
-       SignalPrice1 = 345.67m,
-       Pattern = "Muster1",
-       Type = "Typ1",
-       Currency = "Waehrung1",
-       Sorting = "Sortierung1",
-       Relation_Uid = "Relation1",
-       // Anlage = "Anlage1",
-    });
-    if (rm != null)
-      rm.PageCount = 0; *@
-    var l0 = Get(FactoryService.StockService.GetStockList(daten, rm), messages);
+    var l0 = Get(FactoryService.StockService.GetStockList(daten, rm, Model.Auchinaktiv, null, Model.Muster), messages);
     var l = l0?.Select(a => WP200TableRowModel.From(a)).ToList() ?? new List<WP200TableRowModel>();
     if (m != null && rm != null)
     {
