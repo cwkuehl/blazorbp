@@ -48,7 +48,8 @@ Folgende Funktionen sind implementiert:
 -Tabelle mit optional einblendbaren Spalten und Speicherung der Einstellungen,
 -Umschalten zwischen Dark und Light Mode per Link.
 -Automatische Größenanpassung der Formulare (font size scaling in html-tag)
--Aktualisieren des Dialogs bei Undo und Redo (z.B. TB100).
+-Aktualisieren des Dialogs bei Undo und Redo, z.B. TB100.
+-Starten von asynchronen, länger laufenden Aufgaben, z.B. WP200.
 
 TODO Folgende Funktionen sind noch nicht implementiert:
 -dotnet new razorclasslib -o BlazorBp.Components, Vererbung der Component-Klasse,
