@@ -33,96 +33,81 @@ public static class DownloadData
     if (!string.IsNullOrEmpty(page) && !string.IsNullOrEmpty(id) && ds != null && s != null)
     {
       page = page.ToUpper();
-      TableReadModel? rm = null;
-      PageModelBase? pm = null;
-      var service = -1;
+      var daten = new ServiceDaten(s.GetUserDaten());
+      ServiceErgebnis<string>? r = null;
       switch (page)
       {
         case "AG100":
-          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<AG100TableRowModel>>(s, page, id)?.ReadModel;
-          service = 1; // ClientService
-          break;
-        case "AG200":
-          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<AG200TableRowModel>>(s, page, id)?.ReadModel;
-          service = 1; // ClientService
-          break;
-        case "AM500":
-          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<AM500TableRowModel>>(s, page, id)?.ReadModel;
-          service = 1; // ClientService
-          break;
-        case "DM200":
-          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<DM200TableRowModel>>(s, page, id)?.ReadModel;
-          service = 0; // DemoService
-          break;
-        case "FZ200":
-          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ200TableRowModel>>(s, page, id)?.ReadModel;
-          service = 2; // PrivateService
-          break;
-        case "FZ250":
-          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ250TableRowModel>>(s, page, id)?.ReadModel;
-          service = 2; // PrivateService
-          break;
-        case "FZ700":
-          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ700TableRowModel>>(s, page, id)?.ReadModel;
-          service = 2; // PrivateService
-          break;
-        case "TB100":
-          pm = BlazorComponentBaseStatic.ReadFormularFormModel<TB100Model>(s, page, id);
-          service = 3; // DiaryService
-          break;
-        case "TB200":
-          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<TB200TableRowModel>>(s, page, id)?.ReadModel;
-          service = 3; // DiaryService
-          break;
-        case "WP200":
-          rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<WP200TableRowModel>>(s, page, id)?.ReadModel;
-          service = 4; // StockService
-          break;
-        default:
-          rm = null;
-          pm = null;
-          break;
-      }
-      if ((rm != null || pm != null) && service > 0)
-      {
-        var daten = new ServiceDaten(s.GetUserDaten());
-        ServiceErgebnis<string>? r;
-        switch (service)
         {
-          case 0:
-            var csv = ds.GetCsvString(page, rm);
-            r = new ServiceErgebnis<string>(csv);
-            break;
-          case 1:
-            r = FactoryService.ClientService.GetCsvString(daten, page, rm);
-            break;
-          case 2:
-            r = FactoryService.PrivateService.GetCsvString(daten, page, rm);
-            break;
-          case 3:
-            r = null;
-            if (pm is TB100Model model)
-            {
-              var r2 = FactoryService.DiaryService.GetDiaryReport(daten, model.GetSearchArray(), model.Position2, model.From, model.To);
-              if (r2.Ok && r2.Ergebnis != null)
-              {
-                var csv2 = string.Join(Environment.NewLine, r2.Ergebnis);
-                r = new ServiceErgebnis<string>(csv2);
-              }
-            }
-            else
-              r = FactoryService.DiaryService.GetCsvString(daten, page, rm);
-            break;
-          case 4:
-            r = FactoryService.StockService.GetCsvString(daten, page, rm);
-            break;
-          default:
-            r = null;
-            break;
+          var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<AG100TableRowModel>>(s, page, id)?.ReadModel;
+          r = FactoryService.ClientService.GetCsvString(daten, page, rm);
+          break;
         }
-        if (r != null && r.Ok && !string.IsNullOrEmpty(r.Ergebnis))
-          return r.Ergebnis;
+        case "AG200":
+        {
+          var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<AG200TableRowModel>>(s, page, id)?.ReadModel;
+          r = FactoryService.ClientService.GetCsvString(daten, page, rm);
+          break;
+        }
+        case "AM500":
+        {
+          var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<AM500TableRowModel>>(s, page, id)?.ReadModel;
+          r = FactoryService.ClientService.GetCsvString(daten, page, rm);
+          break;
+        }
+        case "DM200":
+        {
+          var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<DM200TableRowModel>>(s, page, id)?.ReadModel;
+          var csv = ds.GetCsvString(page, rm);
+          r = new ServiceErgebnis<string>(csv);
+          break;
+        }
+        case "FZ200":
+        {
+          var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ200TableRowModel>>(s, page, id)?.ReadModel;
+          r = FactoryService.PrivateService.GetCsvString(daten, page, rm);
+          break;
+        }
+        case "FZ250":
+        {
+          var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ250TableRowModel>>(s, page, id)?.ReadModel;
+          r = FactoryService.PrivateService.GetCsvString(daten, page, rm);
+          break;
+        }
+        case "FZ700":
+        {
+          var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ700TableRowModel>>(s, page, id)?.ReadModel;
+          r = FactoryService.PrivateService.GetCsvString(daten, page, rm);
+          break;
+        }
+        case "TB100":
+        {
+          var pm = BlazorComponentBaseStatic.ReadFormularFormModel<TB100Model>(s, page, id);
+          var r2 = pm == null ? null : FactoryService.DiaryService.GetDiaryReport(daten, pm.GetSearchArray(), pm.Position2, pm.From, pm.To);
+          if (r2 != null && r2.Ok && r2.Ergebnis != null)
+          {
+            var csv2 = string.Join(Environment.NewLine, r2.Ergebnis);
+            r = new ServiceErgebnis<string>(csv2);
+          }
+          break;
+        }
+        case "TB200":
+        {
+          var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<TB200TableRowModel>>(s, page, id)?.ReadModel;
+          r = FactoryService.DiaryService.GetCsvString(daten, page, rm);
+          break;
+        }
+        case "WP200":
+        {
+          var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<WP200TableRowModel>>(s, page, id)?.ReadModel;
+          r = FactoryService.StockService.GetCsvString(daten, page, rm);
+          break;
+        }
+        default:
+          break;
       }
+      if (r != null && r.Ok && !string.IsNullOrEmpty(r.Ergebnis))
+        return r.Ergebnis;
     }
     var csv0 = $"""
       Seite;Fehler
