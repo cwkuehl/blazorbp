@@ -44,7 +44,7 @@
     <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Konfiguration)" DataList="Model!.AuswahlKonfiguration" VerticalColClass="form-group col ms-1"/>
   </div>
   <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2" For="@(() => Model!.Berechnen)"/>
+    <SubmitButton class="btn btn-secondary col-md-2" href="@($"/starttask/WP200/{Model!.Nr}")" For="@(() => Model!.Berechnen)"/>
     <LabelInputValid AutoPostback="" For="@(() => Model!.Status)" VerticalColClass="form-group col ms-1"/>
   </div>
   <div class="modal-footer mt-2">

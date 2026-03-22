@@ -209,6 +209,18 @@ app.MapGet("/download/{page}/{id}",
     return Results.Text(s, "text/csv", Encoding.UTF8);
   return Results.NotFound();
 });
+app.MapGet("/starttask/{page}/{id}",
+  [EndpointSummary("Starten von asynchronen, länger laufenden Aufgaben.")]
+  [EndpointDescription("Page und ID des Formulars müssen angegeben werden.")]
+  (string page, string id, HttpContext context, IServiceProvider sp) =>
+{
+  if (string.IsNullOrEmpty(page) || string.IsNullOrEmpty(id))
+    return Results.BadRequest();
+  // Task.Run(() => StartTask.Do(page, id, context, sp));
+  // return Results.Ok();
+  StartTask.Do(page, id, context, sp);
+  return Results.NoContent();
+});
 
 // app.UseStaticFiles(new StaticFileOptions()
 // {
