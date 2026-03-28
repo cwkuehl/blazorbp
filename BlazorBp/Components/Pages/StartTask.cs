@@ -5,13 +5,7 @@
 namespace BlazorBp.Components.Pages;
 
 using BlazorBp.Base;
-using BlazorBp.Models.Ag;
-using BlazorBp.Models.Am;
-using BlazorBp.Models.Demo;
-using BlazorBp.Models.Fz;
-using BlazorBp.Models.Tb;
 using BlazorBp.Models.Wp;
-using BlazorBp.Services.Apis;
 using CSBP.Services.Base;
 using CSBP.Services.Factory;
 
@@ -32,18 +26,23 @@ public static class StartTask
     {
       var daten = new ServiceDaten(s.GetUserDaten());
       page = page.ToUpper();
-      var state = new System.Text.StringBuilder();
-      var cancel = new System.Text.StringBuilder();
       switch (page)
       {
         case "WP200":
+          var rs = StatusTask.HinzufuegenFunktion(daten.MandantNr, $"CalculateStocks");
+          if (!rs.Ok || rs.Ergebnis == null)
+            return;
+          var state = rs.Ergebnis;
           var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<WP200TableRowModel>>(s, page, id)?.ReadModel;
           var Model = BlazorComponentBaseStatic.ReadFormularFormModel<WP200Model>(s, page, id);
           if (rm != null && Model != null)
           {
             var r = FactoryService.StockService.CalculateStocks(daten, null, Model.Muster, null,
-              Model.Bis ?? daten.Heute, Model.Auchinaktiv, rm?.Search, Model.Konfiguration, state, cancel);
+              Model.Bis ?? daten.Heute, Model.Auchinaktiv, rm?.Search, Model.Konfiguration, state);
+            state.Beenden(r: r);
           }
+          else
+            state.Beenden();
           break;
         default:
           break;

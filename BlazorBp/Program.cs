@@ -11,6 +11,7 @@ using BlazorBp.Components; // für App
 using BlazorBp.Components.Pages;
 using BlazorBp.Services.Apis;
 using BlazorBp.Services.Impl;
+using CSBP.Services.Base;
 using CSBP.Services.Factory;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -29,6 +30,10 @@ var r1 = FactoryService.ClientService.InitDb(daten);
 r1.ThrowAllErrors("InitDb");
 var r2 = FactoryService.ClientService.GetOptionList(daten, daten.MandantNr, CSBP.Services.Base.Parameter.Params, null);
 r2.ThrowAllErrors("GetOptionList");
+var sharedpath = Functions.TrimNull(builder.Configuration["App:SharedPath"]);
+var temppath = Functions.TrimNull(builder.Configuration["App:TempPath"]);
+CsbpBase.SetValues(sharedpath, temppath);
+StatusTask.Aufraeumen();
 
 // Add services to the container.
 if (interactive || true)

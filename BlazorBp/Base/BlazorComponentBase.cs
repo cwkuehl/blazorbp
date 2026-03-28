@@ -597,7 +597,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
         if (fileid != null && f.Name != fileid)
           continue; // Andere Dateien ignorieren.
         var extension = Path.GetExtension(f.FileName);
-        var fn = Functions.GetDateiname(fileprefix, true, true, extension);
+        var fn = Functions.GetDateiname(fileprefix, true, false, true, extension);
         var filePath = Path.Combine(folderPath, fn);
         try
         {
