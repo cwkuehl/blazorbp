@@ -243,6 +243,8 @@
     if (Model == null || Messages == null)
       return;
     var submit = Model.Submit ?? "";
+    var daten = ServiceDaten;
+    Model.Status = StatusTask.GetStatus(daten.MandantNr, new[] { "CalculateStocks" }, true);
     if (!string.IsNullOrEmpty(submit))
     {
       valid = EditContext?.Validate() ?? false;
@@ -258,7 +260,6 @@
     }
     if (valid && submit == nameof(Model.Berechnen))
     {
-      var daten = ServiceDaten;
       var rm = Table?.ReadModel;
       var rs = StatusTask.HinzufuegenFunktion(daten.MandantNr, $"CalculateStocks");
       if (!rs.Ok || rs.Ergebnis == null)
