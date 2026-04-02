@@ -133,6 +133,9 @@ public partial class LabelInputValid<TItem> : ComponentBase
   /// <summary>Anzahl der Nachkommastellen für die Darstellung von Decimal-Werten.</summary>
   private int currency = 0;
 
+  /// <summary>Status für Funktion.</summary>
+  private string? stateof = null;
+
   /// <summary>Anzahl der Renderns.</summary>
   private int rendern = 0;
 
@@ -191,6 +194,8 @@ public partial class LabelInputValid<TItem> : ComponentBase
     AdditionalAttributes.TryGetValue("step", out obj);
     Step = obj?.ToString() ?? "";
     currency = Step == "0.1" ? 1 : Step == "0.01" ? 2 : Step == "0.001" ? 3 : Step == "0.0001" ? 4 : Step == "0.00001" ? 5 : 0;
+    AdditionalAttributes.TryGetValue("stateof", out obj);
+    stateof = obj?.ToString();
     AdditionalAttributes.TryGetValue("rows", out obj);
     var textarearows = obj?.ToString() ?? "";
     AdditionalAttributes.TryGetValue("cols", out obj);
@@ -390,6 +395,7 @@ public partial class LabelInputValid<TItem> : ComponentBase
     foreach (var e in AdditionalAttributes.ToList())
       Attributes2.Add(e.Key, e.Value);
     ValueSubmit = name;
+    SetAttribute(Attributes2, "stateof", null);
     SetAttribute(Attributes2, "value", submit ? ValueSubmit : null);
     SetAttribute(Attributes2, "label", null);
     if (textarea || combobox || listbox)
@@ -422,6 +428,11 @@ public partial class LabelInputValid<TItem> : ComponentBase
       SetAttribute(Attributes2, "multiple", multiple);
       SetAttribute(Attributes2, "onchange", onchange);
       SetAttribute(Attributes2, "autofocus", autofocus);
+      //if (!string.IsNullOrEmpty(stateof))
+      //{
+      //  SetAttribute(Attributes2, "stateof", null);
+      //  SetAttribute(Attributes2, "data-stateof", stateof);
+      //}
     }
     if (InputType == "date")
       SetAttribute(Attributes2, "value", Functions.ToString(CurrentValueAsDateTime));

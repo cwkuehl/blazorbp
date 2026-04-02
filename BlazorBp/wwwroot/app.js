@@ -34,6 +34,34 @@ function submitc(ctrl) {
   // window.onbeforeunload = function() { return "Bitte zuerst abmelden, wenn Sie die Seite verlassen wollen."; }
 }
 
+/** Liest den Status für einen Task.
+ * @param ctrl Auslösendes Control mit Attribut 'data-stateof'.
+ */
+function statec(ctrl) {
+  // console.log('function statec(ctrl)');
+  if (ctrl == null) {
+    alert('StateControl ohne Control.');
+    return;
+  }
+  var stateof = ctrl.attr('data-stateof');
+  var id = ctrl.attr('data-id');
+  if (stateof == null || id == null) {
+    alert('StateControl ohne data-stateof oder data-id.');
+    return;
+  }
+  var statusctl = document.getElementById(id);
+  if (statusctl == null) {
+    alert('Status-Control mit id "' + id + '" nicht gefunden.');
+    return;
+  }
+  $.get('/statustask/' + stateof, function(data) {
+    statusctl.value = data;
+    // alert('Status von ' + stateof + ': ' + data);
+  }).fail(function() {
+    alert('Fehler beim Abrufen des Status von ' + stateof + '.');
+  });
+}
+
 /** Alle Controls deaktivieren.
  */
 function disableAllControls() {

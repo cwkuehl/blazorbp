@@ -169,7 +169,7 @@ app.Use(async (context, next) =>
   // const string POLICY = "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self'; frame-ancestors 'self'; form-action 'self';"; // To tighten further
   if (0 == 0)
   {
-    const string POLICY = "default-src 'self'; script-src 'self' 'unsafe-hashes' 'sha256-CUqQNXXMRfh20wSHsbWzap8G4U55uWVlFrnrwSqnd10=' 'sha256-aV5tqRL+qWGkuS9LFLVv5WMI1ldktz5yzpz7ftN2I5k='; img-src 'self' data:; form-action 'self'; frame-ancestors 'none';"; // To prevent all framing of your content
+    const string POLICY = "default-src 'self'; script-src 'self' 'unsafe-hashes' 'sha256-CUqQNXXMRfh20wSHsbWzap8G4U55uWVlFrnrwSqnd10=' 'sha256-UlYTlM874RdFSS67t+aMjiuwzawEsxJkZV0OrhmqESo='; img-src 'self' data:; form-action 'self'; frame-ancestors 'none';"; // To prevent all framing of your content
     // const string POLICY = "default-src 'self'; script-src 'self' 'unsafe-hashes' 'sha256-fa0BfrkfoHWYWTFJg9cIEoVa6Mn3OUorfpaz+NXuHCI=' 'sha256-RFWPLDbv2BY+rCkDzsE+0fr8ylGr2R2faWMhq4lfEQc='; connect-src 'self'; img-src 'self' data:; style-src 'self'; form-action 'self'; frame-ancestors 'none';"; // To prevent all framing of your content
     // const string POLICY = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; img-src 'self'; style-src 'self'; form-action 'self'; frame-ancestors 'none';";
     // script-src 'unsafe-inline' 'unsafe-eval' for ajax
@@ -181,6 +181,7 @@ app.Use(async (context, next) =>
     // 'sha256-gn6SvwkOt5ByZ8z2lZtOcIQopPyjkBUNz7EbU50dwb8=' submitControl($(this).attr('id'),'form1');
     // 'sha256-JINyXuiE90RdGlUFK8DM5WNxzknp65BaeVE4VuderpY=' submitControl($(this).attr('id'),'formt');
     // 'sha256-CUqQNXXMRfh20wSHsbWzap8G4U55uWVlFrnrwSqnd10=' submitc($(this));
+    // 'sha256-UlYTlM874RdFSS67t+aMjiuwzawEsxJkZV0OrhmqESo=' statec($(this));
     // 'sha256-aV5tqRL+qWGkuS9LFLVv5WMI1ldktz5yzpz7ftN2I5k=' alert('Hallo'); <script>alert('Hallo');</script>
     context.Response.Headers.Append("Content-Security-Policy", $"{POLICY}");
     // Verhindern von MIME-Typ-Sniffing.
@@ -225,6 +226,18 @@ app.MapGet("/starttask/{page}/{id}",
   // return Results.Ok();
   StartTask.Do(page, id, context, sp);
   return Results.NoContent();
+});
+app.MapGet("/statustask/{name}",
+  [EndpointSummary("Abrufen des Status asynchroner, länger laufender Aufgaben.")]
+  [EndpointDescription("Name der Aufgabe muss angegeben werden.")]
+  (string name, HttpContext context, IServiceProvider sp) =>
+{
+  var s = context?.Session;
+  if (string.IsNullOrEmpty(name) || s?.GetUserDaten() == null)
+    return Results.BadRequest();
+  var daten = new ServiceDaten(s.GetUserDaten());
+  var status = StatusTask.GetStatus(daten.MandantNr, [name], true);
+  return Results.Text(status, "text/plain; charset=utf-8");
 });
 
 // app.UseStaticFiles(new StaticFileOptions()

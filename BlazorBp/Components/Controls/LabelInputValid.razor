@@ -10,7 +10,11 @@
 }
 @if (!hidden && !NoLabel && !string.IsNullOrWhiteSpace(LabelMu.Value))
 {
-  if (string.IsNullOrWhiteSpace(VerticalColClass))
+  if (!string.IsNullOrWhiteSpace(stateof))
+  {
+    <button type="button" class="btn btn-secondary col-md-2" title="Status aktualisieren" onclick="statec($(this));" data-stateof="@stateof" data-id="@Id">@LabelMu</button>
+  }
+  else if (string.IsNullOrWhiteSpace(VerticalColClass))
   {
     <label class="col-form-label col-md-2 @CssClassLabel" for="@Id">@LabelMu</label>
   }

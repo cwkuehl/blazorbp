@@ -45,7 +45,7 @@
   </div>
   <div class="row mt-1 g-0">
     <SubmitButton class="btn btn-secondary col-md-2" href="@($"/starttask/WP200/{Model!.Nr}")" For="@(() => Model!.Berechnen)"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Status)" VerticalColClass="form-group col ms-1"/>
+    <LabelInputValid stateof="CalculateStocks" AutoPostback="" For="@(() => Model!.Status)" VerticalColClass="form-group col ms-1"/>
   </div>
   <div class="modal-footer mt-2">
     @* <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-map" href="@Model!.MapHref" For="@(() => Model!.Chart)"/> *@
