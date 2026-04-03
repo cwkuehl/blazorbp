@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using BlazorBp.Base;
 using CSBP.Services.Base;
+using CSBP.Services.Factory;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -96,12 +97,19 @@ public class AuthController : Controller
   //// [Authorize] // Kein Redirect mit ReturnUrl.
   public async Task<IActionResult> LogoutUser()
   {
-    var daten = HttpContext.Session?.GetUserDaten();
-    System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} LogoutUser {daten?.MandantNr} {daten?.BenutzerId}");
+    var userdaten = HttpContext.Session?.GetUserDaten();
+    if (userdaten != null)
+    {
+      var daten = new ServiceDaten(userdaten);
+      var formdata = HttpContext.Session?.GetFormData()?.ToJsonString();
+      FactoryService.LoginService.Logout(daten, formdata);
+    }
+    System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} LogoutUser {userdaten?.MandantNr} {userdaten?.BenutzerId}");
     HttpContext.Session?.SetFormState(null);
     HttpContext.Session?.SetUserDaten(null);
-    if (daten != null)
-      ServiceBase.RemoveUndoRedoStack(daten.SessionId);
+    HttpContext.Session?.SetFormData(null);
+    if (userdaten != null)
+      ServiceBase.RemoveUndoRedoStack(userdaten.SessionId);
     await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     return Redirect("/");
   }

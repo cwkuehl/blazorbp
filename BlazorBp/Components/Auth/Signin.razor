@@ -68,7 +68,7 @@
     Messages = new(EditContext);
   }
 
-  private void Submit() // private async Task Submit() // Zum Setzen der Validation Summary darf es nich async sein.
+  private void Submit() // private async Task Submit() // Zum Setzen der Validation Summary darf es nicht async sein.
   {
     if (Model == null || Messages == null)
       return;
@@ -104,6 +104,14 @@
           //if (!string.IsNullOrEmpty(username))
           //  Model.Username = username;
           //HttpContext.Response.Cookies.Append(CookieName, $"{Model.Client};{Model.Username}", o);
+          var daten = new ServiceDaten(ud);
+          var r = FactoryService.LoginService.GetFormData(daten);
+          if (r.Ok)
+          {
+            var formdata = new FormData();
+            formdata.FromJsonString(r.Ergebnis ?? "");
+            HttpContext.Session?.SetFormData(formdata);
+          }
           var ru = Functions.TrimNull(HttpContext.Request.Query["returnurl"].ToString()) ?? "/";
           navigation.NavigateTo(ru);
         }

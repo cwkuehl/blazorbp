@@ -112,4 +112,26 @@ public static class SessionExtensions
     else
       session.SetObjectAsJson(key, value);
   }
+
+  /// <summary>Lesen der Formular-Daten in der Session.</summary>
+  /// <param name="session">Betroffene Session.</param>
+  /// <returns>Formular-Daten oder null.</returns>
+  public static FormData? GetFormData(this ISession session)
+  {
+    var key = typeof(FormData).FullName ?? "";
+    var data = session.GetObjectFromJson<FormData>(key);
+    return data;
+  }
+
+  /// <summary>Speichern der Formular-Daten in der Session.</summary>
+  /// <param name="session">Betroffene Session.</param>
+  /// <param name="value">Betroffener Wert.</param>
+  public static void SetFormData(this ISession session, FormData? value)
+  {
+    var key = typeof(FormData).FullName ?? "";
+    if (value == null)
+      session.Remove(key);
+    else
+      session.SetObjectAsJson(key, value);
+  }
 }

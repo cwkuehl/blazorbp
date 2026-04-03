@@ -20,7 +20,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// <summary>
   /// Alle möglichen Formulare als Kopiervorlage für Use cases.
   /// </summary>
-  private static readonly Dictionary<string, Formular> Formulare = new Dictionary<string, Formular>
+  private static readonly Dictionary<string, Formular> Formulare = new()
   {
       { "Index", new Formular { Action = "index", Area = "", Name = "Startseite" } },
       { "AG100", new Formular { Action = "ag100", Area = "ag", Name = "Mandanten" } },
@@ -702,6 +702,28 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       return true;
     }
     return false;
+  }
+
+  /// <summary>
+  /// Setzen eines String-Werts in der Session.
+  /// </summary>
+  /// <param name="key">Betroffener Schlüssel.</param>
+  /// <param name="value">Betroffener Wert.</param>
+  protected void SetStringData(string key, string? value)
+  {
+    var data = HttpContext.Session?.GetFormData() ?? new FormData();
+    data[key] = value;
+    HttpContext.Session?.SetFormData(data);
+  }
+
+  /// <summary>
+  /// Lesen eines String-Werts aus der Session.
+  /// </summary> <param name="key">Betroffener Schlüssel.</param>
+  /// <returns>Betroffener Wert.</returns>
+  protected string? GetStringData(string key)
+  {
+    var data = HttpContext.Session?.GetFormData() ?? new FormData();
+    return data[key];
   }
 }
 

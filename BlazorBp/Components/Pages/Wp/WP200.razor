@@ -108,7 +108,8 @@
     Model.AuswahlKonfiguration = InsertEmpty(lk?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
     if (string.IsNullOrEmpty(Model.Konfiguration))
     {
-      Model.Konfiguration = (Model.AuswahlKonfiguration?.FirstOrDefault(a => a.Value.StartsWith(" "))
+      Model.Konfiguration = GetStringData("WP200Konfiguration")
+        ?? (Model.AuswahlKonfiguration?.FirstOrDefault(a => a.Value.StartsWith(" "))
         ?? Model.AuswahlKonfiguration?.FirstOrDefault())?.Key;
     }
     var l0 = Get(FactoryService.StockService.GetStateList(daten));
@@ -144,6 +145,7 @@
       Model.SetMhrf(DialogTypeEnum.Copy, ServiceDaten);
       WriteFormularModel(Model.Nr ?? "0", Model);
     }
+    SetStringData("WP200Konfiguration", Model.Konfiguration);
   }
 
   /// <summary>
