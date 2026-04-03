@@ -51,16 +51,18 @@ public class AuthController : Controller
     // var Model = System.Text.Json.JsonSerializer.Deserialize<UserInfo>(str);
     var sessionId = UserDaten.GetNewSessionId();
     var daten = new ServiceDaten(sessionId, Model.Client, Model.Username, null);
-  #if DEBUG
-    var r = new ServiceErgebnis<UserDaten>(new UserDaten(sessionId, daten.MandantNr, daten.BenutzerId, new List<string> { UserDaten.RoleUser, UserDaten.RoleAdmin, UserDaten.RoleSuperadmin }));
-    if (!(daten.MandantNr == 1 && daten.BenutzerId == "admin" && Model.Password == "test"))
-    {
-      var r0 = CSBP.Services.Factory.FactoryService.LoginService.Login(daten, Model?.Password, false);
-      if (!r0.Ok)
-        r.Errors.Add(Message.New("M0000Login fehlgeschlagen"));
-    }
-  #else
     var r = CSBP.Services.Factory.FactoryService.LoginService.Login(daten, Model?.Password, false);
+  #if DEBUG
+    if (!r.Ok || r.Ergebnis == null)
+    {
+      r = new ServiceErgebnis<UserDaten>(new UserDaten(sessionId, daten.MandantNr, daten.BenutzerId, new List<string> { UserDaten.RoleUser, UserDaten.RoleAdmin, UserDaten.RoleSuperadmin }));
+      if (!(daten.MandantNr == 1 && daten.BenutzerId == "admin" && Model?.Password == "test1"))
+      {
+        var r0 = CSBP.Services.Factory.FactoryService.LoginService.Login(daten, Model?.Password, false);
+        if (!r0.Ok)
+          r.Errors.Add(Message.New("M0000Login fehlgeschlagen"));
+      }
+    }
   #endif
     if (r.Ok && r.Ergebnis != null)
     {
