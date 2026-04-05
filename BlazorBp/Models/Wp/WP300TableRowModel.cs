@@ -11,56 +11,6 @@ using CSBP.Services.Base;
 using static BlazorBp.Base.DialogTypeEnum;
 
 /// <summary>
-/// TodoModel-Klasse für Formular WP300 Konfigurationen.
-/// TODO Durch passendes Model ersetzen und löschen.
-/// </summary>
-[Serializable]
-public class WP300TodoModel
-{
-  /// <summary>Holt oder setzt die Spalte Nr..</summary>
-  public string? Nummer { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Bezeichnung.</summary>
-  public string? Bezeichnung { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Boxgröße.</summary>
-  public string? Box { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Skala.</summary>
-  public string? Skala { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Umkehr.</summary>
-  public string? Umkehr { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Methode.</summary>
-  public string? Methode { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Dauer.</summary>
-  public string? Dauer { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Relativ.</summary>
-  public string? Relativ { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Status.</summary>
-  public string? Status { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Notiz.</summary>
-  public string? Notiz { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Angelegt_Am.</summary>
-  public DateTime? Angelegt_Am { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Angelegt_Von.</summary>
-  public string? Angelegt_Von { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Geaendert_Am.</summary>
-  public DateTime? Geaendert_Am { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Geaendert_Von.</summary>
-  public string? Geaendert_Von { get; set; }
-}
-
-/// <summary>
 /// Model-Klasse für eine Zeile in der Tabelle von Formular WP300 Konfigurationen.
 /// </summary>
 [Serializable]
@@ -79,27 +29,27 @@ public class WP300TableRowModel : TableRowModelBase
   /// <summary>Holt oder setzt Boxgröße.</summary>
   [Display(Name = "Bo_xgröße", Description = "Boxgröße absolut oder prozentual")]
   //// [Required(ErrorMessage = "Boxgröße muss angegeben werden.")]
-  public string? Box { get; set; }
+  public decimal Box { get; set; }
 
   /// <summary>Holt oder setzt Umkehr.</summary>
   [Display(Name = "_Umkehr", Description = "Anzahl der Boxen für Umkehr")]
   //// [Required(ErrorMessage = "Umkehr muss angegeben werden.")]
-  public string? Umkehr { get; set; }
+  public int Umkehr { get; set; }
 
   /// <summary>Holt oder setzt Methode.</summary>
   [Display(Name = "_Methode", Description = "Methode für Kursberechnung")]
   //// [Required(ErrorMessage = "Methode muss angegeben werden.")]
-  public string? Methode { get; set; }
+  public int Methode { get; set; }
 
   /// <summary>Holt oder setzt Dauer.</summary>
   [Display(Name = "_Dauer", Description = "Anzahl der Tage, die ausgewertet werden sollen.")]
   //// [Required(ErrorMessage = "Dauer muss angegeben werden.")]
-  public string? Dauer { get; set; }
+  public int Dauer { get; set; }
 
   /// <summary>Holt oder setzt Relativ.</summary>
   [Display(Name = "_Relativ", Description = "Soll die Auswertung relativ zu anderem Wertpapier oder Index erfolgen?")]
   //// [Required(ErrorMessage = "Relativ muss angegeben werden.")]
-  public string? Relativ { get; set; }
+  public bool Relativ { get; set; }
 
   /// <summary>Holt oder setzt Status.</summary>
   [Display(Name = "_Status", Description = "Status")]
@@ -133,18 +83,18 @@ public class WP300TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
   /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
-  public WP300TodoModel To(ServiceDaten daten)
+  public WpKonfiguration To(ServiceDaten daten)
   {
-    return new WP300TodoModel
+    return new WpKonfiguration
     {
-      // TODO Mandant_Nr = daten.MandantNr,
-      Nummer = Nummer,
+      Mandant_Nr = daten.MandantNr,
+      Uid = Nummer,
       Bezeichnung = Bezeichnung,
       Box = Box,
-      Umkehr = Umkehr,
-      Methode = Methode,
-      Dauer = Dauer,
-      Relativ = Relativ,
+      Reversal = Umkehr,
+      Method = Methode,
+      Duration = Dauer,
+      Relative = Relativ,
       Status = Status,
       Notiz = Notiz,
       Angelegt_Am = AngelegtAm,
@@ -156,17 +106,17 @@ public class WP300TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
-  public static WP300TableRowModel From(WP300TodoModel m)
+  public static WP300TableRowModel From(WpKonfiguration m)
   {
     return new WP300TableRowModel
     {
-      Nummer = m.Nummer,
+      Nummer = m.Uid,
       Bezeichnung = m.Bezeichnung,
-      Box = m.Box,
-      Umkehr = m.Umkehr,
-      Methode = m.Methode,
-      Dauer = m.Dauer,
-      Relativ = m.Relativ,
+      Box = m.Box ?? 0,
+      Umkehr = m.Reversal,
+      Methode = m.Method,
+      Dauer = m.Duration,
+      Relativ = m.Relative,
       Status = m.Status,
       Notiz = m.Notiz,
       AngelegtAm = m.Angelegt_Am,

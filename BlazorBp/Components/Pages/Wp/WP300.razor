@@ -9,19 +9,19 @@
 <CascadingValue Value="this">
 <SortableTable Table="Table" NoData="" FormName="wp300" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="WP300Model" TRTable="WP300TableRowModel">
   <ChildContent>
-    <TableColumn Field="@nameof(WP300TableRowModel.Nummer)" SortField="@nameof(WP300TodoModel.Nummer)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
-    <TableColumn Field="@nameof(WP300TableRowModel.Bezeichnung)" SortField="@nameof(WP300TodoModel.Bezeichnung)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
-    <TableColumn Field="@nameof(WP300TableRowModel.Box)" SortField="@nameof(WP300TodoModel.Box)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
-    <TableColumn Field="@nameof(WP300TableRowModel.Umkehr)" SortField="@nameof(WP300TodoModel.Umkehr)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
-    <TableColumn Field="@nameof(WP300TableRowModel.Methode)" SortField="@nameof(WP300TodoModel.Methode)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
-    <TableColumn Field="@nameof(WP300TableRowModel.Dauer)" SortField="@nameof(WP300TodoModel.Dauer)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
-    <TableColumn Field="@nameof(WP300TableRowModel.Relativ)" SortField="@nameof(WP300TodoModel.Relativ)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
-    <TableColumn Field="@nameof(WP300TableRowModel.Status)" SortField="@nameof(WP300TodoModel.Status)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
-    <TableColumn Field="@nameof(WP300TableRowModel.Notiz)" SortField="@nameof(WP300TodoModel.Notiz)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
-    <TableColumn Field="@nameof(WP300TableRowModel.AngelegtAm)" SortField="@nameof(WP300TodoModel.Angelegt_Am)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
-    <TableColumn Field="@nameof(WP300TableRowModel.AngelegtVon)" SortField="@nameof(WP300TodoModel.Angelegt_Von)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
-    <TableColumn Field="@nameof(WP300TableRowModel.GeaendertAm)" SortField="@nameof(WP300TodoModel.Geaendert_Am)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
-    <TableColumn Field="@nameof(WP300TableRowModel.GeaendertVon)" SortField="@nameof(WP300TodoModel.Geaendert_Von)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    @* <TableColumn Field="@nameof(WP300TableRowModel.Nummer)" SortField="@nameof(WpKonfiguration.Nummer)" TModel="WP300Model" TRTable="WP300TableRowModel"/> *@
+    <TableColumn Field="@nameof(WP300TableRowModel.Bezeichnung)" SortField="@nameof(WpKonfiguration.Bezeichnung)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    @* <TableColumn Field="@nameof(WP300TableRowModel.Box)" SortField="@nameof(WpKonfiguration.Box)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.Umkehr)" SortField="@nameof(WpKonfiguration.Umkehr)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.Methode)" SortField="@nameof(WpKonfiguration.Methode)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.Dauer)" SortField="@nameof(WpKonfiguration.Dauer)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.Relativ)" SortField="@nameof(WpKonfiguration.Relativ)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.Status)" SortField="@nameof(WpKonfiguration.Status)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.Notiz)" SortField="@nameof(WpKonfiguration.Notiz)" TModel="WP300Model" TRTable="WP300TableRowModel"/> *@
+    <TableColumn Field="@nameof(WP300TableRowModel.AngelegtAm)" SortField="@nameof(WpKonfiguration.Angelegt_Am)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.AngelegtVon)" SortField="@nameof(WpKonfiguration.Angelegt_Von)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.GeaendertAm)" SortField="@nameof(WpKonfiguration.Geaendert_Am)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.GeaendertVon)" SortField="@nameof(WpKonfiguration.Geaendert_Von)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
   </ChildContent>
 </SortableTable>
 </CascadingValue>
@@ -74,7 +74,7 @@
         SelectedPage = 1,
         RowsPerPage = 10,
         SelectedRow = 1,
-        SortColumn = $"{nameof(WP300TodoModel.Nummer)}#+",
+        SortColumn = $"{nameof(WpKonfiguration.Bezeichnung)}#+",
       };
     Table.Nr = id;
     if (WP310Model == null)
@@ -231,18 +231,18 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var r = new ServiceErgebnis<List<WP300TodoModel>>(new List<WP300TodoModel>());
-    r.Ergebnis.Add(new WP300TodoModel()
+    var r = new ServiceErgebnis<List<WpKonfiguration>>(new List<WpKonfiguration>());
+    r.Ergebnis.Add(new WpKonfiguration()
     {
        Notiz = "Notiz1",
-       Nummer = "Nummer1",
+       Uid = "Nummer1",
        Bezeichnung = "Bezeichnung1",
-       Box = "Box1",
-       Skala = "Skala1",
-       Umkehr = "Umkehr1",
-       Methode = "Methode1",
-       Dauer = "Dauer1",
-       Relativ = "Relativ1",
+       Box = 1.2m,
+       Scale = 1,
+       Reversal = 1,
+       Method = 1,
+       Duration = 111,
+       Relative = false,
        Status = "Status1",
     });
     if (rm != null)
