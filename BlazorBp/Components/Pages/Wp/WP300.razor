@@ -1,0 +1,269 @@
+@page "/wp/wp300/{id?}"
+@using CSBP.Services.Apis.Models
+@inherits BlazorComponentBase<WP300Model, WP300TableRowModel>
+@attribute [Authorize(Roles = "User, Admin, Superadmin")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<CascadingValue Value="this">
+<SortableTable Table="Table" NoData="" FormName="wp300" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="WP300Model" TRTable="WP300TableRowModel">
+  <ChildContent>
+    <TableColumn Field="@nameof(WP300TableRowModel.Nummer)" SortField="@nameof(WP300TodoModel.Nummer)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.Bezeichnung)" SortField="@nameof(WP300TodoModel.Bezeichnung)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.Box)" SortField="@nameof(WP300TodoModel.Box)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.Umkehr)" SortField="@nameof(WP300TodoModel.Umkehr)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.Methode)" SortField="@nameof(WP300TodoModel.Methode)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.Dauer)" SortField="@nameof(WP300TodoModel.Dauer)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.Relativ)" SortField="@nameof(WP300TodoModel.Relativ)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.Status)" SortField="@nameof(WP300TodoModel.Status)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.Notiz)" SortField="@nameof(WP300TodoModel.Notiz)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.AngelegtAm)" SortField="@nameof(WP300TodoModel.Angelegt_Am)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.AngelegtVon)" SortField="@nameof(WP300TodoModel.Angelegt_Von)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.GeaendertAm)" SortField="@nameof(WP300TodoModel.Geaendert_Am)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+    <TableColumn Field="@nameof(WP300TableRowModel.GeaendertVon)" SortField="@nameof(WP300TodoModel.Geaendert_Von)" TModel="WP300Model" TRTable="WP300TableRowModel"/>
+  </ChildContent>
+</SortableTable>
+</CascadingValue>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="wp300">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <input type="hidden" name="SubmitControl"/>
+  <div class="modal-footer mt-2">
+    <SubmitButton class="btn btn-primary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
+  </div>
+</EditForm>
+
+<WP310 WP310Model="WP310Model" ModalId="@Model.ModalId" ModalArt="@Model.ModalArt" ModalEditContext="@ModalEditContext" ModalMessages="@ModalMessages"/>
+
+@code {
+  /// <summary>Holt oder setzt das 1. Modal-Model.</summary>
+  [SupplyParameterFromForm]
+  protected WP310Model WP310Model { get; set; } = default!;
+  /// <summary>True, wenn EditContext ohne Fehler.</summary>
+  private bool valid;
+
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id">Betroffene Id.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id, WP300Model? model = null, TableModelBase<WP300TableRowModel>? table = null)
+  {
+    if (model != null)
+      Model = model;
+    if (Model == null)
+    {
+      var daten = ServiceDaten;
+      Model = new WP300Model
+      {
+        Nr = id,
+      };
+      Model.SetMhrf(DialogTypeEnum.New);
+    }
+    Model.Nr = id;
+    if (table != null)
+      Table = table;
+    if (Table == null)
+      Table = new TableModelBase<WP300TableRowModel>
+      {
+        SelectedPage = 1,
+        RowsPerPage = 10,
+        SelectedRow = 1,
+        SortColumn = $"{nameof(WP300TodoModel.Nummer)}#+",
+      };
+    Table.Nr = id;
+    if (WP310Model == null)
+      WP310Model = new WP310Model
+      {
+        // Nummer = "1",
+      };
+    WP310Model.Nr = id;
+    InitEditContext(Model, WP310Model);
+  }
+
+  /// <summary>
+  /// Aktualisierung nach Undo/Redo.
+  /// </summary>
+  protected override void Refresh()
+  {
+    TableData(Table, Messages);
+  }
+
+  /// <summary>
+  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
+  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
+  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    if (OnInitializedFormular("WP300", "Konfigurationen - WP300", Id, true))
+      return;
+
+    // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
+    // var submit = Model.Submit ?? "";
+    // if (submit == nameof(Model.Import))
+    // {
+    //   var l = SaveUploadFiles("WP300", "filehochladen");
+    // }
+  }
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  /// <param name="id2">Id aus 2. modalen Dialog.</param>
+  public override void HandleModal(string? form, string? handler, string? id, string? id2)
+  {
+    if (form == "wp300t" || form == "wp310modal")
+    {
+      if (form == "wp300t" && !string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
+      {
+        var dt = Formular.GetTableDialogType(handler);
+        if (dt == DialogTypeEnum.New)
+        {
+          WP310Model.SetMhrf(DialogTypeEnum.New);
+          Model.ModalArt = handler;
+          Model.ModalId = id;
+        }
+        else
+        {
+          var i = Functions.ToInt32(id);
+          if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
+          {
+            var l = TableData(Table, ModalMessages);
+            var ds = l.Skip(i - 1).FirstOrDefault();
+            if (ds != null)
+            {
+              WP310Model.From(ds);
+              WP310Model.SetMhrf(dt);
+              Model.ModalArt = handler;
+              Model.ModalId = id;
+            }
+          }
+        }
+      }
+      else
+      {
+        var msubmit = WP310Model.Submit ?? "";
+        if (msubmit == nameof(WP310Model.Ok))
+        {
+          var dt = Formular.GetTableDialogType(Model.ModalArt);
+          var daten = ServiceDaten;
+          var o = WP310Model.To(daten);
+          var r = new ServiceErgebnis();
+          // TODO var r = dt == DialogTypeEnum.Delete
+          //   ? FactoryService.PrivateService.DeleteMemo(daten, o)
+          //   : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
+          if (r.Ok)
+          {
+            Model.ModalArt = null;
+            Model.ModalId = null;
+            Refresh();
+          }
+          else
+            ModalMessages?.Add(() => WP310Model, r.GetErrors());
+        }
+        else if (msubmit == nameof(WP310Model.Abbrechen) || form != "wp310modal")
+        {
+          Model.ModalArt = null;
+          Model.ModalId = null;
+        }
+      }
+    }
+    else
+    {
+      Model.ModalArt = null;
+      Model.ModalId = null;
+      Model.Modal2Id = null;
+    }
+    WriteFormularModel(Model.Nr ?? "0", Model);
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// -Wegen Anzeige von Fehlermeldungen darf die Funktion nicht async sein (private async Task Submit()).
+  /// -Speichern des geänderten Models.
+  /// </summary>
+  private void Submit()
+  {
+    if (Model == null || Messages == null)
+      return;
+    var submit = Model.Submit ?? "";
+    if (!string.IsNullOrEmpty(submit))
+    {
+      valid = EditContext?.Validate() ?? false;
+    }
+    if (valid && submit == "OK")
+    {
+      var daten = ServiceDaten;
+      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
+      if (r != null)
+      {
+        Get(r);
+        if (r.Ok)
+        {
+          CloseFormular();
+          return;
+        }
+      }
+    }
+    WriteFormularModel(Model.Nr ?? "0", Model);
+    if (submit == nameof(Model.Schliessen))
+    {
+      CloseFormular();
+    }
+  }
+
+  /// <summary>
+  /// Bereitstellen der Tabellen-Daten mit Berücksichtigung der Filterung, Sortierung und Paginierung.
+  /// </summary>
+  /// <param name="m">Betroffenes TableRowModel.</param>
+  /// <param name="messages">Betroffene Fehlermeldungen.</param>
+  /// <returns>Tabellen-Daten als Liste.</returns>
+  protected override List<WP300TableRowModel> TableData(TableModelBase<WP300TableRowModel>? m, ValidationMessageStore? messages)
+  {
+    var rm = m?.ReadModel;
+    var daten = ServiceDaten;
+    var r = new ServiceErgebnis<List<WP300TodoModel>>(new List<WP300TodoModel>());
+    r.Ergebnis.Add(new WP300TodoModel()
+    {
+       Notiz = "Notiz1",
+       Nummer = "Nummer1",
+       Bezeichnung = "Bezeichnung1",
+       Box = "Box1",
+       Skala = "Skala1",
+       Umkehr = "Umkehr1",
+       Methode = "Methode1",
+       Dauer = "Dauer1",
+       Relativ = "Relativ1",
+       Status = "Status1",
+    });
+    if (rm != null)
+      rm.PageCount = 0;
+    // TODO var l0 = Get(FactoryService.PrivateService.GetClientList(daten, rm), messages);
+    var l = r.Ergebnis?.Select(a => WP300TableRowModel.From(a)).ToList() ?? new List<WP300TableRowModel>();
+    if (m != null && rm != null)
+    {
+      m.PageCount = rm.PageCount;
+      m.Liste = l;
+    }
+    return l;
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData(WP300Model model, WP300Model model0)
+  {
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+  }
+}
