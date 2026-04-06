@@ -104,7 +104,7 @@
       };
     WP210Model.Nr = id;
     InitEditContext(Model, WP210Model);
-    var lk = Get(FactoryService.StockService.GetConfigurationList(daten, true, null));
+    var lk = Get(FactoryService.StockService.GetConfigurationList(daten, null, "1"));
     Model.AuswahlKonfiguration = InsertEmpty(lk?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
     if (string.IsNullOrEmpty(Model.Konfiguration))
     {

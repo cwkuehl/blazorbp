@@ -31,6 +31,11 @@ public class WP300TableRowModel : TableRowModelBase
   //// [Required(ErrorMessage = "Boxgröße muss angegeben werden.")]
   public decimal Box { get; set; }
 
+  /// <summary>Holt oder setzt Skala.</summary>
+  [Display(Name = "_Skala", Description = "Skala für Kursberechnung")]
+  //// [Required(ErrorMessage = "Skala muss angegeben werden.")]
+  public string? Skala { get; set; }
+
   /// <summary>Holt oder setzt Umkehr.</summary>
   [Display(Name = "_Umkehr", Description = "Anzahl der Boxen für Umkehr")]
   //// [Required(ErrorMessage = "Umkehr muss angegeben werden.")]
@@ -39,7 +44,7 @@ public class WP300TableRowModel : TableRowModelBase
   /// <summary>Holt oder setzt Methode.</summary>
   [Display(Name = "_Methode", Description = "Methode für Kursberechnung")]
   //// [Required(ErrorMessage = "Methode muss angegeben werden.")]
-  public int Methode { get; set; }
+  public string? Methode { get; set; }
 
   /// <summary>Holt oder setzt Dauer.</summary>
   [Display(Name = "_Dauer", Description = "Anzahl der Tage, die ausgewertet werden sollen.")]
@@ -91,8 +96,9 @@ public class WP300TableRowModel : TableRowModelBase
       Uid = Nummer,
       Bezeichnung = Bezeichnung,
       Box = Box,
+      Scale = Functions.ToInt32(Skala),
       Reversal = Umkehr,
-      Method = Methode,
+      Method = Functions.ToInt32(Methode),
       Duration = Dauer,
       Relative = Relativ,
       Status = Status,
@@ -113,8 +119,9 @@ public class WP300TableRowModel : TableRowModelBase
       Nummer = m.Uid,
       Bezeichnung = m.Bezeichnung,
       Box = m.Box ?? 0,
+      Skala = Functions.ToString(m.Scale),
       Umkehr = m.Reversal,
-      Methode = m.Method,
+      Methode = Functions.ToString(m.Method),
       Dauer = m.Duration,
       Relativ = m.Relative,
       Status = m.Status,

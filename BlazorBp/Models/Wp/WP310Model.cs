@@ -30,21 +30,27 @@ public class WP310Model : PageModelBase
   [Display(Name = "Bo_xgröße", Description = "Boxgröße absolut oder prozentual")]
   //// [Required(ErrorMessage = "Boxgröße muss angegeben werden.")]
   public decimal Box { get; set; }
+  
+  /// <summary>Holt oder setzt die Auswahlliste von Skala.</summary>
+  public List<ListItem>? AuswahlSkala { get; set; } = default!;
 
   /// <summary>Holt oder setzt Skala.</summary>
   [Display(Name = "_Skala", Description = "Skala für Kursberechnung")]
   //// [Required(ErrorMessage = "Skala muss angegeben werden.")]
-  public int Skala { get; set; }
+  public string? Skala { get; set; }
 
   /// <summary>Holt oder setzt Umkehr.</summary>
   [Display(Name = "_Umkehr", Description = "Anzahl der Boxen für Umkehr")]
   //// [Required(ErrorMessage = "Umkehr muss angegeben werden.")]
   public int Umkehr { get; set; }
 
+  /// <summary>Holt oder setzt die Auswahlliste von Methode.</summary>
+  public List<ListItem>? AuswahlMethode { get; set; } = default!;
+
   /// <summary>Holt oder setzt Methode.</summary>
   [Display(Name = "_Methode", Description = "Methode für Kursberechnung")]
   //// [Required(ErrorMessage = "Methode muss angegeben werden.")]
-  public int Methode { get; set; }
+  public string? Methode { get; set; }
 
   /// <summary>Holt oder setzt Dauer.</summary>
   [Display(Name = "_Dauer", Description = "Anzahl der Tage, die ausgewertet werden sollen.")]
@@ -55,6 +61,9 @@ public class WP310Model : PageModelBase
   [Display(Name = "_Relativ", Description = "Soll die Auswertung relativ zu anderem Wertpapier oder Index erfolgen?")]
   //// [Required(ErrorMessage = "Relativ muss angegeben werden.")]
   public bool Relativ { get; set; }
+
+  /// <summary>Holt oder setzt die Auswahlliste von Status.</summary>
+  public List<ListItem>? AuswahlStatus { get; set; } = default!;
 
   /// <summary>Holt oder setzt Status.</summary>
   [Display(Name = "_Status", Description = "Status")]
@@ -95,8 +104,9 @@ public class WP310Model : PageModelBase
     Uid = Nummer,
     Bezeichnung = Bezeichnung,
     Box = Box,
+    Scale = Functions.ToInt32(Skala),
     Reversal = Umkehr,
-    Method = Methode,
+    Method = Functions.ToInt32(Methode),
     Duration = Dauer,
     Relative = Relativ,
     Status = Status,
@@ -110,6 +120,7 @@ public class WP310Model : PageModelBase
     Nummer,
     Bezeichnung,
     Box,
+    Skala,
     Umkehr,
     Methode,
     Dauer,
@@ -122,8 +133,9 @@ public class WP310Model : PageModelBase
     m.Nummer,
     m.Bezeichnung,
     m.Box,
+    Functions.ToString(m.Skala),
     m.Umkehr,
-    m.Methode,
+    Functions.ToString(m.Methode),
     m.Dauer,
     m.Relativ,
     m.Status,
@@ -138,16 +150,21 @@ public class WP310Model : PageModelBase
   {
     if (mode == New || mode == Copy)
     {
-      // TODO Nummer = "";
+      Nummer = "";
+      Skala = "1";
+      Methode = "1";
+      Status = "1";
     }
-    if (mode == New)
-    {
-      // TODO Thema = null;
-    }
-    // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
-    // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
-    // SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Nummer), false, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Bezeichnung), true, false, mode == Delete, mode != New);
+    SetMandatoryHiddenReadonly(nameof(Box), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Skala), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Umkehr), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Methode), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Dauer), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Status), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
+    SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
+    SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
   }
 }

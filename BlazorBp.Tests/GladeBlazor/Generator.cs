@@ -541,11 +541,11 @@ else
   /// <param name="table">Evtl. gelesenes Table-Model.</param>
   protected override void Init(string? id, {{form}}Model? model = null, TableModelBase<{{rowmodel}}>? table = null)
   {
+    var daten = ServiceDaten;
     if (model != null)
       Model = model;
     if (Model == null)
     {
-      var daten = ServiceDaten;
       Model = new {{form}}Model
       {
         Nr = id,

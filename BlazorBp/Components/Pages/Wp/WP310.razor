@@ -46,16 +46,16 @@ else
           </div>
           <div class="row mt-1 g-0">
             <LabelInputValid Step="0.01" AutoPostback="" For="@(() => WP310Model!.Box)" VerticalColClass="form-group col-md-4"/>
-            <LabelInputValid AutoPostback="" For="@(() => WP310Model!.Skala)" VerticalColClass="form-group col-md-4 ms-1"/>
+            <LabelInputValid type="combobox" AutoPostback="" For="@(() => WP310Model!.Skala)" DataList="WP310Model!.AuswahlSkala" VerticalColClass="form-group col-md-4 ms-1"/>
             <LabelInputValid AutoPostback="" For="@(() => WP310Model!.Umkehr)" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => WP310Model!.Methode)" VerticalColClass="form-group col-md-4"/>
+            <LabelInputValid type="combobox" AutoPostback="" For="@(() => WP310Model!.Methode)" DataList="WP310Model!.AuswahlMethode" VerticalColClass="form-group col-md-4"/>
             <LabelInputValid AutoPostback="" For="@(() => WP310Model!.Dauer)" VerticalColClass="form-group col-md-4 ms-1"/>
             <LabelInputValid type="checkbox" AutoPostback="" For="@(() => WP310Model!.Relativ)" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => WP310Model!.Status)" VerticalColClass="form-group col"/>
+            <LabelInputValid type="combobox" AutoPostback="" For="@(() => WP310Model!.Status)" DataList="WP310Model!.AuswahlStatus" VerticalColClass="form-group col"/>
           </div>
           <div class="row mt-1 g-0">
             <LabelInputValid rows="3" AutoPostback="" For="@(() => WP310Model!.Notiz)" VerticalColClass="form-group col"/>

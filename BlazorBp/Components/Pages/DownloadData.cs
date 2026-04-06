@@ -103,6 +103,12 @@ public static class DownloadData
           r = FactoryService.StockService.GetCsvString(daten, page, rm);
           break;
         }
+        case "WP300":
+        {
+          var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<WP300TableRowModel>>(s, page, id)?.ReadModel;
+          r = FactoryService.StockService.GetCsvString(daten, page, rm);
+          break;
+        }
         default:
           break;
       }
