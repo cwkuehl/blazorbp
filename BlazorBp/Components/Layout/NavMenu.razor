@@ -40,6 +40,12 @@
       <NavLink class="nav-link" href="wp/wp300" title="Konfigurationen" aria-label="Konfigurationen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Konfigurationen</NavLink>
     </div>
   </AuthorizeView>
+  <AuthorizeView>
+    <NavLink class="nav-link ms-1" href="#" title="Menü Energie" data-bs-toggle="collapse" data-bs-target="#submenuenergy" aria-expanded="false" aria-controls="submenuprivate"><span class="bi bi-person-nav-menu" aria-hidden="true"></span>Energie</NavLink>
+    <div class="collapse show ms-3" id="submenuenergy">
+      <NavLink class="nav-link" href="en/en100" title="Abfrage-Parameter" aria-label="Abfrage-Parameter"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Abfrage-Parameter</NavLink>
+    </div>
+  </AuthorizeView>
   <AuthorizeView Roles="@UserDaten.RoleAdmin">
   <NavLink class="nav-link ms-1" href="#" title="Menü Demo" data-bs-toggle="collapse" data-bs-target="#submenudemo" aria-expanded="false" aria-controls="submenudemo"><span class="bi bi-screwdriver-nav-menu" aria-hidden="true"></span>Demo</NavLink>
   <div class="collapse showxxx ms-3" id="submenudemo">

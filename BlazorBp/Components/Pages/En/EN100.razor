@@ -1,0 +1,308 @@
+@page "/en/en100/{id?}"
+@using CSBP.Services.Apis.Models
+@inherits BlazorComponentBase<EN100Model, EN100TableRowModel>
+@attribute [Authorize(Roles = "User, Admin, Superadmin")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<CascadingValue Value="this">
+<SortableTable Table="Table" NoData="" FormName="en100" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="EN100Model" TRTable="EN100TableRowModel">
+  <ChildContent>
+    @* <TableColumn Field="@nameof(EN100TableRowModel.Nummer)" SortField="@nameof(WpWertpapier.Uid)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
+    <TableColumn Field="@nameof(EN100TableRowModel.Sortierung)" SortField="@nameof(WpWertpapier.Sorting)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.Bezeichnung)" SortField="@nameof(WpWertpapier.Bezeichnung)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.Status)" SortField="@nameof(WpWertpapier.Status)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.Provider)" SortField="@nameof(WpWertpapier.Datenquelle)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.Kuerzel)" SortField="@nameof(WpWertpapier.Kuerzel)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.Typ)" SortField="@nameof(WpWertpapier.Type)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.AktKurs)" SortField="@nameof(WpWertpapier.CurrentPrice)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    @* <TableColumn Field="@nameof(EN100TableRowModel.StopKurs)" SortField="@nameof(WpWertpapier.StopPrice)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
+    @* <TableColumn Field="@nameof(EN100TableRowModel.SignalKurs1)" SortField="@nameof(WpWertpapier.SignalPrice1)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
+    <TableColumn Field="@nameof(EN100TableRowModel.Muster)" SortField="@nameof(WpWertpapier.Pattern)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.Waehrung)" SortField="@nameof(WpWertpapier.Currency)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    @* <TableColumn Field="@nameof(EN100TableRowModel.Relation)" SortField="@nameof(WpWertpapier.Relation_Uid)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
+    @* <TableColumn Field="@nameof(EN100TableRowModel.Notiz)" SortField="@nameof(WpWertpapier.Notiz)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
+    <TableColumn Field="@nameof(EN100TableRowModel.AngelegtAm)" SortField="@nameof(WpWertpapier.Angelegt_Am)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.AngelegtVon)" SortField="@nameof(WpWertpapier.Angelegt_Von)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.GeaendertAm)" SortField="@nameof(WpWertpapier.Geaendert_Am)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.GeaendertVon)" SortField="@nameof(WpWertpapier.Geaendert_Von)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+  </ChildContent>
+</SortableTable>
+</CascadingValue>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="en100">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <input type="hidden" name="SubmitControl"/>  <div class="row mt-1 g-0">
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.Muster)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid type="checkbox" AutoPostback="x" For="@(() => Model!.Auchinaktiv)" VerticalColClass="form-group col-md-2 ms-1"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" VerticalColClass="form-group col-md-2 ms-1"/>
+    <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Konfiguration)" DataList="Model!.AuswahlKonfiguration" VerticalColClass="form-group col ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <SubmitButton class="btn btn-secondary col-md-2" href="@($"/starttask/EN100/{Model!.Nr}")" For="@(() => Model!.Berechnen)"/>
+    <LabelInputValid stateof="CalculateStocks" AutoPostback="" For="@(() => Model!.Status)" VerticalColClass="form-group col ms-1"/>
+  </div>
+  <div class="modal-footer mt-2">
+    @* <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-map" href="@Model!.MapHref" For="@(() => Model!.Chart)"/> *@
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-map" For="@(() => Model!.Chart)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-floppy" For="@(() => Model!.Floppy)"/>
+    <SubmitButton class="btn btn-primary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
+  </div>
+</EditForm>
+
+<EN110 EN110Model="EN110Model" ModalId="@Model.ModalId" ModalArt="@Model.ModalArt" ModalEditContext="@ModalEditContext" ModalMessages="@ModalMessages"/>
+
+@code {
+  /// <summary>Holt oder setzt das 1. Modal-Model.</summary>
+  [SupplyParameterFromForm]
+  protected EN110Model EN110Model { get; set; } = default!;
+
+  /// <summary>True, wenn EditContext ohne Fehler.</summary>
+  private bool valid;
+
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id">Betroffene Id.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id, EN100Model? model = null, TableModelBase<EN100TableRowModel>? table = null)
+  {
+    var daten = ServiceDaten;
+    if (model != null)
+      Model = model;
+    if (Model == null)
+    {
+      Model = new EN100Model
+      {
+        Nr = id,
+      };
+      Model.SetMhrf(DialogTypeEnum.New, daten);
+    }
+    Model.Nr = id;
+    if (table != null)
+      Table = table;
+    if (Table == null)
+      Table = new TableModelBase<EN100TableRowModel>
+      {
+        SelectedPage = 1,
+        RowsPerPage = 10,
+        SelectedRow = 1,
+        SortColumn = $"{nameof(WpWertpapier.Bezeichnung)}#+",
+      };
+    Table.Nr = id;
+    if (EN110Model == null)
+      EN110Model = new EN110Model
+      {
+        // Nummer = "1",
+      };
+    EN110Model.Nr = id;
+    InitEditContext(Model, EN110Model);
+    var lk = Get(FactoryService.StockService.GetConfigurationList(daten, null, "1"));
+    Model.AuswahlKonfiguration = InsertEmpty(lk?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
+    if (string.IsNullOrEmpty(Model.Konfiguration))
+    {
+      Model.Konfiguration = (Model.AuswahlKonfiguration?.FirstOrDefault(a => a.Value.StartsWith(" "))
+        ?? Model.AuswahlKonfiguration?.FirstOrDefault())?.Key;
+    }
+    var l0 = Get(FactoryService.StockService.GetStateList(daten));
+    EN110Model.AuswahlStatus = l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
+    var l1 = Get(FactoryService.StockService.GetProviderList(daten));
+    EN110Model.AuswahlProvider = l1?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
+    var l2 = Get(FactoryService.StockService.GetStockList(daten));
+    EN110Model.AuswahlRelation = InsertEmpty(l2?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
+  }
+
+  /// <summary>
+  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
+  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
+  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    if (OnInitializedFormular("EN100", "Abfrage-Parameter - EN100", Id, true))
+      return;
+
+    // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
+    var handler = HttpContext.Request.Query["handler"];
+    if (handler == "Table_All")
+    {
+      Model.SetMhrf(DialogTypeEnum.Copy, ServiceDaten);
+      WriteFormularModel(Model.Nr ?? "0", Model);
+    }
+  }
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  /// <param name="id2">Id aus 2. modalen Dialog.</param>
+  public override void HandleModal(string? form, string? handler, string? id, string? id2)
+  {
+    if (form == "en100t" || form == "en110modal")
+    {
+      if (form == "en100t" && !string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
+      {
+        var dt = Formular.GetTableDialogType(handler);
+        if (dt == DialogTypeEnum.New)
+        {
+          EN110Model.SetMhrf(DialogTypeEnum.New);
+          Model.ModalArt = handler;
+          Model.ModalId = id;
+        }
+        else
+        {
+          var i = Functions.ToInt32(id);
+          if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
+          {
+            var l = TableData(Table, ModalMessages);
+            var ds = l.Skip(i - 1).FirstOrDefault();
+            var daten = ServiceDaten;
+            var r = FactoryService.StockService.GetStock(daten, ds?.Nummer ?? "");
+            if (r.Ok && ds != null && r.Ergebnis != null)
+            {
+              EN110Model.From(r.Ergebnis);
+              EN110Model.SetMhrf(dt);
+              Model.ModalArt = handler;
+              Model.ModalId = id;
+            }
+            else
+              Get(r);
+          }
+        }
+      }
+      else
+      {
+        var msubmit = EN110Model.Submit ?? "";
+        var mvalid = false;
+        if (!string.IsNullOrEmpty(msubmit))
+        {
+          mvalid = ModalEditContext?.Validate() ?? false;
+          if (!mvalid)
+          {
+            // Doppelte Meldungen verhindern.
+            InitEditContext(null, EN110Model);
+          }
+        }
+        if (mvalid && msubmit == nameof(EN110Model.Ok) && EN110Model != null)
+        {
+          var dt = Formular.GetTableDialogType(Model.ModalArt);
+          var daten = ServiceDaten;
+          var o = EN110Model.To(daten);
+          var r = dt == DialogTypeEnum.Delete
+            ? FactoryService.StockService.DeleteStock(daten, o)
+            : FactoryService.StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, EN110Model.Anlage);
+          if (r.Ok)
+          {
+            Model.ModalArt = null;
+            Model.ModalId = null;
+            Refresh();
+          }
+          else
+            Get(r, ModalMessages);
+        }
+        else if (msubmit == nameof(EN110Model.Abbrechen) || form != "en110modal")
+        {
+          Model.ModalArt = null;
+          Model.ModalId = null;
+        }
+      }
+    }
+    else
+    {
+      Model.ModalArt = null;
+      Model.ModalId = null;
+      Model.Modal2Id = null;
+    }
+    WriteFormularModel(Model.Nr ?? "0", Model);
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// -Wegen Anzeige von Fehlermeldungen darf die Funktion nicht async sein (private async Task Submit()).
+  /// -Speichern des geänderten Models.
+  /// </summary>
+  private void Submit()
+  {
+    if (Model == null || Messages == null)
+      return;
+    var submit = Model.Submit ?? "";
+    var daten = ServiceDaten;
+    Model.Status = StatusTask.GetStatus(daten.MandantNr, new[] { "CalculateStocks" }, true);
+    if (!string.IsNullOrEmpty(submit))
+    {
+      valid = EditContext?.Validate() ?? false;
+    }
+    if (Table != null && (submit == nameof(Model.Auchinaktiv) || submit == nameof(Model.Muster)))
+    {
+      Refresh();
+    }
+    if (IsDateMhp(submit, nameof(Model.Bis), Model.Bis, out var d))
+    {
+      if (d.HasValue)
+        Model.Bis = d;
+    }
+    if (valid && submit == nameof(Model.Berechnen))
+    {
+      var rm = Table?.ReadModel;
+      var rs = StatusTask.HinzufuegenFunktion(daten.MandantNr, $"CalculateStocks");
+      if (!rs.Ok || rs.Ergebnis == null)
+        Get(rs);
+      else
+      {
+        var state = rs.Ergebnis;
+        var r0 = FactoryService.StockService.CalculateStocks(ServiceDaten, null, Model.Muster,
+            null, Model.Bis ?? daten.Heute, Model.Auchinaktiv, rm?.Search, Model.Konfiguration, state);
+        state.Beenden(r: r0);
+        if (!Get(r0))
+          Refresh();
+      }
+    }
+    if (submit == nameof(Model.Chart))
+    {
+      // TODO Formular WP100 Chart aufrufen.
+    }
+    if (submit == nameof(Model.Floppy))
+    {
+      // TODO Formular WP220 für Import und Export aufrufen.
+    }
+    WriteFormularModel(Model.Nr ?? "0", Model);
+    if (submit == nameof(Model.Schliessen))
+    {
+      CloseFormular();
+    }
+  }
+
+  /// <summary>
+  /// Bereitstellen der Tabellen-Daten mit Berücksichtigung der Filterung, Sortierung und Paginierung.
+  /// </summary>
+  /// <param name="m">Betroffenes TableRowModel.</param>
+  /// <param name="messages">Betroffene Fehlermeldungen.</param>
+  /// <returns>Tabellen-Daten als Liste.</returns>
+  protected override List<EN100TableRowModel> TableData(TableModelBase<EN100TableRowModel>? m, ValidationMessageStore? messages)
+  {
+    var rm = m?.ReadModel;
+    var daten = ServiceDaten;
+    var l0 = Get(FactoryService.StockService.GetStockList(daten, rm, Model.Auchinaktiv, null, Model.Muster), messages);
+    var l = l0?.Select(a => EN100TableRowModel.From(a)).ToList() ?? new List<EN100TableRowModel>();
+    return UpdateTable(m, rm, l);
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData(EN100Model model, EN100Model model0)
+  {
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+  }
+}
