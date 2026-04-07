@@ -465,10 +465,14 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   }
 
   /// <summary>
-  /// Aktualisierung nach Undo/Redo.
+  /// Aktualisierung der Tabelle, z.B. nach Undo/Redo.
   /// </summary>
   protected virtual void Refresh()
   {
+    if (Table != null)
+    {
+      OnTable(Table, Messages);
+    }
   }
 
   /// <summary>
@@ -552,7 +556,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     if (table.SelectedPage > table.PageCount)
     {
       table.SelectedPage = table.PageCount;
-      if (string.IsNullOrEmpty(handler) || handler == "Table_Next")
+      if (string.IsNullOrEmpty(handler) || handler == "Table_Next" || handler == "Table_Last")
         table.Liste = TableData(table, messages);
     }
     if (last || table.SelectedRow > (table.Liste?.Count ?? 0))
@@ -577,6 +581,24 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     SetRhe();
     if (!string.IsNullOrEmpty(handler) && handler != "Table_New" && handler != "Table_Edit" && handler != "Table_Delete" && handler != "Table_Copy")
       Navigation.NavigateTo(HttpContext.Request.Path, true, true); // Query-Parameter handler entfernen.
+  }
+
+  /// <summary>
+  /// Verarbeitung der Tabellen-Aktionen.
+  /// </summary>
+  /// <param name="table">Betroffene Tabellen-Daten.</param>
+  /// <param name="rm">Betroffenes Readmodel.</param>
+  /// <param name="l">Betroffene neue Liste.</param>
+  /// <returns>Neue Liste.</returns>
+  public List<V> UpdateTable(TableModelBase<V>? table, TableReadModel? rm, List<V> l)
+  {
+    if (table != null && rm != null)
+    {
+      table.PageCount = rm.PageCount;
+      table.Essence = rm.Essence;
+      table.Liste = l;
+    }
+    return l;
   }
 
   /// <summary>

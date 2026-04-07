@@ -51,6 +51,7 @@ Folgende Funktionen sind implementiert:
 -Aktualisieren des Dialogs bei Undo und Redo, z.B. TB100.
 -Starten von asynchronen, länger laufenden Aufgaben, z.B. WP200.
 -Abrufen von Status-Meldungen bei länger laufenden Aufgaben.
+-Tabelle mit optionaler Summenzeilen (Essence).
 
 TODO Folgende Funktionen sind noch nicht implementiert:
 -dotnet new razorclasslib -o BlazorBp.Components, Vererbung der Component-Klasse,

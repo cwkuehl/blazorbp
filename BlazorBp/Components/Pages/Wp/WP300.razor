@@ -43,8 +43,6 @@
   /// <summary>Holt oder setzt das 1. Modal-Model.</summary>
   [SupplyParameterFromForm]
   protected WP310Model WP310Model { get; set; } = default!;
-  /// <summary>True, wenn EditContext ohne Fehler.</summary>
-  private bool valid;
 
   /// <summary>
   /// Initialisierung des Models.
@@ -59,10 +57,7 @@
       Model = model;
     if (Model == null)
     {
-      Model = new WP300Model
-      {
-        Nr = id,
-      };
+      Model = new WP300Model { Nr = id };
       Model.SetMhrf(DialogTypeEnum.New);
     }
     Model.Nr = id;
@@ -78,10 +73,7 @@
       };
     Table.Nr = id;
     if (WP310Model == null)
-      WP310Model = new WP310Model
-      {
-        // Nummer = "1",
-      };
+      WP310Model = new WP310Model();
     WP310Model.Nr = id;
     InitEditContext(Model, WP310Model);
     var l0 = Get(FactoryService.StockService.GetScaleList(daten));
@@ -90,14 +82,6 @@
     WP310Model.AuswahlMethode = l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
     l0 = Get(FactoryService.StockService.GetStateList(daten));
     WP310Model.AuswahlStatus = l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
-  }
-
-  /// <summary>
-  /// Aktualisierung nach Undo/Redo.
-  /// </summary>
-  protected override void Refresh()
-  {
-    TableData(Table, Messages);
   }
 
   /// <summary>
@@ -220,12 +204,7 @@
     var daten = ServiceDaten;
     var l0 = Get(FactoryService.StockService.GetConfigurationList(daten, rm, null), messages);
     var l = l0?.Select(a => WP300TableRowModel.From(a)).ToList() ?? new List<WP300TableRowModel>();
-    if (m != null && rm != null)
-    {
-      m.PageCount = rm.PageCount;
-      m.Liste = l;
-    }
-    return l;
+    return UpdateTable(m, rm, l);
   }
 
   /// <summary>

@@ -74,6 +74,9 @@ public class TableModelBase<T>
   /// <summary>Holt oder setzt die aktuelle Liste.</summary>
   public List<T>? Liste { get; set; } = default!;
 
+  /// <summary>Holt oder setzt die Summenzeile unter der Liste.</summary>
+  public string? Essence { get; set; } = default;
+
   /// <summary>Holt oder setzt das ReadModel.</summary>
   public TableReadModel ReadModel
   {

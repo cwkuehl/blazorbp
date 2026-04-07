@@ -77,14 +77,6 @@
   }
 
   /// <summary>
-  /// Aktualisierung nach Undo/Redo.
-  /// </summary>
-  protected override void Refresh()
-  {
-    TableData(Table, Messages);
-  }
-
-  /// <summary>
   /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
   /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
   /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
@@ -210,12 +202,7 @@
     var daten = ServiceDaten;
     var l0 = Get(FactoryService.PrivateService.GetMemoList(daten, rm), messages);
     var l = l0?.Select(a => FZ700TableRowModel.From(a)).ToList() ?? new List<FZ700TableRowModel>();
-    if (m != null && rm != null)
-    {
-      m.PageCount = rm.PageCount;
-      m.Liste = l;
-    }
-    return l;
+    return UpdateTable(m, rm, l);
   }
 
   /// <summary>

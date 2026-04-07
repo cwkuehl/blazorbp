@@ -756,12 +756,7 @@ else
       rm.PageCount = 0;
     // TODO var l0 = Get(FactoryService.PrivateService.GetClientList(daten, rm), messages);
     var l = r.Ergebnis?.Select(a => {{form}}TableRowModel.From(a)).ToList() ?? new List<{{form}}TableRowModel>();
-    if (m != null && rm != null)
-    {
-      m.PageCount = rm.PageCount;
-      m.Liste = l;
-    }
-    return l;
+    return UpdateTable(m, rm, l);
   }
 
 """);

@@ -87,6 +87,14 @@
     }
   </table>
   <div class="row mt-0 g-1">
+    <div class="form-group col">
+      @if (!string.IsNullOrEmpty(Table!.Essence))
+      {
+        <p>@Table!.Essence</p>
+      }
+    </div>
+  </div>
+  <div class="row mt-0 g-1">
     <div class="form-group col-md-1">
       <button type="submit" class="btn btn-secondary" formaction="@actionpath?handler=Table_First" value="First" name="Table.First" title="Erste Seite">|&lt;</button>
       <button type="submit" class="btn btn-secondary" formaction="@actionpath?handler=Table_Prev" value="Prev" name="Table.Prev" title="Vorherige Seite">&lt;</button>

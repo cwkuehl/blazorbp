@@ -240,11 +240,6 @@ else
   {
     var rm = m?.ReadModel;
     var l = DemoService.GetObjektList(rm).Select(a => DM200TableRowModel.FromObjekt(a)).ToList();
-    if (m != null && rm != null)
-    {
-      m.PageCount = rm.PageCount;
-      m.Liste = l;
-    }
-    return l;
+    return UpdateTable(m, rm, l);
   }
 }
