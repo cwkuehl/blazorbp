@@ -448,6 +448,7 @@ $RECYCLE.BIN/
 #Install/csbp/*
 
 #CSBP.Generator/*
+ModbusTests.cs
 
 # ANTLR4 Files
 *.interp
