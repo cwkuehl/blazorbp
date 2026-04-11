@@ -99,7 +99,12 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
       {
         var msubmit = TB110Model.Submit ?? "";
         var uid = Model.Position;
-        if (!string.IsNullOrEmpty(uid) && Model.Date.HasValue && Model.PositionList != null)
+        var mvalid = false;
+        if (!string.IsNullOrEmpty(msubmit))
+        {
+          mvalid = ModalEditContext?.Validate() ?? false;
+        }
+        if (mvalid && !string.IsNullOrEmpty(uid) && Model.Date.HasValue && Model.PositionList != null)
         {
           var o = Model.PositionList?.FirstOrDefault(a => a.Ort_Uid == uid);
           if (o != null)

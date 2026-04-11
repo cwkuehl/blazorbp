@@ -142,7 +142,12 @@
       else
       {
         var msubmit = WP310Model.Submit ?? "";
-        if (msubmit == nameof(WP310Model.Ok))
+        var mvalid = false;
+        if (!string.IsNullOrEmpty(msubmit))
+        {
+          mvalid = ModalEditContext?.Validate() ?? false;
+        }
+        if (mvalid && msubmit == nameof(WP310Model.Ok))
         {
           var dt = Formular.GetTableDialogType(Model.ModalArt);
           var daten = ServiceDaten;

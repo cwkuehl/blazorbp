@@ -35,7 +35,7 @@ else
       </div>
       <div class="modal-body">
         <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="ModalSubmit" FormName="wp310modal">
-          <DataAnnotationsValidator/>
+          @* <DataAnnotationsValidator/> *@
           <ValidationSummary class="text-danger"/>
           <InputText type="hidden" @bind-Value="WP310Model!.Nr"/>
           <InputText type="hidden" @bind-Value="WP310Model!.ReadonlyHiddenError"/>

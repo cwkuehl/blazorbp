@@ -188,11 +188,11 @@
         if (!string.IsNullOrEmpty(msubmit))
         {
           mvalid = ModalEditContext?.Validate() ?? false;
-          if (!mvalid)
+          @* if (!mvalid)
           {
             // Doppelte Meldungen verhindern.
             InitEditContext(null, WP210Model);
-          }
+          } *@
         }
         if (mvalid && msubmit == nameof(WP210Model.Ok) && WP210Model != null)
         {

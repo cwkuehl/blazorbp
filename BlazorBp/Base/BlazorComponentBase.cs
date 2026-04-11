@@ -115,6 +115,14 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     if (modalmodel != null)
     {
       ModalEditContext = new(modalmodel);
+      //// ModalEditContext.OnValidationRequested += (s, e) =>
+      //// {
+      ////     Console.WriteLine("Validation triggered");
+      //// };
+      //// kein <DataAnnotationsValidator/> in EditForm, daher hier die Validierung aktivieren, damit die Fehlermeldungen in ModalMessages gesetzt werden.
+      #pragma warning disable CS0618
+      ModalEditContext.EnableDataAnnotationsValidation();
+      #pragma warning disable CS0618
       ModalMessages = new(ModalEditContext);
     }
     if (modal2model != null)

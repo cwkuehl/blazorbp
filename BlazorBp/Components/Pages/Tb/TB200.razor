@@ -147,7 +147,12 @@
       else
       {
         var msubmit = TB210Model.Submit ?? "";
-        if (msubmit == nameof(TB210Model.Ok))
+        var mvalid = false;
+        if (!string.IsNullOrEmpty(msubmit))
+        {
+          mvalid = ModalEditContext?.Validate() ?? false;
+        }
+        if (mvalid && msubmit == nameof(TB210Model.Ok))
         {
           Modal1?.ModalSubmit();
           var dt = Formular.GetTableDialogType(Model.ModalArt);

@@ -148,7 +148,12 @@
       else
       {
         var msubmit = FZ260Model.Submit ?? "";
-        if (msubmit == nameof(FZ260Model.Ok))
+        var mvalid = false;
+        if (!string.IsNullOrEmpty(msubmit))
+        {
+          mvalid = ModalEditContext?.Validate() ?? false;
+        }
+        if (mvalid && msubmit == nameof(FZ260Model.Ok))
         {
           var dt = Formular.GetTableDialogType(Model.ModalArt);
           var o = FZ260Model.To(daten);

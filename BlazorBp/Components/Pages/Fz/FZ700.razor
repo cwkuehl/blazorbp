@@ -134,7 +134,12 @@
       else
       {
         var msubmit = FZ710Model.Submit ?? "";
-        if (msubmit == nameof(FZ710Model.Ok))
+        var mvalid = false;
+        if (!string.IsNullOrEmpty(msubmit))
+        {
+          mvalid = ModalEditContext?.Validate() ?? false;
+        }
+        if (mvalid && msubmit == nameof(FZ710Model.Ok))
         {
           var dt = Formular.GetTableDialogType(Model.ModalArt);
           var daten = ServiceDaten;

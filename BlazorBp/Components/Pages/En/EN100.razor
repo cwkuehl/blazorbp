@@ -9,24 +9,24 @@
 <CascadingValue Value="this">
 <SortableTable Table="Table" NoData="" FormName="en100" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="EN100Model" TRTable="EN100TableRowModel">
   <ChildContent>
-    @* <TableColumn Field="@nameof(EN100TableRowModel.Nummer)" SortField="@nameof(WpWertpapier.Uid)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
-    <TableColumn Field="@nameof(EN100TableRowModel.Sortierung)" SortField="@nameof(WpWertpapier.Sorting)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
-    <TableColumn Field="@nameof(EN100TableRowModel.Bezeichnung)" SortField="@nameof(WpWertpapier.Bezeichnung)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
-    <TableColumn Field="@nameof(EN100TableRowModel.Status)" SortField="@nameof(WpWertpapier.Status)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
-    <TableColumn Field="@nameof(EN100TableRowModel.Provider)" SortField="@nameof(WpWertpapier.Datenquelle)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    @* <TableColumn Field="@nameof(EN100TableRowModel.Nummer)" SortField="@nameof(EnAbfrage.Uid)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
+    <TableColumn Field="@nameof(EN100TableRowModel.Sortierung)" SortField="@nameof(EnAbfrage.Sortierung)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.Bezeichnung)" SortField="@nameof(EnAbfrage.Bezeichnung)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    @* <TableColumn Field="@nameof(EN100TableRowModel.Provider)" SortField="@nameof(WpWertpapier.Datenquelle)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
     <TableColumn Field="@nameof(EN100TableRowModel.Kuerzel)" SortField="@nameof(WpWertpapier.Kuerzel)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
     <TableColumn Field="@nameof(EN100TableRowModel.Typ)" SortField="@nameof(WpWertpapier.Type)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
-    <TableColumn Field="@nameof(EN100TableRowModel.AktKurs)" SortField="@nameof(WpWertpapier.CurrentPrice)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.AktKurs)" SortField="@nameof(WpWertpapier.CurrentPrice)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
     @* <TableColumn Field="@nameof(EN100TableRowModel.StopKurs)" SortField="@nameof(WpWertpapier.StopPrice)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
     @* <TableColumn Field="@nameof(EN100TableRowModel.SignalKurs1)" SortField="@nameof(WpWertpapier.SignalPrice1)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
-    <TableColumn Field="@nameof(EN100TableRowModel.Muster)" SortField="@nameof(WpWertpapier.Pattern)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
-    <TableColumn Field="@nameof(EN100TableRowModel.Waehrung)" SortField="@nameof(WpWertpapier.Currency)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    @* <TableColumn Field="@nameof(EN100TableRowModel.Muster)" SortField="@nameof(WpWertpapier.Pattern)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.Waehrung)" SortField="@nameof(WpWertpapier.Currency)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
     @* <TableColumn Field="@nameof(EN100TableRowModel.Relation)" SortField="@nameof(WpWertpapier.Relation_Uid)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
+    <TableColumn Field="@nameof(EN100TableRowModel.Status)" SortField="@nameof(WpWertpapier.Status)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
     @* <TableColumn Field="@nameof(EN100TableRowModel.Notiz)" SortField="@nameof(WpWertpapier.Notiz)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
-    <TableColumn Field="@nameof(EN100TableRowModel.AngelegtAm)" SortField="@nameof(WpWertpapier.Angelegt_Am)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
-    <TableColumn Field="@nameof(EN100TableRowModel.AngelegtVon)" SortField="@nameof(WpWertpapier.Angelegt_Von)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
-    <TableColumn Field="@nameof(EN100TableRowModel.GeaendertAm)" SortField="@nameof(WpWertpapier.Geaendert_Am)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
-    <TableColumn Field="@nameof(EN100TableRowModel.GeaendertVon)" SortField="@nameof(WpWertpapier.Geaendert_Von)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.AngelegtAm)" SortField="@nameof(EnAbfrage.Angelegt_Am)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.AngelegtVon)" SortField="@nameof(EnAbfrage.Angelegt_Von)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.GeaendertAm)" SortField="@nameof(EnAbfrage.Geaendert_Am)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.GeaendertVon)" SortField="@nameof(EnAbfrage.Geaendert_Von)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
   </ChildContent>
 </SortableTable>
 </CascadingValue>
@@ -38,10 +38,10 @@
   <input type="hidden" name="SubmitControl"/>  <div class="row mt-1 g-0">
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="x" For="@(() => Model!.Muster)" VerticalColClass="form-group col-md-2"/>
+    @* <LabelInputValid AutoPostback="x" For="@(() => Model!.Muster)" VerticalColClass="form-group col-md-2"/> *@
     <LabelInputValid type="checkbox" AutoPostback="x" For="@(() => Model!.Auchinaktiv)" VerticalColClass="form-group col-md-2 ms-1"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" VerticalColClass="form-group col-md-2 ms-1"/>
-    <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Konfiguration)" DataList="Model!.AuswahlKonfiguration" VerticalColClass="form-group col ms-1"/>
+    @* <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" VerticalColClass="form-group col-md-2 ms-1"/>
+    <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Konfiguration)" DataList="Model!.AuswahlKonfiguration" VerticalColClass="form-group col ms-1"/> *@
   </div>
   <div class="row mt-1 g-0">
     <SubmitButton class="btn btn-secondary col-md-2" href="@($"/starttask/EN100/{Model!.Nr}")" For="@(() => Model!.Berechnen)"/>
@@ -49,8 +49,8 @@
   </div>
   <div class="modal-footer mt-2">
     @* <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-map" href="@Model!.MapHref" For="@(() => Model!.Chart)"/> *@
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-map" For="@(() => Model!.Chart)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-floppy" For="@(() => Model!.Floppy)"/>
+    @* <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-map" For="@(() => Model!.Chart)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-floppy" For="@(() => Model!.Floppy)"/> *@
     <SubmitButton class="btn btn-primary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
   </div>
@@ -111,12 +111,12 @@
       Model.Konfiguration = (Model.AuswahlKonfiguration?.FirstOrDefault(a => a.Value.StartsWith(" "))
         ?? Model.AuswahlKonfiguration?.FirstOrDefault())?.Key;
     }
-    var l0 = Get(FactoryService.StockService.GetStateList(daten));
+    var l0 = Get(FactoryService.EnergyService.GetStateList(daten));
     EN110Model.AuswahlStatus = l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
-    var l1 = Get(FactoryService.StockService.GetProviderList(daten));
+    @* var l1 = Get(FactoryService.StockService.GetProviderList(daten));
     EN110Model.AuswahlProvider = l1?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
     var l2 = Get(FactoryService.StockService.GetStockList(daten));
-    EN110Model.AuswahlRelation = InsertEmpty(l2?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
+    EN110Model.AuswahlRelation = InsertEmpty(l2?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList()); *@
   }
 
   /// <summary>
@@ -166,7 +166,7 @@
             var l = TableData(Table, ModalMessages);
             var ds = l.Skip(i - 1).FirstOrDefault();
             var daten = ServiceDaten;
-            var r = FactoryService.StockService.GetStock(daten, ds?.Nummer ?? "");
+            var r = FactoryService.EnergyService.GetQuery(daten, ds?.Nummer ?? "");
             if (r.Ok && ds != null && r.Ergebnis != null)
             {
               EN110Model.From(r.Ergebnis);
@@ -186,20 +186,21 @@
         if (!string.IsNullOrEmpty(msubmit))
         {
           mvalid = ModalEditContext?.Validate() ?? false;
-          if (!mvalid)
+          @* if (!mvalid)
           {
             // Doppelte Meldungen verhindern.
             InitEditContext(null, EN110Model);
-          }
+          } *@
         }
         if (mvalid && msubmit == nameof(EN110Model.Ok) && EN110Model != null)
         {
           var dt = Formular.GetTableDialogType(Model.ModalArt);
           var daten = ServiceDaten;
           var o = EN110Model.To(daten);
+          // var r = new ServiceErgebnis();
           var r = dt == DialogTypeEnum.Delete
-            ? FactoryService.StockService.DeleteStock(daten, o)
-            : FactoryService.StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, EN110Model.Anlage);
+            ? FactoryService.EnergyService.DeleteQuery(daten, o)
+            : FactoryService.EnergyService.SaveQuery(daten, o.Uid, o.Sortierung, o.Art, o.Bezeichnung, o.Host_Url, o.Datentyp, o.Schreibbarkeit, o.Einheit, o.Param1, o.Param2, o.Param3, o.Param4, o.Param5, o.Status, o.Notiz);
           if (r.Ok)
           {
             Model.ModalArt = null;
@@ -291,7 +292,7 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var l0 = Get(FactoryService.StockService.GetStockList(daten, rm, Model.Auchinaktiv, null, Model.Muster), messages);
+    var l0 = Get(FactoryService.EnergyService.GetQueryList(daten, rm, Model.Auchinaktiv, null), messages);
     var l = l0?.Select(a => EN100TableRowModel.From(a)).ToList() ?? new List<EN100TableRowModel>();
     return UpdateTable(m, rm, l);
   }

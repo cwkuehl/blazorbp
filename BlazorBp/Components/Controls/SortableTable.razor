@@ -106,7 +106,7 @@
       <label class="control-label"> von </label>
     </div>
     <div class="col-md-1">
-      <input class="form-control" type="text" readonly="readonly" value="@Table!.PageCount" name="Table.PageCount" title="Anzahl der Seiten"/>
+      <input class="form-control" type="text" readonly="readonly" value="@(Table!.PageCount ?? 0)" name="Table.PageCount" title="Anzahl der Seiten"/>
     </div>
     <div class="form-group col-md-1">
       <button type="submit" class="btn btn-secondary" formaction="@actionpath?handler=Table_Next" value="Next" name="Table.Next" title="Nächste Seite">&gt;</button>

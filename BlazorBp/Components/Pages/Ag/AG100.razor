@@ -146,7 +146,12 @@
       else
       {
         var msubmit = AG110Model.Submit ?? "";
-        if (msubmit == nameof(AG110Model.Ok))
+        var mvalid = false;
+        if (!string.IsNullOrEmpty(msubmit))
+        {
+          mvalid = ModalEditContext?.Validate() ?? false;
+        }
+        if (mvalid && msubmit == nameof(AG110Model.Ok))
         {
           var o = AG110Model.To();
           var daten = ServiceDaten;

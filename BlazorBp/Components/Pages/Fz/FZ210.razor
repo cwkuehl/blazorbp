@@ -35,7 +35,7 @@ else
       </div>
       <div class="modal-body">
         <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="ModalSubmit" FormName="fz210modal">
-          <DataAnnotationsValidator/>
+          @* <DataAnnotationsValidator/> *@
           <ValidationSummary class="text-danger"/>
           <InputText type="hidden" @bind-Value="FZ210Model!.Nr"/>
           <InputText type="hidden" @bind-Value="FZ210Model!.ReadonlyHiddenError"/>

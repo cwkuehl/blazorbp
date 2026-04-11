@@ -35,7 +35,7 @@ else
       </div>
       <div class="modal-body">
         <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="ModalSubmit" FormName="en110modal">
-          <DataAnnotationsValidator/>
+          @* <DataAnnotationsValidator/> *@
           <ValidationSummary class="text-danger"/>
           <InputText type="hidden" @bind-Value="EN110Model!.Nr"/>
           <InputText type="hidden" @bind-Value="EN110Model!.ReadonlyHiddenError"/>
@@ -45,15 +45,12 @@ else
             <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Bezeichnung)" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
+            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Sortierung)" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Art)" VerticalColClass="form-group col ms-1"/>
+          </div>
+          @* <div class="row mt-1 g-0">
             <LabelInputValid type="combobox" AutoPostback="" For="@(() => EN110Model!.Provider)" DataList="EN110Model!.AuswahlProvider" VerticalColClass="form-group col-md-6"/>
             <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Kuerzel)" VerticalColClass="form-group col ms-1"/>
-          </div>
-          <div class="row mt-1 g-0">
-            <LabelInputValid type="combobox" AutoPostback="" For="@(() => EN110Model!.Status)" DataList="EN110Model!.AuswahlStatus" VerticalColClass="form-group col"/>
-          </div>
-          <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.AktKurs)" VerticalColClass="form-group col-md-6"/>
-            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.StopKurs)" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
             <LabelInputValid AutoPostback="" For="@(() => EN110Model!.SignalKurs1)" VerticalColClass="form-group col-md-6"/>
@@ -66,6 +63,9 @@ else
           <div class="row mt-1 g-0">
             <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Sortierung)" VerticalColClass="form-group col-md-4"/>
             <LabelInputValid type="combobox" AutoPostback="" For="@(() => EN110Model!.Relation)" DataList="EN110Model!.AuswahlRelation" VerticalColClass="form-group col ms-1"/>
+          </div> *@
+          <div class="row mt-1 g-0">
+            <LabelInputValid type="combobox" AutoPostback="" For="@(() => EN110Model!.Status)" DataList="EN110Model!.AuswahlStatus" VerticalColClass="form-group col"/>
           </div>
           <div class="row mt-1 g-0">
             <LabelInputValid rows="3" AutoPostback="" For="@(() => EN110Model!.Notiz)" VerticalColClass="form-group col"/>
@@ -75,7 +75,6 @@ else
             <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Geaendert)" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
-            <LabelInputValid type="checkbox" AutoPostback="" For="@(() => EN110Model!.Anlage)" VerticalColClass="form-group col-md-4"/>
             <SubmitButton class="btn btn-primary col-md-2 ms-1" For="@(() => EN110Model!.Ok)"/>
             <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => EN110Model!.Abbrechen)"/>
             @* <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button> *@

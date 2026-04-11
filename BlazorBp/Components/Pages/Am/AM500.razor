@@ -131,7 +131,12 @@
       else
       {
         var msubmit = AM510Model.Submit ?? "";
-        if (msubmit == nameof(AM510Model.Ok) && handler == "Table_Edit")
+        var mvalid = false;
+        if (!string.IsNullOrEmpty(msubmit))
+        {
+          mvalid = ModalEditContext?.Validate() ?? false;
+        }
+        if (mvalid && msubmit == nameof(AM510Model.Ok) && handler == "Table_Edit")
         {
           var daten = ServiceDaten;
           var o = AM510Model.To(daten.MandantNr);

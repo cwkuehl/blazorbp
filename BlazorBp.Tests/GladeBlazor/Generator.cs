@@ -449,7 +449,7 @@ else
       </div>
       <div class="modal-body">
         <EditForm Enhance method="post" EditContext="ModalEditContext" OnValidSubmit="ModalSubmit" FormName="{{form2?.ToLower()}}modal">
-          <DataAnnotationsValidator/>
+          @* <DataAnnotationsValidator/> *@
           <ValidationSummary class="text-danger"/>
           <InputText type="hidden" @bind-Value="{{form2}}Model!.Nr"/>
           <InputText type="hidden" @bind-Value="{{form2}}Model!.ReadonlyHiddenError"/>
@@ -660,7 +660,12 @@ else
       else
       {
         var msubmit = {{form2}}Model.Submit ?? "";
-        if (msubmit == nameof({{form2}}Model.Ok))
+        var mvalid = false;
+        if (!string.IsNullOrEmpty(msubmit))
+        {
+          mvalid = ModalEditContext?.Validate() ?? false;
+        }
+        if (mvalid && msubmit == nameof({{form2}}Model.Ok))
         {
           var dt = Formular.GetTableDialogType(Model.ModalArt);
           var daten = ServiceDaten;
