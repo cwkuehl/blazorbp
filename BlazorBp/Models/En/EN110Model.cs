@@ -24,11 +24,13 @@ public class EN110Model : PageModelBase
   /// <summary>Holt oder setzt Bezeichnung.</summary>
   [Display(Name = "_Bezeichnung", Description = "Bezeichnung")]
   [Required(ErrorMessage = "Bezeichnung muss angegeben werden.")]
+  [MaxLength(255, ErrorMessage = "Bezeichnung darf maximal {1} Zeichen lang sein.")]
   public string? Bezeichnung { get; set; }
 
   /// <summary>Holt oder setzt die Sortierung.</summary>
   [Display(Name = "_Sortierung", Description = "Sortierung")]
   [Required(ErrorMessage = "Sortierung muss angegeben werden.")]
+  [MaxLength(10, ErrorMessage = "Sortierung darf maximal {1} Zeichen lang sein.")]
   public string? Sortierung { get; set; }
 
   /// <summary>Holt oder setzt die Auswahlliste von Art.</summary>
@@ -39,48 +41,61 @@ public class EN110Model : PageModelBase
   [Required(ErrorMessage = "Art muss angegeben werden.")]
   public string? Art { get; set; }
 
-  // /// <summary>Holt oder setzt Aktueller Kurs.</summary>
-  // [Display(Name = "Aktueller Kurs", Description = "Aktueller Kurs aus letzter Bewertung")]
-  // //// [Required(ErrorMessage = "Aktueller Kurs muss angegeben werden.")]
-  // public string? AktKurs { get; set; }
+  /// <summary>Holt oder setzt Host-URL.</summary>
+  [Display(Name = "Host-URL", Description = "Host:Port für Modbus-TCP oder URL für JSON.")]
+  [Required(ErrorMessage = "Host-URL muss angegeben werden.")]
+  [MaxLength(255, ErrorMessage = "Host-URL darf maximal {1} Zeichen lang sein.")]
+  public string? HostUrl { get; set; }
 
-  // /// <summary>Holt oder setzt Stop-Kurs.</summary>
-  // [Display(Name = "Stop-Kurs", Description = "Stop-Kurs aus letzter Bewertung")]
-  // //// [Required(ErrorMessage = "Stop-Kurs muss angegeben werden.")]
-  // public string? StopKurs { get; set; }
+  /// <summary>Holt oder setzt die Auswahlliste von Datentyp.</summary>
+  public List<ListItem>? AuswahlDatentyp { get; set; } = default!;
 
-  // /// <summary>Holt oder setzt Kursziel.</summary>
-  // [Display(Name = "Kurs_ziel", Description = "Manuelles Kursziel")]
-  // //// [Required(ErrorMessage = "Kursziel muss angegeben werden.")]
-  // public string? SignalKurs1 { get; set; }
+  /// <summary>Holt oder setzt den Datentyp.</summary>
+  [Display(Name = "_Datentyp", Description = "Datentyp der Abfrage.")]
+  [Required(ErrorMessage = "Datentyp muss angegeben werden.")]
+  public string? Datentyp { get; set; }
 
-  // /// <summary>Holt oder setzt Letztes Muster.</summary>
-  // [Display(Name = "Letztes Muster", Description = "Letztes Signalmuster aus letzter Bewertung")]
-  // //// [Required(ErrorMessage = "Letztes Muster muss angegeben werden.")]
-  // public string? Muster { get; set; }
+  /// <summary>Holt oder setzt die Aufzählung.</summary>
+  [Display(Name = "_Aufzählung", Description = "Aufzählung der möglichen Werte als Text im Format '1=Text1;2=Text2;3=Text3'.")]
+  [MaxLength(240, ErrorMessage = "Aufzählung darf maximal {1} Zeichen lang sein.")]
+  public string? Enum { get; set; }
 
-  // /// <summary>Holt oder setzt Typ.</summary>
-  // [Display(Name = "_Typ", Description = "Aktie (wenn leer) oder Anleihe")]
-  // //// [Required(ErrorMessage = "Typ muss angegeben werden.")]
-  // public string? Typ { get; set; }
+  /// <summary>Holt oder setzt die Schreibbarkeit.</summary>
+  [Display(Name = "Schreibbar_keit", Description = "Schreibbarkeit des Wertes.")]
+  //// [Required(ErrorMessage = "Schreibbarkeit muss angegeben werden.")]
+  public bool Schreibbarkeit { get; set; }
 
-  // /// <summary>Holt oder setzt Währung.</summary>
-  // [Display(Name = "_Währung", Description = "Währungskürzel für Kursabfrage; EUR, GBP, USD, ...")]
-  // //// [Required(ErrorMessage = "Währung muss angegeben werden.")]
-  // public string? Waehrung { get; set; }
+  /// <summary>Holt oder setzt die Einheit.</summary>
+  [Display(Name = "_Einheit", Description = "Einheit des Wertes.")]
+  [MaxLength(50, ErrorMessage = "Einheit darf maximal {1} Zeichen lang sein.")]
+  public string? Einheit { get; set; }
 
-  // /// <summary>Holt oder setzt Sortierung.</summary>
-  // [Display(Name = "Sortierun_g", Description = "Zeichenkette für Sortierung")]
-  // //// [Required(ErrorMessage = "Sortierung muss angegeben werden.")]
-  // public string? Sortierung { get; set; }
+  /// <summary>Holt oder setzt den Param1.</summary>
+  [Display(Name = "Param_1", Description = "UnitID bei Modbus, z.B. 1; Start-Muster bei JSON.")]
+  [Required(ErrorMessage = "Parameter 1 muss angegeben werden.")]
+  [MaxLength(50, ErrorMessage = "Parameter 1 darf maximal {1} Zeichen lang sein.")]
+  public string? Param1 { get; set; }
 
-  // /// <summary>Holt oder setzt die Auswahlliste von Relation.</summary>
-  // public List<ListItem>? AuswahlRelation { get; set; } = default!;
+  /// <summary>Holt oder setzt den Param2.</summary>
+  [Display(Name = "Param_2", Description = "Registeradresse bei Modbus, z.B. 1004; Ende-Muster bei JSON.")]
+  [Required(ErrorMessage = "Parameter 2 muss angegeben werden.")]
+  [MaxLength(50, ErrorMessage = "Parameter 2 darf maximal {1} Zeichen lang sein.")]
+  public string? Param2 { get; set; }
 
-  // /// <summary>Holt oder setzt Relation.</summary>
-  // [Display(Name = "_Relation", Description = "Relation zu anderem Wertpapier, z.B. Index")]
-  // //// [Required(ErrorMessage = "Relation muss angegeben werden.")]
-  // public string? Relation { get; set; }
+  /// <summary>Holt oder setzt den Param3.</summary>
+  [Display(Name = "Param_3", Description = "Anzahl bei Modbus, meist 1 für 2 Bytes; unbenutzt bei JSON.")]
+  [MaxLength(50, ErrorMessage = "Parameter 3 darf maximal {1} Zeichen lang sein.")]
+  public string? Param3 { get; set; }
+
+  /// <summary>Holt oder setzt den Param4.</summary>
+  [Display(Name = "Param_4", Description = "Faktor für Werte bei Modbus, z.B. 0,1 für 1/10; unbenutzt bei JSON.")]
+  [MaxLength(50, ErrorMessage = "Parameter 4 darf maximal {1} Zeichen lang sein.")]
+  public string? Param4 { get; set; }
+
+  /// <summary>Holt oder setzt den Param5.</summary>
+  [Display(Name = "Param_5", Description = "Parameter 5 der Abfrage, unbenutzt.")]
+  [MaxLength(50, ErrorMessage = "Parameter 5 darf maximal {1} Zeichen lang sein.")]
+  public string? Param5 { get; set; }
 
   /// <summary>Holt oder setzt die Auswahlliste von Status.</summary>
   public List<ListItem>? AuswahlStatus { get; set; } = default!;
@@ -92,32 +107,22 @@ public class EN110Model : PageModelBase
 
   /// <summary>Holt oder setzt Notiz.</summary>
   [Display(Name = "Notiz", Description = "")]
-  //// [Required(ErrorMessage = "Notiz muss angegeben werden.")]
   public string? Notiz { get; set; }
 
   /// <summary>Holt oder setzt Angelegt.</summary>
   [Display(Name = "Angelegt", Description = "Datum, Uhrzeit und Benutzer, der die Daten angelegt hat")]
-  //// [Required(ErrorMessage = "Angelegt muss angegeben werden.")]
   public string? Angelegt { get; set; }
 
   /// <summary>Holt oder setzt Geändert.</summary>
   [Display(Name = "Geändert", Description = "Datum, Uhrzeit und Benutzer, der die Daten geändert hat")]
-  //// [Required(ErrorMessage = "Geändert muss angegeben werden.")]
   public string? Geaendert { get; set; }
-
-  // /// <summary>Holt oder setzt Anlage erstellen.</summary>
-  // [Display(Name = "Anlage erstellen", Description = "Soll für das Wertpapier auch eine Anlage erstellt werden?")]
-  // //// [Required(ErrorMessage = "Anlage erstellen muss angegeben werden.")]
-  // public bool Anlage { get; set; }
 
   /// <summary>Holt oder setzt OK.</summary>
   [Display(Name = "_OK", Description = "Dialog mit Speichern schließen")]
-  //// [Required(ErrorMessage = "OK muss angegeben werden.")]
   public string? Ok { get; set; }
 
   /// <summary>Holt oder setzt Abbrechen.</summary>
   [Display(Name = "Abbre_chen", Description = "Dialog ohne Speichern schließen")]
-  //// [Required(ErrorMessage = "Abbrechen muss angegeben werden.")]
   public string? Abbrechen { get; set; }
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
@@ -128,31 +133,66 @@ public class EN110Model : PageModelBase
     Mandant_Nr = daten.MandantNr,
     Uid = Nummer,
     Bezeichnung = Bezeichnung,
+    Sortierung = Sortierung,
+    Art = Art,
+    Host_Url = HostUrl,
+    SplitDatatype = (Datentyp, Enum),
+    Schreibbarkeit = Schreibbarkeit ? "RW" : "R",
+    Einheit = Einheit,
+    Param1 = Param1,
+    Param2 = Param2,
+    Param3 = Param3,
+    Param4 = Param4,
+    Param5 = Param5,
+    Status = Status,
     Notiz = Notiz,
   };
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
-  public void From(EnAbfrage m) =>
-  (
-    Nummer,
-    Bezeichnung,
-    Sortierung,
-    Art,
-    Status,
-    Notiz,
-    Angelegt,
-    Geaendert
-  ) = (
-    m.Uid,
-    m.Bezeichnung,
-    m.Sortierung,
-    m.Art,
-    m.Status,
-    m.Notiz,
-    ModelBase.FormatDateOf(m.Angelegt_Am, m.Angelegt_Von),
-    ModelBase.FormatDateOf(m.Geaendert_Am, m.Geaendert_Von)
-  );
+  public void From(EnAbfrage m)
+  {
+    var parts = m.SplitDatatype;
+    (
+      Nummer,
+      Bezeichnung,
+      Sortierung,
+      Art,
+      HostUrl,
+      Datentyp,
+      Enum,
+      Schreibbarkeit,
+      Einheit,
+      Param1,
+      Param2,
+      Param3,
+      Param4,
+      Param5,
+      Status,
+      Notiz,
+      Angelegt,
+      Geaendert
+    ) = (
+      m.Uid,
+      m.Bezeichnung,
+      m.Sortierung,
+      m.Art,
+      m.Host_Url,
+      parts.Datatype,
+      parts.Enum,
+      m.Schreibbarkeit != null && m.Schreibbarkeit.Contains("W"),
+      m.Einheit,
+      m.Param1,
+      m.Param2,
+      m.Param3,
+      m.Param4,
+      m.Param5,
+      m.Status,
+      m.Notiz,
+      ModelBase.FormatDateOf(m.Angelegt_Am, m.Angelegt_Von),
+      ModelBase.FormatDateOf(m.Geaendert_Am, m.Geaendert_Von)
+    );
+  }
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>
@@ -160,12 +200,21 @@ public class EN110Model : PageModelBase
   {
     if (mode == New || mode == Copy)
     {
-      // Anlage = true;
+      Nummer = "";
     }
     SetMandatoryHiddenReadonly(nameof(Nummer), false, false, true, false);
     SetMandatoryHiddenReadonly(nameof(Bezeichnung), true, false, mode == Delete, mode != New);
     SetMandatoryHiddenReadonly(nameof(Sortierung), true, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Art), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(HostUrl), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Datentyp), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Schreibbarkeit), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Einheit), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Param1), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Param2), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Param3), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Param4), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Param5), false, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Status), true, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Notiz), false, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);

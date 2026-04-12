@@ -45,27 +45,27 @@ else
             <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Bezeichnung)" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Sortierung)" VerticalColClass="form-group col-md-6"/>
-            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Art)" VerticalColClass="form-group col ms-1"/>
-          </div>
-          @* <div class="row mt-1 g-0">
-            <LabelInputValid type="combobox" AutoPostback="" For="@(() => EN110Model!.Provider)" DataList="EN110Model!.AuswahlProvider" VerticalColClass="form-group col-md-6"/>
-            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Kuerzel)" VerticalColClass="form-group col ms-1"/>
+            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Sortierung)" maxlength="10" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid type="combobox" AutoPostback="" For="@(() => EN110Model!.Art)" DataList="EN110Model!.AuswahlArt" maxlength="10" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.SignalKurs1)" VerticalColClass="form-group col-md-6"/>
-            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Muster)" VerticalColClass="form-group col ms-1"/>
+            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.HostUrl)" maxlength="255" VerticalColClass="form-group col-md-6"/>
+            <LabelInputValid type="combobox" AutoPostback="" For="@(() => EN110Model!.Datentyp)" DataList="EN110Model!.AuswahlDatentyp" maxlength="10" VerticalColClass="form-group col-md-2 ms-1"/>
+            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Enum)" maxlength="240" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Typ)" VerticalColClass="form-group col-md-6"/>
-            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Waehrung)" VerticalColClass="form-group col ms-1"/>
+            <LabelInputValid type="checkbox" AutoPostback="" For="@(() => EN110Model!.Schreibbarkeit)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Einheit)" maxlength="50" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
-            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Sortierung)" VerticalColClass="form-group col-md-4"/>
-            <LabelInputValid type="combobox" AutoPostback="" For="@(() => EN110Model!.Relation)" DataList="EN110Model!.AuswahlRelation" VerticalColClass="form-group col ms-1"/>
-          </div> *@
+            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Param1)" maxlength="50" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Param2)" maxlength="50" VerticalColClass="form-group col-md-2 ms-1"/>
+            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Param3)" maxlength="50" VerticalColClass="form-group col-md-2 ms-1"/>
+            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Param4)" maxlength="50" VerticalColClass="form-group col-md-2 ms-1"/>
+            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Param5)" maxlength="50" VerticalColClass="form-group col-md-2 ms-1"/>
+          </div>
           <div class="row mt-1 g-0">
-            <LabelInputValid type="combobox" AutoPostback="" For="@(() => EN110Model!.Status)" DataList="EN110Model!.AuswahlStatus" VerticalColClass="form-group col"/>
+            <LabelInputValid type="combobox" AutoPostback="" For="@(() => EN110Model!.Status)" maxlength="10" DataList="EN110Model!.AuswahlStatus" VerticalColClass="form-group col"/>
           </div>
           <div class="row mt-1 g-0">
             <LabelInputValid rows="3" AutoPostback="" For="@(() => EN110Model!.Notiz)" VerticalColClass="form-group col"/>

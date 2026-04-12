@@ -12,17 +12,8 @@
     @* <TableColumn Field="@nameof(EN100TableRowModel.Nummer)" SortField="@nameof(EnAbfrage.Uid)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
     <TableColumn Field="@nameof(EN100TableRowModel.Sortierung)" SortField="@nameof(EnAbfrage.Sortierung)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
     <TableColumn Field="@nameof(EN100TableRowModel.Bezeichnung)" SortField="@nameof(EnAbfrage.Bezeichnung)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
-    @* <TableColumn Field="@nameof(EN100TableRowModel.Provider)" SortField="@nameof(WpWertpapier.Datenquelle)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
-    <TableColumn Field="@nameof(EN100TableRowModel.Kuerzel)" SortField="@nameof(WpWertpapier.Kuerzel)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
-    <TableColumn Field="@nameof(EN100TableRowModel.Typ)" SortField="@nameof(WpWertpapier.Type)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
-    <TableColumn Field="@nameof(EN100TableRowModel.AktKurs)" SortField="@nameof(WpWertpapier.CurrentPrice)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
-    @* <TableColumn Field="@nameof(EN100TableRowModel.StopKurs)" SortField="@nameof(WpWertpapier.StopPrice)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
-    @* <TableColumn Field="@nameof(EN100TableRowModel.SignalKurs1)" SortField="@nameof(WpWertpapier.SignalPrice1)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
-    @* <TableColumn Field="@nameof(EN100TableRowModel.Muster)" SortField="@nameof(WpWertpapier.Pattern)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
-    <TableColumn Field="@nameof(EN100TableRowModel.Waehrung)" SortField="@nameof(WpWertpapier.Currency)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
-    @* <TableColumn Field="@nameof(EN100TableRowModel.Relation)" SortField="@nameof(WpWertpapier.Relation_Uid)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
-    <TableColumn Field="@nameof(EN100TableRowModel.Status)" SortField="@nameof(WpWertpapier.Status)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
-    @* <TableColumn Field="@nameof(EN100TableRowModel.Notiz)" SortField="@nameof(WpWertpapier.Notiz)" TModel="EN100Model" TRTable="EN100TableRowModel"/> *@
+    <TableColumn Field="@nameof(EN100TableRowModel.Status)" SortField="@nameof(EnAbfrage.Status)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
+    <TableColumn Field="@nameof(EN100TableRowModel.HostUrl)" SortField="@nameof(EnAbfrage.Host_Url)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
     <TableColumn Field="@nameof(EN100TableRowModel.AngelegtAm)" SortField="@nameof(EnAbfrage.Angelegt_Am)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
     <TableColumn Field="@nameof(EN100TableRowModel.AngelegtVon)" SortField="@nameof(EnAbfrage.Angelegt_Von)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
     <TableColumn Field="@nameof(EN100TableRowModel.GeaendertAm)" SortField="@nameof(EnAbfrage.Geaendert_Am)" TModel="EN100Model" TRTable="EN100TableRowModel"/>
@@ -113,10 +104,10 @@
     }
     var l0 = Get(FactoryService.EnergyService.GetStateList(daten));
     EN110Model.AuswahlStatus = l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
-    @* var l1 = Get(FactoryService.StockService.GetProviderList(daten));
-    EN110Model.AuswahlProvider = l1?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
-    var l2 = Get(FactoryService.StockService.GetStockList(daten));
-    EN110Model.AuswahlRelation = InsertEmpty(l2?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList()); *@
+    var l1 = Get(FactoryService.EnergyService.GetKindList(daten));
+    EN110Model.AuswahlArt = l1?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
+    var l2 = Get(FactoryService.EnergyService.GetDatatypeList(daten));
+    EN110Model.AuswahlDatentyp = InsertEmpty(l2?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
   }
 
   /// <summary>
@@ -186,18 +177,12 @@
         if (!string.IsNullOrEmpty(msubmit))
         {
           mvalid = ModalEditContext?.Validate() ?? false;
-          @* if (!mvalid)
-          {
-            // Doppelte Meldungen verhindern.
-            InitEditContext(null, EN110Model);
-          } *@
         }
         if (mvalid && msubmit == nameof(EN110Model.Ok) && EN110Model != null)
         {
           var dt = Formular.GetTableDialogType(Model.ModalArt);
           var daten = ServiceDaten;
           var o = EN110Model.To(daten);
-          // var r = new ServiceErgebnis();
           var r = dt == DialogTypeEnum.Delete
             ? FactoryService.EnergyService.DeleteQuery(daten, o)
             : FactoryService.EnergyService.SaveQuery(daten, o.Uid, o.Sortierung, o.Art, o.Bezeichnung, o.Host_Url, o.Datentyp, o.Schreibbarkeit, o.Einheit, o.Param1, o.Param2, o.Param3, o.Param4, o.Param5, o.Status, o.Notiz);

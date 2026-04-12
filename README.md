@@ -47,11 +47,12 @@ Folgende Funktionen sind implementiert:
 -Layout-Idee: keine Revisionsdaten im Header, sondern in optionalen Tabellen-Spalten und im Formular,
 -Tabelle mit optional einblendbaren Spalten und Speicherung der Einstellungen,
 -Umschalten zwischen Dark und Light Mode per Link.
--Automatische Größenanpassung der Formulare (font size scaling in html-tag)
+-Automatische Größenanpassung der Formulare (font size scaling in html-tag).
 -Aktualisieren des Dialogs bei Undo und Redo, z.B. TB100.
 -Starten von asynchronen, länger laufenden Aufgaben, z.B. WP200.
 -Abrufen von Status-Meldungen bei länger laufenden Aufgaben.
 -Tabelle mit optionaler Summenzeilen (Essence).
+-Längenprüfung der Felder.
 
 TODO Folgende Funktionen sind noch nicht implementiert:
 -dotnet new razorclasslib -o BlazorBp.Components, Vererbung der Component-Klasse,

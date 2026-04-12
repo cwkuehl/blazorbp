@@ -56,27 +56,23 @@ public class FZ260Model : PageModelBase
 
   /// <summary>Holt oder setzt Beschreibung.</summary>
   [Display(Name = "_Beschreibung", Description = "Beschreibung")]
-  //// [Required(ErrorMessage = "Beschreibung muss angegeben werden.")]
+  [MaxLength(255, ErrorMessage = "Beschreibung darf maximal {1} Zeichen lang sein.")]
   public string? Beschreibung { get; set; }
 
   /// <summary>Holt oder setzt Angelegt.</summary>
   [Display(Name = "Angelegt", Description = "Datum, Uhrzeit und Benutzer, der die Daten angelegt hat")]
-  //// [Required(ErrorMessage = "Angelegt muss angegeben werden.")]
   public string? Angelegt { get; set; }
 
   /// <summary>Holt oder setzt Geändert.</summary>
   [Display(Name = "Geändert", Description = "Datum, Uhrzeit und Benutzer, der die Daten geändert hat")]
-  //// [Required(ErrorMessage = "Geändert muss angegeben werden.")]
   public string? Geaendert { get; set; }
 
   /// <summary>Holt oder setzt OK.</summary>
   [Display(Name = "_OK", Description = "Dialog mit Speichern schließen")]
-  //// [Required(ErrorMessage = "OK muss angegeben werden.")]
   public string? Ok { get; set; }
 
   /// <summary>Holt oder setzt Abbrechen.</summary>
   [Display(Name = "Abbre_chen", Description = "Dialog ohne Speichern schließen")]
-  //// [Required(ErrorMessage = "Abbrechen muss angegeben werden.")]
   public string? Abbrechen { get; set; }
 
   /// <summary>Kopiert die Werte in ein Model.</summary>

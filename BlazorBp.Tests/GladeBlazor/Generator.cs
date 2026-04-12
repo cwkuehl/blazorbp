@@ -129,6 +129,7 @@ public class Generator
   /// <summary>Holt oder setzt {{n}}.</summary>
   [Display(Name = "{{c.Text}}", Description = "{{c.Tooltip}}")]
   //// [Required(ErrorMessage = "{{n}} muss angegeben werden.")]
+  //// [MaxLength(255, ErrorMessage = "{{n}} darf maximal {1} Zeichen lang sein.")]
   public {{typ}}? {{Functions.ToFirstUpper(c.Name)}} { get; set; }
 """);
       if (c != lastc)
@@ -394,7 +395,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
           sb.AppendLine($$"""    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.{{Functions.ToFirstUpper(c.Name)}})"/>""");
       }
       else
-        sb.AppendLine($$"""    <LabelInputValid AutoPostback="" For="@(() => Model!.{{Functions.ToFirstUpper(c.Name)}})" VerticalColClass="form-group col-md-2"/>""");
+        sb.AppendLine($$"""    <LabelInputValid AutoPostback="" For="@(() => Model!.{{Functions.ToFirstUpper(c.Name)}})" maxlength="255" VerticalColClass="form-group col-md-2"/>""");
     }
     sb.AppendLine($"  </div>");
     sbr.Append(sb);
