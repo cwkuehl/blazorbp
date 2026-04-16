@@ -254,19 +254,7 @@
     }
     if (valid && submit == nameof(Model.Berechnen))
     {
-      var rm = Table?.ReadModel;
-      var rs = StatusTask.HinzufuegenFunktion(daten.MandantNr, $"CalculateStocks");
-      if (!rs.Ok || rs.Ergebnis == null)
-        Get(rs);
-      else
-      {
-        var state = rs.Ergebnis;
-        var r0 = FactoryService.StockService.CalculateStocks(ServiceDaten, null, Model.Muster,
-            null, Model.Bis ?? daten.Heute, Model.Auchinaktiv, rm?.Search, Model.Konfiguration, state);
-        state.Beenden(r: r0);
-        if (!Get(r0))
-          Refresh();
-      }
+        // Siehe StartTask
     }
     if (submit == nameof(Model.Chart))
     {

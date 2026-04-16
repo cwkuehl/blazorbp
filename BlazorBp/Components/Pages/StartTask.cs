@@ -28,7 +28,25 @@ public static class StartTask
       page = page.ToUpper();
       switch (page)
       {
+        case "EN100":
+        {
+          var rs = StatusTask.HinzufuegenFunktion(daten.MandantNr, $"QueryQueries");
+          if (!rs.Ok || rs.Ergebnis == null)
+            return;
+          var state = rs.Ergebnis;
+          var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<WP200TableRowModel>>(s, page, id)?.ReadModel;
+          var Model = BlazorComponentBaseStatic.ReadFormularFormModel<WP200Model>(s, page, id);
+          if (rm != null && Model != null)
+          {
+            var r = FactoryService.EnergyService.QueryQueries(daten, Model.Auchinaktiv, rm?.Search, state);
+            state.Beenden(r: r);
+          }
+          else
+            state.Beenden();
+          break;
+        }
         case "WP200":
+        {
           var rs = StatusTask.HinzufuegenFunktion(daten.MandantNr, $"CalculateStocks");
           if (!rs.Ok || rs.Ergebnis == null)
             return;
@@ -44,6 +62,7 @@ public static class StartTask
           else
             state.Beenden();
           break;
+        }
         default:
           break;
       }

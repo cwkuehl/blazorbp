@@ -29,19 +29,14 @@
   <input type="hidden" name="SubmitControl"/>  <div class="row mt-1 g-0">
   </div>
   <div class="row mt-1 g-0">
+    <SubmitButton class="btn btn-secondary col-md-2" href="@($"/starttask/EN100/{Model!.Nr}")" For="@(() => Model!.Berechnen)"/>
     @* <LabelInputValid AutoPostback="x" For="@(() => Model!.Muster)" VerticalColClass="form-group col-md-2"/> *@
     <LabelInputValid type="checkbox" AutoPostback="x" For="@(() => Model!.Auchinaktiv)" VerticalColClass="form-group col-md-2 ms-1"/>
-    @* <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" VerticalColClass="form-group col-md-2 ms-1"/>
-    <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Konfiguration)" DataList="Model!.AuswahlKonfiguration" VerticalColClass="form-group col ms-1"/> *@
   </div>
   <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2" href="@($"/starttask/EN100/{Model!.Nr}")" For="@(() => Model!.Berechnen)"/>
-    <LabelInputValid stateof="CalculateStocks" AutoPostback="" For="@(() => Model!.Status)" VerticalColClass="form-group col ms-1"/>
+    <LabelInputValid stateof="QueryQueries" rows="5" AutoPostback="" For="@(() => Model!.Status)" VerticalColClass="form-group col"/>
   </div>
   <div class="modal-footer mt-2">
-    @* <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-map" href="@Model!.MapHref" For="@(() => Model!.Chart)"/> *@
-    @* <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-map" For="@(() => Model!.Chart)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-floppy" For="@(() => Model!.Floppy)"/> *@
     <SubmitButton class="btn btn-primary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
   </div>
@@ -56,6 +51,9 @@
 
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
+
+  /// <summary>Race condition verhindern.</summary>
+  private bool issubmitting;
 
   /// <summary>
   /// Initialisierung des Models.
@@ -85,7 +83,7 @@
         SelectedPage = 1,
         RowsPerPage = 10,
         SelectedRow = 1,
-        SortColumn = $"{nameof(WpWertpapier.Bezeichnung)}#+",
+        SortColumn = $"{nameof(EnAbfrage.Sortierung)}#+",
       };
     Table.Nr = id;
     if (EN110Model == null)
@@ -95,13 +93,6 @@
       };
     EN110Model.Nr = id;
     InitEditContext(Model, EN110Model);
-    var lk = Get(FactoryService.StockService.GetConfigurationList(daten, null, "1"));
-    Model.AuswahlKonfiguration = InsertEmpty(lk?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
-    if (string.IsNullOrEmpty(Model.Konfiguration))
-    {
-      Model.Konfiguration = (Model.AuswahlKonfiguration?.FirstOrDefault(a => a.Value.StartsWith(" "))
-        ?? Model.AuswahlKonfiguration?.FirstOrDefault())?.Key;
-    }
     var l0 = Get(FactoryService.EnergyService.GetStateList(daten));
     EN110Model.AuswahlStatus = l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
     var l1 = Get(FactoryService.EnergyService.GetKindList(daten));
@@ -218,52 +209,35 @@
   /// </summary>
   private void Submit()
   {
-    if (Model == null || Messages == null)
+    if (Model == null || Messages == null || issubmitting)
       return;
-    var submit = Model.Submit ?? "";
-    var daten = ServiceDaten;
-    Model.Status = StatusTask.GetStatus(daten.MandantNr, new[] { "CalculateStocks" }, true);
-    if (!string.IsNullOrEmpty(submit))
+    issubmitting = true;
+    try
     {
-      valid = EditContext?.Validate() ?? false;
-    }
-    if (Table != null && (submit == nameof(Model.Auchinaktiv) || submit == nameof(Model.Muster)))
-    {
-      Refresh();
-    }
-    if (IsDateMhp(submit, nameof(Model.Bis), Model.Bis, out var d))
-    {
-      if (d.HasValue)
-        Model.Bis = d;
-    }
-    if (valid && submit == nameof(Model.Berechnen))
-    {
-      var rm = Table?.ReadModel;
-      var rs = StatusTask.HinzufuegenFunktion(daten.MandantNr, $"CalculateStocks");
-      if (!rs.Ok || rs.Ergebnis == null)
-        Get(rs);
-      else
+      var submit = Model.Submit ?? "";
+      var daten = ServiceDaten;
+      Model.Status = StatusTask.GetStatus(daten.MandantNr, new[] { "CalculateStocks" }, true);
+      if (!string.IsNullOrEmpty(submit))
       {
-        var state = rs.Ergebnis;
-        var r0 = FactoryService.StockService.CalculateStocks(ServiceDaten, null, Model.Muster,
-            null, Model.Bis ?? daten.Heute, Model.Auchinaktiv, rm?.Search, Model.Konfiguration, state);
-        state.Beenden(r: r0);
-        if (!Get(r0))
-          Refresh();
+        valid = EditContext?.Validate() ?? false;
+      }
+      if (Table != null && (submit == nameof(Model.Auchinaktiv) || submit == nameof(Model.Muster)))
+      {
+        Refresh();
+      }
+      if (valid && submit == nameof(Model.Berechnen))
+      {
+        // Siehe StartTask
+      }
+      WriteFormularModel(Model.Nr ?? "0", Model);
+      if (submit == nameof(Model.Schliessen))
+      {
+        CloseFormular();
       }
     }
-    if (submit == nameof(Model.Chart))
+    finally
     {
-      // TODO Formular WP100 Chart aufrufen.
-    }
-    if (submit == nameof(Model.Floppy))
-    {
-      // TODO Formular WP220 für Import und Export aufrufen.
-    }
-    WriteFormularModel(Model.Nr ?? "0", Model);
-    if (submit == nameof(Model.Schliessen))
-    {
-      CloseFormular();
+      issubmitting = false;
     }
   }
 

@@ -20,15 +20,6 @@ public class EN100Model : PageModelBase
   //// [Required(ErrorMessage = "Aktualisieren muss angegeben werden.")]
   public string? Refresh { get; set; }
 
-  /// <summary>Holt oder setzt Importieren und Exportieren.</summary>
-  [Display(Name = "Importieren und Exportieren", Description = "Importieren und Exportieren")]
-  //// [Required(ErrorMessage = "Importieren und Exportieren muss angegeben werden.")]
-  public string? Floppy { get; set; }
-
-  /// <summary>Holt oder setzt Chart.</summary>
-  [Display(Name = "Chart", Description = "Chart zum ausgewählten Wertpapier anzeigen")]
-  public string? Chart { get; set; }
-
   /// <summary>Holt oder setzt Status.</summary>
   [Display(Name = "Status", Description = "")]
   public string? Status { get; set; }
@@ -40,26 +31,11 @@ public class EN100Model : PageModelBase
 
   /// <summary>Holt oder setzt auch inaktive.</summary>
   [Display(Name = "auch inaktive", Description = "Sollen auch inaktive Wertpapiere angezeigt werden?")]
-  //// [Required(ErrorMessage = "auch inaktive muss angegeben werden.")]
   public bool Auchinaktiv { get; set; }
 
   /// <summary>Holt oder setzt Bewertungen berechnen.</summary>
-  [Display(Name = "Bewertungen berechnen", Description = "Soll die Bewertung für jedes aktive Wertpapier berechnet werden?")]
-  //// [Required(ErrorMessage = "Bewertungen berechnen muss angegeben werden.")]
+  [Display(Name = "Bewertungen berechnen", Description = "Soll die Abfrage für jeden ausgewählten Parameter gestartet werden?")]
   public string? Berechnen { get; set; }
-
-  /// <summary>Holt oder setzt Bis.</summary>
-  [Display(Name = "B_is", Description = "")]
-  //// [Required(ErrorMessage = "Bis muss angegeben werden.")]
-  public DateTime? Bis { get; set; }
-
-  /// <summary>Holt oder setzt die Auswahlliste von Konfiguration.</summary>
-  public List<ListItem>? AuswahlKonfiguration { get; set; } = default!;
-
-  /// <summary>Holt oder setzt Konfiguration.</summary>
-  [Display(Name = "_Konfiguration", Description = "Konfiguration für Bewertung festlegen")]
-  //// [Required(ErrorMessage = "Konfiguration muss angegeben werden.")]
-  public string? Konfiguration { get; set; }
 
   /// <summary>Holt oder setzt Schließen.</summary>
   [Display(Name = "Schließen", Description = "Schließen")]
@@ -73,7 +49,6 @@ public class EN100Model : PageModelBase
     if (mode == New || mode == Copy)
     {
       Muster = "%%";
-      Bis = daten.Heute;
     }
     if (mode == New)
     {
