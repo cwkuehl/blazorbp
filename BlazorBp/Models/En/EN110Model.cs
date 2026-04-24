@@ -93,7 +93,7 @@ public class EN110Model : PageModelBase
   public string? Param4 { get; set; }
 
   /// <summary>Holt oder setzt den Param5.</summary>
-  [Display(Name = "Param_5", Description = "Parameter 5 der Abfrage, unbenutzt.")]
+  [Display(Name = "Param_5", Description = "Formatierung des Werts, z.B. N, N1, N2, unbenutzt bei JSON.")]
   [MaxLength(50, ErrorMessage = "Parameter 5 darf maximal {1} Zeichen lang sein.")]
   public string? Param5 { get; set; }
 

@@ -30,7 +30,7 @@ public static class StartTask
       {
         case "EN100":
         {
-          var rs = StatusTask.HinzufuegenFunktion(daten.MandantNr, $"QueryQueries");
+          var rs = StatusTask.HinzufuegenFunktion(daten.MandantNr, $"QueryQueries", kurz: false);
           if (!rs.Ok || rs.Ergebnis == null)
             return;
           var state = rs.Ergebnis;
