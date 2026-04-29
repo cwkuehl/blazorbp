@@ -83,17 +83,17 @@ public class EN110Model : PageModelBase
   public string? Param2 { get; set; }
 
   /// <summary>Holt oder setzt den Param3.</summary>
-  [Display(Name = "Param_3", Description = "Anzahl bei Modbus, meist 1 für 2 Bytes; unbenutzt bei JSON.")]
+  [Display(Name = "Param_3", Description = "Anzahl bei Modbus, meist 1 Word für 2 Bytes; unbenutzt bei JSON.")]
   [MaxLength(50, ErrorMessage = "Parameter 3 darf maximal {1} Zeichen lang sein.")]
   public string? Param3 { get; set; }
 
   /// <summary>Holt oder setzt den Param4.</summary>
-  [Display(Name = "Param_4", Description = "Faktor für Werte bei Modbus, z.B. 0,1 für 1/10; unbenutzt bei JSON.")]
+  [Display(Name = "Faktor", Description = "Faktor für Werte, z.B. 0,1 für 1/10.")]
   [MaxLength(50, ErrorMessage = "Parameter 4 darf maximal {1} Zeichen lang sein.")]
   public string? Param4 { get; set; }
 
   /// <summary>Holt oder setzt den Param5.</summary>
-  [Display(Name = "Param_5", Description = "Formatierung des Werts, z.B. N, N1, N2, unbenutzt bei JSON.")]
+  [Display(Name = "Format", Description = "Formatierung des Werts, z.B. N, N1, N2")]
   [MaxLength(50, ErrorMessage = "Parameter 5 darf maximal {1} Zeichen lang sein.")]
   public string? Param5 { get; set; }
 
