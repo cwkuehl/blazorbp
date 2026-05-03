@@ -21,20 +21,15 @@ public class EN100Model : PageModelBase
   public string? Refresh { get; set; }
 
   /// <summary>Holt oder setzt Status.</summary>
-  [Display(Name = "Status", Description = "")]
+  [Display(Name = "Status", Description = "Status der Berechnung wird angezeigt.")]
   public string? Status { get; set; }
-
-  /// <summary>Holt oder setzt Muster.</summary>
-  [Display(Name = "_Muster", Description = "Zu suchendes Muster")]
-  //// [Required(ErrorMessage = "Muster muss angegeben werden.")]
-  public string? Muster { get; set; }
 
   /// <summary>Holt oder setzt auch inaktive.</summary>
   [Display(Name = "auch inaktive", Description = "Sollen auch inaktive Wertpapiere angezeigt werden?")]
   public bool Auchinaktiv { get; set; }
 
-  /// <summary>Holt oder setzt Bewertungen berechnen.</summary>
-  [Display(Name = "Bewertungen berechnen", Description = "Soll die Abfrage für jeden ausgewählten Parameter gestartet werden?")]
+  /// <summary>Holt oder setzt Parameter abfragen.</summary>
+  [Display(Name = "Parameter abfragen", Description = "Soll die Abfrage von allen ausgewählten Parameter gestartet werden?")]
   public string? Berechnen { get; set; }
 
   /// <summary>Holt oder setzt Schließen.</summary>
@@ -46,13 +41,9 @@ public class EN100Model : PageModelBase
   /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
   public void SetMhrf(DialogTypeEnum mode, ServiceDaten daten)
   {
-    if (mode == New || mode == Copy)
-    {
-      Muster = "%%";
-    }
     if (mode == New)
     {
-      Auchinaktiv = false;
+      Auchinaktiv = true;
     }
     SetMandatoryHiddenReadonly(nameof(Status), false, false, true, false);
   }

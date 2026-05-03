@@ -30,7 +30,6 @@
   </div>
   <div class="row mt-1 g-0">
     <SubmitButton class="btn btn-secondary col-md-2" href="@($"/starttask/EN100/{Model!.Nr}")" For="@(() => Model!.Berechnen)"/>
-    @* <LabelInputValid AutoPostback="x" For="@(() => Model!.Muster)" VerticalColClass="form-group col-md-2"/> *@
     <LabelInputValid type="checkbox" AutoPostback="x" For="@(() => Model!.Auchinaktiv)" VerticalColClass="form-group col-md-2 ms-1"/>
   </div>
   <div class="row mt-1 g-0">
@@ -221,7 +220,7 @@
       {
         valid = EditContext?.Validate() ?? false;
       }
-      if (Table != null && (submit == nameof(Model.Auchinaktiv) || submit == nameof(Model.Muster)))
+      if (Table != null && submit == nameof(Model.Auchinaktiv))
       {
         Refresh();
       }
