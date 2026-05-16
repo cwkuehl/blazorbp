@@ -106,7 +106,7 @@ public class EN110Model : PageModelBase
   public string? Status { get; set; }
 
   /// <summary>Holt oder setzt Notiz.</summary>
-  [Display(Name = "Notiz", Description = "")]
+  [Display(Name = "Notiz", Description = "Beliebige Notiz zum Abfrage-Parameter.")]
   public string? Notiz { get; set; }
 
   /// <summary>Holt oder setzt Angelegt.</summary>
@@ -116,6 +116,18 @@ public class EN110Model : PageModelBase
   /// <summary>Holt oder setzt Geändert.</summary>
   [Display(Name = "Geändert", Description = "Datum, Uhrzeit und Benutzer, der die Daten geändert hat")]
   public string? Geaendert { get; set; }
+
+  /// <summary>Holt oder setzt Wert.</summary>
+  [Display(Name = "Wert", Description = "Gelesener und formatierter Wert des Abfrage-Parameters.")]
+  public string? Wert { get; set; }
+
+  /// <summary>Holt oder setzt Lesen.</summary>
+  [Display(Name = "Lesen", Description = "Lesen der Werte aus der Quelle, z.B. Modbus oder JSON.")]
+  public string? Lesen { get; set; }
+
+  /// <summary>Holt oder setzt Schreiben.</summary>
+  [Display(Name = "Schreiben", Description = "Schreiben der Werte in die Quelle für Modbus.")]
+  public string? Schreiben { get; set; }
 
   /// <summary>Holt oder setzt OK.</summary>
   [Display(Name = "_OK", Description = "Dialog mit Speichern schließen")]
@@ -219,6 +231,9 @@ public class EN110Model : PageModelBase
     SetMandatoryHiddenReadonly(nameof(Notiz), false, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
     SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
+    SetMandatoryHiddenReadonly(nameof(Wert), false, mode == Delete, false, false);
+    SetMandatoryHiddenReadonly(nameof(Lesen), false, mode == Delete, false, false);
+    SetMandatoryHiddenReadonly(nameof(Schreiben), false, mode == Delete || !Schreibbarkeit, false, false);
     SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
   }
 }

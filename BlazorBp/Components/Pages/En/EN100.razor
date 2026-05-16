@@ -162,11 +162,37 @@
       }
       else
       {
+        EN110Model.GetSubmit(HttpContext.Request);
         var msubmit = EN110Model.Submit ?? "";
         var mvalid = false;
         if (!string.IsNullOrEmpty(msubmit))
         {
           mvalid = ModalEditContext?.Validate() ?? false;
+        }
+        if (msubmit == nameof(EN110Model.Schreibbarkeit))
+        {
+          if (EN110Model.Schreibbarkeit)
+            EN110Model.SetReadonly(nameof(EN110Model.Schreiben), true);
+          else
+            EN110Model.SetHidden(nameof(EN110Model.Schreiben));
+        }
+        else if (msubmit == nameof(EN110Model.Lesen))
+        {
+          var daten = ServiceDaten;
+          var o = EN110Model.To(daten);
+          var r = FactoryService.EnergyService.QueryQuery(daten, o);
+          if (r.Ok && r.Ergebnis != null)
+            EN110Model.Wert = r.Ergebnis;
+          else
+            Get(r, ModalMessages);
+        }
+        else if (msubmit == nameof(EN110Model.Schreiben))
+        {
+          var daten = ServiceDaten;
+          var o = EN110Model.To(daten);
+          var r = FactoryService.EnergyService.WriteQuery(daten, o, EN110Model.Wert);
+          if (!r.Ok)
+            Get(r, ModalMessages);
         }
         if (mvalid && msubmit == nameof(EN110Model.Ok) && EN110Model != null)
         {

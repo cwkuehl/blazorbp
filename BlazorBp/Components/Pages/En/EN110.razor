@@ -54,7 +54,7 @@ else
             <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Enum)" maxlength="240" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
-            <LabelInputValid type="checkbox" AutoPostback="" For="@(() => EN110Model!.Schreibbarkeit)" VerticalColClass="form-group col-md-2"/>
+            <LabelInputValid type="checkbox" AutoPostback="x" For="@(() => EN110Model!.Schreibbarkeit)" VerticalColClass="form-group col-md-2"/>
             <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Einheit)" maxlength="50" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="row mt-1 g-0">
@@ -73,6 +73,11 @@ else
           <div class="row mt-1 g-0">
             <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Angelegt)" VerticalColClass="form-group col-md-6"/>
             <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Geaendert)" VerticalColClass="form-group col ms-1"/>
+          </div>
+          <div class="row mt-1 g-0">
+            <LabelInputValid AutoPostback="" For="@(() => EN110Model!.Wert)" maxlength="255" VerticalColClass="form-group col-md-8"/>
+            <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => EN110Model!.Lesen)"/>
+            <SubmitButton class="btn btn-secondary col ms-1" For="@(() => EN110Model!.Schreiben)"/>
           </div>
           <div class="row mt-1 g-0">
             <SubmitButton class="btn btn-primary col-md-2 ms-1" For="@(() => EN110Model!.Ok)"/>
