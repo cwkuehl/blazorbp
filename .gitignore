@@ -459,3 +459,6 @@ ConvertHtml.txt
 # sqlite files
 *.db-shm
 *.db-wal
+
+# C# Dev Kit
+*.lscache
