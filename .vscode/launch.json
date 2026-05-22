@@ -10,7 +10,7 @@
       "request": "launch",
       "preLaunchTask": "build",
       // Wenn Sie Zielframeworks geändert haben, stellen Sie sicher, dass Sie den Programmpfad aktualisieren.
-      "program": "${workspaceFolder}/BlazorBp/bin/Debug/net9.0/BlazorBp.dll",
+      "program": "${workspaceFolder}/BlazorBp/bin/Debug/net10.0/BlazorBp.dll",
       "args": [],
       "cwd": "${workspaceFolder}/BlazorBp",
       "stopAtEntry": false,
