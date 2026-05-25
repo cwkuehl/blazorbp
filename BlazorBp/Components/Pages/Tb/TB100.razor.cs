@@ -22,9 +22,6 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
   [SupplyParameterFromForm]
   protected TB210Model TB210Model { get; set; } = default!;
 
-  /// <summary>True, wenn EditContext ohne Fehler.</summary>
-  private bool valid;
-
   /// <summary>Holt oder setzt die Canvas-Daten.</summary>
   private string CanvasDaten = "";
 
@@ -416,19 +413,11 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
 
   /// <summary>
   /// Verarbeitung des Postbacks.
-  /// -Wegen Anzeige von Fehlermeldungen darf die Funktion nicht async sein (private async Task Submit()).
-  /// -Speichern des geänderten Models.
   /// </summary>
-  private void Submit()
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
   {
-    if (Model == null || Messages == null)
-      return;
-    var submit = Model.Submit ?? "";
-    var msubmit = TB110Model.Submit ?? "";
-    if (!string.IsNullOrEmpty(submit))
-    {
-      valid = EditContext?.Validate() ?? false;
-    }
     if (submit == nameof(Model.Copy))
     {
       Model.Kopie = Model.Entry;
@@ -550,6 +539,7 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
     }
     else if (submit == nameof(Model.Add) && Model.Date.HasValue && Model.PositionList != null)
     {
+      var msubmit = TB110Model.Submit ?? "";
       var uid = Model.Position;
       if (!string.IsNullOrEmpty(uid))
       {
@@ -622,11 +612,9 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
       if (dt.HasValue)
         Model.To = dt;
     }
-    WriteFormularModel(Model.Nr ?? "0", Model);
     if (submit == nameof(Model.Schliessen))
-    {
-      CloseFormular();
-    }
+      return true;
+    return false;
   }
 
   /// <summary>

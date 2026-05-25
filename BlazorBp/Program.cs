@@ -220,6 +220,7 @@ app.MapGet("/starttask/{page}/{id}",
   [EndpointDescription("Page und ID des Formulars müssen angegeben werden.")]
   (string page, string id, HttpContext context, IServiceProvider sp) =>
 {
+    System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} starttask {page} ...{id.Right(6)}");
   if (string.IsNullOrEmpty(page) || string.IsNullOrEmpty(id))
     return Results.BadRequest();
   // Task.Run(() => StartTask.Do(page, id, context, sp));

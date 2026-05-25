@@ -90,9 +90,6 @@
 @* <script>alert('Hallo');</script> *@
 
 @code {
-  /// <summary>True, wenn EditContext ohne Fehler.</summary>
-  private bool valid;
-
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -141,18 +138,17 @@ Zeile 2",
 
   /// <summary>
   /// Verarbeitung des Postbacks.
-  /// -Wegen Anzeige von Fehlermeldungen darf die Funktion nicht async sein (private async Task Submit()).
-  /// -Speichern des geänderten Models.
   /// </summary>
-  private void Submit()
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
   {
     // await Task.Delay(1);
-    if (Model == null || Messages == null)
-      return;
-    var submit = Model.Submit ?? "";
-    if (!string.IsNullOrEmpty(submit))
-      valid = EditContext?.Validate() ?? false;
-    if (submit == nameof(Model.ComboBox))
+    if (IsDateMhp(submit, nameof(Model.DateBox), Model.DateBox, out var dm))
+    {
+      Model.DateBox = dm;
+    }
+    else if (submit == nameof(Model.ComboBox))
     {
       System.Diagnostics.Debug.Print($"ComboBox {Model.ComboBox}");
     }
@@ -316,7 +312,7 @@ Zeile 2",
     }
     else if (submit == nameof(Model.ErrorMessage))
     {
-      #pragma warning disable CS8603
+      #pragma warning disable CS8602, CS8603
       Messages.Add(() => Model.Button, $"Fehlermeldung für {nameof(Model.Button)}");
       Messages.Add(() => Model, $"Allgemeine Fehlermeldung von {nameof(Model.Button)}");
       Messages.Add(() => Model.TextBox, $"Fehlermeldung für {nameof(Model.TextBox)}");
@@ -338,7 +334,7 @@ Zeile 2",
       Messages.Add(() => Model.ListBox, $"Fehlermeldung für {nameof(Model.ListBox)}");
       Messages.Add(() => Model, $"Allgemeine Fehlermeldung von {nameof(Model.ListBox)}");
       Model.Focus = nameof(Model.Error);
-      #pragma warning restore CS8603
+      #pragma warning restore CS8602, CS8603
     }
     else if (submit == nameof(Model.Horizontal))
     {
@@ -350,17 +346,15 @@ Zeile 2",
       Model.VerticalColClass = "form-group col-md-6";
       Model.Focus = nameof(Model.Horizontal);
     }
-    //if (ModelState.IsValid && submit == "OK")
-    //{
-    //  return CloseFormular();
-    //}
-    WriteFormularModel(Model.Nr ?? "0", Model);
     if (submit == nameof(Model.Schliessen))
-    {
-      CloseFormular();
-    }
+      return true;
+    return false;
   }
 
+  /// <summary>
+  /// Returns a flag to indicate whether the component should render.
+  /// </summary>
+  /// <returns>True, wenn die Component gerendert werden soll, sonst false.</returns>
   protected override bool ShouldRender()
   {
     var b = base.ShouldRender();

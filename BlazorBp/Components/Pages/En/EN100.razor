@@ -48,12 +48,12 @@
   [SupplyParameterFromForm]
   protected EN110Model EN110Model { get; set; } = default!;
 
-  /// <summary>True, wenn EditContext ohne Fehler.</summary>
+  @* /// <summary>True, wenn EditContext ohne Fehler.</summary>
   private bool valid;
 
   /// <summary>Race condition verhindern.</summary>
   private bool issubmitting;
-
+ *@
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -229,41 +229,26 @@
 
   /// <summary>
   /// Verarbeitung des Postbacks.
-  /// -Wegen Anzeige von Fehlermeldungen darf die Funktion nicht async sein (private async Task Submit()).
-  /// -Speichern des geänderten Models.
   /// </summary>
-  private void Submit()
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
   {
-    if (Model == null || Messages == null || issubmitting)
-      return;
-    issubmitting = true;
-    try
+    var daten = ServiceDaten;
+    Model.Status = StatusTask.GetStatus(daten.MandantNr, new[] { "CalculateStocks" }, true);
+    if (Table != null && submit == nameof(Model.Auchinaktiv))
     {
-      var submit = Model.Submit ?? "";
-      var daten = ServiceDaten;
-      Model.Status = StatusTask.GetStatus(daten.MandantNr, new[] { "CalculateStocks" }, true);
-      if (!string.IsNullOrEmpty(submit))
-      {
-        valid = EditContext?.Validate() ?? false;
-      }
-      if (Table != null && submit == nameof(Model.Auchinaktiv))
-      {
-        Refresh();
-      }
-      if (valid && submit == nameof(Model.Berechnen))
-      {
-        // Siehe StartTask
-      }
-      WriteFormularModel(Model.Nr ?? "0", Model);
-      if (submit == nameof(Model.Schliessen))
-      {
-        CloseFormular();
-      }
+      Refresh();
     }
-    finally
+    if (valid && submit == nameof(Model.Berechnen))
     {
-      issubmitting = false;
+      // Siehe StartTask
     }
+    if (submit == nameof(Model.Schliessen))
+    {
+      return true;
+    }
+    return false;
   }
 
   /// <summary>

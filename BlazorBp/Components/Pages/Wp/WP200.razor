@@ -63,9 +63,6 @@
   [SupplyParameterFromForm]
   protected WP210Model WP210Model { get; set; } = default!;
 
-  /// <summary>True, wenn EditContext ohne Fehler.</summary>
-  private bool valid;
-
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -229,20 +226,13 @@
 
   /// <summary>
   /// Verarbeitung des Postbacks.
-  /// -Wegen Anzeige von Fehlermeldungen darf die Funktion nicht async sein (private async Task Submit()).
-  /// -Speichern des geänderten Models.
   /// </summary>
-  private void Submit()
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
   {
-    if (Model == null || Messages == null)
-      return;
-    var submit = Model.Submit ?? "";
     var daten = ServiceDaten;
     Model.Status = StatusTask.GetStatus(daten.MandantNr, new[] { "CalculateStocks" }, true);
-    if (!string.IsNullOrEmpty(submit))
-    {
-      valid = EditContext?.Validate() ?? false;
-    }
     if (Table != null && (submit == nameof(Model.Auchinaktiv) || submit == nameof(Model.Muster)))
     {
       Refresh();
@@ -264,11 +254,9 @@
     {
       // TODO Formular WP220 für Import und Export aufrufen.
     }
-    WriteFormularModel(Model.Nr ?? "0", Model);
     if (submit == nameof(Model.Schliessen))
-    {
-      CloseFormular();
-    }
+      return true;
+    return false;
   }
 
   /// <summary>

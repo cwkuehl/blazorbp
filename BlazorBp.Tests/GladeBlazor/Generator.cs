@@ -706,18 +706,11 @@ else
 
   /// <summary>
   /// Verarbeitung des Postbacks.
-  /// -Wegen Anzeige von Fehlermeldungen darf die Funktion nicht async sein (private async Task Submit()).
-  /// -Speichern des geänderten Models.
   /// </summary>
-  private void Submit()
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
   {
-    if (Model == null || Messages == null)
-      return;
-    var submit = Model.Submit ?? "";
-    if (!string.IsNullOrEmpty(submit))
-    {
-      valid = EditContext?.Validate() ?? false;
-    }
     if (valid && submit == "OK")
     {
       var daten = ServiceDaten;
@@ -732,11 +725,10 @@ else
         }
       }
     }
-    WriteFormularModel(Model.Nr ?? "0", Model);
     // TODO if (submit == nameof(Model.Abbrechen))
-    // {
-    //   CloseFormular();
-    // }
+    // if (submit == nameof(Model.Schliessen))
+    //   return true;
+    return false;
   }
 
 """);

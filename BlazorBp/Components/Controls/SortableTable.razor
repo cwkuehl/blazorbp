@@ -25,7 +25,7 @@
         {
           var sort = sc.StartsWith($"{c.SortName}#");
           var v = c.SortName + Functions.Iif(sort, Functions.Iif(desc, "#+", "#-"), "#-");
-          var v2 = c.Label + Functions.Iif(sort, Functions.Iif(desc, " ^", " v"), "");
+          var v2 = c.Label + Functions.Iif(sort, Functions.Iif(desc, " ▲", " ▼"), "");
           <th><button type="submit" class="btn btn-outline-info border-0 btn-sm fw-bold" formaction="@actionpath?handler=Table_Sort" value="@v" name="Table.SortColumn" title="@c.SortTitle">@v2</button></th>
         }
         @if (EditAktion || DeleteAktion || CopyAktion || NewAktion)
@@ -234,6 +234,7 @@
 
   protected override void OnInitialized()
   {
+    System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} OnInitialized Table {GetFormName()} {Table != null}");
     //if (Table == null && Parent != null)
     //  Table = Parent.Table;
     if (Table == null)
@@ -252,8 +253,8 @@
     if (Table == null || Parent == null)
       return;
     var rowchanged = Table.GetSubmit(HttpContext?.Request, GetFormName(), Columns);
+    System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} Submit Table {GetFormName()} rowchanged {rowchanged}");
     Parent.OnTable(Table, Messages, rowchanged);
-    // Parent.TableData(Table);
   }
 
   private string GetFormName()

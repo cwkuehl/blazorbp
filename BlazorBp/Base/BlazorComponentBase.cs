@@ -9,7 +9,6 @@ using CSBP.Services.Base;
 using CSBP.Services.Base.Csv;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.Extensions.Primitives;
 
 /// <summary>
 /// Basis-Klasse für alle Blazor-Formulare.
@@ -46,7 +45,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   [SupplyParameterFromForm]
   protected T Model { get; set; } = default!;
 
-  /// <summary>Standard-Model für Tabellen.</summary>
+  /// <summary>Standard-Model für Tabelle.</summary>
   [SupplyParameterFromForm]
   public TableModelBase<V>? Table { get; set; } = default!;
 
@@ -58,6 +57,12 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
 
   /// <summary>Betroffener ValidationMessageStore.</summary>
   protected ValidationMessageStore? Messages;
+
+  /// <summary>True, wenn EditContext ohne Fehler.</summary>
+  protected bool valid;
+
+  /// <summary>Race condition verhindern.</summary>
+  protected bool issubmitting;
 
   /// <summary>Betroffener modaler EditContext.</summary>
   protected EditContext? ModalEditContext;
@@ -349,14 +354,16 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     var f = OpenFormular(action, id, usecase);
     if (string.IsNullOrEmpty(id))
     {
+      System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} OnInitializedFormular a {action} ...{f.Id.Right(6)} Model {Model != null} Table {Table != null}");
       OpenFormular(f);
       return true;
     }
+    System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} OnInitializedFormular b {action} ...{id.Right(6)} Model {Model != null} Table {Table != null}");
     Title = title;
     Postback = Model != null ? 1 : Table != null ? 2 : 0;
     T? model = null;
     TableModelBase<V>? table = null;
-    if (Postback == 0 || Postback == 2)
+    if (Model == null)
     {
       model = ReadFormularModel(id); // Bei Model-Postback ist kein Read notwendig.
       if ((!string.IsNullOrEmpty(model?.ModalId) || !string.IsNullOrEmpty(model?.Modal2Id))
@@ -366,9 +373,9 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
         model.Modal2Id = null;
       }
     }
-    if (Postback == 0 || Postback == 1)
+    if (Table == null)
       table = ReadFormularTableModel(id); // Der Table-Postback wird im SortableTable verarbeitet.
-    if (Postback == 1 && Model != null)
+    if (Model != null)
     {
       // Model-Postback.
       var fz = HttpContext.Session?.GetFormState() ?? new FormularZustand();
@@ -398,6 +405,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     Init(id, model, table);
     if (HttpContext.Session?.GetBoolean("Refresh") ?? false)
     {
+      System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} OnInitializedFormular Refresh {action} ...{id.Right(6)}");
       HttpContext.Session?.SetBoolean("Refresh", false);
       if (model != null)
       {
@@ -421,11 +429,14 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       if (HttpContext.Request.Method == "POST")
       {
         var handler = HttpContext.Request.Query["handler"].FirstOrDefault()?.ToString() ?? "";
-        var form = HttpContext.Request.Form["_handler"].FirstOrDefault()?.ToString() ?? "";
-        var modalid = TableData == null ? null : HttpContext.Request.Form["Table.ModalId"].FirstOrDefault();
+        var form = HttpContext.Request.Form["_handler"].FirstOrDefault()?.ToString() ?? ""; // input hidden durch EditForm erzeugt mit FormName, z.B. formheader, formlogout, en100t, en100, en110modal.
+        var modalid = TableData == null ? null : HttpContext.Request.Form["Table.ModalId"].FirstOrDefault(); // Satznummer ab 1, -1 für Neu.
         var modal2id = Model?.Modal2Id;
         if (form.EndsWith("modal") || !string.IsNullOrEmpty(modalid))
+        {
+          System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} OnInitializedFormular HandleModal {handler} {modalid} {modal2id}");
           HandleModal(form, handler, modalid, modal2id);
+        }
       }
     }
     if (Postback == 0)
@@ -437,6 +448,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
           TableData(Table, Messages);
           var sr = Table.SelectedRow ?? 0;
           var row = sr > 0 && Table.Liste != null && Table.Liste.Count >= sr ? Table.Liste[sr - 1] : null;
+          System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} OnInitializedFormular OnRowChanged {sr}");
           OnRowChanged(row, sr, Messages);
         }
       }
@@ -482,6 +494,56 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     {
       OnTable(Table, Messages);
     }
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// -Wegen Anzeige von Fehlermeldungen darf die Funktion nicht async sein (private async Task Submit()).
+  /// -Speichern des geänderten Models.
+  /// -Schließen des Formulars nach dem Speichern, wenn die Schaltfläche "Schließen" betätigt wurde.
+  /// </summary>
+  protected virtual void Submit()
+  {
+    // Alle Submit-Aktionen, die nach dem Rendern der Komponenten ausgeführt werden können.
+    if (Model == null || Messages == null || issubmitting)
+      return;
+    issubmitting = true;
+    try
+    {
+      var submit = Model.Submit ?? "";
+      if (!string.IsNullOrEmpty(submit))
+      {
+        valid = EditContext?.Validate() ?? false;
+        // if (!valid)
+        // {
+        //   Doppelte Meldungen verhindern.
+        //   InitEditContext(Model);
+        // }
+      }
+      System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} Submit {submit} valid {valid}");
+      var close = Submit(submit);
+      WriteFormularModel(Model.Nr ?? "0", Model, Table);
+      if (close)
+      {
+        CloseFormular();
+      }
+    }
+    finally
+    {
+      issubmitting = false;
+    }
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// </summary>
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected virtual bool Submit(string? submit)
+  {
+    if (submit == "Schliessen")
+      return true;
+    return false;
   }
 
   /// <summary>
@@ -535,6 +597,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     var handler = table.Handler;
     var selpage = table.SelectedPage;
     var selrow = table.SelectedRow;
+    System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} OnTable {handler} {selpage} {selrow}");
     if (handler == "Table_First")
     {
       table.SelectedPage = 1;

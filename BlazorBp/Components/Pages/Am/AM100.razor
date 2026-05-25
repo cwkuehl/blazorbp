@@ -26,8 +26,6 @@
 </EditForm>
 
 @code {
-  private bool valid;
-
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -66,29 +64,17 @@
 
   /// <summary>
   /// Verarbeitung des Postbacks.
-  /// -Wegen Anzeige von Fehlermeldungen darf die Funktion nicht async sein (private async Task Submit()).
-  /// -Speichern des geänderten Models.
   /// </summary>
-  private void Submit()
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
   {
-    if (Model == null || Messages == null)
-      return;
-    var submit = Model.Submit ?? "";
-    if (!string.IsNullOrEmpty(submit))
+    if (valid && Model.KennwortNeu != Model.KennwortNeu2)
     {
-      valid = EditContext?.Validate() ?? false;
-      if (!valid)
-      {
-        // Doppelte Meldungen verhindern.
-        // InitEditContext(Model);
-      }
-      if (valid && Model.KennwortNeu != Model.KennwortNeu2)
-      {
-        #pragma warning disable CS8603
-        Messages.Add(() => Model.KennwortNeu2, $"Die neuen Kennwörter stimmen nicht überein.");
-        #pragma warning restore CS8603
-        valid = false;
-      }
+      #pragma warning disable CS8602, CS8603
+      Messages.Add(() => Model.KennwortNeu2, $"Die neuen Kennwörter stimmen nicht überein.");
+      #pragma warning restore CS8602, CS8603
+      valid = false;
     }
     if (valid && submit == "OK")
     {
@@ -99,17 +85,12 @@
       {
         Get(r);
         if (r.Ok)
-        {
-          CloseFormular();
-          return;
-        }
+          return true;
       }
     }
-    WriteFormularModel(Model.Nr ?? "0", Model);
     if (submit == nameof(Model.Schliessen))
-    {
-      CloseFormular();
-    }
+      return true;
+    return false;
   }
 
   /// <summary>

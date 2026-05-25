@@ -167,17 +167,16 @@
     WriteFormularModel(Model.Nr ?? "0", Model);
   }
 
-  private void Submit()
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// </summary>
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
   {
-    // Alle Submit-Aktionen, die nach dem Rendern der Komponenten ausgeführt werden können.
-    // await Task.Delay(1);
-    var msubmit = AM510Model.Submit ?? "";
-    var submit = Model.Submit ?? "";
-    WriteFormularModel(Model.Nr ?? "0", Model);
     if (submit == nameof(Model.Schliessen))
-    {
-      CloseFormular();
-    }
+      return true;
+    return false;
   }
 
   /// <summary>
