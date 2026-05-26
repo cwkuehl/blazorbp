@@ -53,10 +53,12 @@ public class Formular
         return DialogTypeEnum.New;
       case "Table_Edit":
         return DialogTypeEnum.Edit;
+      case "Table_Copy":
+        return DialogTypeEnum.Copy;
       case "Table_Delete":
         return DialogTypeEnum.Delete;
       default:
-        return DialogTypeEnum.Copy;
+        return DialogTypeEnum.Without;
     }
   }
 }

@@ -7,8 +7,8 @@ namespace BlazorBp.Base;
 /// <summary>Calling mode of dialog.</summary>
 public enum DialogTypeEnum
 {
-  // /// <summary>Without mode.</summary>
-  // Without,
+  /// <summary>Without mode.</summary>
+  Without,
 
   /// <summary>New mode.</summary>
   New,
@@ -27,4 +27,7 @@ public enum DialogTypeEnum
 
   // /// <summary>Reverse mode.</summary>
   // Reverse,
+
+  /// <summary>Postback mode.</summary>
+  Postback,
 }

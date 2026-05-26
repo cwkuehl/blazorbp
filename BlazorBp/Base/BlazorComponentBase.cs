@@ -582,6 +582,59 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   }
 
   /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="formt">Betroffenes Tabellen-Postback-Formular.</param>
+  /// <param name="formmodal">Betroffenes modales Formular.</param>
+  /// <param name="msubmit">Betroffener Submit-Parameter aus dem modalem Model.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  /// <param name="id2">Id aus 2. modalen Dialog.</param>
+  /// <param name="abbrechen">Betroffener Submit für Abbrechen.</param>
+  /// <returns>DialogTypeEnum für den Aufruf eines modalen Dialogs.</returns>
+  public virtual (DialogTypeEnum dt, string msubmit, bool mvalid) HandleModal1(string? form, string? formt, string? formmodal, string msubmit, string abbrechen, string? handler, string? id, string? id2)
+  {
+    var dt = DialogTypeEnum.Without;
+    var mvalid = false;
+    if (form == formt || form == formmodal)
+    {
+      if (form == formt && !string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
+      {
+        dt = Formular.GetTableDialogType(handler);
+        if (dt != DialogTypeEnum.Edit && dt != DialogTypeEnum.Copy)
+          dt = DialogTypeEnum.New;
+      }
+      else
+      {
+        if (!string.IsNullOrEmpty(msubmit))
+        {
+          mvalid = ModalEditContext?.Validate() ?? false;
+          // if (!mvalid)
+          // {
+          //   // Doppelte Meldungen verhindern.
+          //   InitEditContext(null, WP210Model);
+          // }
+        }
+        dt = DialogTypeEnum.Postback;
+        if (msubmit == abbrechen || form != formmodal)
+        {
+          Model.ModalArt = null;
+          Model.ModalId = null;
+        }
+      }
+    }
+    else
+    {
+      Model.ModalArt = null;
+      Model.ModalId = null;
+      Model.Modal2Id = null;
+    }
+    //// WriteFormularModel(Model.Nr ?? "0", Model);
+    return (dt, msubmit, mvalid);
+  }
+
+  /// <summary>
   /// Verarbeitung der Tabellen-Aktionen.
   /// </summary>
   /// <param name="table">Betroffene Tabellen-Daten.</param>

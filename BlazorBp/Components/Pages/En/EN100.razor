@@ -163,7 +163,7 @@
       else
       {
         EN110Model.GetSubmit(HttpContext.Request);
-        var msubmit = EN110Model.Submit ?? "";
+        var msubmit = EN110Model.GetSubmit(HttpContext.Request);
         var mvalid = false;
         if (!string.IsNullOrEmpty(msubmit))
         {

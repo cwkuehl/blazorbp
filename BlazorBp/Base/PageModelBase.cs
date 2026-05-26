@@ -44,12 +44,13 @@ public class PageModelBase
   /// <summary>Holt oder setzt den Namen der Submit-auslösenden Schaltfläche.</summary>
   public string? Submit
   {
-    get { return string.IsNullOrWhiteSpace(SubmitControl) ?  Handler : SubmitControl; }
+    get { return string.IsNullOrWhiteSpace(SubmitControl) ? Handler : SubmitControl; }
   }
 
   /// <summary>Lesen der Submit-auslösenden Schaltfläche und des Submit-Controls aus dem Request.</summary>
   /// <param name="Request">Betroffener Request.</param>
-  public void GetSubmit(HttpRequest Request)
+  /// <returns>Name der Submit-auslösenden Komponente.</returns>
+  public string GetSubmit(HttpRequest Request)
   {
     Handler ??= Request.Query["handler"];
     if (Request.Method == "POST")
@@ -57,6 +58,7 @@ public class PageModelBase
       SubmitControl ??= Request.Form["SubmitControl"]; // input hidden name="SubmitControl"
       SubmitControl ??= Request.Form["Model.SubmitControl"]; // SubmitButton
     }
+    return Submit ?? "";
   }
 
   /// <summary>Ist Steuerelement gesperrt?</summary>
