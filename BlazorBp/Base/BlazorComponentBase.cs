@@ -589,11 +589,10 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// <param name="formmodal">Betroffenes modales Formular.</param>
   /// <param name="msubmit">Betroffener Submit-Parameter aus dem modalem Model.</param>
   /// <param name="handler">Handler aus Tabellen-Aktion.</param>
-  /// <param name="id">Id aus Tabellen-Aktion.</param>
-  /// <param name="id2">Id aus 2. modalen Dialog.</param>
+  /// <param name="id">Id aus Tabellen-Aktion oder 2. modalen Dialog.</param>
   /// <param name="abbrechen">Betroffener Submit für Abbrechen.</param>
   /// <returns>DialogTypeEnum für den Aufruf eines modalen Dialogs.</returns>
-  public virtual (DialogTypeEnum dt, string msubmit, bool mvalid) HandleModal1(string? form, string? formt, string? formmodal, string msubmit, string abbrechen, string? handler, string? id, string? id2)
+  public virtual (DialogTypeEnum dt, string msubmit, bool mvalid) HandleModal1(string? form, string? formt, string? formmodal, string msubmit, string abbrechen, string? handler, string? id)
   {
     var dt = DialogTypeEnum.Without;
     var mvalid = false;

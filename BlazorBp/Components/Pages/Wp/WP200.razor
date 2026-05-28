@@ -146,7 +146,7 @@
   /// <param name="id2">Id aus 2. modalen Dialog.</param>
   public override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
-    var (dt, msubmit, mvalid) = HandleModal1(form, "wp200t", "wp210modal", WP210Model.GetSubmit(HttpContext.Request), nameof(WP210Model.Abbrechen), handler, id, id2);
+    var (dt, msubmit, mvalid) = HandleModal1(form, "wp200t", "wp210modal", WP210Model.GetSubmit(HttpContext.Request), nameof(WP210Model.Abbrechen), handler, id);
     if (dt == DialogTypeEnum.New)
     {
       WP210Model.SetMhrf(DialogTypeEnum.New);

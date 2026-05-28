@@ -82,25 +82,16 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
   {
     if (form == "tb110modal")
     {
-      if (!string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
+      var (dt, msubmit, mvalid) = HandleModal1(form, form, form, TB110Model.GetSubmit(HttpContext.Request), nameof(TB110Model.Abbrechen), handler, id);
+      if (dt == DialogTypeEnum.New)
       {
-        var dt = Formular.GetTableDialogType(handler);
-        if (dt == DialogTypeEnum.New)
-        {
-          TB110Model.SetMhrf(dt);
-          Model.ModalArt = handler;
-          Model.ModalId = id;
-        }
+        TB110Model.SetMhrf(dt);
+        Model.ModalArt = handler;
+        Model.ModalId = id;
       }
-      else
+      else if (dt == DialogTypeEnum.Postback)
       {
-        var msubmit = TB110Model.Submit ?? "";
         var uid = Model.Position;
-        var mvalid = false;
-        if (!string.IsNullOrEmpty(msubmit))
-        {
-          mvalid = ModalEditContext?.Validate() ?? false;
-        }
         if (mvalid && !string.IsNullOrEmpty(uid) && Model.Date.HasValue && Model.PositionList != null)
         {
           var o = Model.PositionList?.FirstOrDefault(a => a.Ort_Uid == uid);
@@ -143,25 +134,21 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
     }
     else if (form == "tb210modal")
     {
-      if (!string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id2))
+      var (dt, msubmit, mvalid) = HandleModal1(form, form, form, TB210Model.GetSubmit(HttpContext.Request), nameof(TB210Model.Abbrechen), handler, id2);
+      if (dt == DialogTypeEnum.New)
       {
-        var dt = Formular.GetTableDialogType(handler);
-        if (dt == DialogTypeEnum.New)
-        {
-          TB210Model.SetMhrf(dt);
-          Model.ModalArt = handler;
-          Model.Modal2Id = id2;
-        }
+        TB210Model.SetMhrf(dt);
+        Model.ModalArt = handler;
+        Model.Modal2Id = id2;
       }
-      else
+      else if (dt == DialogTypeEnum.Postback)
       {
-        var msubmit = TB210Model.Submit ?? "";
         if (msubmit == nameof(TB210Model.Ok))
         {
-          var dt = Formular.GetTableDialogType(Model.ModalArt);
+          var dtp = Formular.GetTableDialogType(Model.ModalArt);
           var daten = ServiceDaten;
           var o = TB210Model.To(daten);
-          var r = dt == DialogTypeEnum.Delete
+          var r = dtp == DialogTypeEnum.Delete
             ? FactoryService.DiaryService.DeletePosition(daten, o)
             : FactoryService.DiaryService.SavePosition(daten, o.Uid, o.Bezeichnung,
                 Functions.ToString(o.Breite, 5), Functions.ToString(o.Laenge, 5),
