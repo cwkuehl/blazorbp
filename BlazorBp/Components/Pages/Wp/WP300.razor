@@ -118,7 +118,7 @@
         var dt = Formular.GetTableDialogType(handler);
         if (dt == DialogTypeEnum.New)
         {
-          WP310Model.SetMhrf(DialogTypeEnum.New);
+          WP310Model.SetMhrf(dt);
           Model.ModalArt = handler;
           Model.ModalId = id;
         }

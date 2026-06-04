@@ -120,7 +120,7 @@
         var dt = Formular.GetTableDialogType(handler);
         if (dt == DialogTypeEnum.New)
         {
-          TB210Model.SetMhrf(DialogTypeEnum.New);
+          TB210Model.SetMhrf(dt);
           Model.ModalArt = handler;
           Model.ModalId = id;
         }

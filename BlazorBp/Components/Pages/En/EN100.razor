@@ -131,7 +131,7 @@
     var (dt, msubmit, mvalid) = HandleModal1(form, "en100t", "en110modal", EN110Model.GetSubmit(HttpContext.Request), nameof(EN110Model.Abbrechen), handler, id);
     if (dt == DialogTypeEnum.New)
     {
-      EN110Model.SetMhrf(DialogTypeEnum.New);
+      EN110Model.SetMhrf(dt);
       Model.ModalArt = handler;
       Model.ModalId = id;
     }

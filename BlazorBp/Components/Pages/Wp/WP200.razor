@@ -149,7 +149,7 @@
     var (dt, msubmit, mvalid) = HandleModal1(form, "wp200t", "wp210modal", WP210Model.GetSubmit(HttpContext.Request), nameof(WP210Model.Abbrechen), handler, id);
     if (dt == DialogTypeEnum.New)
     {
-      WP210Model.SetMhrf(DialogTypeEnum.New);
+      WP210Model.SetMhrf(dt);
       Model.ModalArt = handler;
       Model.ModalId = id;
     }

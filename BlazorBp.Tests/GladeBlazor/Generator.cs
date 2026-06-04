@@ -633,7 +633,7 @@ else
     var (dt, msubmit, mvalid) = HandleModal1(form, "{{form.ToLower()}}t", "{{form2?.ToLower()}}modal", {{form2}}Model.GetSubmit(HttpContext.Request), nameof({{form2}}Model.Abbrechen), handler, id);
     if (dt == DialogTypeEnum.New)
     {
-      {{form2}}Model.SetMhrf(DialogTypeEnum.New);
+      {{form2}}Model.SetMhrf(dt);
       Model.ModalArt = handler;
       Model.ModalId = id;
     }

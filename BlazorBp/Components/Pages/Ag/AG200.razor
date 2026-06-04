@@ -120,7 +120,7 @@
     var (dt, msubmit, mvalid) = HandleModal1(form, "ag200t", "ag210modal", AG210Model.GetSubmit(HttpContext.Request), nameof(AG210Model.Schliessen), handler, id);
     if (dt == DialogTypeEnum.New)
     {
-      AG210Model.SetMhrf(DialogTypeEnum.New);
+      AG210Model.SetMhrf(dt);
       Model.ModalArt = handler;
       Model.ModalId = id;
     }

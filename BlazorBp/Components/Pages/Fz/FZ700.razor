@@ -107,7 +107,7 @@
         var dt = Formular.GetTableDialogType(handler);
         if (dt == DialogTypeEnum.New)
         {
-          FZ710Model.SetMhrf(DialogTypeEnum.New);
+          FZ710Model.SetMhrf(dt);
           Model.ModalArt = handler;
           Model.ModalId = id;
         }
