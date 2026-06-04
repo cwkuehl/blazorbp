@@ -128,101 +128,77 @@
   /// <param name="id2">Id aus 2. modalen Dialog.</param>
   public override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
-    if (form == "en100t" || form == "en110modal")
+    var (dt, msubmit, mvalid) = HandleModal1(form, "en100t", "en110modal", EN110Model.GetSubmit(HttpContext.Request), nameof(EN110Model.Abbrechen), handler, id);
+    if (dt == DialogTypeEnum.New)
     {
-      if (form == "en100t" && !string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
+      EN110Model.SetMhrf(DialogTypeEnum.New);
+      Model.ModalArt = handler;
+      Model.ModalId = id;
+    }
+    else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
+    {
+      var i = Functions.ToInt32(id);
+      if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
       {
-        var dt = Formular.GetTableDialogType(handler);
-        if (dt == DialogTypeEnum.New)
+        var l = TableData(Table, ModalMessages);
+        var ds = l.Skip(i - 1).FirstOrDefault();
+        var daten = ServiceDaten;
+        var r = FactoryService.EnergyService.GetQuery(daten, ds?.Nummer ?? "");
+        if (r.Ok && ds != null && r.Ergebnis != null)
         {
-          EN110Model.SetMhrf(DialogTypeEnum.New);
+          EN110Model.From(r.Ergebnis);
+          EN110Model.SetMhrf(dt);
           Model.ModalArt = handler;
           Model.ModalId = id;
         }
         else
-        {
-          var i = Functions.ToInt32(id);
-          if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
-          {
-            var l = TableData(Table, ModalMessages);
-            var ds = l.Skip(i - 1).FirstOrDefault();
-            var daten = ServiceDaten;
-            var r = FactoryService.EnergyService.GetQuery(daten, ds?.Nummer ?? "");
-            if (r.Ok && ds != null && r.Ergebnis != null)
-            {
-              EN110Model.From(r.Ergebnis);
-              EN110Model.SetMhrf(dt);
-              Model.ModalArt = handler;
-              Model.ModalId = id;
-            }
-            else
-              Get(r);
-          }
-        }
+          Get(r);
       }
-      else
+    }
+    else if (dt == DialogTypeEnum.Postback)
+    {
+      if (msubmit == nameof(EN110Model.Schreibbarkeit))
       {
-        EN110Model.GetSubmit(HttpContext.Request);
-        var msubmit = EN110Model.GetSubmit(HttpContext.Request);
-        var mvalid = false;
-        if (!string.IsNullOrEmpty(msubmit))
-        {
-          mvalid = ModalEditContext?.Validate() ?? false;
-        }
-        if (msubmit == nameof(EN110Model.Schreibbarkeit))
-        {
-          if (EN110Model.Schreibbarkeit)
-            EN110Model.SetReadonly(nameof(EN110Model.Schreiben), true);
-          else
-            EN110Model.SetHidden(nameof(EN110Model.Schreiben));
-        }
-        else if (msubmit == nameof(EN110Model.Lesen))
-        {
-          var daten = ServiceDaten;
-          var o = EN110Model.To(daten);
-          var r = FactoryService.EnergyService.QueryQuery(daten, o);
-          if (r.Ok && r.Ergebnis != null)
-            EN110Model.Wert = r.Ergebnis;
-          else
-            Get(r, ModalMessages);
-        }
-        else if (msubmit == nameof(EN110Model.Schreiben))
-        {
-          var daten = ServiceDaten;
-          var o = EN110Model.To(daten);
-          var r = FactoryService.EnergyService.WriteQuery(daten, o, EN110Model.Wert);
-          if (!r.Ok)
-            Get(r, ModalMessages);
-        }
-        if (mvalid && msubmit == nameof(EN110Model.Ok) && EN110Model != null)
-        {
-          var dt = Formular.GetTableDialogType(Model.ModalArt);
-          var daten = ServiceDaten;
-          var o = EN110Model.To(daten);
-          var r = dt == DialogTypeEnum.Delete
-            ? FactoryService.EnergyService.DeleteQuery(daten, o)
-            : FactoryService.EnergyService.SaveQuery(daten, o.Uid, o.Sortierung, o.Art, o.Bezeichnung, o.Host_Url, o.Datentyp, o.Schreibbarkeit, o.Einheit, o.Param1, o.Param2, o.Param3, o.Param4, o.Param5, o.Status, o.Notiz);
-          if (r.Ok)
-          {
-            Model.ModalArt = null;
-            Model.ModalId = null;
-            Refresh();
-          }
-          else
-            Get(r, ModalMessages);
-        }
-        else if (msubmit == nameof(EN110Model.Abbrechen) || form != "en110modal")
+        if (EN110Model.Schreibbarkeit)
+          EN110Model.SetReadonly(nameof(EN110Model.Schreiben), true);
+        else
+          EN110Model.SetHidden(nameof(EN110Model.Schreiben));
+      }
+      else if (msubmit == nameof(EN110Model.Lesen))
+      {
+        var daten = ServiceDaten;
+        var o = EN110Model.To(daten);
+        var r = FactoryService.EnergyService.QueryQuery(daten, o);
+        if (r.Ok && r.Ergebnis != null)
+          EN110Model.Wert = r.Ergebnis;
+        else
+          Get(r, ModalMessages);
+      }
+      else if (msubmit == nameof(EN110Model.Schreiben))
+      {
+        var daten = ServiceDaten;
+        var o = EN110Model.To(daten);
+        var r = FactoryService.EnergyService.WriteQuery(daten, o, EN110Model.Wert);
+        if (!r.Ok)
+          Get(r, ModalMessages);
+      }
+      if (mvalid && msubmit == nameof(EN110Model.Ok) && EN110Model != null)
+      {
+        var dt1 = Formular.GetTableDialogType(Model.ModalArt);
+        var daten = ServiceDaten;
+        var o = EN110Model.To(daten);
+        var r = dt1 == DialogTypeEnum.Delete
+          ? FactoryService.EnergyService.DeleteQuery(daten, o)
+          : FactoryService.EnergyService.SaveQuery(daten, o.Uid, o.Sortierung, o.Art, o.Bezeichnung, o.Host_Url, o.Datentyp, o.Schreibbarkeit, o.Einheit, o.Param1, o.Param2, o.Param3, o.Param4, o.Param5, o.Status, o.Notiz);
+        if (r.Ok)
         {
           Model.ModalArt = null;
           Model.ModalId = null;
+          Refresh();
         }
+        else
+          Get(r, ModalMessages);
       }
-    }
-    else
-    {
-      Model.ModalArt = null;
-      Model.ModalId = null;
-      Model.Modal2Id = null;
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
   }

@@ -601,7 +601,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       if (form == formt && !string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
       {
         dt = Formular.GetTableDialogType(handler);
-        if (dt != DialogTypeEnum.Edit && dt != DialogTypeEnum.Copy)
+        if (dt != DialogTypeEnum.Edit && dt != DialogTypeEnum.Delete && dt != DialogTypeEnum.Copy)
           dt = DialogTypeEnum.New;
       }
       else

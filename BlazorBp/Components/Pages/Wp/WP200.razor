@@ -153,7 +153,7 @@
       Model.ModalArt = handler;
       Model.ModalId = id;
     }
-    else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Copy)
+    else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
     {
       var i = Functions.ToInt32(id);
       if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)

@@ -138,12 +138,12 @@
         }
         if (mvalid && msubmit == nameof(FZ710Model.Ok))
         {
-          var dt = Formular.GetTableDialogType(Model.ModalArt);
+          var dt1 = Formular.GetTableDialogType(Model.ModalArt);
           var daten = ServiceDaten;
           var o = FZ710Model.To(daten);
           var xml = Functions.Base64Decode(FZ710Model.Xml);
           xml = FZ710Model.SetMemo(xml, o.Notiz);
-          var r = dt == DialogTypeEnum.Delete
+          var r = dt1 == DialogTypeEnum.Delete
             ? FactoryService.PrivateService.DeleteMemo(daten, o)
             : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
           if (r.Ok)

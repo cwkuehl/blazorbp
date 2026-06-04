@@ -149,10 +149,10 @@
         }
         if (mvalid && msubmit == nameof(WP310Model.Ok))
         {
-          var dt = Formular.GetTableDialogType(Model.ModalArt);
+          var dt1 = Formular.GetTableDialogType(Model.ModalArt);
           var daten = ServiceDaten;
           var o = WP310Model.To(daten);
-          var r = dt == DialogTypeEnum.Delete
+          var r = dt1 == DialogTypeEnum.Delete
             ? FactoryService.StockService.DeleteConfiguration(daten, o)
             : FactoryService.StockService.SaveConfiguration(daten, o.Uid, o.Bezeichnung, o.Box ?? 0m, o.Reversal, o.Method, o.Duration, o.Relative, o.Scale, o.Status, o.Notiz);
           if (r.Ok)

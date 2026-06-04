@@ -630,72 +630,49 @@ else
   /// <param name="id2">Id aus 2. modalen Dialog.</param>
   public override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
-    if (form == "{{form.ToLower()}}t" || form == "{{form2?.ToLower()}}modal")
+    var (dt, msubmit, mvalid) = HandleModal1(form, "{{form.ToLower()}}t", "{{form2?.ToLower()}}modal", {{form2}}Model.GetSubmit(HttpContext.Request), nameof({{form2}}Model.Abbrechen), handler, id);
+    if (dt == DialogTypeEnum.New)
     {
-      if (form == "{{form.ToLower()}}t" && !string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
+      {{form2}}Model.SetMhrf(DialogTypeEnum.New);
+      Model.ModalArt = handler;
+      Model.ModalId = id;
+    }
+    else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
+    {
+      var i = Functions.ToInt32(id);
+      if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
       {
-        var dt = Formular.GetTableDialogType(handler);
-        if (dt == DialogTypeEnum.New)
+        var l = TableData(Table, ModalMessages);
+        var ds = l.Skip(i - 1).FirstOrDefault();
+        if (ds != null)
         {
-          {{form2}}Model.SetMhrf(DialogTypeEnum.New);
+          {{form2}}Model.From(ds);
+          {{form2}}Model.SetMhrf(dt);
           Model.ModalArt = handler;
           Model.ModalId = id;
         }
-        else
-        {
-          var i = Functions.ToInt32(id);
-          if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
-          {
-            var l = TableData(Table, ModalMessages);
-            var ds = l.Skip(i - 1).FirstOrDefault();
-            if (ds != null)
-            {
-              {{form2}}Model.From(ds);
-              {{form2}}Model.SetMhrf(dt);
-              Model.ModalArt = handler;
-              Model.ModalId = id;
-            }
-          }
-        }
       }
-      else
+    }
+    else if (dt == DialogTypeEnum.Postback)
+    {
+      if (mvalid && msubmit == nameof({{form2}}Model.Ok))
       {
-        var msubmit = {{form2}}Model.Submit ?? "";
-        var mvalid = false;
-        if (!string.IsNullOrEmpty(msubmit))
-        {
-          mvalid = ModalEditContext?.Validate() ?? false;
-        }
-        if (mvalid && msubmit == nameof({{form2}}Model.Ok))
-        {
-          var dt = Formular.GetTableDialogType(Model.ModalArt);
-          var daten = ServiceDaten;
-          var o = {{form2}}Model.To(daten);
-          var r = new ServiceErgebnis();
-          // TODO var r = dt == DialogTypeEnum.Delete
-          //   ? FactoryService.PrivateService.DeleteMemo(daten, o)
-          //   : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
-          if (r.Ok)
-          {
-            Model.ModalArt = null;
-            Model.ModalId = null;
-            Refresh();
-          }
-          else
-            ModalMessages?.Add(() => {{form2}}Model, r.GetErrors());
-        }
-        else if (msubmit == nameof({{form2}}Model.Abbrechen) || form != "{{form2?.ToLower()}}modal")
+        var dt1 = Formular.GetTableDialogType(Model.ModalArt);
+        var daten = ServiceDaten;
+        var o = {{form2}}Model.To(daten);
+        var r = new ServiceErgebnis();
+        // TODO var r = dt1 == DialogTypeEnum.Delete
+        //   ? FactoryService.PrivateService.DeleteMemo(daten, o)
+        //   : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
+        if (r.Ok)
         {
           Model.ModalArt = null;
           Model.ModalId = null;
+          Refresh();
         }
+        else
+          ModalMessages?.Add(() => {{form2}}Model, r.GetErrors());
       }
-    }
-    else
-    {
-      Model.ModalArt = null;
-      Model.ModalId = null;
-      Model.Modal2Id = null;
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
   }

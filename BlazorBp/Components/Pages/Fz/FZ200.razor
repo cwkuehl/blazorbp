@@ -143,10 +143,10 @@
       }
       if (mvalid && msubmit == nameof(FZ210Model.Ok))
       {
-        var dt = Formular.GetTableDialogType(Model.ModalArt);
+        var dt1 = Formular.GetTableDialogType(Model.ModalArt);
         var daten = ServiceDaten;
         var o = FZ210Model.To(daten);
-        var r = dt == DialogTypeEnum.Delete
+        var r = dt1 == DialogTypeEnum.Delete
           ? FactoryService.PrivateService.DeleteBike(daten, o)
           : FactoryService.PrivateService.SaveBike(daten, o.Uid, o.Bezeichnung, o.Typ);
         if (r.Ok)

@@ -152,9 +152,9 @@
         }
         if (mvalid && msubmit == nameof(FZ260Model.Ok))
         {
-          var dt = Formular.GetTableDialogType(Model.ModalArt);
+          var dt1 = Formular.GetTableDialogType(Model.ModalArt);
           var o = FZ260Model.To(daten);
-          var r = dt == DialogTypeEnum.Delete
+          var r = dt1 == DialogTypeEnum.Delete
             ? FactoryService.PrivateService.DeleteMileage(daten, o)
             : FactoryService.PrivateService.SaveMileage(daten, o.Fahrrad_Uid, o.Datum, o.Nr, o.Zaehler_km, o.Periode_km, o.Periode_Schnitt, o.Beschreibung);
           Get(r, ModalMessages);

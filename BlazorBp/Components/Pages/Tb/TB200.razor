@@ -152,10 +152,10 @@
         if (mvalid && msubmit == nameof(TB210Model.Ok))
         {
           Modal1?.ModalSubmit();
-          var dt = Formular.GetTableDialogType(Model.ModalArt);
+          var dt1 = Formular.GetTableDialogType(Model.ModalArt);
           var daten = ServiceDaten;
           var o = TB210Model.To(daten);
-          var r = dt == DialogTypeEnum.Delete
+          var r = dt1 == DialogTypeEnum.Delete
             ? FactoryService.DiaryService.DeletePosition(daten, o)
             : FactoryService.DiaryService.SavePosition(daten, o.Uid, o.Bezeichnung,
                 Functions.ToString(o.Breite, 5), Functions.ToString(o.Laenge, 5),
