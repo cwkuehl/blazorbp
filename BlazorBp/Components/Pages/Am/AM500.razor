@@ -100,69 +100,47 @@
   /// <param name="id2">Id aus 2. modalen Dialog.</param>
   public override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
-    if (form == "am500t" || form == "am510modal")
+    var (dt, msubmit, mvalid) = HandleModal1(form, "am500t", "am510modal", AM510Model.GetSubmit(HttpContext.Request), nameof(AM510Model.Schliessen), handler, id);
+    if (dt == DialogTypeEnum.New)
     {
-      if (form == "am500t" && !string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
+      AM510Model.SetMhrf(dt);
+      Model.ModalArt = handler;
+      Model.ModalId = id;
+    }
+    else if (dt == DialogTypeEnum.Edit)
+    {
+      var i = Functions.ToInt32(id);
+      if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
       {
-        if (handler == "Table_New")
+        var l = TableData(Table, ModalMessages);
+        var ds = l.Skip(i - 1).FirstOrDefault();
+        if (ds != null)
         {
-          AM510Model.SetMhrf(DialogTypeEnum.New);
+          AM510Model.From(ds);
+          AM510Model.SetMhrf(dt);
           Model.ModalArt = handler;
           Model.ModalId = id;
         }
-        else
-        {
-          var edit = handler == "Table_Edit";
-          var i = Functions.ToInt32(id);
-          if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
-          {
-            var l = TableData(Table, ModalMessages);
-            var ds = l.Skip(i - 1).FirstOrDefault();
-            if (ds != null)
-            {
-              AM510Model.From(ds);
-              AM510Model.SetMhrf(edit ? DialogTypeEnum.Edit : DialogTypeEnum.Delete);
-              Model.ModalArt = handler;
-              Model.ModalId = id;
-            }
-          }
-        }
       }
-      else
+    }
+    else if (dt == DialogTypeEnum.Postback)
+    {
+      var dt1 = Formular.GetTableDialogType(Model.ModalArt);
+      if (mvalid && msubmit == nameof(AM510Model.Ok) && dt1 == DialogTypeEnum.Edit)
       {
-        var msubmit = AM510Model.Submit ?? "";
-        var mvalid = false;
-        if (!string.IsNullOrEmpty(msubmit))
-        {
-          mvalid = ModalEditContext?.Validate() ?? false;
-        }
-        if (mvalid && msubmit == nameof(AM510Model.Ok) && handler == "Table_Edit")
-        {
-          var daten = ServiceDaten;
-          var o = AM510Model.To(daten.MandantNr);
-          var p = Parameter.Params.TryGetValue(o.Schluessel, out var v) ? v : null;
-          var r = FactoryService.ClientService.SaveOption(daten, daten.MandantNr, p, o.Wert);
-          if (r.Ok)
-          {
-            Model.ModalArt = null;
-            Model.ModalId = null;
-            Refresh();
-          }
-          else
-            ModalMessages?.Add(() => AM510Model, r.GetErrors());
-        }
-        else if (form != "am510modal")
+        var daten = ServiceDaten;
+        var o = AM510Model.To(daten.MandantNr);
+        var p = Parameter.Params.TryGetValue(o.Schluessel, out var v) ? v : null;
+        var r = FactoryService.ClientService.SaveOption(daten, daten.MandantNr, p, o.Wert);
+        if (r.Ok)
         {
           Model.ModalArt = null;
           Model.ModalId = null;
+          Refresh();
         }
+        else
+          ModalMessages?.Add(() => AM510Model, r.GetErrors());
       }
-    }
-    else
-    {
-      Model.ModalArt = null;
-      Model.ModalId = null;
-      Model.Modal2Id = null;
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
   }
