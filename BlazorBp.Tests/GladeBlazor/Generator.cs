@@ -531,8 +531,6 @@ else
 """);
     }
     sbr.Append($$"""
-  /// <summary>True, wenn EditContext ohne Fehler.</summary>
-  private bool valid;
 
   /// <summary>
   /// Initialisierung des Models.
@@ -696,10 +694,7 @@ else
       {
         Get(r);
         if (r.Ok)
-        {
-          CloseFormular();
-          return;
-        }
+          return true;
       }
     }
     // TODO if (submit == nameof(Model.Abbrechen))

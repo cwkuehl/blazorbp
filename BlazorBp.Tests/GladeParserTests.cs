@@ -12,6 +12,7 @@ public class GladeParserTests
     // Generator.Generate(@"/home/wolfgang/cs/csbp/CSBP/GtkGui/TB/TB100Diary.glade", null, "/home/wolfgang/cs/csbp/CSBP.Services/Resources/Messages.de.resx", "/home/wolfgang/cs/blazorbp/BlazorBp");
     // Generator.Generate(@"/home/wolfgang/cs/csbp/CSBP/GtkGui/TB/TB200Positions.glade", @"/home/wolfgang/cs/csbp/CSBP/GtkGui/TB/TB210Position.glade", "/home/wolfgang/cs/csbp/CSBP.Services/Resources/Messages.de.resx", "/home/wolfgang/cs/blazorbp/BlazorBp");
     // Generator.Generate(@"/home/wolfgang/cs/csbp/CSBP/GtkGui/WP/WP200Stocks.glade", @"/home/wolfgang/cs/csbp/CSBP/GtkGui/WP/WP210Stock.glade", "/home/wolfgang/cs/csbp/CSBP.Services/Resources/Messages.de.resx", "/home/wolfgang/cs/blazorbp/BlazorBp");
-    Generator.Generate(@"/home/wolfgang/cs/csbp/CSBP/GtkGui/WP/WP300Configurations.glade", @"/home/wolfgang/cs/csbp/CSBP/GtkGui/WP/WP310Configuration.glade", "/home/wolfgang/cs/csbp/CSBP.Services/Resources/Messages.de.resx", "/home/wolfgang/cs/blazorbp/BlazorBp");
+    // Generator.Generate(@"/home/wolfgang/cs/csbp/CSBP/GtkGui/WP/WP300Configurations.glade", @"/home/wolfgang/cs/csbp/CSBP/GtkGui/WP/WP310Configuration.glade", "/home/wolfgang/cs/csbp/CSBP.Services/Resources/Messages.de.resx", "/home/wolfgang/cs/blazorbp/BlazorBp");
+    Generator.Generate(@"/home/wolfgang/cs/csbp/CSBP/GtkGui/WP/WP250Investments.glade", @"/home/wolfgang/cs/csbp/CSBP/GtkGui/WP/WP260Investment.glade", "/home/wolfgang/cs/csbp/CSBP.Services/Resources/Messages.de.resx", "/home/wolfgang/cs/blazorbp/BlazorBp");
   }
 }
