@@ -22,6 +22,9 @@ public class WP260Model : PageModelBase
   //// [MaxLength(255, ErrorMessage = "Nr. darf maximal {1} Zeichen lang sein.")]
   public string? Nummer { get; set; }
 
+  /// <summary>Holt oder setzt die Auswahlliste von Wertpapier.</summary>
+  public List<ListItem>? AuswahlWertpapier { get; set; } = default!;
+
   /// <summary>Holt oder setzt Wertpapier.</summary>
   [Display(Name = "_Wertpapier", Description = "Bezug zum Wertpapier")]
   //// [Required(ErrorMessage = "Wertpapier muss angegeben werden.")]
@@ -40,11 +43,17 @@ public class WP260Model : PageModelBase
   //// [MaxLength(255, ErrorMessage = "Bezeichnung darf maximal {1} Zeichen lang sein.")]
   public string? Bezeichnung { get; set; }
 
+  /// <summary>Holt oder setzt die Auswahlliste von Status.</summary>
+  public List<ListItem>? AuswahlStatus { get; set; } = default!;
+
   /// <summary>Holt oder setzt Status.</summary>
   [Display(Name = "_Status", Description = "Status für Berechnung")]
   //// [Required(ErrorMessage = "Status muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Status darf maximal {1} Zeichen lang sein.")]
   public string? Status { get; set; }
+
+  /// <summary>Holt oder setzt die Auswahlliste von Depot-Konto.</summary>
+  public List<ListItem>? AuswahlDepot { get; set; } = default!;
 
   /// <summary>Holt oder setzt Depot-Konto.</summary>
   [Display(Name = "Depot-Konto", Description = "Depot-Konto für gleichzeitige Haushaltsbuchung")]
@@ -52,11 +61,17 @@ public class WP260Model : PageModelBase
   //// [MaxLength(255, ErrorMessage = "Depot-Konto darf maximal {1} Zeichen lang sein.")]
   public string? Depot { get; set; }
 
+  /// <summary>Holt oder setzt die Auswahlliste von Abrechnungs-Konto.</summary>
+  public List<ListItem>? AuswahlAbrechnung { get; set; } = default!;
+
   /// <summary>Holt oder setzt Abrechnungs-Konto.</summary>
   [Display(Name = "Abrechnungs-Konto", Description = "Abrechnungs-Konto für gleichzeitige Haushaltsbuchung")]
   //// [Required(ErrorMessage = "Abrechnungs-Konto muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Abrechnungs-Konto darf maximal {1} Zeichen lang sein.")]
   public string? Abrechnung { get; set; }
+
+  /// <summary>Holt oder setzt die Auswahlliste von Ertrags-Konto.</summary>
+  public List<ListItem>? AuswahlErtrag { get; set; } = default!;
 
   /// <summary>Holt oder setzt Ertrags-Konto.</summary>
   [Display(Name = "Ertrags-Konto", Description = "Ertrags-Konto für gleichzeitige Haushaltsbuchung")]
@@ -90,13 +105,13 @@ public class WP260Model : PageModelBase
 
   /// <summary>Holt oder setzt Valuta.</summary>
   [Display(Name = "Valuta", Description = "Valuta-Datum für das Setzen des Stands")]
-  public string? Valuta { get; set; }
+  public DateTime? Valuta { get; set; }
 
   /// <summary>Holt oder setzt Stand.</summary>
   [Display(Name = "_Stand", Description = "Wert aller Anteile der Anlage am Datum")]
   //// [Required(ErrorMessage = "Stand muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Stand darf maximal {1} Zeichen lang sein.")]
-  public string? Stand { get; set; }
+  public decimal? Stand { get; set; }
 
   /// <summary>Holt oder setzt OK.</summary>
   [Display(Name = "_OK", Description = "Dialog mit Speichern schließen")]
@@ -113,30 +128,29 @@ public class WP260Model : PageModelBase
   /// <summary>Kopiert die Werte in ein Model.</summary>
   /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
   /// <returns>Das kopierte Model.</returns>
-  public WP250TodoModel To(ServiceDaten daten) => new()
+  public WpAnlage To(ServiceDaten daten) => new()
   {
-    // TODO Mandant_Nr = daten.MandantNr,
-    Nummer = Nummer,
-    Wertpapier = Wertpapier,
-    Wpdetails = Wpdetails,
+    Mandant_Nr = daten.MandantNr,
+    Uid = Nummer,
+    // Wertpapier = Wertpapier,
+    // Wpdetails = Wpdetails,
     Bezeichnung = Bezeichnung,
-    Status = Status,
-    Depot = Depot,
-    Abrechnung = Abrechnung,
-    Ertrag = Ertrag,
+    // Status = Status,
+    // Depot = Depot,
+    // Abrechnung = Abrechnung,
+    // Ertrag = Ertrag,
     Notiz = Notiz,
     Data = Data,
-    Valuta = Valuta,
-    Stand = Stand,
+    // Valuta = Valuta,
+    // Stand = Stand,
   };
   
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
-  public void From(WP250TableRowModel m) =>
+  public void From(WpAnlage m) =>
   (
     Nummer,
     Wertpapier,
-    Wpdetails,
     Bezeichnung,
     Status,
     Depot,
@@ -144,41 +158,48 @@ public class WP260Model : PageModelBase
     Ertrag,
     Notiz,
     Data,
+    Angelegt,
+    Geaendert,
     Valuta,
     Stand
-    // TODO , Angelegt, Geaendert
   ) = (
-    m.Nummer,
-    m.Wertpapier,
-    m.Wpdetails,
+    m.Uid,
+    m.Wertpapier_Uid,
     m.Bezeichnung,
-    m.Status,
-    m.Depot,
-    m.Abrechnung,
-    m.Ertrag,
+    Status = Functions.ToString(m.State),
+    m.PortfolioAccountUid,
+    m.SettlementAccountUid,
+    m.IncomeAccountUid,
     m.Notiz,
     m.Data,
-    m.Valuta,
-    m.Stand
-    // TODO , ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon), ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon)
+    ModelBase.FormatDateOf(m.Angelegt_Am, m.Angelegt_Von),
+    ModelBase.FormatDateOf(m.Geaendert_Am, m.Geaendert_Von),
+    null, // m.Valuta,
+    null // m.Stand,
   );
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>
-  public void SetMhrf(DialogTypeEnum mode)
+  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
+  public void SetMhrf(DialogTypeEnum mode, ServiceDaten daten)
   {
-    if (mode == New || mode == Copy)
+    if (mode == Edit)
     {
-      // TODO Nummer = "";
+      Valuta = daten.Heute.AddDays(-1);
     }
-    if (mode == New)
-    {
-      // TODO Thema = null;
-    }
-    // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
-    // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
-    // SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Nummer), false, false, true);
+    SetMandatoryHiddenReadonly(nameof(Wertpapier), true, false, mode == Delete, mode == New);
+    SetMandatoryHiddenReadonly(nameof(Wpdetails), false, false, false);
+    SetMandatoryHiddenReadonly(nameof(Bezeichnung), true, false, mode == Delete, mode == Edit || mode == Copy);
+    SetMandatoryHiddenReadonly(nameof(Status), true, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Depot), false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Abrechnung), false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Ertrag), false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Notiz), false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Data), false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
+    SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
+    SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Abbrechen), false, false, false);
   }
 }

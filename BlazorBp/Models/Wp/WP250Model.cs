@@ -68,7 +68,7 @@ public class WP250Model : PageModelBase
   [Display(Name = "auch inaktive", Description = "Sollen auch inaktive Anlagen angezeigt werden?")]
   //// [Required(ErrorMessage = "auch inaktive muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "auch inaktive darf maximal {1} Zeichen lang sein.")]
-  public string? Auchinaktiv { get; set; }
+  public bool Auchinaktiv { get; set; }
 
   /// <summary>Holt oder setzt Bewertungen berechnen.</summary>
   [Display(Name = "Bewertungen berechnen", Description = "Soll die Bewertung für jedes aktive Wertpapier berechnet werden?")]

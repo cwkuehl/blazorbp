@@ -9,21 +9,17 @@
 <CascadingValue Value="this">
 <SortableTable Table="Table" NoData="" FormName="wp250" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="WP250Model" TRTable="WP250TableRowModel">
   <ChildContent>
-    <TableColumn Field="@nameof(WP250TableRowModel.Nummer)" SortField="@nameof(WP250TodoModel.Nummer)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
-    <TableColumn Field="@nameof(WP250TableRowModel.Wertpapier)" SortField="@nameof(WP250TodoModel.Wertpapier)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
-    <TableColumn Field="@nameof(WP250TableRowModel.Wpdetails)" SortField="@nameof(WP250TodoModel.Wpdetails)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
-    <TableColumn Field="@nameof(WP250TableRowModel.Bezeichnung)" SortField="@nameof(WP250TodoModel.Bezeichnung)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
-    <TableColumn Field="@nameof(WP250TableRowModel.Status)" SortField="@nameof(WP250TodoModel.Status)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
-    <TableColumn Field="@nameof(WP250TableRowModel.Depot)" SortField="@nameof(WP250TodoModel.Depot)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
-    <TableColumn Field="@nameof(WP250TableRowModel.Abrechnung)" SortField="@nameof(WP250TodoModel.Abrechnung)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
-    <TableColumn Field="@nameof(WP250TableRowModel.Ertrag)" SortField="@nameof(WP250TodoModel.Ertrag)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
-    <TableColumn Field="@nameof(WP250TableRowModel.Notiz)" SortField="@nameof(WP250TodoModel.Notiz)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
-    <TableColumn Field="@nameof(WP250TableRowModel.Data)" SortField="@nameof(WP250TodoModel.Data)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
-    <TableColumn Field="@nameof(WP250TableRowModel.Stand)" SortField="@nameof(WP250TodoModel.Stand)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
-    <TableColumn Field="@nameof(WP250TableRowModel.AngelegtAm)" SortField="@nameof(WP250TodoModel.Angelegt_Am)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
-    <TableColumn Field="@nameof(WP250TableRowModel.AngelegtVon)" SortField="@nameof(WP250TodoModel.Angelegt_Von)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
-    <TableColumn Field="@nameof(WP250TableRowModel.GeaendertAm)" SortField="@nameof(WP250TodoModel.Geaendert_Am)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
-    <TableColumn Field="@nameof(WP250TableRowModel.GeaendertVon)" SortField="@nameof(WP250TodoModel.Geaendert_Von)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
+    @* <TableColumn Field="@nameof(WP250TableRowModel.Nummer)" SortField="@nameof(WpAnlage.Uid)" TModel="WP250Model" TRTable="WP250TableRowModel"/> *@
+    <TableColumn Field="@nameof(WP250TableRowModel.Bezeichnung)" SortField="@nameof(WpAnlage.Bezeichnung)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
+    <TableColumn Field="@nameof(WP250TableRowModel.Status)" SortField="@nameof(WpAnlage.State)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
+    <TableColumn Field="@nameof(WP250TableRowModel.Provider)" SortField="@nameof(WpAnlage.StockProvider)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
+    <TableColumn Field="@nameof(WP250TableRowModel.Kuerzel)" SortField="@nameof(WpAnlage.StockShortcut)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
+    <TableColumn Field="@nameof(WP250TableRowModel.Valuta)" SortField="@nameof(WpAnlage.PriceDate)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
+    @* <TableColumn Field="@nameof(WP250TableRowModel.Stand)" SortField="@nameof(WP250TodoModel.Stand)" TModel="WP250Model" TRTable="WP250TableRowModel"/> *@
+    <TableColumn Field="@nameof(WP250TableRowModel.AngelegtAm)" SortField="@nameof(WpAnlage.Angelegt_Am)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
+    <TableColumn Field="@nameof(WP250TableRowModel.AngelegtVon)" SortField="@nameof(WpAnlage.Angelegt_Von)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
+    <TableColumn Field="@nameof(WP250TableRowModel.GeaendertAm)" SortField="@nameof(WpAnlage.Geaendert_Am)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
+    <TableColumn Field="@nameof(WP250TableRowModel.GeaendertVon)" SortField="@nameof(WpAnlage.Geaendert_Von)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
   </ChildContent>
 </SortableTable>
 </CascadingValue>
@@ -96,7 +92,7 @@
         SelectedPage = 1,
         RowsPerPage = 10,
         SelectedRow = 1,
-        SortColumn = $"{nameof(WP250TodoModel.Nummer)}#+",
+        SortColumn = $"{nameof(WpAnlage.Bezeichnung)}#+",
       };
     Table.Nr = id;
     if (WP260Model == null)
@@ -107,6 +103,15 @@
       };
     WP260Model.Nr = id;
     InitEditContext(Model, WP260Model);
+    var l0 = Get(FactoryService.StockService.GetStockList(daten));
+    WP260Model.AuswahlWertpapier = l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList();
+    var l1 = Get(FactoryService.StockService.GetStateList(daten));
+    WP260Model.AuswahlStatus = l1?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
+    var kl = Get(FactoryService.BudgetService.GetAccountList(ServiceDaten, null, daten.Heute, daten.Heute));
+    var keind = !kl?.Any(a => a.Kz == Constants.KZK_DEPOT) ?? true;
+    WP260Model.AuswahlDepot = kl?.Where(a => a.Art == Constants.ARTK_AKTIVKONTO && (keind || a.Kz == Constants.KZK_DEPOT)).Select(a => new ListItem(a.Uid, a.Name)).ToList();
+    WP260Model.AuswahlAbrechnung = kl?.Where(a => a.Art == Constants.ARTK_AKTIVKONTO).Select(a => new ListItem(a.Uid, a.Name)).ToList();
+    WP260Model.AuswahlErtrag = kl?.Where(a => a.Art == Constants.ARTK_ERTRAGSKONTO).Select(a => new ListItem(a.Uid, a.Name)).ToList();
   }
 
   /// <summary>
@@ -144,10 +149,11 @@
   /// <param name="id2">Id aus 2. modalen Dialog.</param>
   public override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
+    var daten = ServiceDaten;
     var (dt, msubmit, mvalid) = HandleModal1(form, "wp250t", "wp260modal", WP260Model.GetSubmit(HttpContext.Request), nameof(WP260Model.Abbrechen), handler, id);
     if (dt == DialogTypeEnum.New)
     {
-      WP260Model.SetMhrf(dt);
+      WP260Model.SetMhrf(dt, daten);
       Model.ModalArt = handler;
       Model.ModalId = id;
     }
@@ -158,10 +164,12 @@
       {
         var l = TableData(Table, ModalMessages);
         var ds = l.Skip(i - 1).FirstOrDefault();
+        var r = FactoryService.StockService.GetInvestment(daten, ds?.Nummer ?? "");
+        if (r.Ok && ds != null && r.Ergebnis != null)
         if (ds != null)
         {
-          WP260Model.From(ds);
-          WP260Model.SetMhrf(dt);
+          WP260Model.From(r.Ergebnis);
+          WP260Model.SetMhrf(dt, daten);
           Model.ModalArt = handler;
           Model.ModalId = id;
         }
@@ -172,7 +180,6 @@
       if (mvalid && msubmit == nameof(WP260Model.Ok))
       {
         var dt1 = Formular.GetTableDialogType(Model.ModalArt);
-        var daten = ServiceDaten;
         var o = WP260Model.To(daten);
         var r = new ServiceErgebnis();
         // TODO var r = dt1 == DialogTypeEnum.Delete
@@ -225,25 +232,8 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var r = new ServiceErgebnis<List<WP250TodoModel>>(new List<WP250TodoModel>());
-    r.Ergebnis.Add(new WP250TodoModel()
-    {
-       Notiz = "Notiz1",
-       Nummer = "Nummer1",
-       Wertpapier = "Wertpapier1",
-       Bezeichnung = "Bezeichnung1",
-       Status = "Status1",
-       Depot = "Depot1",
-       Abrechnung = "Abrechnung1",
-       Ertrag = "Ertrag1",
-       Data = "Data1",
-       Valuta = "Valuta1",
-       Stand = "Stand1",
-    });
-    if (rm != null)
-      rm.PageCount = 0;
-    // TODO var l0 = Get(FactoryService.PrivateService.GetClientList(daten, rm), messages);
-    var l = r.Ergebnis?.Select(a => WP250TableRowModel.From(a)).ToList() ?? new List<WP250TableRowModel>();
+    var l0 = Get(FactoryService.StockService.GetInvestmentList(daten, rm, Model.Auchinaktiv), messages);
+    var l = l0?.Select(a => WP250TableRowModel.From(a)).ToList() ?? new List<WP250TableRowModel>();
     return UpdateTable(m, rm, l);
   }
 
