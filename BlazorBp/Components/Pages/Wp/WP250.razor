@@ -32,28 +32,21 @@
   <div class="row mt-1 g-0">
   </div>
   <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Refresh)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Chart)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Details)"/>
+    <LabelInputValid type="combobox" AutoPostback="x" For="@(() => Model!.Wertpapier)" DataList="@Model!.AuswahlWertpapier" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid type="checkbox" AutoPostback="x" For="@(() => Model!.Auchinaktiv)" VerticalColClass="form-group col-md-2 ms-1"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" VerticalColClass="form-group col-md-2 ms-1"/>
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Anlagen)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Alle)"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Bezeichnung)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Wertpapier)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Auchinaktiv)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Berechnen)"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+    <SubmitButton class="btn btn-secondary col-md-2" href="@($"/starttask/WP250/{Model!.Nr}")" For="@(() => Model!.Berechnen)"/>
+    <LabelInputValid stateof="CalculateInvestments" AutoPostback="" For="@(() => Model!.Status)" VerticalColClass="form-group col ms-1"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Abbrechen)"/>
   </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.AnlagenStatus)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+  <div class="modal-footer mt-2">
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Details)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-map" For="@(() => Model!.Chart)"/>
+    <SubmitButton class="btn btn-primary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
   </div>
-  <!-- TODO btn-primary festlegen -->
 </EditForm>
 
 <WP260 WP260Model="WP260Model" ModalId="@Model.ModalId" ModalArt="@Model.ModalArt" ModalEditContext="@ModalEditContext" ModalMessages="@ModalMessages"/>
@@ -79,9 +72,8 @@
       Model = new WP250Model
       {
         Nr = id,
-        // TODO Mandant = daten.MandantNr,
       };
-      Model.SetMhrf(DialogTypeEnum.New);
+      Model.SetMhrf(DialogTypeEnum.New, daten);
     }
     Model.Nr = id;
     if (table != null)
@@ -90,20 +82,17 @@
       Table = new TableModelBase<WP250TableRowModel>
       {
         SelectedPage = 1,
-        RowsPerPage = 10,
+        RowsPerPage = 15,
         SelectedRow = 1,
         SortColumn = $"{nameof(WpAnlage.Bezeichnung)}#+",
       };
     Table.Nr = id;
     if (WP260Model == null)
-      WP260Model = new WP260Model
-      {
-        // TODO Nummer = "1",
-        // Beschreibung = null,
-      };
+      WP260Model = new WP260Model { };
     WP260Model.Nr = id;
     InitEditContext(Model, WP260Model);
     var l0 = Get(FactoryService.StockService.GetStockList(daten));
+    Model.AuswahlWertpapier = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
     WP260Model.AuswahlWertpapier = l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList();
     var l1 = Get(FactoryService.StockService.GetStateList(daten));
     WP260Model.AuswahlStatus = l1?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
@@ -112,14 +101,6 @@
     WP260Model.AuswahlDepot = kl?.Where(a => a.Art == Constants.ARTK_AKTIVKONTO && (keind || a.Kz == Constants.KZK_DEPOT)).Select(a => new ListItem(a.Uid, a.Name)).ToList();
     WP260Model.AuswahlAbrechnung = kl?.Where(a => a.Art == Constants.ARTK_AKTIVKONTO).Select(a => new ListItem(a.Uid, a.Name)).ToList();
     WP260Model.AuswahlErtrag = kl?.Where(a => a.Art == Constants.ARTK_ERTRAGSKONTO).Select(a => new ListItem(a.Uid, a.Name)).ToList();
-  }
-
-  /// <summary>
-  /// Aktualisierung nach Undo/Redo.
-  /// </summary>
-  protected override void Refresh()
-  {
-    // TODO TableData(Table, Messages);
   }
 
   /// <summary>
@@ -133,11 +114,12 @@
       return;
 
     // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
-    // var submit = Model.Submit ?? "";
-    // if (submit == nameof(Model.Import))
-    // {
-    //   var l = SaveUploadFiles("WP250", "filehochladen");
-    // }
+    var handler = HttpContext.Request.Query["handler"];
+    if (handler == "Table_All")
+    {
+      Model.SetMhrf(DialogTypeEnum.Copy, ServiceDaten);
+      WriteFormularModel(Model.Nr ?? "0", Model);
+    }
   }
 
   /// <summary>
@@ -205,9 +187,27 @@
   /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
   protected override bool Submit(string? submit)
   {
+    var daten = ServiceDaten;
+    Model.Status = StatusTask.GetStatus(daten.MandantNr, new[] { "CalculateInvestments" }, true);
+    if (Table != null && (submit == nameof(Model.Auchinaktiv) || submit == nameof(Model.Wertpapier)))
+    {
+      Refresh();
+    }
+    if (IsDateMhp(submit, nameof(Model.Bis), Model.Bis, out var d))
+    {
+      if (d.HasValue)
+        Model.Bis = d;
+    }
+    if (valid && submit == nameof(Model.Berechnen))
+    {
+        // Siehe StartTask
+    }
+    if (submit == nameof(Model.Chart))
+    {
+      // TODO Formular WP100 Chart aufrufen.
+    }
     if (valid && submit == "OK")
     {
-      var daten = ServiceDaten;
       var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
       if (r != null)
       {
@@ -216,9 +216,8 @@
           return true;
       }
     }
-    // TODO if (submit == nameof(Model.Abbrechen))
-    // if (submit == nameof(Model.Schliessen))
-    //   return true;
+    if (submit == nameof(Model.Schliessen))
+      return true;
     return false;
   }
 
@@ -232,7 +231,7 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var l0 = Get(FactoryService.StockService.GetInvestmentList(daten, rm, Model.Auchinaktiv), messages);
+    var l0 = Get(FactoryService.StockService.GetInvestmentList(daten, rm, Model.Auchinaktiv, null, null, Model.Wertpapier), messages);
     var l = l0?.Select(a => WP250TableRowModel.From(a)).ToList() ?? new List<WP250TableRowModel>();
     return UpdateTable(m, rm, l);
   }

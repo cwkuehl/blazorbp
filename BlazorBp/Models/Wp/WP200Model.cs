@@ -30,27 +30,24 @@ public class WP200Model : PageModelBase
   public string? Chart { get; set; }
 
   /// <summary>Holt oder setzt Status.</summary>
-  [Display(Name = "Status", Description = "")]
+  [Display(Name = "Status", Description = "Status der Berechnung")]
   public string? Status { get; set; }
 
   /// <summary>Holt oder setzt Muster.</summary>
   [Display(Name = "_Muster", Description = "Zu suchendes Muster")]
-  //// [Required(ErrorMessage = "Muster muss angegeben werden.")]
   public string? Muster { get; set; }
 
   /// <summary>Holt oder setzt auch inaktive.</summary>
   [Display(Name = "auch inaktive", Description = "Sollen auch inaktive Wertpapiere angezeigt werden?")]
-  //// [Required(ErrorMessage = "auch inaktive muss angegeben werden.")]
   public bool Auchinaktiv { get; set; }
 
   /// <summary>Holt oder setzt Bewertungen berechnen.</summary>
   [Display(Name = "Bewertungen berechnen", Description = "Soll die Bewertung für jedes aktive Wertpapier berechnet werden?")]
-  //// [Required(ErrorMessage = "Bewertungen berechnen muss angegeben werden.")]
   public string? Berechnen { get; set; }
 
   /// <summary>Holt oder setzt Bis.</summary>
   [Display(Name = "B_is", Description = "")]
-  //// [Required(ErrorMessage = "Bis muss angegeben werden.")]
+  [Required(ErrorMessage = "Bis muss angegeben werden.")]
   public DateTime? Bis { get; set; }
 
   /// <summary>Holt oder setzt die Auswahlliste von Konfiguration.</summary>
@@ -58,7 +55,7 @@ public class WP200Model : PageModelBase
 
   /// <summary>Holt oder setzt Konfiguration.</summary>
   [Display(Name = "_Konfiguration", Description = "Konfiguration für Bewertung festlegen")]
-  //// [Required(ErrorMessage = "Konfiguration muss angegeben werden.")]
+  [Required(ErrorMessage = "Konfiguration muss angegeben werden.")]
   public string? Konfiguration { get; set; }
 
   /// <summary>Holt oder setzt Schließen.</summary>

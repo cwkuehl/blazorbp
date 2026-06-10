@@ -16,52 +16,17 @@ using static BlazorBp.Base.DialogTypeEnum;
 [Serializable]
 public class WP250Model : PageModelBase
 {
-  /// <summary>Holt oder setzt Aktualisieren.</summary>
-  [Display(Name = "Aktualisieren", Description = "Aktualisieren")]
-  //// [Required(ErrorMessage = "Aktualisieren muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Aktualisieren darf maximal {1} Zeichen lang sein.")]
-  public string? Refresh { get; set; }
-
-  /// <summary>Holt oder setzt Chart oder Karte.</summary>
-  [Display(Name = "Chart oder Karte", Description = "Chart oder Karte")]
-  //// [Required(ErrorMessage = "Chart oder Karte muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Chart oder Karte darf maximal {1} Zeichen lang sein.")]
-  public string? Chart { get; set; }
-
-  /// <summary>Holt oder setzt Details.</summary>
-  [Display(Name = "Details", Description = "Details")]
-  //// [Required(ErrorMessage = "Details muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Details darf maximal {1} Zeichen lang sein.")]
-  public string? Details { get; set; }
-
-  /// <summary>Holt oder setzt Anlagen.</summary>
-  [Display(Name = "_Anlagen", Description = "Wertpapier-Anlagen")]
-  //// [Required(ErrorMessage = "Anlagen muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Anlagen darf maximal {1} Zeichen lang sein.")]
-  public string? Anlagen { get; set; }
-
   /// <summary>Holt oder setzt Status.</summary>
   [Display(Name = "Status", Description = "")]
   //// [Required(ErrorMessage = "Status muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Status darf maximal {1} Zeichen lang sein.")]
-  public string? AnlagenStatus { get; set; }
+  public string? Status { get; set; }
 
-  /// <summary>Holt oder setzt Alle.</summary>
-  [Display(Name = "A_lle", Description = "Selektionskriterien zurücksetzen")]
-  //// [Required(ErrorMessage = "Alle muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Alle darf maximal {1} Zeichen lang sein.")]
-  public string? Alle { get; set; }
-
-  /// <summary>Holt oder setzt Suche.</summary>
-  [Display(Name = "_Suche", Description = "Suche in allen Textfeldern")]
-  //// [Required(ErrorMessage = "Suche muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Suche darf maximal {1} Zeichen lang sein.")]
-  public string? Bezeichnung { get; set; }
+  /// <summary>Holt oder setzt die Auswahlliste von Wertpapieren.</summary>
+  public List<ListItem>? AuswahlWertpapier { get; set; } = default!;
 
   /// <summary>Holt oder setzt Wertpapier.</summary>
   [Display(Name = "_Wertpapier", Description = "Zu suchendes Wertpapier")]
-  //// [Required(ErrorMessage = "Wertpapier muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Wertpapier darf maximal {1} Zeichen lang sein.")]
   public string? Wertpapier { get; set; }
 
   /// <summary>Holt oder setzt auch inaktive.</summary>
@@ -72,38 +37,47 @@ public class WP250Model : PageModelBase
 
   /// <summary>Holt oder setzt Bewertungen berechnen.</summary>
   [Display(Name = "Bewertungen berechnen", Description = "Soll die Bewertung für jedes aktive Wertpapier berechnet werden?")]
-  //// [Required(ErrorMessage = "Bewertungen berechnen muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Bewertungen berechnen darf maximal {1} Zeichen lang sein.")]
   public string? Berechnen { get; set; }
 
   /// <summary>Holt oder setzt Bis.</summary>
   [Display(Name = "B_is", Description = "")]
-  //// [Required(ErrorMessage = "Bis muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Bis darf maximal {1} Zeichen lang sein.")]
-  public string? Bis { get; set; }
+  [Required(ErrorMessage = "Bis muss angegeben werden.")]
+  public DateTime? Bis { get; set; }
+
+  /// <summary>Holt oder setzt Details.</summary>
+  [Display(Name = "Details", Description = "Details")]
+  public string? Details { get; set; }
 
   /// <summary>Holt oder setzt Abbrechen.</summary>
-  [Display(Name = "Abbre_chen", Description = "Berechnung abbrechen")]
-  //// [Required(ErrorMessage = "Abbrechen muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Abbrechen darf maximal {1} Zeichen lang sein.")]
+  [Display(Name = "Abbre_chen", Description = "Berechnung der Bewertungen abbrechen")]
   public string? Abbrechen { get; set; }
+
+  /// <summary>Holt oder setzt Chart oder Karte.</summary>
+  [Display(Name = "Chart oder Karte", Description = "Chart oder Karte")]
+  public string? Chart { get; set; }
+
+  /// <summary>Holt oder setzt Aktualisieren.</summary>
+  [Display(Name = "Aktualisieren", Description = "Aktualisieren")]
+  public string? Refresh { get; set; }
+
+  /// <summary>Holt oder setzt Schließen.</summary>
+  [Display(Name = "Schließen", Description = "Schließen")]
+  public string? Schliessen { get; set; }
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>
-  public void SetMhrf(DialogTypeEnum mode)
+  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
+  public void SetMhrf(DialogTypeEnum mode, ServiceDaten daten)
   {
     if (mode == New || mode == Copy)
     {
-      // TODO Nummer = "";
+      Wertpapier = null;
+      Bis = daten.Heute;
     }
     if (mode == New)
     {
-      // TODO Thema = null;
+      Auchinaktiv = false;
     }
-    // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
-    // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
-    // SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Status), false, false, true, false);
   }
 }
