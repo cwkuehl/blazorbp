@@ -140,7 +140,6 @@ public class WP210Model : PageModelBase
     Sorting = Sortierung,
     Relation_Uid = Relation,
     Notiz = Notiz,
-    // Anlage = Anlage,
   };
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
@@ -190,6 +189,7 @@ public class WP210Model : PageModelBase
   {
     if (mode == New || mode == Copy)
     {
+      Nummer = "";
       Anlage = true;
     }
     SetMandatoryHiddenReadonly(nameof(Nummer), false, false, true, false);

@@ -166,19 +166,44 @@
     {
       if (mvalid && msubmit == nameof(WP260Model.Ok))
       {
-        @* TODO var dt1 = Formular.GetTableDialogType(Model.ModalArt);
+        var dt1 = Formular.GetTableDialogType(Model.ModalArt);
         var o = WP260Model.To(daten);
-        var r = dt1 == DialogTypeEnum.Delete
-          ? FactoryService.StockService.DeleteInvestment(daten, o)
-          : FactoryService.StockService.SaveInvestment(daten, o.Uid, o.Thema, xml);
-        if (r.Ok)
+        var st = WP260Model.Stand ?? 0;
+        if (dt1 == DialogTypeEnum.Delete)
         {
-          Model.ModalArt = null;
-          Model.ModalId = null;
-          Refresh();
+          var r = FactoryService.StockService.DeleteInvestment(daten, o);
+          if (r.Ok)
+          {
+            Model.ModalArt = null;
+            Model.ModalId = null;
+            Refresh();
+          }
+          else
+            ModalMessages?.Add(() => WP260Model, r.GetErrors());
         }
         else
-          ModalMessages?.Add(() => WP260Model, r.GetErrors()); *@
+        {
+          var r = FactoryService.StockService.SaveInvestment(daten, o.Uid, o.Wertpapier_Uid, o.Bezeichnung, o.Notiz, o.State, o.PortfolioAccountUid, o.SettlementAccountUid, o.IncomeAccountUid, WP260Model.Valuta, st);
+          if (r.Ok && WP260Model.Valuta.HasValue && st != 0 && r.Ergebnis != null)
+          {
+            var rs = StatusTask.HinzufuegenFunktion(daten.MandantNr, "CalculateInvestments", "1");
+            r.AddMeldungen(rs);
+            if (rs.Ok && rs.Ergebnis != null)
+            {
+              var state = rs.Ergebnis;
+              Get(FactoryService.StockService.CalculateInvestments(daten, null, r.Ergebnis.Uid, null, WP260Model.Valuta.Value, false, null, state));
+              state.Beenden();
+            }
+          }
+          if (r.Ok)
+          {
+            Model.ModalArt = null;
+            Model.ModalId = null;
+            Refresh();
+          }
+          else
+            ModalMessages?.Add(() => WP260Model, r.GetErrors());
+        }
       }
     }
     WriteFormularModel(Model.Nr ?? "0", Model);

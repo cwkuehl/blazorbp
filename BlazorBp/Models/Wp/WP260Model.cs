@@ -27,20 +27,18 @@ public class WP260Model : PageModelBase
 
   /// <summary>Holt oder setzt Wertpapier.</summary>
   [Display(Name = "_Wertpapier", Description = "Bezug zum Wertpapier")]
-  //// [Required(ErrorMessage = "Wertpapier muss angegeben werden.")]
+  [Required(ErrorMessage = "Wertpapier muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Wertpapier darf maximal {1} Zeichen lang sein.")]
   public string? Wertpapier { get; set; }
 
   /// <summary>Holt oder setzt ....</summary>
   [Display(Name = "...", Description = "Wertpapier-Details anzeigen")]
-  //// [Required(ErrorMessage = "... muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "... darf maximal {1} Zeichen lang sein.")]
   public string? Wpdetails { get; set; }
 
   /// <summary>Holt oder setzt Bezeichnung.</summary>
   [Display(Name = "_Bezeichnung", Description = "Bezeichnung")]
-  //// [Required(ErrorMessage = "Bezeichnung muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Bezeichnung darf maximal {1} Zeichen lang sein.")]
+  [Required(ErrorMessage = "Bezeichnung muss angegeben werden.")]
+  [MaxLength(255, ErrorMessage = "Bezeichnung darf maximal {1} Zeichen lang sein.")]
   public string? Bezeichnung { get; set; }
 
   /// <summary>Holt oder setzt die Auswahlliste von Status.</summary>
@@ -48,8 +46,7 @@ public class WP260Model : PageModelBase
 
   /// <summary>Holt oder setzt Status.</summary>
   [Display(Name = "_Status", Description = "Status für Berechnung")]
-  //// [Required(ErrorMessage = "Status muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Status darf maximal {1} Zeichen lang sein.")]
+  [Required(ErrorMessage = "Status muss angegeben werden.")]
   public string? Status { get; set; }
 
   /// <summary>Holt oder setzt die Auswahlliste von Depot-Konto.</summary>
@@ -58,7 +55,6 @@ public class WP260Model : PageModelBase
   /// <summary>Holt oder setzt Depot-Konto.</summary>
   [Display(Name = "Depot-Konto", Description = "Depot-Konto für gleichzeitige Haushaltsbuchung")]
   //// [Required(ErrorMessage = "Depot-Konto muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Depot-Konto darf maximal {1} Zeichen lang sein.")]
   public string? Depot { get; set; }
 
   /// <summary>Holt oder setzt die Auswahlliste von Abrechnungs-Konto.</summary>
@@ -67,7 +63,6 @@ public class WP260Model : PageModelBase
   /// <summary>Holt oder setzt Abrechnungs-Konto.</summary>
   [Display(Name = "Abrechnungs-Konto", Description = "Abrechnungs-Konto für gleichzeitige Haushaltsbuchung")]
   //// [Required(ErrorMessage = "Abrechnungs-Konto muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Abrechnungs-Konto darf maximal {1} Zeichen lang sein.")]
   public string? Abrechnung { get; set; }
 
   /// <summary>Holt oder setzt die Auswahlliste von Ertrags-Konto.</summary>
@@ -76,31 +71,23 @@ public class WP260Model : PageModelBase
   /// <summary>Holt oder setzt Ertrags-Konto.</summary>
   [Display(Name = "Ertrags-Konto", Description = "Ertrags-Konto für gleichzeitige Haushaltsbuchung")]
   //// [Required(ErrorMessage = "Ertrags-Konto muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Ertrags-Konto darf maximal {1} Zeichen lang sein.")]
   public string? Ertrag { get; set; }
 
   /// <summary>Holt oder setzt Notiz.</summary>
   [Display(Name = "_Notiz", Description = "")]
-  //// [Required(ErrorMessage = "Notiz muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Notiz darf maximal {1} Zeichen lang sein.")]
+  [MaxLength(255000, ErrorMessage = "Notiz darf maximal {1} Zeichen lang sein.")]
   public string? Notiz { get; set; }
 
   /// <summary>Holt oder setzt Daten.</summary>
   [Display(Name = "_Daten", Description = "Daten für die Anlage, z.B. Anzahl Anteile und Kaufpreis")]
-  //// [Required(ErrorMessage = "Daten muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Daten darf maximal {1} Zeichen lang sein.")]
   public string? Data { get; set; }
 
   /// <summary>Holt oder setzt Angelegt.</summary>
   [Display(Name = "Angelegt", Description = "Datum, Uhrzeit und Benutzer, der die Daten angelegt hat")]
-  //// [Required(ErrorMessage = "Angelegt muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Angelegt darf maximal {1} Zeichen lang sein.")]
   public string? Angelegt { get; set; }
 
   /// <summary>Holt oder setzt Geändert.</summary>
   [Display(Name = "Geändert", Description = "Datum, Uhrzeit und Benutzer, der die Daten geändert hat")]
-  //// [Required(ErrorMessage = "Geändert muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Geändert darf maximal {1} Zeichen lang sein.")]
   public string? Geaendert { get; set; }
 
   /// <summary>Holt oder setzt Valuta.</summary>
@@ -109,20 +96,14 @@ public class WP260Model : PageModelBase
 
   /// <summary>Holt oder setzt Stand.</summary>
   [Display(Name = "_Stand", Description = "Wert aller Anteile der Anlage am Datum")]
-  //// [Required(ErrorMessage = "Stand muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Stand darf maximal {1} Zeichen lang sein.")]
   public decimal? Stand { get; set; }
 
   /// <summary>Holt oder setzt OK.</summary>
   [Display(Name = "_OK", Description = "Dialog mit Speichern schließen")]
-  //// [Required(ErrorMessage = "OK muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "OK darf maximal {1} Zeichen lang sein.")]
   public string? Ok { get; set; }
 
   /// <summary>Holt oder setzt Abbrechen.</summary>
   [Display(Name = "Abbre_chen", Description = "Dialog ohne Speichern schließen")]
-  //// [Required(ErrorMessage = "Abbrechen muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Abbrechen darf maximal {1} Zeichen lang sein.")]
   public string? Abbrechen { get; set; }
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
@@ -132,17 +113,13 @@ public class WP260Model : PageModelBase
   {
     Mandant_Nr = daten.MandantNr,
     Uid = Nummer,
-    // Wertpapier = Wertpapier,
-    // Wpdetails = Wpdetails,
+    Wertpapier_Uid = Wertpapier,
     Bezeichnung = Bezeichnung,
-    // Status = Status,
-    // Depot = Depot,
-    // Abrechnung = Abrechnung,
-    // Ertrag = Ertrag,
+    State = Functions.ToInt32(Status),
+    PortfolioAccountUid = Depot,
+    SettlementAccountUid = Abrechnung,
+    IncomeAccountUid = Ertrag,
     Notiz = Notiz,
-    Data = Data,
-    // Valuta = Valuta,
-    // Stand = Stand,
   };
   
   /// <summary>Kopiert die Werte aus einem Model.</summary>
@@ -183,6 +160,10 @@ public class WP260Model : PageModelBase
   /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
   public void SetMhrf(DialogTypeEnum mode, ServiceDaten daten)
   {
+    if (mode == New || mode == Copy)
+    {
+      Nummer = "";
+    }
     if (mode == Edit)
     {
       Valuta = daten.Heute.AddDays(-1);
