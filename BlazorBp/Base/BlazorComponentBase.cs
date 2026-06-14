@@ -767,6 +767,21 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   }
 
   /// <summary>
+  /// Sets an error message.
+  /// </summary>
+  /// <param name="text">Affected Error Message.</param>
+  /// <param name="messages">Affected messages store.</param>
+  protected void SetError(string text, ValidationMessageStore? messages = null)
+  {
+    if (string.IsNullOrEmpty(text))
+      return;
+    if (messages == null)
+      messages = Messages;
+    if (messages != null)
+      messages.Add(() => Model, text);
+  }
+
+  /// <summary>
   /// Extracts possible errors from service result.
   /// </summary>
   /// <param name="r">Affected service result.</param>

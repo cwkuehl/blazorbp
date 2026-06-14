@@ -12,10 +12,15 @@
     @* <TableColumn Field="@nameof(WP250TableRowModel.Nummer)" SortField="@nameof(WpAnlage.Uid)" TModel="WP250Model" TRTable="WP250TableRowModel"/> *@
     <TableColumn Field="@nameof(WP250TableRowModel.Bezeichnung)" SortField="@nameof(WpAnlage.Bezeichnung)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
     <TableColumn Field="@nameof(WP250TableRowModel.Status)" SortField="@nameof(WpAnlage.State)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
-    <TableColumn Field="@nameof(WP250TableRowModel.Provider)" SortField="@nameof(WpAnlage.StockProvider)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
-    <TableColumn Field="@nameof(WP250TableRowModel.Kuerzel)" SortField="@nameof(WpAnlage.StockShortcut)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
+    @* <TableColumn Field="@nameof(WP250TableRowModel.Provider)" SortField="@nameof(WpAnlage.StockProvider)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
+    <TableColumn Field="@nameof(WP250TableRowModel.Kuerzel)" SortField="@nameof(WpAnlage.StockShortcut)" TModel="WP250Model" TRTable="WP250TableRowModel"/> *@
+    <TableColumn Field="@nameof(WP250TableRowModel.Zahlung)" SortField="@nameof(WpAnlage.Payment)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
+    <TableColumn Field="@nameof(WP250TableRowModel.Anteile)" SortField="@nameof(WpAnlage.Shares)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
+    <TableColumn Field="@nameof(WP250TableRowModel.Wert)" SortField="@nameof(WpAnlage.Value)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
+    <TableColumn Field="@nameof(WP250TableRowModel.Gewinn)" SortField="@nameof(WpAnlage.Profit)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
+    <TableColumn Field="@nameof(WP250TableRowModel.WertDiff)" SortField="@nameof(WpAnlage.ValueDiff)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
     <TableColumn Field="@nameof(WP250TableRowModel.Valuta)" SortField="@nameof(WpAnlage.PriceDate)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
-    @* <TableColumn Field="@nameof(WP250TableRowModel.Stand)" SortField="@nameof(WP250TodoModel.Stand)" TModel="WP250Model" TRTable="WP250TableRowModel"/> *@
+    <TableColumn Field="@nameof(WP250TableRowModel.Waehrung)" SortField="@nameof(WpAnlage.Currency)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
     <TableColumn Field="@nameof(WP250TableRowModel.AngelegtAm)" SortField="@nameof(WpAnlage.Angelegt_Am)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
     <TableColumn Field="@nameof(WP250TableRowModel.AngelegtVon)" SortField="@nameof(WpAnlage.Angelegt_Von)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
     <TableColumn Field="@nameof(WP250TableRowModel.GeaendertAm)" SortField="@nameof(WpAnlage.Geaendert_Am)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
@@ -161,12 +166,11 @@
     {
       if (mvalid && msubmit == nameof(WP260Model.Ok))
       {
-        var dt1 = Formular.GetTableDialogType(Model.ModalArt);
+        @* TODO var dt1 = Formular.GetTableDialogType(Model.ModalArt);
         var o = WP260Model.To(daten);
-        var r = new ServiceErgebnis();
-        // TODO var r = dt1 == DialogTypeEnum.Delete
-        //   ? FactoryService.PrivateService.DeleteMemo(daten, o)
-        //   : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
+        var r = dt1 == DialogTypeEnum.Delete
+          ? FactoryService.StockService.DeleteInvestment(daten, o)
+          : FactoryService.StockService.SaveInvestment(daten, o.Uid, o.Thema, xml);
         if (r.Ok)
         {
           Model.ModalArt = null;
@@ -174,7 +178,7 @@
           Refresh();
         }
         else
-          ModalMessages?.Add(() => WP260Model, r.GetErrors());
+          ModalMessages?.Add(() => WP260Model, r.GetErrors()); *@
       }
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
@@ -202,19 +206,17 @@
     {
         // Siehe StartTask
     }
+    if (submit == nameof(Model.Details))
+    {
+      SetError("TODO Formular WP400 WP-Buchungen aufrufen.");
+    }
     if (submit == nameof(Model.Chart))
     {
-      // TODO Formular WP100 Chart aufrufen.
+      SetError("TODO Formular WP100 Chart aufrufen.");
     }
-    if (valid && submit == "OK")
+    if (submit == nameof(Model.Abbrechen))
     {
-      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
-      if (r != null)
-      {
-        Get(r);
-        if (r.Ok)
-          return true;
-      }
+      StatusTask.Abbrechen(Functions.ToString(daten.MandantNr), new[] { "CalculateInvestments" });
     }
     if (submit == nameof(Model.Schliessen))
       return true;

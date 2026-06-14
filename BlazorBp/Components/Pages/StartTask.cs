@@ -30,7 +30,7 @@ public static class StartTask
       {
         case "EN100":
         {
-          var rs = StatusTask.HinzufuegenFunktion(daten.MandantNr, $"QueryQueries", kurz: false);
+          var rs = StatusTask.HinzufuegenFunktion(daten.MandantNr, $"QueryQueries", id, kurz: false);
           if (!rs.Ok || rs.Ergebnis == null)
             return;
           var state = rs.Ergebnis;
@@ -47,7 +47,7 @@ public static class StartTask
         }
         case "WP200":
         {
-          var rs = StatusTask.HinzufuegenFunktion(daten.MandantNr, $"CalculateStocks");
+          var rs = StatusTask.HinzufuegenFunktion(daten.MandantNr, $"CalculateStocks", id);
           if (!rs.Ok || rs.Ergebnis == null)
             return;
           var state = rs.Ergebnis;
@@ -57,6 +57,24 @@ public static class StartTask
           {
             var r = FactoryService.StockService.CalculateStocks(daten, null, Model.Muster, null,
               Model.Bis ?? daten.Heute, Model.Auchinaktiv, rm?.Search, Model.Konfiguration, state);
+            state.Beenden(r: r);
+          }
+          else
+            state.Beenden();
+          break;
+        }
+        case "WP250":
+        {
+          var rs = StatusTask.HinzufuegenFunktion(daten.MandantNr, $"CalculateInvestments", id);
+          if (!rs.Ok || rs.Ergebnis == null)
+            return;
+          var state = rs.Ergebnis;
+          var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<WP250TableRowModel>>(s, page, id)?.ReadModel;
+          var Model = BlazorComponentBaseStatic.ReadFormularFormModel<WP250Model>(s, page, id);
+          if (rm != null && Model != null)
+          {
+            var r = FactoryService.StockService.CalculateInvestments(daten, null, null, Model.Wertpapier,
+              Model.Bis ?? daten.Heute, Model.Auchinaktiv, rm?.Search, state);
             state.Beenden(r: r);
           }
           else

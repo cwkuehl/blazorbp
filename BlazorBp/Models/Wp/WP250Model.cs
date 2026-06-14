@@ -6,7 +6,6 @@ namespace BlazorBp.Models.Wp;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Base;
-using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorBp.Base.DialogTypeEnum;
 
