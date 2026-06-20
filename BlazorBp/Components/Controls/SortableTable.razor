@@ -62,7 +62,7 @@
             <td scope="row"><button type="submit" class="btn btn-secondary btn-sm" formaction="@actionpath?handler=Table_Row" value="@ix" name="Table.SelectedRow" title="Zeile markieren">&gt;</button></td>
             @foreach (var c in Columns.Where(a => a.Visible))
             {
-              <td>@FormatForColumn(c.Pi.GetValue(r))</td>
+              <td class="@Functions.Iif(c.Right, "text-end", "")">@FormatForColumn(c.Pi.GetValue(r))</td>
             }
             @if (EditAktion || DeleteAktion || CopyAktion)
             {
@@ -209,6 +209,13 @@
     var sortfield = Functions.TrimNull(column.SortField) ?? field;
     var label = Functions.TrimNull(column.Label);
     var title = Functions.TrimNull(column.Title);
+    var right = Functions.ToBool(column.Right) ?? false;
+    var type = prop.PropertyType;
+    var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
+    if (underlyingType == typeof(decimal))
+    {
+      right = true;
+    }
     if (string.IsNullOrEmpty(label) || string.IsNullOrEmpty(title))
     {
       var dp = prop.GetCustomAttributes(typeof(DisplayAttribute), true).FirstOrDefault() as DisplayAttribute;
@@ -228,7 +235,7 @@
         Table.VisibleColumns += "1"; // TODO Sichtbarkeit benutzerbezogen initialisieren.
     }
     var v = Table != null && Table.VisibleColumns[Columns.Count] == '1';
-    Columns.Add(new Column(field, sortfield, label ?? "", title ?? "", sorttitle, prop, v));
+    Columns.Add(new Column(field, sortfield, label ?? "", title ?? "", sorttitle, prop, v, right));
     // StateHasChanged();
   }
 

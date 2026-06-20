@@ -46,6 +46,7 @@ Folgende Funktionen sind implementiert:
 -Meldungen aus Service-Schicht anzeigen,
 -Layout-Idee: keine Revisionsdaten im Header, sondern in optionalen Tabellen-Spalten und im Formular,
 -Tabelle mit optional einblendbaren Spalten und Speicherung der Einstellungen,
+-rechtsbündige Spalten,
 -Umschalten zwischen Dark und Light Mode per Link.
 -Automatische Größenanpassung der Formulare (font size scaling in html-tag).
 -Aktualisieren des Dialogs bei Undo und Redo, z.B. TB100.

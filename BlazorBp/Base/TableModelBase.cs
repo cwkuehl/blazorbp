@@ -157,8 +157,9 @@ public class TableModelBase<T>
     /// <param name="sortTitle">Tooltip auf Sortier-Schaltfläche.</param>
     /// <param name="pi">Betroffene PropertyInfo im Model.</param>
     /// <param name="visible">Sichbarkeit der Spalte.</param>
+    /// <param name="right">Rechte Ausrichtung der Spalte.</param>
     /// <returns></returns>
-    public Column(string name, string sortName, string label, string title, string sortTitle, PropertyInfo pi, bool visible)
+    public Column(string name, string sortName, string label, string title, string sortTitle, PropertyInfo pi, bool visible, bool right)
     {
       Name = name;
       SortName = sortName;
@@ -167,6 +168,7 @@ public class TableModelBase<T>
       SortTitle = sortTitle;
       Pi = pi;
       Visible = visible;
+      Right = right;
     }
 
     /// <summary>Holt oder setzt den Namen der Model-Spalte.</summary>
@@ -189,4 +191,7 @@ public class TableModelBase<T>
 
     /// <summary>Holt oder setzt die Sichtbarkeit der Spalte.</summary>
     public bool Visible { get; set; }
+
+    /// <summary>Holt oder setzt die rechte Ausrichtung der Spalte.</summary>
+    public bool Right { get; set; }
   };
