@@ -56,10 +56,16 @@
 
 <WP260 WP260Model="WP260Model" ModalId="@Model.ModalId" ModalArt="@Model.ModalArt" ModalEditContext="@ModalEditContext" ModalMessages="@ModalMessages"/>
 
+<WP210 WP210Model="WP210Model" ModalId="@Model.Modal2Id" ModalArt="@Model.ModalArt" ModalEditContext="@Modal2EditContext" ModalMessages="@Modal2Messages"/>
+
 @code {
   /// <summary>Holt oder setzt das 1. Modal-Model.</summary>
   [SupplyParameterFromForm]
   protected WP260Model WP260Model { get; set; } = default!;
+
+  /// <summary>Holt oder setzt das Modal2-Model.</summary>
+  [SupplyParameterFromForm]
+  protected WP210Model WP210Model { get; set; } = default!;
 
   /// <summary>
   /// Initialisierung des Models.
@@ -95,7 +101,10 @@
     if (WP260Model == null)
       WP260Model = new WP260Model { };
     WP260Model.Nr = id;
-    InitEditContext(Model, WP260Model);
+    if (WP210Model == null)
+      WP210Model = new WP210Model();
+    WP210Model.Nr = id;
+    InitEditContext(Model, WP260Model, WP210Model);
     var l0 = Get(FactoryService.StockService.GetStockList(daten));
     Model.AuswahlWertpapier = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
     WP260Model.AuswahlWertpapier = l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList();
@@ -106,7 +115,14 @@
     WP260Model.AuswahlDepot = kl?.Where(a => a.Art == Constants.ARTK_AKTIVKONTO && (keind || a.Kz == Constants.KZK_DEPOT)).Select(a => new ListItem(a.Uid, a.Name)).ToList();
     WP260Model.AuswahlAbrechnung = kl?.Where(a => a.Art == Constants.ARTK_AKTIVKONTO).Select(a => new ListItem(a.Uid, a.Name)).ToList();
     WP260Model.AuswahlErtrag = kl?.Where(a => a.Art == Constants.ARTK_ERTRAGSKONTO).Select(a => new ListItem(a.Uid, a.Name)).ToList();
-  }
+  
+    var lw0 = Get(FactoryService.StockService.GetStateList(daten));
+    WP210Model.AuswahlStatus = lw0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
+    var lw1 = Get(FactoryService.StockService.GetProviderList(daten));
+    WP210Model.AuswahlProvider = lw1?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
+    var lw2 = Get(FactoryService.StockService.GetStockList(daten));
+    WP210Model.AuswahlRelation = InsertEmpty(lw2?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
+}
 
   /// <summary>
   /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
@@ -137,74 +153,135 @@
   public override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
     var daten = ServiceDaten;
-    var (dt, msubmit, mvalid) = HandleModal1(form, "wp250t", "wp260modal", WP260Model.GetSubmit(HttpContext.Request), nameof(WP260Model.Abbrechen), handler, id);
-    if (dt == DialogTypeEnum.New)
+    if (form == "wp250t" || form == "wp260modal")
     {
-      WP260Model.SetMhrf(dt, daten);
-      Model.ModalArt = handler;
-      Model.ModalId = id;
-    }
-    else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
-    {
-      var i = Functions.ToInt32(id);
-      if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
+      var (dt, msubmit, mvalid) = HandleModal1(form, "wp250t", "wp260modal", WP260Model.GetSubmit(HttpContext.Request), nameof(WP260Model.Abbrechen), handler, id);
+      if (dt == DialogTypeEnum.New)
       {
-        var l = TableData(Table, ModalMessages);
-        var ds = l.Skip(i - 1).FirstOrDefault();
-        var r = FactoryService.StockService.GetInvestment(daten, ds?.Nummer ?? "");
-        if (r.Ok && ds != null && r.Ergebnis != null)
-        if (ds != null)
+        WP260Model.SetMhrf(dt, daten);
+        Model.ModalArt = handler;
+        Model.ModalId = id;
+      }
+      else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
+      {
+        var i = Functions.ToInt32(id);
+        if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
         {
-          WP260Model.From(r.Ergebnis);
-          WP260Model.SetMhrf(dt, daten);
-          Model.ModalArt = handler;
-          Model.ModalId = id;
+          var l = TableData(Table, ModalMessages);
+          var ds = l.Skip(i - 1).FirstOrDefault();
+          var r = FactoryService.StockService.GetInvestment(daten, ds?.Nummer ?? "");
+          if (r.Ok && ds != null && r.Ergebnis != null)
+          if (ds != null)
+          {
+            WP260Model.From(r.Ergebnis);
+            WP260Model.SetMhrf(dt, daten);
+            Model.ModalArt = handler;
+            Model.ModalId = id;
+          }
+        }
+      }
+      else if (dt == DialogTypeEnum.Postback)
+      {
+        if (msubmit == nameof(WP260Model.Wpdetails))
+        {
+          // SetError("TODO Formular WP210 Wertpapier aufrufen.");
+          // Formular WP210 Wertpapier öffnen
+          var wpid = WP260Model.Wertpapier;
+          HandleModal("wp210modal", "Form_Edit", null, wpid);
+          @* WP210Model.SetMhrf(DialogTypeEnum.Edit);
+          Model.ModalArt = "Table_Edit";
+          Model.ModalId = null;
+          Model.Modal2Id = id2; *@
+        }
+        else if (mvalid && msubmit == nameof(WP260Model.Ok))
+        {
+          var dt1 = Formular.GetTableDialogType(Model.ModalArt);
+          var o = WP260Model.To(daten);
+          var st = WP260Model.Stand ?? 0;
+          if (dt1 == DialogTypeEnum.Delete)
+          {
+            var r = FactoryService.StockService.DeleteInvestment(daten, o);
+            if (r.Ok)
+            {
+              Model.ModalArt = null;
+              Model.ModalId = null;
+              Refresh();
+            }
+            else
+              ModalMessages?.Add(() => WP260Model, r.GetErrors());
+          }
+          else
+          {
+            var r = FactoryService.StockService.SaveInvestment(daten, o.Uid, o.Wertpapier_Uid, o.Bezeichnung, o.Notiz, o.State, o.PortfolioAccountUid, o.SettlementAccountUid, o.IncomeAccountUid, WP260Model.Valuta, st);
+            if (r.Ok && WP260Model.Valuta.HasValue && st != 0 && r.Ergebnis != null)
+            {
+              var rs = StatusTask.HinzufuegenFunktion(daten.MandantNr, "CalculateInvestments", "1");
+              r.AddMeldungen(rs);
+              if (rs.Ok && rs.Ergebnis != null)
+              {
+                var state = rs.Ergebnis;
+                Get(FactoryService.StockService.CalculateInvestments(daten, null, r.Ergebnis.Uid, null, WP260Model.Valuta.Value, false, null, state));
+                state.Beenden();
+              }
+            }
+            if (r.Ok)
+            {
+              Model.ModalArt = null;
+              Model.ModalId = null;
+              Refresh();
+            }
+            else
+              ModalMessages?.Add(() => WP260Model, r.GetErrors());
+          }
         }
       }
     }
-    else if (dt == DialogTypeEnum.Postback)
+    else if (form == "wp210modal")
     {
-      if (mvalid && msubmit == nameof(WP260Model.Ok))
+      var (dt, msubmit, mvalid) = HandleModal1(form, "wp210modal", "wp210modal", WP210Model.GetSubmit(HttpContext.Request), nameof(WP210Model.Abbrechen), handler, id2);
+      if (dt == DialogTypeEnum.Edit)
       {
-        var dt1 = Formular.GetTableDialogType(Model.ModalArt);
-        var o = WP260Model.To(daten);
-        var st = WP260Model.Stand ?? 0;
-        if (dt1 == DialogTypeEnum.Delete)
+        WP210Model.SetMhrf(dt);
+        Model.ModalArt = handler;
+        Model.Modal2Id = id2;
+        var r = FactoryService.StockService.GetStock(daten, id2 ?? "");
+        if (r.Ok && r.Ergebnis != null)
         {
-          var r = FactoryService.StockService.DeleteInvestment(daten, o);
-          if (r.Ok)
-          {
-            Model.ModalArt = null;
-            Model.ModalId = null;
-            Refresh();
-          }
-          else
-            ModalMessages?.Add(() => WP260Model, r.GetErrors());
+          WP210Model.From(r.Ergebnis);
+          WP210Model.SetMhrf(dt);
+          Model.ModalArt = handler;
+          Model.ModalId = id2;
         }
         else
+          Get(r);
+      }
+      else if (dt == DialogTypeEnum.Postback)
+      {
+        if (msubmit == nameof(WP210Model.Ok))
         {
-          var r = FactoryService.StockService.SaveInvestment(daten, o.Uid, o.Wertpapier_Uid, o.Bezeichnung, o.Notiz, o.State, o.PortfolioAccountUid, o.SettlementAccountUid, o.IncomeAccountUid, WP260Model.Valuta, st);
-          if (r.Ok && WP260Model.Valuta.HasValue && st != 0 && r.Ergebnis != null)
-          {
-            var rs = StatusTask.HinzufuegenFunktion(daten.MandantNr, "CalculateInvestments", "1");
-            r.AddMeldungen(rs);
-            if (rs.Ok && rs.Ergebnis != null)
-            {
-              var state = rs.Ergebnis;
-              Get(FactoryService.StockService.CalculateInvestments(daten, null, r.Ergebnis.Uid, null, WP260Model.Valuta.Value, false, null, state));
-              state.Beenden();
-            }
-          }
+          @* var dtp = Formular.GetTableDialogType(Model.ModalArt);
+          var o = WP210Model.To(daten);
+          var r = dtp == DialogTypeEnum.Delete
+            ? FactoryService.DiaryService.DeletePosition(daten, o)
+            : FactoryService.DiaryService.SavePosition(daten, o.Uid, o.Bezeichnung,
+                Functions.ToString(o.Breite, 5), Functions.ToString(o.Laenge, 5),
+                Functions.ToString(o.Hoehe, 2), o.Zeitzone, o.Notiz);
           if (r.Ok)
           {
             Model.ModalArt = null;
-            Model.ModalId = null;
+            Model.Modal2Id = null;
             Refresh();
           }
           else
-            ModalMessages?.Add(() => WP260Model, r.GetErrors());
+            Modal2Messages?.Add(() => WP210Model, r.GetErrors()); *@
         }
       }
+    }
+    else
+    {
+      Model.ModalArt = null;
+      Model.ModalId = null;
+      Model.Modal2Id = null;
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
   }

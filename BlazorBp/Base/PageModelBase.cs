@@ -52,6 +52,8 @@ public class PageModelBase
   /// <returns>Name der Submit-auslösenden Komponente.</returns>
   public string GetSubmit(HttpRequest Request)
   {
+    if (Handler != null)
+      System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} GetSubmit Handler {Handler}");
     Handler ??= Request.Query["handler"];
     if (Request.Method == "POST")
     {
