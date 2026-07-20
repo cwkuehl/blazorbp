@@ -7,6 +7,7 @@ namespace BlazorBp.Models.Ag;
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Base;
 using CSBP.Services.Apis.Models;
+using CSBP.Services.Base;
 
 /// <summary>
 /// Model-Klasse für eine Zeile in der Tabelle von Formular AG100 Mandanten.
@@ -39,20 +40,6 @@ public class AG100TableRowModel : TableRowModelBase
   [Display(Name = "Geändert von", Description = "Die Benutzer-ID der letzten Änderung.")]
   public string? GeaendertVon { get; set; }
 
-  /// <summary>Kopiert die Werte in ein Model.</summary>
-  public MaMandant To()
-  {
-    return new MaMandant
-    {
-      Nr = Nummer,
-      Beschreibung = Beschreibung,
-      Angelegt_Am = AngelegtAm,
-      Angelegt_Von = AngelegtVon,
-      Geaendert_Am = GeaendertAm,
-      Geaendert_Von = GeaendertVon,
-    };
-  }
-
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
   public static AG100TableRowModel From(MaMandant m)
@@ -60,7 +47,7 @@ public class AG100TableRowModel : TableRowModelBase
     return new AG100TableRowModel
     {
       Nummer = m.Nr,
-      Beschreibung = m.Beschreibung,
+      Beschreibung = Functions.Left2(m.Beschreibung),
       AngelegtAm = m.Angelegt_Am,
       AngelegtVon = m.Angelegt_Von,
       GeaendertAm = m.Geaendert_Am,

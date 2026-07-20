@@ -71,27 +71,6 @@ public class TB200TableRowModel : TableRowModelBase
   //// [Required(ErrorMessage = "Geändert von muss angegeben werden.")]
   public string? GeaendertVon { get; set; }
 
-  /// <summary>Kopiert die Werte in ein Model.</summary>
-  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
-  public TbOrt To(ServiceDaten daten)
-  {
-    return new TbOrt
-    {
-      Mandant_Nr = daten.MandantNr,
-      Uid = Nummer,
-      Bezeichnung = Bezeichnung,
-      Breite = Functions.ToDecimal(Breite, 5) ?? 0m,
-      Laenge = Functions.ToDecimal(Laenge, 5) ?? 0m,
-      Hoehe = Functions.ToDecimal(Hoehe, 5) ?? 0m,
-      Zeitzone = Zeitzone,
-      Notiz = Notiz,
-      Angelegt_Am = AngelegtAm,
-      Angelegt_Von = AngelegtVon,
-      Geaendert_Am = GeaendertAm,
-      Geaendert_Von = GeaendertVon,
-    };
-  }
-
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
   public static TB200TableRowModel From(TbOrt m)
@@ -99,12 +78,12 @@ public class TB200TableRowModel : TableRowModelBase
     return new TB200TableRowModel
     {
       Nummer = m.Uid,
-      Bezeichnung = m.Bezeichnung,
+      Bezeichnung = Functions.Left2(m.Bezeichnung),
       Breite = Functions.ToString(m.Breite, 5),
       Laenge = Functions.ToString(m.Laenge, 5),
       Hoehe = Functions.ToString(m.Hoehe, 2),
       Zeitzone = m.Zeitzone,
-      Notiz = m.Notiz,
+      Notiz = Functions.Left2(m.Notiz),
       AngelegtAm = m.Angelegt_Am,
       AngelegtVon = m.Angelegt_Von, 
       GeaendertAm = m.Geaendert_Am,

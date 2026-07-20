@@ -106,34 +106,6 @@ public class WP200TableRowModel : TableRowModelBase
   //// [Required(ErrorMessage = "Geändert von muss angegeben werden.")]
   public string? GeaendertVon { get; set; }
 
-  /// <summary>Kopiert die Werte in ein Model.</summary>
-  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
-  public WpWertpapier To(ServiceDaten daten)
-  {
-    return new WpWertpapier
-    {
-      // Mandant_Nr = daten.MandantNr,
-      Uid = Nummer,
-      Bezeichnung = Bezeichnung,
-      Datenquelle = Provider,
-      Kuerzel = Kuerzel,
-      Status = Status,
-      CurrentPrice = Functions.ToDecimal(AktKurs),
-      StopPrice = Functions.ToDecimal(StopKurs),
-      SignalPrice1 = Functions.ToDecimal(SignalKurs1),
-      Pattern = Muster,
-      Type = Typ,
-      Currency = Waehrung,
-      Sorting = Sortierung,
-      Relation_Uid = Relation,
-      Notiz = Notiz,
-      Angelegt_Am = AngelegtAm,
-      Angelegt_Von = AngelegtVon,
-      Geaendert_Am = GeaendertAm,
-      Geaendert_Von = GeaendertVon,
-    };
-  }
-
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
   public static WP200TableRowModel From(WpWertpapier m)
@@ -141,14 +113,14 @@ public class WP200TableRowModel : TableRowModelBase
     return new WP200TableRowModel
     {
       Nummer = m.Uid,
-      Bezeichnung = m.Bezeichnung,
+      Bezeichnung = Functions.Left2(m.Bezeichnung),
       Provider = m.Datenquelle,
       Kuerzel = m.Kuerzel,
       Status = CsbpBase.GetStockState(m.Status, m.Kuerzel),
       AktKurs = Functions.ToString(m.CurrentPrice),
       StopKurs = Functions.ToString(m.StopPrice),
       SignalKurs1 = Functions.ToString(m.SignalPrice1),
-      Muster = m.Pattern,
+      Muster = Functions.Left2(m.Pattern),
       Typ = m.Type,
       Waehrung = m.Currency,
       Sortierung = m.Sorting,

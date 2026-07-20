@@ -54,25 +54,6 @@ public class AG200TableRowModel : TableRowModelBase
   [Display(Name = "Geändert von", Description = "Die Benutzer-ID der letzten Änderung.")]
   public string? GeaendertVon { get; set; }
 
-  /// <summary>Kopiert die Werte in ein Model.</summary>
-  /// <param name="mnr">Betroffene Mandantennummer.</param>
-  public Benutzer To(int mnr)
-  {
-    return new Benutzer
-    {
-      Mandant_Nr = mnr,
-      Person_Nr = Nummer,
-      Benutzer_ID = BenutzerId,
-      Passwort = "",
-      Berechtigung = Functions.ToInt32(Berechtigung),
-      Geburt = Geburt,
-      Angelegt_Am = AngelegtAm,
-      Angelegt_Von = AngelegtVon,
-      Geaendert_Am = GeaendertAm,
-      Geaendert_Von = GeaendertVon,
-    };
-  }
-
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
   public static AG200TableRowModel From(Benutzer m)

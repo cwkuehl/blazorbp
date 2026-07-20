@@ -52,25 +52,6 @@ public class EN100TableRowModel : TableRowModelBase
   [Display(Name = "Geändert von", Description = "Die Benutzer-ID der letzten Änderung")]
   public string? GeaendertVon { get; set; }
 
-  /// <summary>Kopiert die Werte in ein Model.</summary>
-  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
-  public EnAbfrage To(ServiceDaten daten)
-  {
-    return new EnAbfrage
-    {
-      Mandant_Nr = daten.MandantNr,
-      Uid = Nummer,
-      Sortierung = Sortierung,
-      Bezeichnung = Bezeichnung,
-      Status = Status,
-      Host_Url = HostUrl,
-      Angelegt_Am = AngelegtAm,
-      Angelegt_Von = AngelegtVon,
-      Geaendert_Am = GeaendertAm,
-      Geaendert_Von = GeaendertVon,
-    };
-  }
-
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
   public static EN100TableRowModel From(EnAbfrage m)
@@ -79,7 +60,7 @@ public class EN100TableRowModel : TableRowModelBase
     {
       Nummer = m.Uid,
       Sortierung = m.Sortierung,
-      Bezeichnung = m.Bezeichnung,
+      Bezeichnung = Functions.Left2(m.Bezeichnung),
       Status = CsbpBase.GetStockState(m.Status, "1"),
       HostUrl = m.Host_Url,
       AngelegtAm = m.Angelegt_Am,

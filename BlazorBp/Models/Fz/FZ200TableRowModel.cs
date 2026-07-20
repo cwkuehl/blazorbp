@@ -47,23 +47,6 @@ public class FZ200TableRowModel : TableRowModelBase
   [Display(Name = "Geändert von", Description = "Die Benutzer-ID der letzten Änderung")]
   public string? GeaendertVon { get; set; }
 
-  /// <summary>Kopiert die Werte in ein Model.</summary>
-  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
-  public FzFahrrad To(ServiceDaten daten)
-  {
-    return new FzFahrrad
-    {
-      Mandant_Nr = daten.MandantNr,
-      Uid = Nummer,
-      Bezeichnung = Bezeichnung,
-      Typ = FzFahrrad.GetTyp(Typ),
-      Angelegt_Am = AngelegtAm,
-      Angelegt_Von = AngelegtVon,
-      Geaendert_Am = GeaendertAm,
-      Geaendert_Von = GeaendertVon,
-    };
-  }
-
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
   public static FZ200TableRowModel From(FzFahrrad m)
@@ -71,7 +54,7 @@ public class FZ200TableRowModel : TableRowModelBase
     return new FZ200TableRowModel
     {
       Nummer = m.Uid,
-      Bezeichnung = m.Bezeichnung,
+      Bezeichnung = Functions.Left2(m.Bezeichnung),
       Typ = m.TypBezeichnung,
       AngelegtAm = m.Angelegt_Am,
       AngelegtVon = m.Angelegt_Von,

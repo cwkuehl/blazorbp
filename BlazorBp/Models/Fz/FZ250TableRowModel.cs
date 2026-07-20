@@ -75,28 +75,6 @@ public class FZ250TableRowModel : TableRowModelBase
   //// [Required(ErrorMessage = "Geändert von muss angegeben werden.")]
   public string? GeaendertVon { get; set; }
 
-  /// <summary>Kopiert die Werte in ein Model.</summary>
-  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
-  public VFzFahrradstand To(ServiceDaten daten)
-  {
-    return new VFzFahrradstand
-    {
-      Mandant_Nr = daten.MandantNr,
-      Fahrrad_Uid = Nummer,
-      Bezeichnung = Fahrrad,
-      Datum = Datum ?? daten.Heute,
-      Nr = UnterNr,
-      Zaehler_km = Zaehler ?? 0,
-      Periode_km = Km ?? 0,
-      Periode_Schnitt = Functions.Round(Schnitt) ?? 0,
-      Beschreibung = Beschreibung,
-      Angelegt_Am = AngelegtAm,
-      Angelegt_Von = AngelegtVon,
-      Geaendert_Am = GeaendertAm,
-      Geaendert_Von = GeaendertVon,
-    };
-  }
-
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
   public static FZ250TableRowModel From(VFzFahrradstand m)
@@ -104,13 +82,13 @@ public class FZ250TableRowModel : TableRowModelBase
     return new FZ250TableRowModel
     {
       Nummer = m.Fahrrad_Uid,
-      Fahrrad = m.Bezeichnung,
+      Fahrrad = Functions.Left2(m.Bezeichnung),
       Datum = m.Datum,
       UnterNr = m.Nr,
       Zaehler = m.Zaehler_km,
       Km = m.Periode_km,
       Schnitt = Functions.Round(m.Periode_Schnitt),
-      Beschreibung = m.Beschreibung,
+      Beschreibung = Functions.Left2(m.Beschreibung),
       AngelegtAm = m.Angelegt_Am,
       AngelegtVon = m.Angelegt_Von,
       GeaendertAm = m.Geaendert_Am,

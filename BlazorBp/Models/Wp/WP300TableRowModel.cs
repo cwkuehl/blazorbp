@@ -86,30 +86,6 @@ public class WP300TableRowModel : TableRowModelBase
   //// [Required(ErrorMessage = "Geändert von muss angegeben werden.")]
   public string? GeaendertVon { get; set; }
 
-  /// <summary>Kopiert die Werte in ein Model.</summary>
-  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
-  public WpKonfiguration To(ServiceDaten daten)
-  {
-    return new WpKonfiguration
-    {
-      Mandant_Nr = daten.MandantNr,
-      Uid = Nummer,
-      Bezeichnung = Bezeichnung,
-      Box = Box,
-      Scale = Functions.ToInt32(Skala),
-      Reversal = Umkehr,
-      Method = Functions.ToInt32(Methode),
-      Duration = Dauer,
-      Relative = Relativ,
-      Status = Status,
-      Notiz = Notiz,
-      Angelegt_Am = AngelegtAm,
-      Angelegt_Von = AngelegtVon,
-      Geaendert_Am = GeaendertAm,
-      Geaendert_Von = GeaendertVon,
-    };
-  }
-
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
   public static WP300TableRowModel From(WpKonfiguration m)
@@ -117,7 +93,7 @@ public class WP300TableRowModel : TableRowModelBase
     return new WP300TableRowModel
     {
       Nummer = m.Uid,
-      Bezeichnung = m.Bezeichnung,
+      Bezeichnung = Functions.Left2(m.Bezeichnung),
       Box = m.Box ?? 0,
       Skala = Functions.ToString(m.Scale),
       Umkehr = m.Reversal,
@@ -125,7 +101,7 @@ public class WP300TableRowModel : TableRowModelBase
       Dauer = m.Duration,
       Relativ = m.Relative,
       Status = m.Status,
-      Notiz = m.Notiz,
+      Notiz = Functions.Left2(m.Notiz),
       AngelegtAm = m.Angelegt_Am,
       AngelegtVon = m.Angelegt_Von,
       GeaendertAm = m.Geaendert_Am,

@@ -80,31 +80,6 @@ public class WP250TableRowModel : TableRowModelBase
   [Display(Name = "Geändert von", Description = "Die Benutzer-ID der letzten Änderung")]
   public string? GeaendertVon { get; set; }
 
-  /// <summary>Kopiert die Werte in ein Model.</summary>
-  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
-  public WpAnlage To(ServiceDaten daten)
-  {
-    return new WpAnlage
-    {
-      Mandant_Nr = daten.MandantNr,
-      Uid = Nummer,
-      // Bezeichnung = Bezeichnung,
-      // State = Status,
-      // StockProvider = Provider,
-      // StockShortcut = Kuerzel,
-      // Payment = Functions.ToDecimal(Zahlung) ?? 0,
-      // Shares = Functions.ToDecimal(Anteile) ?? 0,
-      // Value = Functions.ToDecimal(Wert) ?? 0,
-      // Profit = Functions.ToDecimal(Gewinn) ?? 0,
-      // PriceDate = Functions.ToDateTime(Valuta),
-      // Currency = Waehrung,
-      // Angelegt_Am = AngelegtAm,
-      // Angelegt_Von = AngelegtVon,
-      // Geaendert_Am = GeaendertAm,
-      // Geaendert_Von = GeaendertVon,
-    };
-  }
-
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
   public static WP250TableRowModel From(WpAnlage m)
@@ -112,7 +87,7 @@ public class WP250TableRowModel : TableRowModelBase
     return new WP250TableRowModel
     {
       Nummer = m.Uid,
-      Bezeichnung = m.Bezeichnung,
+      Bezeichnung = Functions.Left2(m.Bezeichnung),
       Status = CsbpBase.GetStockState(m.State.ToString(), m.StockShortcut),
       Provider = m.StockProvider,
       Kuerzel = m.StockShortcut,
