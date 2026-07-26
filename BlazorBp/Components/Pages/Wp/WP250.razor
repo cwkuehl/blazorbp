@@ -7,7 +7,7 @@
 <PageTitle>@Title</PageTitle>
 
 <CascadingValue Value="this">
-<SortableTable Table="Table" NoData="" FormName="wp250" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="WP250Model" TRTable="WP250TableRowModel">
+<SortableTable Table="Table" NoData="" FormName="wp250" NoModal="true" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="WP250Model" TRTable="WP250TableRowModel">
   <ChildContent>
     @* <TableColumn Field="@nameof(WP250TableRowModel.Nummer)" SortField="@nameof(WpAnlage.Uid)" TModel="WP250Model" TRTable="WP250TableRowModel"/> *@
     <TableColumn Field="@nameof(WP250TableRowModel.Bezeichnung)" SortField="@nameof(WpAnlage.Bezeichnung)" TModel="WP250Model" TRTable="WP250TableRowModel"/>
@@ -54,7 +54,7 @@
   </div>
 </EditForm>
 
-<WP260 WP260Model="WP260Model" ModalId="@Model.ModalId" ModalArt="@Model.ModalArt" ModalEditContext="@ModalEditContext" ModalMessages="@ModalMessages"/>
+<WP260M WP260Model="WP260Model" ModalId="@Model.ModalId" ModalArt="@Model.ModalArt" ModalEditContext="@ModalEditContext" ModalMessages="@ModalMessages"/>
 
 <WP210 WP210Model="WP210Model" ModalId="@Model.Modal2Id" ModalArt="@Model.ModalArt" ModalEditContext="@Modal2EditContext" ModalMessages="@Modal2Messages"/>
 
@@ -122,7 +122,7 @@
     WP210Model.AuswahlProvider = lw1?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
     var lw2 = Get(FactoryService.StockService.GetStockList(daten));
     WP210Model.AuswahlRelation = InsertEmpty(lw2?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
-}
+  }
 
   /// <summary>
   /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
@@ -165,9 +165,9 @@
       else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
       {
         var i = Functions.ToInt32(id);
-        if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
+        var l = Table?.Liste ?? TableData(Table, ModalMessages);
+        if (l != null && i >= 1 && l.Count() >= i)
         {
-          var l = TableData(Table, ModalMessages);
           var ds = l.Skip(i - 1).FirstOrDefault();
           var r = FactoryService.StockService.GetInvestment(daten, ds?.Nummer ?? "");
           if (r.Ok && ds != null && r.Ergebnis != null)
@@ -234,6 +234,10 @@
               ModalMessages?.Add(() => WP260Model, r.GetErrors());
           }
         }
+        else if (IsDateMhp(msubmit, nameof(WP260Model.Valuta), WP260Model.Valuta, out var d))
+        {
+          WP260Model.Valuta = d;
+        }
       }
     }
     else if (form == "wp210modal")
@@ -284,6 +288,40 @@
       Model.Modal2Id = null;
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
+  }
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines nicht modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  public override void HandleNoModal(string? form, string? handler, string? id)
+  {
+    var i = Functions.ToInt32(id);
+    if (i < 0 && handler == "Table_New")
+    {
+      var dt = Formular.ToShortString(Formular.GetTableDialogType(handler));
+      var id2 = $"{dt}_{id}";
+      var f = OpenFormular("WP260", id2);
+      if (f != null)
+        OpenFormular(f);
+      return;
+    }
+    var l = Table?.Liste ?? TableData(Table, ModalMessages);
+    if (l != null && i >= 1 && l.Count() >= i)
+    {
+      var ds = l.Skip(i - 1).FirstOrDefault();
+      var nr = ds?.Nummer ?? "";
+      if (!string.IsNullOrEmpty(nr))
+      {
+        var dt = Formular.ToShortString(Formular.GetTableDialogType(handler));
+        var id2 = $"{dt}_{nr}";
+        var f = OpenFormular("WP260", id2);
+        if (f != null)
+          OpenFormular(f);
+      }
+    }
   }
 
   /// <summary>

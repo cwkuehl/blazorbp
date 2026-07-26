@@ -81,8 +81,7 @@ public class FZ260Model : PageModelBase
   public VFzFahrradstand To(ServiceDaten daten) => new()
   {
     Mandant_Nr = daten.MandantNr,
-    Fahrrad_Uid = Nummer,
-    Bezeichnung = Fahrrad,
+    Fahrrad_Uid = Fahrrad,
     Datum = Datum ?? daten.Heute,
     Nr = UnterNr,
     Zaehler_km = Zaehler ?? 0,

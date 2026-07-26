@@ -50,17 +50,78 @@ public class Formular
     switch (handler)
     {
       case "Table_New":
+      case "N":
         return DialogTypeEnum.New;
       case "Table_Edit":
-        return DialogTypeEnum.Edit;
       case "Form_Edit":
+      case "E":
         return DialogTypeEnum.Edit;
       case "Table_Copy":
+      case "C":
         return DialogTypeEnum.Copy;
       case "Table_Delete":
+      case "D":
         return DialogTypeEnum.Delete;
       default:
         return DialogTypeEnum.Without;
+    }
+  }
+
+  /// <summary>
+  /// Liefert den Kurznamen für den DialogType.
+  /// </summary>
+  /// <param name="dt">Betroffener DialogType.</param>
+  /// <returns>Passender Kurzname.</returns>
+  public static string ToShortString(DialogTypeEnum dt)
+  {
+    switch (dt)
+    {
+      case DialogTypeEnum.New:
+        return "N";
+      case DialogTypeEnum.Edit:
+        return "E";
+      case DialogTypeEnum.Copy:
+        return "C";
+      case DialogTypeEnum.Delete:
+        return "D";
+      default:
+        return "W";
+    }
+  }
+
+  /// <summary>
+  /// Liefert DialogType und Id.
+  /// </summary>
+  /// <param name="id0">Betroffene Id mit vorangestelltem Dialogtyp.</param>
+  /// <returns>Passender DialogType und Id.</returns>
+  public static (DialogTypeEnum dt, string id) GetDtId(string? id0)
+  {
+    var parts = (id0 ?? "").Split('_');
+    var dt = GetTableDialogType(parts.Length > 0 ? parts[0] : null);
+    var id = parts.Length > 1 ? parts[1] : "";
+    return (dt, id);
+  }
+
+  /// <summary>
+  /// Liefert Formulartitel für den DialogType.
+  /// </summary>
+  /// <param name="title">Betroffener Titel.</param>
+  /// <param name="dt">Betroffener DialogType.</param>
+  /// <returns>Passender Kurzname.</returns>
+  public static string ToTitle(string title, DialogTypeEnum dt)
+  {
+    switch (dt)
+    {
+      case DialogTypeEnum.Edit:
+        return $"{title} bearbeiten";
+      case DialogTypeEnum.Copy:
+        return $"{title} kopieren";
+      case DialogTypeEnum.Delete:
+        return $"{title} löschen";
+      case DialogTypeEnum.Without:
+        return title;
+      default:
+        return $"{title} erfassen";
     }
   }
 }

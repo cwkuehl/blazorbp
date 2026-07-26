@@ -37,6 +37,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       { "TB200", new Formular { Action = "tb200", Area = "tb", Name = "Positionen" } },
       { "WP200", new Formular { Action = "wp200", Area = "wp", Name = "Wertpapiere" } },
       { "WP250", new Formular { Action = "wp250", Area = "wp", Name = "Anlagen" } },
+      { "WP260", new Formular { Action = "wp260", Area = "wp", Name = "Anlage" } },
       { "WP300", new Formular { Action = "wp300", Area = "wp", Name = "Konfigurationen" } },
 };
 
@@ -579,6 +580,16 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// <param name="id">Id aus Tabellen-Aktion.</param>
   /// <param name="id2">Id aus 2. modalen Dialog.</param>
   public virtual void HandleModal(string? form, string? handler, string? id, string? id2)
+  {
+  }
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines nicht modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  public virtual void HandleNoModal(string? form, string? handler, string? id)
   {
   }
 

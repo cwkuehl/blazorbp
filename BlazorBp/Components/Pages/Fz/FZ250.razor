@@ -124,9 +124,9 @@
     else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
     {
       var i = Functions.ToInt32(id);
-      if (i >= 1 && (Table?.Liste?.Count() ?? -1) < i)
+      var l = Table?.Liste ?? TableData(Table, ModalMessages);
+      if (l != null && i >= 1 && l.Count() >= i)
       {
-        var l = TableData(Table, ModalMessages);
         var ds = l.Skip(i - 1).FirstOrDefault();
         if (ds != null)
         {

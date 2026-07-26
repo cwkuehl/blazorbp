@@ -71,6 +71,9 @@ public class TableModelBase<T>
   /// <summary>Holt oder setzt die Id für modalen Dialogs.</summary>
   public string? ModalId { get; set; }
 
+  /// <summary>Holt oder setzt die Id für nicht modalen Dialogs.</summary>
+  public string? NoModalId { get; set; }
+
   /// <summary>Holt oder setzt die aktuelle Liste.</summary>
   public List<T>? Liste { get; set; } = default!;
 

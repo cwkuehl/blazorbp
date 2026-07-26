@@ -177,9 +177,11 @@ public class WP260Model : PageModelBase
     SetMandatoryHiddenReadonly(nameof(Abrechnung), false, false, mode == Delete);
     SetMandatoryHiddenReadonly(nameof(Ertrag), false, false, mode == Delete);
     SetMandatoryHiddenReadonly(nameof(Notiz), false, false, mode == Delete);
-    SetMandatoryHiddenReadonly(nameof(Data), false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Data), false, false, true);
     SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
     SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
+    SetMandatoryHiddenReadonly(nameof(Valuta), false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Stand), false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
     SetMandatoryHiddenReadonly(nameof(Abbrechen), false, false, false);
   }

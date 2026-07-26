@@ -15,6 +15,9 @@ public class PageModelBase
   /// <summary>Holt oder setzt die eindeutige Nummer des Models.</summary>
   public string? Nr { get; set; } = default;
 
+  /// <summary>Holt oder setzt den Dialogtyp des Models.</summary>
+  public DialogTypeEnum DialogType { get; set; } = DialogTypeEnum.Without;
+
   /// <summary>Holt oder setzt den Namen des Submit-auslösenden Controls.</summary>
   ////[BindProperty(Name="submitcontrol")]
   public string? SubmitControl { get; set; } = default;
