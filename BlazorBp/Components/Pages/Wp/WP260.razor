@@ -113,14 +113,12 @@
     var daten = ServiceDaten;
     if (submit == nameof(Model.Wpdetails))
     {
-      // SetError("TODO Formular WP210 Wertpapier aufrufen.");
       // Formular WP210 Wertpapier öffnen
-      @* var wpid = Model.Wertpapier;
-      HandleModal("wp210modal", "Form_Edit", null, wpid);
-      WP210Model.SetMhrf(DialogTypeEnum.Edit);
-      Model.ModalArt = "Table_Edit";
-      Model.ModalId = null;
-      Model.Modal2Id = id2; *@
+      var dt = Formular.ToShortString(DialogTypeEnum.Edit);
+      var id2 = $"{dt}_{Model.Wertpapier}";
+      var f = OpenFormular("WP210", id2);
+      if (f != null)
+        OpenFormular(f);
     }
     else if (valid && submit == nameof(Model.Ok))
     {
@@ -158,6 +156,7 @@
           Model.ModalArt = null;
           Model.ModalId = null;
           Refresh();
+          return true;
         }
         else
           Messages?.Add(() => Model, r.GetErrors());
@@ -168,9 +167,7 @@
       Model.Valuta = d;
     }
     if (submit == nameof(Model.Abbrechen))
-    {
       return true;
-    }
     return false;
   }
 }

@@ -7,7 +7,7 @@
 <PageTitle>@Title</PageTitle>
 
 <CascadingValue Value="this">
-<SortableTable Table="Table" NoData="" FormName="wp200" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="WP200Model" TRTable="WP200TableRowModel">
+<SortableTable Table="Table" NoData="" FormName="wp200" NoModal="true" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="WP200Model" TRTable="WP200TableRowModel">
   <ChildContent>
     @* <TableColumn Field="@nameof(WP200TableRowModel.Nummer)" SortField="@nameof(WpWertpapier.Uid)" TModel="WP200Model" TRTable="WP200TableRowModel"/> *@
     <TableColumn Field="@nameof(WP200TableRowModel.Sortierung)" SortField="@nameof(WpWertpapier.Sorting)" TModel="WP200Model" TRTable="WP200TableRowModel"/>
@@ -56,7 +56,7 @@
   </div>
 </EditForm>
 
-<WP210 WP210Model="WP210Model" ModalId="@Model.ModalId" ModalArt="@Model.ModalArt" ModalEditContext="@ModalEditContext" ModalMessages="@ModalMessages"/>
+<WP210M WP210Model="WP210Model" ModalId="@Model.ModalId" ModalArt="@Model.ModalArt" ModalEditContext="@ModalEditContext" ModalMessages="@ModalMessages"/>
 
 @code {
   /// <summary>Holt oder setzt das 1. Modal-Model.</summary>
@@ -194,6 +194,41 @@
       }
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
+  }
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines nicht modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  public override void HandleNoModal(string? form, string? handler, string? id)
+  {
+    // TODO Basis-Funktion mit Formularkennung und Id, die ein Formular öffnet.
+    var i = Functions.ToInt32(id);
+    if (i < 0 && handler == "Table_New")
+    {
+      var dt = Formular.ToShortString(Formular.GetTableDialogType(handler));
+      var id2 = $"{dt}_{id}";
+      var f = OpenFormular("WP210", id2);
+      if (f != null)
+        OpenFormular(f);
+      return;
+    }
+    var l = Table?.Liste ?? TableData(Table, ModalMessages);
+    if (l != null && i >= 1 && l.Count() >= i)
+    {
+      var ds = l.Skip(i - 1).FirstOrDefault();
+      var nr = ds?.Nummer ?? "";
+      if (!string.IsNullOrEmpty(nr))
+      {
+        var dt = Formular.ToShortString(Formular.GetTableDialogType(handler));
+        var id2 = $"{dt}_{nr}";
+        var f = OpenFormular("WP210", id2);
+        if (f != null)
+          OpenFormular(f);
+      }
+    }
   }
 
   /// <summary>
