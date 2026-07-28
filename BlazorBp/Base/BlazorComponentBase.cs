@@ -362,7 +362,8 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       return true;
     }
     System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} OnInitializedFormular b {action} ...{id.Right(6)} Model {Model != null} Table {Table != null}");
-    Title = title;
+    var dt = Formular.GetDtId(Id).dt;
+    Title = Formular.ToTitle(title, dt);
     Postback = Model != null ? 1 : Table != null ? 2 : 0;
     T? model = null;
     TableModelBase<V>? table = null;
@@ -592,6 +593,42 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// <param name="id">Id aus Tabellen-Aktion.</param>
   public virtual void HandleNoModal(string? form, string? handler, string? id)
   {
+  }
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines nicht modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  /// <param name="detailform">Betroffenes Detail-Formular aus Tabelle öffnen.</param>
+  public void HandleNoModal1(string? form, string? handler, string? id, string detailform)
+  {
+    // Basis-Funktion mit Formularkennung und Id, die ein Formular öffnet.
+    var i = Functions.ToInt32(id);
+    if (i < 0 && handler == "Table_New")
+    {
+      var dt = Formular.ToShortString(Formular.GetTableDialogType(handler));
+      var id2 = $"{dt}_{id}";
+      var f = OpenFormular(detailform, id2);
+      if (f != null)
+        OpenFormular(f);
+      return;
+    }
+    var l = Table?.Liste ?? TableData(Table, ModalMessages);
+    if (l != null && i >= 1 && l.Count() >= i)
+    {
+      var ds = l.Skip(i - 1).FirstOrDefault();
+      var nr = ds?.Id ?? "";
+      if (!string.IsNullOrEmpty(nr))
+      {
+        var dt = Formular.ToShortString(Formular.GetTableDialogType(handler));
+        var id2 = $"{dt}_{nr}";
+        var f = OpenFormular(detailform, id2);
+        if (f != null)
+          OpenFormular(f);
+      }
+    }
   }
 
   /// <summary>

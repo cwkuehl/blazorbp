@@ -17,7 +17,10 @@ public class AG100TableRowModel : TableRowModelBase
 {
   /// <summary>Holt oder setzt die Nummer.</summary>
   [Display(Name = "_Nr.", Description = "Die Nummer des Mandanten kann nicht geändert werden.")]
-  public int Nummer { get; set; } = default!;
+  public int Nummer
+  {
+     get { return Functions.ToInt32(Id); } set { Id = Functions.ToString(value); }
+  }
 
   /// <summary>Holt oder setzt die Beschreibung.</summary>
   [Display(Name = "Be_schreibung", Description = "Die Beschreibung des Mandanten muss angegeben werden.")]

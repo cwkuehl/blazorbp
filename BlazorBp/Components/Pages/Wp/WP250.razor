@@ -184,14 +184,8 @@
       {
         if (msubmit == nameof(WP260Model.Wpdetails))
         {
-          // SetError("TODO Formular WP210 Wertpapier aufrufen.");
-          // Formular WP210 Wertpapier öffnen
           var wpid = WP260Model.Wertpapier;
           HandleModal("wp210modal", "Form_Edit", null, wpid);
-          @* WP210Model.SetMhrf(DialogTypeEnum.Edit);
-          Model.ModalArt = "Table_Edit";
-          Model.ModalId = null;
-          Model.Modal2Id = id2; *@
         }
         else if (mvalid && msubmit == nameof(WP260Model.Ok))
         {
@@ -298,30 +292,7 @@
   /// <param name="id">Id aus Tabellen-Aktion.</param>
   public override void HandleNoModal(string? form, string? handler, string? id)
   {
-    var i = Functions.ToInt32(id);
-    if (i < 0 && handler == "Table_New")
-    {
-      var dt = Formular.ToShortString(Formular.GetTableDialogType(handler));
-      var id2 = $"{dt}_{id}";
-      var f = OpenFormular("WP260", id2);
-      if (f != null)
-        OpenFormular(f);
-      return;
-    }
-    var l = Table?.Liste ?? TableData(Table, ModalMessages);
-    if (l != null && i >= 1 && l.Count() >= i)
-    {
-      var ds = l.Skip(i - 1).FirstOrDefault();
-      var nr = ds?.Nummer ?? "";
-      if (!string.IsNullOrEmpty(nr))
-      {
-        var dt = Formular.ToShortString(Formular.GetTableDialogType(handler));
-        var id2 = $"{dt}_{nr}";
-        var f = OpenFormular("WP260", id2);
-        if (f != null)
-          OpenFormular(f);
-      }
-    }
+    HandleNoModal1(form, handler, id, "WP260");
   }
 
   /// <summary>

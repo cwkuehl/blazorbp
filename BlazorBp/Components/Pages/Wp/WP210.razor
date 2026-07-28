@@ -98,9 +98,7 @@
   /// <summary>Initialisierung der Komponente.</summary>
   protected override void OnInitialized()
   {
-    var dt = Formular.GetDtId(Id).dt;
-    var title = Formular.ToTitle("Wertpapier - WP210", dt);
-    if (OnInitializedFormular("WP210", title, Id, false))
+    if (OnInitializedFormular("WP210", "Wertpapier - WP210", Id, false))
       return;
   }
  

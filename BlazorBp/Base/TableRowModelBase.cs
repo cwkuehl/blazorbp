@@ -10,4 +10,6 @@ namespace BlazorBp.Base;
 [Serializable]
 public class TableRowModelBase
 {
+  /// <summary>Holt oder setzt die ID.</summary>
+  public virtual string? Id { get; set; } = default!;
 }

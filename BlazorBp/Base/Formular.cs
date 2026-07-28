@@ -97,9 +97,12 @@ public class Formular
   public static (DialogTypeEnum dt, string id) GetDtId(string? id0)
   {
     var parts = (id0 ?? "").Split('_');
-    var dt = GetTableDialogType(parts.Length > 0 ? parts[0] : null);
-    var id = parts.Length > 1 ? parts[1] : "";
-    return (dt, id);
+    if (parts.Length <= 0)
+      return (DialogTypeEnum.Without, "");
+    else if (parts.Length == 1)
+      return (DialogTypeEnum.Without, id0 ?? "");
+    var dt = GetTableDialogType(parts[0]);
+    return (dt, parts[1]);
   }
 
   /// <summary>
