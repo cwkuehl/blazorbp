@@ -56,8 +56,6 @@
   </div>
 </EditForm>
 
-<WP210M WP210Model="WP210Model" ModalId="@Model.ModalId" ModalArt="@Model.ModalArt" ModalEditContext="@ModalEditContext" ModalMessages="@ModalMessages"/>
-
 @code {
   /// <summary>Holt oder setzt das 1. Modal-Model.</summary>
   [SupplyParameterFromForm]
@@ -135,65 +133,6 @@
       WriteFormularModel(Model.Nr ?? "0", Model);
     }
     SetStringData("WP200Konfiguration", Model.Konfiguration);
-  }
-
-  /// <summary>
-  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
-  /// </summary>
-  /// <param name="form">Betroffenes Postback-Formular.</param>
-  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
-  /// <param name="id">Id aus Tabellen-Aktion.</param>
-  /// <param name="id2">Id aus 2. modalen Dialog.</param>
-  public override void HandleModal(string? form, string? handler, string? id, string? id2)
-  {
-    var (dt, msubmit, mvalid) = HandleModal1(form, "wp200t", "wp210modal", WP210Model.GetSubmit(HttpContext.Request), nameof(WP210Model.Abbrechen), handler, id);
-    if (dt == DialogTypeEnum.New)
-    {
-      WP210Model.SetMhrf(dt);
-      Model.ModalArt = handler;
-      Model.ModalId = id;
-    }
-    else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
-    {
-      var i = Functions.ToInt32(id);
-      var l = Table?.Liste ?? TableData(Table, ModalMessages);
-      if (l != null && i >= 1 && l.Count() >= i)
-      {
-        var ds = l.Skip(i - 1).FirstOrDefault();
-        var daten = ServiceDaten;
-        var r = FactoryService.StockService.GetStock(daten, ds?.Nummer ?? "");
-        if (r.Ok && ds != null && r.Ergebnis != null)
-        {
-          WP210Model.From(r.Ergebnis);
-          WP210Model.SetMhrf(dt);
-          Model.ModalArt = handler;
-          Model.ModalId = id;
-        }
-        else
-          Get(r);
-      }
-    }
-    else if (dt == DialogTypeEnum.Postback)
-    {
-      if (mvalid && msubmit == nameof(WP210Model.Ok) && WP210Model != null)
-      {
-        var dtp = Formular.GetTableDialogType(Model.ModalArt);
-        var daten = ServiceDaten;
-        var o = WP210Model.To(daten);
-        var r = dtp == DialogTypeEnum.Delete
-          ? FactoryService.StockService.DeleteStock(daten, o)
-          : FactoryService.StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, WP210Model.Anlage);
-        if (r.Ok)
-        {
-          Model.ModalArt = null;
-          Model.ModalId = null;
-          Refresh();
-        }
-        else
-          Get(r, ModalMessages);
-      }
-    }
-    WriteFormularModel(Model.Nr ?? "0", Model);
   }
 
   /// <summary>
