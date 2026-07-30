@@ -342,19 +342,35 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   }
 
   /// <summary>
+  /// Entfernen der Modelle eine Formular-Instanz.
+  /// </summary>
+  /// <param name="id">Betroffene ID.</param>
+  /// <param name="model">Betroffenes Model.</param>
+  /// <param name="tmodel">Betroffenes Table-Model.</param>
+  protected void RemoveFormularModel(string id, T? model, TableModelBase<V>? tmodel = null)
+  {
+    var form = GetType().Name;
+    if (model != null)
+      HttpContext.Session?.Remove($"{form}.Form.{id}");
+    if (tmodel != null)
+      HttpContext.Session?.Remove($"{form}.Table.{id}");
+  }
+
+  /// <summary>
   /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
   /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
   /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
   /// -Verarbeitung des Postbacks, weil danach gerendert wird.
   /// </summary>
   /// <param name="action">Name der Action, Formularname oder "" für aktuelles Formular.</param>
-  /// <param name="id">Betroffene ID.</param>
+  /// <param name="id0">Betroffene ID.</param>
   /// <param name="title">Betroffene Formular-Titel.</param>
   /// <param name="usecase">Soll ein neuer Use case erstellt werden, falls noch nicht offen?</param>
   /// <returns>Muss die Funktion OnInitialized wegen Redirect verlassen werden.</returns>
-  protected bool OnInitializedFormular(string action, string title, string? id, bool usecase = false)
+  protected bool OnInitializedFormular(string action, string title, string? id0, bool usecase = false)
   {
-    var f = OpenFormular(action, id, usecase);
+    var (dt, id) = Formular.GetDtId(id0 ?? "");
+    var f = OpenFormular(action, id0, usecase);
     if (string.IsNullOrEmpty(id))
     {
       System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} OnInitializedFormular a {action} ...{f.Id.Right(6)} Model {Model != null} Table {Table != null}");
@@ -362,7 +378,6 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       return true;
     }
     System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} OnInitializedFormular b {action} ...{id.Right(6)} Model {Model != null} Table {Table != null}");
-    var dt = Formular.GetDtId(Id).dt;
     Title = Formular.ToTitle(title, dt);
     Postback = Model != null ? 1 : Table != null ? 2 : 0;
     T? model = null;
@@ -391,8 +406,8 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
           var f0 = uc.Formulare.LastOrDefault();
           if (f0 != null)
           {
-            if (id != f0.Id)
-              throw new Exception($"Falsche Formular-ID {f0.Id}: Erwartet {id}.");
+            if (id0 != f0.Id)
+              throw new Exception($"Falsche Formular-ID {f0.Id}: Erwartet {id0}.");
             var model0 = ReadFormularModel(f0.Id ?? "");
             if (model0 != null)
               CopyNotPostbackData(Model, model0);
@@ -406,7 +421,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
         Model.GetSubmit(HttpContext.Request);
       }
     }
-    Init(id, model, table);
+    Init(id0, model, table);
     if (HttpContext.Session?.GetBoolean("Refresh") ?? false)
     {
       System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} OnInitializedFormular Refresh {action} ...{id.Right(6)}");
@@ -526,11 +541,13 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       }
       System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} Submit {submit} valid {valid}");
       var close = Submit(submit);
-      WriteFormularModel(Model.Nr ?? "0", Model, Table);
       if (close)
       {
+        RemoveFormularModel(Model.Nr ?? "0", Model, Table);
         CloseFormular();
       }
+      else
+        WriteFormularModel(Model.Nr ?? "0", Model, Table);
     }
     finally
     {

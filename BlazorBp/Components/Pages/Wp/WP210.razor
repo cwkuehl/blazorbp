@@ -127,7 +127,7 @@
         Get(r, ModalMessages);
     }
     if (submit == nameof(Model.Abbrechen))
-      return true;
+      return true; // Model beim Schließen löschen.
     return false;
   }
 }
