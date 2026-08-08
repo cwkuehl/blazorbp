@@ -40,6 +40,8 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       { "WP250", new Formular { Action = "wp250", Area = "wp", Name = "Anlagen" } },
       { "WP260", new Formular { Action = "wp260", Area = "wp", Name = "Anlage" } },
       { "WP300", new Formular { Action = "wp300", Area = "wp", Name = "Konfigurationen" } },
+      { "WP500", new Formular { Action = "wp500", Area = "wp", Name = "Stände" } },
+      { "WP510", new Formular { Action = "wp510", Area = "wp", Name = "Stand" } },
 };
 
   /// <summary>

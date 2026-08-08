@@ -57,10 +57,6 @@
 </EditForm>
 
 @code {
-  /// <summary>Holt oder setzt das 1. Modal-Model.</summary>
-  [SupplyParameterFromForm]
-  protected WP210Model WP210Model { get; set; } = default!;
-
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -92,13 +88,7 @@
         SortColumn = $"{nameof(WpWertpapier.Bezeichnung)}#+",
       };
     Table.Nr = id;
-    if (WP210Model == null)
-      WP210Model = new WP210Model
-      {
-        // Nummer = "1",
-      };
-    WP210Model.Nr = id;
-    InitEditContext(Model, WP210Model);
+    InitEditContext(Model);
     var lk = Get(FactoryService.StockService.GetConfigurationList(daten, null, "1"));
     Model.AuswahlKonfiguration = InsertEmpty(lk?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
     if (string.IsNullOrEmpty(Model.Konfiguration))
@@ -107,12 +97,6 @@
         ?? (Model.AuswahlKonfiguration?.FirstOrDefault(a => a.Value.StartsWith(" "))
         ?? Model.AuswahlKonfiguration?.FirstOrDefault())?.Key;
     }
-    var l0 = Get(FactoryService.StockService.GetStateList(daten));
-    WP210Model.AuswahlStatus = l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
-    var l1 = Get(FactoryService.StockService.GetProviderList(daten));
-    WP210Model.AuswahlProvider = l1?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
-    var l2 = Get(FactoryService.StockService.GetStockList(daten));
-    WP210Model.AuswahlRelation = InsertEmpty(l2?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
   }
 
   /// <summary>

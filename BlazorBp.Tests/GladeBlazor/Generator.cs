@@ -42,49 +42,67 @@ public class Generator
   /// </summary>
   /// <param name="file">Betroffene Glade-Datei.</param>
   /// <param name="modalfile">Betroffene Glade-Datei als modaler Dialog.</param>
+  /// <param name="nomodalfile">Betroffene Glade-Datei als nicht modaler Dialog.</param>
   /// <param name="resfile">Betroffene Resource-Datei.</param>
   /// <param name="genpath">Betroffener Basis-Pfad zum Generieren.</param>
-  public static void Generate(string file, string? modalfile, string resfile, string genpath)
+  public static void Generate(string file, string? modalfile, string? nomodalfile, string resfile, string genpath)
   {
     var resxml = new XmlDocument();
     resxml.Load(resfile);
     var root = new Control("Root", "Form", "", "", null);
     Control? modalroot = null;
+    Control? nomodalroot = null;
     ParseGlade(root, file, resxml);
     if (!string.IsNullOrEmpty(modalfile))
     {
       modalroot = new Control("ModalRoot", "Form", "", "", null);
       ParseGlade(modalroot, modalfile, resxml);
+      nomodalfile = null;
+    }
+    if (!string.IsNullOrEmpty(nomodalfile))
+    {
+      nomodalroot = new Control("NoModalRoot", "Form", "", "", null);
+      ParseGlade(nomodalroot, nomodalfile, resxml);
     }
     var area = Functions.ToFirstUpper(Directory.GetParent(file)?.Name, true);
     var form = Path.GetFileName(file).Left(5).ToUpper();
-    var form2 = modalfile != null ? Path.GetFileName(modalfile).Left(5).ToUpper() : null;
+    var form2 = modalfile != null ? Path.GetFileName(modalfile).Left(5).ToUpper() : nomodalfile != null ? Path.GetFileName(nomodalfile).Left(5).ToUpper() : null;
     var title = ReadResource(resxml, $"{form}.title") ?? form;
     var table = GetControls(root.Children, a => a.Type == "GtkTreeView").FirstOrDefault();
     var sorttable = "";
     List<Control>? rowcontrols = null;
     GenerateModel(genpath, root, area, form, null, title, "");
-    GenerateModel(genpath, modalroot, area, form2, form, title, "Modal");
-    if (modalroot != null)
+    if (!string.IsNullOrEmpty(modalfile))
+      GenerateModel(genpath, modalroot, area, form2, form, title, "Modal");
+    else if (!string.IsNullOrEmpty(nomodalfile))
+      GenerateModel(genpath, nomodalroot, area, form2, form, title, "NoModal");
+    if (modalroot != null || nomodalroot != null)
     {
       if (table == null)
         throw new Exception("Table fehlt.");
-      rowcontrols = GenerateModel(genpath, modalroot, area, form, null, title, "TableRow");
-      sorttable = GenerateTableModels(genpath, rowcontrols, area, form, title, table.Text);
+      rowcontrols = GenerateModel(genpath, modalroot ?? nomodalroot, area, form, null, title, "TableRow");
+      sorttable = GenerateTableModels(genpath, rowcontrols, area, form, title, table.Text, nomodalfile != null);
     }
-    GenerateRazor(genpath, root, modalroot, rowcontrols, area, form, form2, title, sorttable);
+    GenerateRazor(genpath, root, modalroot, nomodalroot, rowcontrols, area, form, form2, title, sorttable);
   }
 
   /// <summary>
   /// Model erzeugen.
   /// </summary>
   /// <param name="genpath">Betroffener Basis-Pfad zum Generieren.</param>
+  /// <param name="root">Root-Control für das Formular.</param>
+  /// <param name="area">Betroffene Area.</param>
+  /// <param name="form">Betroffenes Formular.</param>
+  /// <param name="form0">Betroffenes Formular 0.</param>
+  /// <param name="title">Betroffener Titel.</param>
+  /// <param name="prefix">Betroffener Prefix.</param>
   private static List<Control> GenerateModel(string genpath, Control? root, string area, string? form, string? form0, string title, string prefix)
   {
     if (root == null)
       return new();
     var table = false;
     var modal = false;
+    var nomodal = false;
     var baseclass = "PageModelBase";
     var besch = "das ";
     if (prefix == "Modal")
@@ -92,6 +110,12 @@ public class Generator
       prefix = "";
       modal = true;
       besch = "das modale ";
+    }
+    if (prefix == "NoModal")
+    {
+      prefix = "";
+      nomodal = true;
+      besch = "das nicht modale ";
     }
     if (prefix == "TableRow")
     {
@@ -295,7 +319,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
   /// TableModel erzeugen.
   /// </summary>
   /// <param name="genpath">Betroffener Basis-Pfad zum Generieren.</param>
-  private static string GenerateTableModels(string genpath, List<Control> controls, string area, string form, string title, string table)
+  private static string GenerateTableModels(string genpath, List<Control> controls, string area, string form, string title, string table, bool nomodal = false)
   {
     if (controls == null)
       return "";
@@ -312,7 +336,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
     }
     var sorttable = $$"""
 <CascadingValue Value="this">
-<SortableTable Table="Table" NoData="" FormName="{{form.ToLower()}}" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="{{form}}Model" TRTable="{{form}}TableRowModel">
+<SortableTable Table="Table" NoData="" FormName="{{form.ToLower()}}" NoModal="{{Functions.Iif(nomodal, "true", "false")}}" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="{{form}}Model" TRTable="{{form}}TableRowModel">
   <ChildContent>
 {{sb}}    <TableColumn Field="@nameof({{form}}TableRowModel.AngelegtAm)" SortField="@nameof({{form}}TodoModel.Angelegt_Am)" TModel="{{form}}Model" TRTable="{{form}}TableRowModel"/>
     <TableColumn Field="@nameof({{form}}TableRowModel.AngelegtVon)" SortField="@nameof({{form}}TodoModel.Angelegt_Von)" TModel="{{form}}Model" TRTable="{{form}}TableRowModel"/>
@@ -346,19 +370,20 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
   /// <param name="genpath">Betroffener Basis-Pfad zum Generieren.</param>
   /// <param name="root">Root-Control für das Formular.</param>
   /// <param name="modalroot">Root-Control für das modale Formular.</param>
+  /// <param name="nomodalroot">Root-Control für das nicht modale Formular.</param>
   /// <param name="rowcontrols">Controls für die Tabellenzeile.</param>
   /// <param name="area">Betroffene Area.</param>
   /// <param name="form">Betroffenes Formular.</param>
   /// <param name="form2">Betroffenes modales Formular.</param>
   /// <param name="title">Betroffener Titel.</param>
   /// <param name="sorttable">Sortierbare Tabelle.</param>
-  private static void GenerateRazor(string genpath, Control root, Control? modalroot, List<Control>? rowcontrols, string area, string form, string? form2, string title, string sorttable)
+  private static void GenerateRazor(string genpath, Control root, Control? modalroot, Control? nomodalroot, List<Control>? rowcontrols, string area, string form, string? form2, string title, string sorttable)
   {
     var sbr = new StringBuilder(); // für Haupt-Formular razor
-    var sb = new StringBuilder();
-    var sbr2 = new StringBuilder(); // für Modal-Formular
+    var sb = new StringBuilder(); // temporärer StringBuilder für Controls
+    var sbr2 = new StringBuilder(); // für Modal- oder NoModal-Formular
     var sbm = new StringBuilder(); // für TodoModel
-    var rowmodel = modalroot == null ? "TableRowModelBase" : $"{form}TableRowModel";
+    var rowmodel = modalroot == null && nomodalroot == null ? "TableRowModelBase" : $"{form}TableRowModel";
     var first = rowcontrols == null ? null : rowcontrols.First().Name.ToFirstUpper();
 
     sbr.Append($$"""
@@ -516,6 +541,143 @@ else
 }
 
 """);
+    }
+    if (nomodalroot != null)
+    {
+      sbr2.Append($$"""
+@page "/{{area.ToLower()}}/{{form2?.ToLower()}}/{id?}"
+@using CSBP.Services.Apis.Models
+@inherits BlazorComponentBase<{{form2}}Model, TableRowModelBase>
+@attribute [Authorize(Roles = "User, Admin, Superadmin")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<CascadingValue Value="this">
+</CascadingValue>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="{{form2?.ToLower()}}">
+  @* <DataAnnotationsValidator/> *@
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <InputText type="hidden" @bind-Value="Model!.ReadonlyHiddenError"/>
+  <input type="hidden" name="SubmitControl"/>
+
+""");
+      controls = GetControls(nomodalroot.Children, a => a.Children.Count <= 0 && a.Type != "GtkTreeView");
+      parent = null;
+      sb.Length = 0;
+      sb.AppendLine($"""
+  <div class="row mt-1 g-0">
+""");
+      foreach (var c in controls)
+      {
+        var n = c.Text.Replace("_", "");
+        if (parent != c.Parent)
+        {
+          parent = c.Parent;
+          sb.AppendLine($"  </div>");
+          sb.AppendLine($"""  <div class="row mt-1 g-0">""");
+        }
+        if (c.Type == "GtkButton")
+        {
+          if (c.Name == "abbrechen")
+          {
+            sb.AppendLine($$"""    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Abbrechen)"/>""");
+            sb.AppendLine($$"""    @* TODO <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button> *@""");
+          }
+          else
+            sb.AppendLine($$"""    <SubmitButton class="btn btn-{{Functions.Iif(c.Name == "ok", "primary", "secondary")}} col-md-2 ms-1" For="@(() => Model!.{{Functions.ToFirstUpper(c.Name)}})"/>""");
+        }
+        else
+        {
+          sb.AppendLine($$"""    <LabelInputValid AutoPostback="" For="@(() => Model!.{{Functions.ToFirstUpper(c.Name)}})" VerticalColClass="form-group col-md-2"/>""");
+          if (c.Name != "angelegt" && c.Name != "geaendert")
+            sbm.AppendLine($$"""       {{Functions.ToFirstUpper(c.Name)}} = "{{Functions.ToFirstUpper(c.Name)}}1",""");
+        }
+      }
+      sb.AppendLine($"  </div>");
+      sbr2.Append(sb);
+      sbr2.Append($$"""
+</EditForm>
+
+@code {
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id0">Betroffene Id mit vorangestelltem Dialogtyp.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id0, {{form2}}Model? model = null, TableModelBase<TableRowModelBase>? table = null)
+  {
+    var daten = ServiceDaten;
+    var (dt, id) = Formular.GetDtId(id0);
+    if (model != null)
+      Model = model;
+    if (Model == null)
+    {
+      Model = new {{form2}}Model
+      {
+        DialogType = dt,
+        Nr = id,
+      };
+      if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
+      {
+        // TODO Lesen des Models aus der Datenbank, z.B.:
+        // var r = FactoryService.StockService.GetStock(daten, id ?? "");
+        // if (r.Ok && r.Ergebnis != null)
+        //   Model.From(r.Ergebnis);
+      }
+      Model.SetMhrf(dt);
+    }
+    Model.Nr = id;
+    InitEditContext(Model);
+    // TODO Lesen der Listen für Auswahlfelder, z.B.:
+    // var l0 = Get(FactoryService.StockService.GetStateList(daten));
+    // Model.AuswahlStatus = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
+  }
+
+  /// <summary>Initialisierung der Komponente.</summary>
+  protected override void OnInitialized()
+  {
+    var dt = Formular.GetDtId(Id).dt;
+    var title = Formular.ToTitle("TODO Titel - {{form2}}", dt);
+    if (OnInitializedFormular("{{form2}}", title, Id, false))
+      return;
+  }
+ 
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// </summary>
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
+  {
+    var daten = ServiceDaten;
+    if (valid && submit == nameof(Model.Ok))
+    {
+      // var o = Model.To(daten);
+      // var r = Model.DialogType == DialogTypeEnum.Delete
+      //   ? FactoryService.StockService.DeleteStock(daten, o)
+      //   : FactoryService.StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, Model.Anlage);
+      // if (r.Ok)
+      // {
+      //   Model.ModalArt = null;
+      //   Model.ModalId = null;
+      //   Refresh();
+      //   return true;
+      // }
+      // else
+      //   Get(r, ModalMessages);
+    }
+    if (submit == nameof(Model.Abbrechen))
+      return true;
+    return false;
+  }
+}
+
+""");
+
     }
     sbr.Append($$"""
 @code {
@@ -748,7 +910,7 @@ else
     var path = Path.Combine(genpath, "Components", "Pages", area);
     Directory.CreateDirectory(path);
     File.WriteAllText(Path.Combine(path, $"{form}.razor"), sbr.ToString());
-    if (modalroot != null)
+    if (modalroot != null || nomodalroot != null)
       File.WriteAllText(Path.Combine(path, $"{form2}.razor"), sbr2.ToString());
   }
 
