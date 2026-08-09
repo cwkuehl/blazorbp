@@ -70,7 +70,7 @@ public class FZ710Model : PageModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
-  public void From(FZ700TableRowModel m) =>
+  public void From(FzNotiz m) =>
   (
     Nummer,
     Thema,
@@ -80,13 +80,13 @@ public class FZ710Model : PageModelBase
     Angelegt,
     Geaendert
   ) = (
-    m.Nummer,
+    m.Uid,
     m.Thema,
     Functions.Base64Encode(m.Notiz),
     GetMemo(m.Notiz),
     GetTable(m.Notiz),
-    ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon),
-    ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon)
+    ModelBase.FormatDateOf(m.Angelegt_Am, m.Angelegt_Von),
+    ModelBase.FormatDateOf(m.Geaendert_Am, m.Geaendert_Von)
   );
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>

@@ -114,9 +114,11 @@
       if (l != null && i >= 1 && l.Count() >= i)
       {
         var ds = l.Skip(i - 1).FirstOrDefault();
-        if (ds != null)
+        var daten = ServiceDaten;
+        var r = FactoryService.PrivateService.GetMemo(daten, ds?.Nummer ?? "");
+        if (r.Ok && ds != null && r.Ergebnis != null)
         {
-          FZ710Model.From(ds);
+          FZ710Model.From(r.Ergebnis);
           FZ710Model.SetMhrf(dt);
           Model.ModalArt = handler;
           Model.ModalId = id;
