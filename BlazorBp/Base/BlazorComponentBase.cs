@@ -634,7 +634,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
         OpenFormular(f);
       return;
     }
-    var l = Table?.Liste ?? TableData(Table, ModalMessages);
+    var l = Table?.Liste ?? TableData(Table, Messages);
     if (l != null && i >= 1 && l.Count() >= i)
     {
       var ds = l.Skip(i - 1).FirstOrDefault();

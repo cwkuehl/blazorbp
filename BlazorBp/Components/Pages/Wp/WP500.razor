@@ -1,0 +1,192 @@
+@page "/wp/wp500/{id?}"
+@using CSBP.Services.Apis.Models
+@inherits BlazorComponentBase<WP500Model, WP500TableRowModel>
+@attribute [Authorize(Roles = "User, Admin, Superadmin")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<CascadingValue Value="this">
+<SortableTable Table="Table" NoData="" FormName="wp500" NoModal="true" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="WP500Model" TRTable="WP500TableRowModel">
+  <ChildContent>
+    <TableColumn Field="@nameof(WP500TableRowModel.Wertpapier)" SortField="@nameof(WP500TodoModel.Wertpapier)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
+    <TableColumn Field="@nameof(WP500TableRowModel.Valuta)" SortField="@nameof(WP500TodoModel.Valuta)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
+    <TableColumn Field="@nameof(WP500TableRowModel.Betrag)" SortField="@nameof(WP500TodoModel.Betrag)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
+    <TableColumn Field="@nameof(WP500TableRowModel.AngelegtAm)" SortField="@nameof(WP500TodoModel.Angelegt_Am)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
+    <TableColumn Field="@nameof(WP500TableRowModel.AngelegtVon)" SortField="@nameof(WP500TodoModel.Angelegt_Von)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
+    <TableColumn Field="@nameof(WP500TableRowModel.GeaendertAm)" SortField="@nameof(WP500TodoModel.Geaendert_Am)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
+    <TableColumn Field="@nameof(WP500TableRowModel.GeaendertVon)" SortField="@nameof(WP500TodoModel.Geaendert_Von)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
+  </ChildContent>
+</SortableTable>
+</CascadingValue>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="wp500">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <input type="hidden" name="SubmitControl"/>
+  <div class="row mt-1 g-0">
+  </div>
+  <div class="row mt-1 g-0">
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Refresh)"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Staende)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Wertpapier)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Thin)"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Von)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.All)"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Schliessen)"/>
+  </div>
+  <!-- TODO btn-primary festlegen -->
+</EditForm>
+
+@code {
+
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id">Betroffene Id.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id, WP500Model? model = null, TableModelBase<WP500TableRowModel>? table = null)
+  {
+    var daten = ServiceDaten;
+    if (model != null)
+      Model = model;
+    if (Model == null)
+    {
+      Model = new WP500Model
+      {
+        Nr = id,
+        // TODO Mandant = daten.MandantNr,
+      };
+      Model.SetMhrf(DialogTypeEnum.New);
+    }
+    Model.Nr = id;
+    if (table != null)
+      Table = table;
+    if (Table == null)
+      Table = new TableModelBase<WP500TableRowModel>
+      {
+        SelectedPage = 1,
+        RowsPerPage = 10,
+        SelectedRow = 1,
+        SortColumn = $"{nameof(WP500TodoModel.Wertpapier)}#+",
+      };
+    Table.Nr = id;
+    InitEditContext(Model);
+    // TODO Lesen der Listen für Auswahlfelder, z.B.:
+    // var lk = Get(FactoryService.StockService.GetConfigurationList(daten, null, "1"));
+    // Model.AuswahlKonfiguration = InsertEmpty(lk?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
+  }
+
+  /// <summary>
+  /// Aktualisierung nach Undo/Redo.
+  /// </summary>
+  protected override void Refresh()
+  {
+    // TODO TableData(Table, Messages);
+  }
+
+  /// <summary>
+  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
+  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
+  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    if (OnInitializedFormular("WP500", "Stände - WP500", Id, true))
+      return;
+
+    // TODO Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
+    // var handler = HttpContext.Request.Query["handler"];
+    // if (handler == "Table_All")
+    // {
+    //   Model.SetMhrf(DialogTypeEnum.Copy, ServiceDaten);
+    //   WriteFormularModel(Model.Nr ?? "0", Model);
+    // }
+    // var submit = Model.Submit ?? "";
+    // if (submit == nameof(Model.Import))
+    // {
+    //   var l = SaveUploadFiles("WP500", "filehochladen");
+    // }
+  }
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines nicht modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  public override void HandleNoModal(string? form, string? handler, string? id)
+  {
+    HandleNoModal1(form, handler, id, "WP510");
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// </summary>
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
+  {
+    if (valid && submit == "OK")
+    {
+      var daten = ServiceDaten;
+      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
+      if (r != null)
+      {
+        Get(r);
+        if (r.Ok)
+          return true;
+      }
+    }
+    // TODO if (submit == nameof(Model.Abbrechen))
+    // if (submit == nameof(Model.Schliessen))
+    //   return true;
+    return false;
+  }
+
+  /// <summary>
+  /// Bereitstellen der Tabellen-Daten mit Berücksichtigung der Filterung, Sortierung und Paginierung.
+  /// </summary>
+  /// <param name="m">Betroffenes TableRowModel.</param>
+  /// <param name="messages">Betroffene Fehlermeldungen.</param>
+  /// <returns>Tabellen-Daten als Liste.</returns>
+  protected override List<WP500TableRowModel> TableData(TableModelBase<WP500TableRowModel>? m, ValidationMessageStore? messages)
+  {
+    var rm = m?.ReadModel;
+    var daten = ServiceDaten;
+    var r = new ServiceErgebnis<List<WP500TodoModel>>(new List<WP500TodoModel>());
+    r.Ergebnis.Add(new WP500TodoModel()
+    {
+      Nummer = "1",
+      Wertpapier = "Wertpapier1",
+      Valuta = "Valuta1",
+      Betrag = "Betrag1",
+    });
+    if (rm != null)
+      rm.PageCount = 0;
+    // TODO var l0 = Get(FactoryService.PrivateService.GetClientList(daten, rm), messages);
+    var l = r.Ergebnis?.Select(a => WP500TableRowModel.From(a)).ToList() ?? new List<WP500TableRowModel>();
+    return UpdateTable(m, rm, l);
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData(WP500Model model, WP500Model model0)
+  {
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+  }
+}

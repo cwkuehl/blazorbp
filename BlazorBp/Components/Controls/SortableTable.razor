@@ -53,9 +53,9 @@
       <tbody>
         @{
           var ix = 0;
-          var sr = Table.SelectedRow ?? 0;
+          var sr = Table?.SelectedRow ?? 0;
         }
-        @foreach (var r in Table.Liste)
+        @foreach (var r in Table?.Liste ?? new List<TRTable>())
         {
           ix++;
           <tr class="@Functions.Iif(ix == sr, "table-info", "")">

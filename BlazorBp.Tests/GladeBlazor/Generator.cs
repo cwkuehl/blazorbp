@@ -130,7 +130,8 @@ public class Generator
     var sbt4 = new StringBuilder();
     var sbt5 = new StringBuilder();
     var sbt6 = new StringBuilder();
-    var controls = GetControls(root.Children, a => !string.IsNullOrEmpty(a.Text) && a.Children.Count <= 0);
+    var controls = GetControls(root.Children, a => (a.Name == "refresh" || !string.IsNullOrEmpty(a.Text)) && a.Children.Count <= 0, true); // mit Labels und End-Steuerelemente
+    System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} GenerateModel: {controls.Count} controls: {string.Join(", ", controls.Select(a => a.Name))}");
     if (table) // || modal)
     {
       controls = GetControls(controls, a => a.Name != "ok" && a.Name != "abbrechen" && a.Name != "angelegt" && a.Name != "geaendert");
@@ -198,6 +199,19 @@ using static BlazorBp.Base.DialogTypeEnum;
 [Serializable]
 public class {{form}}TodoModel
 {
+""";
+    if (table)
+    {
+      model += $$"""
+
+  /// <summary>Holt oder setzt Nr.</summary>
+  [Display(Name = "Nr.", Description = "Nummer")]
+  public string? Nummer { get; set; }
+
+
+""";
+    }
+      model += $$"""
 {{sbt}}  /// <summary>Holt oder setzt die Spalte Angelegt_Am.</summary>
   public DateTime? Angelegt_Am { get; set; }
 
@@ -221,6 +235,19 @@ public class {{form}}TodoModel
 [Serializable]
 public class {{form}}{{prefix}}Model : {{baseclass}}
 {
+""";
+    if (table)
+    {
+      model += $$"""
+
+  /// <summary>Holt oder setzt Nr.</summary>
+  [Display(Name = "Nr.", Description = "Nummer")]
+  public string? Nummer { get { return Id; } set { Id = value; } }
+
+
+""";
+    }
+      model += $$"""
 {{sb}}
 """;
     if (table)
@@ -247,6 +274,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
   {
     return new {{form}}TableRowModel
     {
+      Nummer = m.Nummer,
 {{sbt3}}      AngelegtAm = m.Angelegt_Am,
       AngelegtVon = m.Angelegt_Von,
       GeaendertAm = m.Geaendert_Am,
@@ -361,7 +389,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
     if (c == null || c.Type != "GtkButton")
       return false;
     var n = c.Name.ToLower();
-    return n == "undo" || n == "redo" || n == "newaction" || n == "edit" || n == "delete" || n == "copy";
+    return n == "undo" || n == "redo" || n == "newaction" || n == "edit" || n == "delete" || n == "copy"; // || n == "refresh";
   }
 
   /// <summary>
@@ -511,7 +539,7 @@ else
         {
           sb.AppendLine($$"""            <LabelInputValid AutoPostback="" For="@(() => {{form2}}Model!.{{Functions.ToFirstUpper(c.Name)}})" VerticalColClass="form-group col-md-2"/>""");
           if (c.Name != "angelegt" && c.Name != "geaendert")
-            sbm.AppendLine($$"""       {{Functions.ToFirstUpper(c.Name)}} = "{{Functions.ToFirstUpper(c.Name)}}1",""");
+            sbm.AppendLine($$"""      {{Functions.ToFirstUpper(c.Name)}} = "{{Functions.ToFirstUpper(c.Name)}}1",""");
         }
       }
       sb.AppendLine($"          </div>");
@@ -593,7 +621,7 @@ else
         {
           sb.AppendLine($$"""    <LabelInputValid AutoPostback="" For="@(() => Model!.{{Functions.ToFirstUpper(c.Name)}})" VerticalColClass="form-group col-md-2"/>""");
           if (c.Name != "angelegt" && c.Name != "geaendert")
-            sbm.AppendLine($$"""       {{Functions.ToFirstUpper(c.Name)}} = "{{Functions.ToFirstUpper(c.Name)}}1",""");
+            sbm.AppendLine($$"""      {{Functions.ToFirstUpper(c.Name)}} = "{{Functions.ToFirstUpper(c.Name)}}1",""");
         }
       }
       sb.AppendLine($"  </div>");
@@ -717,12 +745,12 @@ else
     Model.Nr = id;
 
 """);
-    if (modalroot == null)
+    if (modalroot == null && nomodalroot == null)
       sbr.Append($$"""
     InitEditContext(Model);
 
 """);
-    else
+    else if (modalroot != null)
     {
       sbr.Append($$"""
     if (table != null)
@@ -747,6 +775,27 @@ else
 
 """);
     }
+    else
+    {
+      sbr.Append($$"""
+    if (table != null)
+      Table = table;
+    if (Table == null)
+      Table = new TableModelBase<{{rowmodel}}>
+      {
+        SelectedPage = 1,
+        RowsPerPage = 10,
+        SelectedRow = 1,
+        SortColumn = $"{nameof({{form}}TodoModel.{{first}})}#+",
+      };
+    Table.Nr = id;
+    InitEditContext(Model);
+    // TODO Lesen der Listen für Auswahlfelder, z.B.:
+    // var lk = Get(FactoryService.StockService.GetConfigurationList(daten, null, "1"));
+    // Model.AuswahlKonfiguration = InsertEmpty(lk?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
+
+""");
+    }
     sbr.Append($$"""
   }
 
@@ -768,7 +817,13 @@ else
     if (OnInitializedFormular("{{form}}", "{{title}} - {{form}}", Id, true))
       return;
 
-    // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
+    // TODO Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
+    // var handler = HttpContext.Request.Query["handler"];
+    // if (handler == "Table_All")
+    // {
+    //   Model.SetMhrf(DialogTypeEnum.Copy, ServiceDaten);
+    //   WriteFormularModel(Model.Nr ?? "0", Model);
+    // }
     // var submit = Model.Submit ?? "";
     // if (submit == nameof(Model.Import))
     // {
@@ -839,6 +894,23 @@ else
 
 """);
     }
+    if (nomodalroot != null)
+    {
+      sbr.Append($$"""
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines nicht modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  public override void HandleNoModal(string? form, string? handler, string? id)
+  {
+    HandleNoModal1(form, handler, id, "{{form2}}");
+  }
+
+""");
+    }
     sbr.Append($$"""
 
   /// <summary>
@@ -866,7 +938,7 @@ else
   }
 
 """);
-    if (modalroot != null)
+    if (modalroot != null || nomodalroot != null)
     {
       sbr.Append($$"""
 
@@ -883,6 +955,7 @@ else
     var r = new ServiceErgebnis<List<{{form}}TodoModel>>(new List<{{form}}TodoModel>());
     r.Ergebnis.Add(new {{form}}TodoModel()
     {
+      Nummer = "1",
 {{sbm}}    });
     if (rm != null)
       rm.PageCount = 0;
@@ -952,8 +1025,13 @@ else
               ignore = true;
             else
             {
-              if (type == "GtkButton" && name.EndsWith("Action") && name != "newAction")
-                name = name.Substring(0, name.Length - 6);
+              if (type == "GtkButton" && name.EndsWith("Action"))
+              {
+                if (name == "newAction")
+                  Functions.MachNichts();
+                else
+                  name = name.Substring(0, name.Length - 6);
+              }
               var c = new Control(name, type, "", "", parent);
               // if (type == "GtkImage")
               // {
@@ -1024,12 +1102,18 @@ else
     SetControlSort(root.Children, 1);
   }
 
-  private static List<Control> GetControls(List<Control> controls, Expression<Func<Control, bool>> where)
+  private static List<Control> GetControls(List<Control> controls, Expression<Func<Control, bool>> where, bool debug = false)
   {
+    if (debug)
+      System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} GetControls 1: {controls.FirstOrDefault()?.Name ?? "leer"} von {controls.Count} , where: {where}");
     // var list = controls.Where(where.Compile()).ToList();
     // list.AddRange(controls.SelectMany(a => GetControls(a.Children, where)));
-    var list = controls.SelectMany(a => GetControls(a.Children, where)).ToList();
+    var list = controls.SelectMany(a => GetControls(a.Children, where, debug)).ToList();
+    if (debug)
+      System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} GetControls 2: {controls.FirstOrDefault()?.Name ?? "leer"} von {controls.Count},  list: {string.Join(", ", list.Select(a => a.Name))} ({list.Count})");
     list.AddRange(controls.Where(where.Compile()).ToList());
+    if (debug)
+      System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} GetControls 3: {controls.FirstOrDefault()?.Name ?? "leer"} von {controls.Count}, list: {string.Join(", ", list.Select(a => a.Name))} ({list.Count})");
     return list;
   }
 

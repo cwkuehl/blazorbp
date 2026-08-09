@@ -1,0 +1,107 @@
+@page "/wp/wp510/{id?}"
+@using CSBP.Services.Apis.Models
+@inherits BlazorComponentBase<WP510Model, TableRowModelBase>
+@attribute [Authorize(Roles = "User, Admin, Superadmin")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<CascadingValue Value="this">
+</CascadingValue>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="wp510">
+  @* <DataAnnotationsValidator/> *@
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <InputText type="hidden" @bind-Value="Model!.ReadonlyHiddenError"/>
+  <input type="hidden" name="SubmitControl"/>
+  <div class="row mt-1 g-0">
+  </div>
+  <div class="row mt-1 g-0">
+    <SubmitButton class="btn btn-primary col-md-2 ms-1" For="@(() => Model!.Ok)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Abbrechen)"/>
+    @* TODO <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button> *@
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Wertpapier)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Valuta)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Betrag)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Angelegt)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Geaendert)" VerticalColClass="form-group col-md-2"/>
+  </div>
+</EditForm>
+
+@code {
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id0">Betroffene Id mit vorangestelltem Dialogtyp.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id0, WP510Model? model = null, TableModelBase<TableRowModelBase>? table = null)
+  {
+    var daten = ServiceDaten;
+    var (dt, id) = Formular.GetDtId(id0);
+    if (model != null)
+      Model = model;
+    if (Model == null)
+    {
+      Model = new WP510Model
+      {
+        DialogType = dt,
+        Nr = id,
+      };
+      if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
+      {
+        // TODO Lesen des Models aus der Datenbank, z.B.:
+        // var r = FactoryService.StockService.GetStock(daten, id ?? "");
+        // if (r.Ok && r.Ergebnis != null)
+        //   Model.From(r.Ergebnis);
+      }
+      Model.SetMhrf(dt);
+    }
+    Model.Nr = id;
+    InitEditContext(Model);
+    // TODO Lesen der Listen für Auswahlfelder, z.B.:
+    // var l0 = Get(FactoryService.StockService.GetStateList(daten));
+    // Model.AuswahlStatus = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
+  }
+
+  /// <summary>Initialisierung der Komponente.</summary>
+  protected override void OnInitialized()
+  {
+    var dt = Formular.GetDtId(Id).dt;
+    var title = Formular.ToTitle("TODO Titel - WP510", dt);
+    if (OnInitializedFormular("WP510", title, Id, false))
+      return;
+  }
+ 
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// </summary>
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
+  {
+    var daten = ServiceDaten;
+    if (valid && submit == nameof(Model.Ok))
+    {
+      // var o = Model.To(daten);
+      // var r = Model.DialogType == DialogTypeEnum.Delete
+      //   ? FactoryService.StockService.DeleteStock(daten, o)
+      //   : FactoryService.StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, Model.Anlage);
+      // if (r.Ok)
+      // {
+      //   Model.ModalArt = null;
+      //   Model.ModalId = null;
+      //   Refresh();
+      //   return true;
+      // }
+      // else
+      //   Get(r, ModalMessages);
+    }
+    if (submit == nameof(Model.Abbrechen))
+      return true;
+    return false;
+  }
+}
