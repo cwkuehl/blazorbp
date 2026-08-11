@@ -35,8 +35,6 @@
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
   <input type="hidden" name="SubmitControl"/>
   <div class="row mt-1 g-0">
-  </div>
-  <div class="row mt-1 g-0">
     <LabelInputValid type="combobox" AutoPostback="x" For="@(() => Model!.Wertpapier)" DataList="@Model!.AuswahlWertpapier" VerticalColClass="form-group col-md-2"/>
     <LabelInputValid type="checkbox" AutoPostback="x" For="@(() => Model!.Auchinaktiv)" VerticalColClass="form-group col-md-2 ms-1"/>
     <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" VerticalColClass="form-group col-md-2 ms-1"/>

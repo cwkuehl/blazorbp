@@ -16,8 +16,6 @@
   <InputText type="hidden" @bind-Value="Model!.ReadonlyHiddenError"/>
   <input type="hidden" name="SubmitControl"/>
   <div class="row mt-1 g-0">
-  </div>
-  <div class="row mt-1 g-0">
     <SubmitButton class="btn btn-primary col-md-2 ms-1" For="@(() => Model!.Ok)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Abbrechen)"/>
     @* TODO <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button> *@
@@ -71,7 +69,7 @@
   protected override void OnInitialized()
   {
     var dt = Formular.GetDtId(Id).dt;
-    var title = Formular.ToTitle("TODO Titel - WP510", dt);
+    var title = Formular.ToTitle("Stand - WP510", dt);
     if (OnInitializedFormular("WP510", title, Id, false))
       return;
   }

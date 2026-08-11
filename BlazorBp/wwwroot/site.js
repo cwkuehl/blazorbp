@@ -107,7 +107,16 @@ export function onUpdate() {
       // $('.modal').modal('show');
       modals.modal('hide');
       setTimeout(() => {
-        modals.modal('show'); // Damit der modale Dialog nach einem OK wieder erscheint: hide und nach 0 ms show.
+        if (1 == 1)
+          modals.modal('show'); // Damit der modale Dialog nach einem OK wieder erscheint: hide und nach 0 ms show.
+        else
+        {
+          modals.modal({
+            backdrop: 'static', // Verhindert Schließen durch Klick außerhalb
+            keyboard: false     // Verhindert Schließen mit ESC
+          });
+          modals.show();
+        }
         $('[autofocus]').last().focus(); // Fokus auf das letzte Element (im modalen Dialog) setzen.
       }, 0);
     }

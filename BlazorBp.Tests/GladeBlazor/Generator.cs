@@ -123,6 +123,7 @@ public class Generator
       baseclass = "TableRowModelBase";
       besch = "eine Zeile in der Tabelle von ";
     }
+    Functions.MachNichts(nomodal);
     var sb = new StringBuilder();
     var sbt = new StringBuilder();
     var sbt2 = new StringBuilder();

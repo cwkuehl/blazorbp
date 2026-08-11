@@ -9,13 +9,13 @@
 <CascadingValue Value="this">
 <SortableTable Table="Table" NoData="" FormName="wp500" NoModal="true" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="WP500Model" TRTable="WP500TableRowModel">
   <ChildContent>
-    <TableColumn Field="@nameof(WP500TableRowModel.Wertpapier)" SortField="@nameof(WP500TodoModel.Wertpapier)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
-    <TableColumn Field="@nameof(WP500TableRowModel.Valuta)" SortField="@nameof(WP500TodoModel.Valuta)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
-    <TableColumn Field="@nameof(WP500TableRowModel.Betrag)" SortField="@nameof(WP500TodoModel.Betrag)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
-    <TableColumn Field="@nameof(WP500TableRowModel.AngelegtAm)" SortField="@nameof(WP500TodoModel.Angelegt_Am)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
-    <TableColumn Field="@nameof(WP500TableRowModel.AngelegtVon)" SortField="@nameof(WP500TodoModel.Angelegt_Von)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
-    <TableColumn Field="@nameof(WP500TableRowModel.GeaendertAm)" SortField="@nameof(WP500TodoModel.Geaendert_Am)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
-    <TableColumn Field="@nameof(WP500TableRowModel.GeaendertVon)" SortField="@nameof(WP500TodoModel.Geaendert_Von)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
+    <TableColumn Field="@nameof(WP500TableRowModel.Wertpapier)" SortField="@nameof(WpStand.StockDescription)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
+    <TableColumn Field="@nameof(WP500TableRowModel.Valuta)" SortField="@nameof(WpStand.Datum)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
+    <TableColumn Field="@nameof(WP500TableRowModel.Betrag)" SortField="@nameof(WpStand.Stueckpreis)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
+    <TableColumn Field="@nameof(WP500TableRowModel.AngelegtAm)" SortField="@nameof(WpStand.Angelegt_Am)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
+    <TableColumn Field="@nameof(WP500TableRowModel.AngelegtVon)" SortField="@nameof(WpStand.Angelegt_Von)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
+    <TableColumn Field="@nameof(WP500TableRowModel.GeaendertAm)" SortField="@nameof(WpStand.Geaendert_Am)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
+    <TableColumn Field="@nameof(WP500TableRowModel.GeaendertVon)" SortField="@nameof(WpStand.Geaendert_Von)" TModel="WP500Model" TRTable="WP500TableRowModel"/>
   </ChildContent>
 </SortableTable>
 </CascadingValue>
@@ -26,26 +26,17 @@
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
   <input type="hidden" name="SubmitControl"/>
   <div class="row mt-1 g-0">
-  </div>
-  <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Refresh)"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Staende)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Wertpapier)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid type="combobox" AutoPostback="x" For="@(() => Model!.Wertpapier)" DataList="@Model!.AuswahlWertpapier" VerticalColClass="form-group col-md-2"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Thin)"/>
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Von)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.All)"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Von)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" VerticalColClass="form-group col-md-2 ms-1"/>
   </div>
-  <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Schliessen)"/>
+  <div class="modal-footer mt-2">
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
   </div>
-  <!-- TODO btn-primary festlegen -->
 </EditForm>
 
 @code {
@@ -66,9 +57,8 @@
       Model = new WP500Model
       {
         Nr = id,
-        // TODO Mandant = daten.MandantNr,
       };
-      Model.SetMhrf(DialogTypeEnum.New);
+      Model.SetMhrf(DialogTypeEnum.New, daten);
     }
     Model.Nr = id;
     if (table != null)
@@ -77,23 +67,18 @@
       Table = new TableModelBase<WP500TableRowModel>
       {
         SelectedPage = 1,
-        RowsPerPage = 10,
+        RowsPerPage = 20,
         SelectedRow = 1,
-        SortColumn = $"{nameof(WP500TodoModel.Wertpapier)}#+",
+        SortColumn = $"{nameof(WpStand.StockDescription)}#+",
       };
     Table.Nr = id;
     InitEditContext(Model);
-    // TODO Lesen der Listen für Auswahlfelder, z.B.:
-    // var lk = Get(FactoryService.StockService.GetConfigurationList(daten, null, "1"));
-    // Model.AuswahlKonfiguration = InsertEmpty(lk?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
-  }
 
-  /// <summary>
-  /// Aktualisierung nach Undo/Redo.
-  /// </summary>
-  protected override void Refresh()
-  {
-    // TODO TableData(Table, Messages);
+    // Lesen der Listen für Auswahlfelder
+    var l0 = Get(FactoryService.StockService.GetStockList(daten));
+    Model.AuswahlWertpapier = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
+    if (string.IsNullOrEmpty(Model.Wertpapier))
+      Model.Wertpapier = GetStringData("WP500Wertpapier");
   }
 
   /// <summary>
@@ -106,18 +91,14 @@
     if (OnInitializedFormular("WP500", "Stände - WP500", Id, true))
       return;
 
-    // TODO Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
-    // var handler = HttpContext.Request.Query["handler"];
-    // if (handler == "Table_All")
-    // {
-    //   Model.SetMhrf(DialogTypeEnum.Copy, ServiceDaten);
-    //   WriteFormularModel(Model.Nr ?? "0", Model);
-    // }
-    // var submit = Model.Submit ?? "";
-    // if (submit == nameof(Model.Import))
-    // {
-    //   var l = SaveUploadFiles("WP500", "filehochladen");
-    // }
+    // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
+    var handler = HttpContext.Request.Query["handler"];
+    if (handler == "Table_All")
+    {
+      Model.SetMhrf(DialogTypeEnum.Copy, ServiceDaten);
+      WriteFormularModel(Model.Nr ?? "0", Model);
+    }
+    SetStringData("WP500Wertpapier", Model.Wertpapier);
   }
 
   /// <summary>
@@ -138,20 +119,41 @@
   /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
   protected override bool Submit(string? submit)
   {
-    if (valid && submit == "OK")
+    if (submit == nameof(Model.Thin))
     {
       var daten = ServiceDaten;
-      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
-      if (r != null)
+      var r = FactoryService.StockService.ThinPrices(daten, Model.Von ?? daten.Heute, Model.Wertpapier);
+      if (Get(r))
       {
-        Get(r);
-        if (r.Ok)
-          return true;
+        Model.Focus = nameof(Model.Wertpapier);
+        WriteFormularModel(Model.Nr ?? "0", Model);
+        Refresh();
       }
     }
-    // TODO if (submit == nameof(Model.Abbrechen))
-    // if (submit == nameof(Model.Schliessen))
-    //   return true;
+    if (Table != null && submit == nameof(Model.Wertpapier))
+    {
+      Refresh();
+    }
+    if (IsDateMhp(submit, nameof(Model.Von), Model.Von, out var d))
+    {
+      if (d.HasValue)
+      {
+        Model.Von = d;
+        WriteFormularModel(Model.Nr ?? "0", Model);
+        Refresh();
+      }
+    }
+    if (IsDateMhp(submit, nameof(Model.Bis), Model.Bis, out var db))
+    {
+      if (db.HasValue)
+      {
+        Model.Bis = db;
+        WriteFormularModel(Model.Nr ?? "0", Model);
+        Refresh();
+      }
+    }
+    if (submit == nameof(Model.Schliessen))
+      return true;
     return false;
   }
 
@@ -165,18 +167,8 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var r = new ServiceErgebnis<List<WP500TodoModel>>(new List<WP500TodoModel>());
-    r.Ergebnis.Add(new WP500TodoModel()
-    {
-      Nummer = "1",
-      Wertpapier = "Wertpapier1",
-      Valuta = "Valuta1",
-      Betrag = "Betrag1",
-    });
-    if (rm != null)
-      rm.PageCount = 0;
-    // TODO var l0 = Get(FactoryService.PrivateService.GetClientList(daten, rm), messages);
-    var l = r.Ergebnis?.Select(a => WP500TableRowModel.From(a)).ToList() ?? new List<WP500TableRowModel>();
+    var l0 = Get(FactoryService.StockService.GetPriceList(daten, rm, Model.Wertpapier, Model.Von, Model.Bis), messages);
+    var l = l0?.Select(a => WP500TableRowModel.From(a)).ToList() ?? new List<WP500TableRowModel>();
     return UpdateTable(m, rm, l);
   }
 

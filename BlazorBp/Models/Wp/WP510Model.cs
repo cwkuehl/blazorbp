@@ -71,8 +71,8 @@ public class WP510Model : PageModelBase
     }
     // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
     // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
-    // SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
+    SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
+    SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
   }
 }
