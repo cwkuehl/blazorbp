@@ -146,7 +146,16 @@ else if (InputType != "label") // Standard-Input
 }
 @if (!hidden && InputType == "date")
 {
-  <button class="btn btn-secondary btn-sm col-md-1 ms-1" type="submit" name="@NameAttributeValueSubmit" value="@(ValueSubmit)m" title="Datum minus 1 Tag" accesskey="@accesskey1">-</button>
-  <button class="btn btn-secondary btn-sm col-md-1 ms-1" type="submit" name="@NameAttributeValueSubmit" value="@(ValueSubmit)h" title="Heutiges Datum" accesskey="@accesskey2">h</button>
-  <button class="btn btn-secondary btn-sm col-md-1 ms-1" type="submit" name="@NameAttributeValueSubmit" value="@(ValueSubmit)p" title="Datum plus 1 Tag" accesskey="@accesskey3">+</button>
+  <div class="form-group col-md-1 ms-1">
+    <label class="form-label invisible">&nbsp;</label>
+    <button class="form-control btn btn-secondary" type="submit" name="@NameAttributeValueSubmit" value="@(ValueSubmit)m" title="Datum minus 1 Tag" accesskey="@accesskey1">-</button>
+  </div>
+  <div class="form-group col-md-1 ms-1">
+    <label class="form-label invisible">&nbsp;</label>
+    <button class="form-control btn btn-secondary" type="submit" name="@NameAttributeValueSubmit" value="@(ValueSubmit)h" title="Heutiges Datum" accesskey="@accesskey2">h</button>
+  </div>
+  <div class="form-group col-md-1 ms-1">
+    <label class="form-label invisible">&nbsp;</label>
+    <button class="form-control btn btn-secondary" type="submit" name="@NameAttributeValueSubmit" value="@(ValueSubmit)p" title="Datum plus 1 Tag" accesskey="@accesskey3">+</button>
+  </div>
 }
