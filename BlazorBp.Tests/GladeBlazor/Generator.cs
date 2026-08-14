@@ -689,9 +689,7 @@ else
       //   : FactoryService.StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, Model.Anlage);
       // if (r.Ok)
       // {
-      //   Model.ModalArt = null;
-      //   Model.ModalId = null;
-      //   Refresh();
+      //   SetFormRefresh();
       //   return true;
       // }
       // else

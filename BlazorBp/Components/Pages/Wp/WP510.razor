@@ -112,7 +112,7 @@
         : FactoryService.StockService.SavePrice(daten, o.Wertpapier_Uid, o.Datum, o.Stueckpreis);
       if (r.Ok)
       {
-        HttpContext.Session?.SetBoolean("Refresh", true);
+        SetFormRefresh();
         return true;
       }
       else

@@ -73,7 +73,7 @@ else
       if (r.Ok && r.Ergebnis)
       {
         // Aktualisieren der aktuellen Seite.
-        HttpContext.Session?.SetBoolean("Refresh", true);
+        HttpContext.Session?.SetFormRefresh();
         navigation.NavigateTo(HttpContext.Request.Path, true);
       }
     }
@@ -83,7 +83,7 @@ else
       var r = FactoryService.LoginService.Redo(daten);
       if (r.Ok && r.Ergebnis)
       {
-        HttpContext.Session?.SetBoolean("Refresh", true);
+        HttpContext.Session?.SetFormRefresh();
         navigation.NavigateTo(HttpContext.Request.Path, true);
       }
     }

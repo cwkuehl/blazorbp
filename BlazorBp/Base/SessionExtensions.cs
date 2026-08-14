@@ -155,4 +155,23 @@ public static class SessionExtensions
     var key = "FormParameter";
     return session.GetString(key);
   }
+
+  /// <summary>
+  /// Aktualisierung der des nächsten Formulars, z.B. nach Schließen eines Formulars.
+  /// <param name="session">Betroffene Session.</param>
+  /// <paramref name="refresh"/>True, wenn das nächste Formular, z.B. die Tabelle, aktualisiert werden soll, sonst false.
+  public static void SetFormRefresh(this ISession session, bool refresh = true)
+  {
+    var key = "FormRefresh";
+    session.SetBoolean(key, refresh);
+  }
+
+  /// <summary>Prüft, ob das nächste Formular, z.B. die Tabelle, aktualisiert werden soll.</summary>
+  /// <param name="session">Betroffene Session.</param>
+  /// <returns>True, wenn das nächste Formular aktualisiert werden soll, sonst false.</returns>
+  public static bool GetFormRefresh(this ISession session)
+  {
+    var key = "FormRefresh";
+    return session.GetBoolean(key) ?? false;
+  }
 }

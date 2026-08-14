@@ -424,10 +424,10 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       }
     }
     Init(id0, model, table);
-    if (HttpContext.Session?.GetBoolean("Refresh") ?? false)
+    if (HttpContext.Session?.GetFormRefresh() ?? false)
     {
       System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} OnInitializedFormular Refresh {action} ...{id.Right(6)}");
-      HttpContext.Session?.SetBoolean("Refresh", false);
+      SetFormRefresh(false);
       if (model != null)
       {
         model.ModalId = null; // Unterformulare nicht anzeigen.
@@ -515,6 +515,15 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     {
       OnTable(Table, Messages);
     }
+  }
+
+  /// <summary>
+  /// Aktualisierung der des nächsten Formulars, z.B. nach Schließen eines Formulars.
+  /// <paramref name="refresh"/>True, wenn das nächste Formular, z.B. die Tabelle, aktualisiert werden soll, sonst false.
+  /// </summary>
+  protected void SetFormRefresh(bool refresh = true)
+  {
+    HttpContext.Session?.SetFormRefresh(refresh);
   }
 
   /// <summary>
