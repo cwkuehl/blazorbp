@@ -15,34 +15,33 @@ using static BlazorBp.Base.DialogTypeEnum;
 /// </summary>
 [Serializable]
 public class WP510Model : PageModelBase
-{  /// <summary>Holt oder setzt Wertpapier.</summary>
+{
+  /// <summary>Holt oder setzt die Auswahlliste von Wertpapieren.</summary>
+  public List<ListItem>? AuswahlWertpapier { get; set; } = default!;
+
+  /// <summary>Holt oder setzt Wertpapier.</summary>
   [Display(Name = "_Wertpapier", Description = "Bezug zum Wertpapier")]
-  //// [Required(ErrorMessage = "Wertpapier muss angegeben werden.")]
+  [Required(ErrorMessage = "Wertpapier muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Wertpapier darf maximal {1} Zeichen lang sein.")]
   public string? Wertpapier { get; set; }
 
   /// <summary>Holt oder setzt Datum.</summary>
   [Display(Name = "_Datum", Description = "")]
-  //// [Required(ErrorMessage = "Datum muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Datum darf maximal {1} Zeichen lang sein.")]
-  public string? Valuta { get; set; }
+  [Required(ErrorMessage = "Datum muss angegeben werden.")]
+  public DateTime? Valuta { get; set; }
 
   /// <summary>Holt oder setzt Betrag.</summary>
   [Display(Name = "_Betrag", Description = "Kurs am Datum")]
-  //// [Required(ErrorMessage = "Betrag muss angegeben werden.")]
+  [Required(ErrorMessage = "Betrag muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Betrag darf maximal {1} Zeichen lang sein.")]
-  public string? Betrag { get; set; }
+  public decimal? Betrag { get; set; }
 
   /// <summary>Holt oder setzt Angelegt.</summary>
   [Display(Name = "Angelegt", Description = "Datum, Uhrzeit und Benutzer, der die Daten angelegt hat")]
-  //// [Required(ErrorMessage = "Angelegt muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Angelegt darf maximal {1} Zeichen lang sein.")]
   public string? Angelegt { get; set; }
 
   /// <summary>Holt oder setzt Geändert.</summary>
   [Display(Name = "Geändert", Description = "Datum, Uhrzeit und Benutzer, der die Daten geändert hat")]
-  //// [Required(ErrorMessage = "Geändert muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Geändert darf maximal {1} Zeichen lang sein.")]
   public string? Geaendert { get; set; }
 
   /// <summary>Holt oder setzt OK.</summary>
@@ -57,6 +56,34 @@ public class WP510Model : PageModelBase
   //// [MaxLength(255, ErrorMessage = "Abbrechen darf maximal {1} Zeichen lang sein.")]
   public string? Abbrechen { get; set; }
 
+  /// <summary>Kopiert die Werte aus einem Model.</summary>
+  /// <param name="m">Zu kopierendes Model.</param>
+  public void From(WpStand m) =>
+  (
+    Wertpapier,
+    Valuta,
+    Betrag,
+    Angelegt,
+    Geaendert
+  ) = (
+    m.Wertpapier_Uid,
+    m.Datum,
+    m.Stueckpreis,
+    ModelBase.FormatDateOf(m.Angelegt_Am, m.Angelegt_Von),
+    ModelBase.FormatDateOf(m.Geaendert_Am, m.Geaendert_Von)
+  );
+
+  /// <summary>Kopiert die Werte in ein Model.</summary>
+  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
+  /// <returns>Das kopierte Model.</returns>
+  public WpStand To(ServiceDaten daten) => new()
+  {
+    Mandant_Nr = daten.MandantNr,
+    Wertpapier_Uid = Wertpapier,
+    Datum = Valuta ?? daten.Heute,
+    Stueckpreis = Betrag ?? 0,
+  };
+
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>
   public void SetMhrf(DialogTypeEnum mode)
@@ -69,8 +96,9 @@ public class WP510Model : PageModelBase
     {
       // TODO Thema = null;
     }
-    // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
-    // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
+    SetMandatoryHiddenReadonly(nameof(Wertpapier), true, false, mode == Edit || mode == Delete, mode == New);
+    SetMandatoryHiddenReadonly(nameof(Valuta), true, false, mode == Edit || mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Betrag), true, false, mode == Delete, mode == Edit);
     SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
     SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
     SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);

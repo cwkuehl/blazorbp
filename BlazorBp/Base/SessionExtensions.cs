@@ -134,4 +134,25 @@ public static class SessionExtensions
     else
       session.SetObjectAsJson(key, value);
   }
+
+  /// <summary>Speichern der Parameter für einen Formular-Aufruf in der Session.</summary>
+  /// <param name="session">Betroffene Session.</param>
+  /// <param name="value">Betroffener Wert.</param>
+  public static void SetFormParameter(this ISession session, string? value)
+  {
+    var key = "FormParameter";
+    if (value == null)
+      session.Remove(key);
+    else
+      session.SetString(key, value);
+  }
+
+  /// <summary>Lesen der Parameter für einen Formular-Aufruf in der Session.</summary>
+  /// <param name="session">Betroffene Session.</param>
+  /// <returns>Formular-Daten oder null.</returns>
+  public static string? GetFormParameter(this ISession session)
+  {
+    var key = "FormParameter";
+    return session.GetString(key);
+  }
 }

@@ -410,7 +410,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
           {
             if (id0 != f0.Id)
               throw new Exception($"Falsche Formular-ID {f0.Id}: Erwartet {id0}.");
-            var model0 = ReadFormularModel(f0.Id ?? "");
+            var model0 = ReadFormularModel(id);
             if (model0 != null)
               CopyNotPostbackData(Model, model0);
             WriteFormularModel(id, Model);
@@ -639,6 +639,12 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     {
       var ds = l.Skip(i - 1).FirstOrDefault();
       var nr = ds?.Id ?? "";
+      if (nr.StartsWith("P"))
+      {
+        var v = nr.Substring(1);
+        HttpContext?.Session?.SetFormParameter(v);
+        nr = Guid.NewGuid().ToString();
+      }
       if (!string.IsNullOrEmpty(nr))
       {
         var dt = Formular.ToShortString(Formular.GetTableDialogType(handler));

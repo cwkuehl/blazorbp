@@ -585,11 +585,11 @@ else
 <CascadingValue Value="this">
 </CascadingValue>
 
-<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="{{form2?.ToLower()}}">
-  @* <DataAnnotationsValidator/> *@
+<EditForm Enhance method="post" EditContext="EditContext" OnSubmit="Submit" FormName="{{form2?.ToLower()}}">
+  <DataAnnotationsValidator/>
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
-  <InputText type="hidden" @bind-Value="Model!.ReadonlyHiddenError"/>
+  @* <InputText type="hidden" @bind-Value="Model!.ReadonlyHiddenError"/> *@
   <input type="hidden" name="SubmitControl"/>
 
 """);
@@ -669,9 +669,7 @@ else
   /// <summary>Initialisierung der Komponente.</summary>
   protected override void OnInitialized()
   {
-    var dt = Formular.GetDtId(Id).dt;
-    var title = Formular.ToTitle("TODO Titel - {{form2}}", dt);
-    if (OnInitializedFormular("{{form2}}", title, Id, false))
+    if (OnInitializedFormular("{{form2}}", "TODO Titel - {{form2}}", Id, false))
       return;
   }
  
@@ -702,6 +700,17 @@ else
     if (submit == nameof(Model.Abbrechen))
       return true;
     return false;
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData({{form2}}Model model, {{form2}}Model model0)
+  {
+    model.DialogType = model0.DialogType;
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
   }
 }
 

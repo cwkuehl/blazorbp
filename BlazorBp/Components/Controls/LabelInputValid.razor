@@ -144,7 +144,7 @@ else if (InputType != "label") // Standard-Input
 {
   @((MarkupString)"</div>")
 }
-@if (!hidden && InputType == "date")
+@if (!hidden && !disabled && InputType == "date")
 {
   <div class="form-group col-md-1 ms-1">
     <label class="form-label invisible">&nbsp;</label>

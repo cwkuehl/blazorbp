@@ -74,7 +74,7 @@
     Table.Nr = id;
     InitEditContext(Model);
 
-    // Lesen der Listen für Auswahlfelder
+    // Lesen der Listen für Auswahlfelder.
     var l0 = Get(FactoryService.StockService.GetStockList(daten));
     Model.AuswahlWertpapier = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
     if (string.IsNullOrEmpty(Model.Wertpapier))

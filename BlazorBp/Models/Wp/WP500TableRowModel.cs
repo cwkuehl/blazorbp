@@ -11,39 +11,6 @@ using CSBP.Services.Base;
 using static BlazorBp.Base.DialogTypeEnum;
 
 /// <summary>
-/// TodoModel-Klasse für Formular WP500 Stände.
-/// TODO Durch passendes Model ersetzen und löschen.
-/// </summary>
-[Serializable]
-public class WP500TodoModel
-{
-  /// <summary>Holt oder setzt Nr.</summary>
-  [Display(Name = "Nr.", Description = "Nummer")]
-  public string? Nummer { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Wertpapier.</summary>
-  public string? Wertpapier { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Datum.</summary>
-  public string? Valuta { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Betrag.</summary>
-  public string? Betrag { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Angelegt_Am.</summary>
-  public DateTime? Angelegt_Am { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Angelegt_Von.</summary>
-  public string? Angelegt_Von { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Geaendert_Am.</summary>
-  public DateTime? Geaendert_Am { get; set; }
-
-  /// <summary>Holt oder setzt die Spalte Geaendert_Von.</summary>
-  public string? Geaendert_Von { get; set; }
-}
-
-/// <summary>
 /// Model-Klasse für eine Zeile in der Tabelle von Formular WP500 Stände.
 /// </summary>
 [Serializable]
@@ -83,14 +50,13 @@ public class WP500TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
   /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
-  public WP500TodoModel To(ServiceDaten daten)
+  public WpStand To(ServiceDaten daten)
   {
-    return new WP500TodoModel
+    return new WpStand
     {
-      // TODO Mandant_Nr = daten.MandantNr,
-      Wertpapier = Wertpapier,
-      Valuta = Valuta,
-      Betrag = Betrag,
+      Wertpapier_Uid = Wertpapier,
+      Datum = Functions.ToDateTime(Valuta) ?? daten.Heute,
+      Stueckpreis = Functions.ToDecimal(Betrag) ?? 0,
       Angelegt_Am = AngelegtAm,
       Angelegt_Von = AngelegtVon,
       Geaendert_Am = GeaendertAm,
@@ -104,7 +70,7 @@ public class WP500TableRowModel : TableRowModelBase
   {
     return new WP500TableRowModel
     {
-      Nummer = m.Wertpapier_Uid,
+      Nummer = $"P{m.Wertpapier_Uid}+{Functions.ToString(m.Datum)}", // Parameter in Session speichern, damit die Daten nicht in der URL stehen.
       Wertpapier = Functions.Left2(m.StockDescription),
       Valuta = Functions.ToString(m.Datum),
       Betrag = Functions.ToString(m.Stueckpreis),

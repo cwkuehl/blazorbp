@@ -9,23 +9,28 @@
 <CascadingValue Value="this">
 </CascadingValue>
 
-<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="wp510">
-  @* <DataAnnotationsValidator/> *@
+<EditForm Enhance method="post" EditContext="EditContext" OnSubmit="Submit" FormName="wp510">
+  <DataAnnotationsValidator/>
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
-  <InputText type="hidden" @bind-Value="Model!.ReadonlyHiddenError"/>
+  @* <InputText type="hidden" @bind-Value="Model!.ReadonlyHiddenError"/> *@
   <input type="hidden" name="SubmitControl"/>
+  <div class="row mt-1 g-0">
+    <LabelInputValid type="combobox" AutoPostback="x" For="@(() => Model!.Wertpapier)" DataList="@Model!.AuswahlWertpapier" VerticalColClass="form-group col"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Valuta)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid step="0.0001" AutoPostback="" For="@(() => Model!.Betrag)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Angelegt)" VerticalColClass="form-group col-md-6"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Geaendert)" VerticalColClass="form-group col ms-1"/>
+  </div>
   <div class="row mt-1 g-0">
     <SubmitButton class="btn btn-primary col-md-2 ms-1" For="@(() => Model!.Ok)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Abbrechen)"/>
-    @* TODO <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button> *@
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Wertpapier)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Valuta)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Betrag)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Angelegt)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Geaendert)" VerticalColClass="form-group col-md-2"/>
   </div>
 </EditForm>
 
@@ -51,26 +56,35 @@
       };
       if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
       {
-        // TODO Lesen des Models aus der Datenbank, z.B.:
-        // var r = FactoryService.StockService.GetStock(daten, id ?? "");
-        // if (r.Ok && r.Ergebnis != null)
-        //   Model.From(r.Ergebnis);
+        // Lesen des Models aus der Datenbank.
+        var param = HttpContext?.Session?.GetFormParameter() ?? "";
+        var arr = param.Split('+');
+        var uid = arr.Length > 0 ? arr[0] : "";
+        var date = arr.Length > 1 ? Functions.ToDateTime(arr[1]) : null;
+        if (string.IsNullOrEmpty(uid) || !date.HasValue)
+          dt = DialogTypeEnum.New;
+        else
+        {
+          var r = FactoryService.StockService.GetPrice(daten, uid, date.Value);
+          if (r.Ok && r.Ergebnis != null)
+            Model.From( r.Ergebnis);
+          else
+            dt = DialogTypeEnum.New;
+        }
       }
       Model.SetMhrf(dt);
     }
     Model.Nr = id;
     InitEditContext(Model);
-    // TODO Lesen der Listen für Auswahlfelder, z.B.:
-    // var l0 = Get(FactoryService.StockService.GetStateList(daten));
-    // Model.AuswahlStatus = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
+    // Lesen der Listen für Auswahlfelder.
+    var l0 = Get(FactoryService.StockService.GetStockList(daten));
+    Model.AuswahlWertpapier = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
   }
 
   /// <summary>Initialisierung der Komponente.</summary>
   protected override void OnInitialized()
   {
-    var dt = Formular.GetDtId(Id).dt;
-    var title = Formular.ToTitle("Stand - WP510", dt);
-    if (OnInitializedFormular("WP510", title, Id, false))
+    if (OnInitializedFormular("WP510", "Stand - WP510", Id, false))
       return;
   }
  
@@ -82,24 +96,41 @@
   protected override bool Submit(string? submit)
   {
     var daten = ServiceDaten;
+    if (IsDateMhp(submit, nameof(Model.Valuta), Model.Valuta, out var d))
+    {
+      if (d.HasValue)
+      {
+        Model.Valuta = d;
+        WriteFormularModel(Model.Nr ?? "0", Model);
+      }
+    }
     if (valid && submit == nameof(Model.Ok))
     {
-      // var o = Model.To(daten);
-      // var r = Model.DialogType == DialogTypeEnum.Delete
-      //   ? FactoryService.StockService.DeleteStock(daten, o)
-      //   : FactoryService.StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, Model.Anlage);
-      // if (r.Ok)
-      // {
-      //   Model.ModalArt = null;
-      //   Model.ModalId = null;
-      //   Refresh();
-      //   return true;
-      // }
-      // else
-      //   Get(r, ModalMessages);
+      var o = Model.To(daten);
+      var r = Model.DialogType == DialogTypeEnum.Delete
+        ? FactoryService.StockService.DeletePrice(daten, o)
+        : FactoryService.StockService.SavePrice(daten, o.Wertpapier_Uid, o.Datum, o.Stueckpreis);
+      if (r.Ok)
+      {
+        HttpContext.Session?.SetBoolean("Refresh", true);
+        return true;
+      }
+      else
+        Get(r);
     }
     if (submit == nameof(Model.Abbrechen))
       return true;
     return false;
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData(WP510Model model, WP510Model model0)
+  {
+    model.DialogType = model0.DialogType;
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
   }
 }
