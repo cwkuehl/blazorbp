@@ -17,6 +17,7 @@ public class GladeParserTests
     // Generator.Generate($"{basepath}/WP/WP200Stocks.glade", $"{basepath}/WP/WP210Stock.glade", resfile, genpath);
     // Generator.Generate($"{basepath}/WP/WP300Configurations.glade", $"{basepath}/WP/WP310Configuration.glade", resfile, genpath);
     // Generator.Generate($"{basepath}/WP/WP250Investments.glade", $"{basepath}/WP/WP260Investment.glade", null, resfile, genpath);
-    Generator.Generate($"{basepath}/WP/WP500Prices.glade", null, $"{basepath}/WP/WP510Price.glade", resfile, genpath);
+    // Generator.Generate($"{basepath}/WP/WP500Prices.glade", null, $"{basepath}/WP/WP510Price.glade", resfile, genpath);
+    Generator.Generate($"{basepath}/WP/WP100Chart.glade", null, null, resfile, genpath);
   }
 }

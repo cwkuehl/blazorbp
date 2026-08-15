@@ -86,7 +86,8 @@ public class WP510Model : PageModelBase
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>
-  public void SetMhrf(DialogTypeEnum mode)
+  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
+  public void SetMhrf(DialogTypeEnum mode, ServiceDaten daten)
   {
     if (mode == New || mode == Copy)
     {
@@ -94,7 +95,7 @@ public class WP510Model : PageModelBase
     }
     if (mode == New)
     {
-      // TODO Thema = null;
+      Valuta = daten.Heute;
     }
     SetMandatoryHiddenReadonly(nameof(Wertpapier), true, false, mode == Edit || mode == Delete, mode == New);
     SetMandatoryHiddenReadonly(nameof(Valuta), true, false, mode == Edit || mode == Delete, false);
