@@ -158,8 +158,9 @@ public static class SessionExtensions
 
   /// <summary>
   /// Aktualisierung der des nächsten Formulars, z.B. nach Schließen eines Formulars.
+  /// </summary>
   /// <param name="session">Betroffene Session.</param>
-  /// <paramref name="refresh"/>True, wenn das nächste Formular, z.B. die Tabelle, aktualisiert werden soll, sonst false.
+  /// <param name="refresh">True, wenn das nächste Formular, z.B. die Tabelle, aktualisiert werden soll, sonst false.</param>
   public static void SetFormRefresh(this ISession session, bool refresh = true)
   {
     var key = "FormRefresh";

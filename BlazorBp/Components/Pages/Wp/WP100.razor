@@ -11,31 +11,40 @@
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
   <input type="hidden" name="SubmitControl"/>
-  <div class="row mt-1 g-0">
+  <div class="row g-0">
+    <div class="col-md-6">
+    <div class="row mt-1 g-0">
+      <LabelInputValid type="listbox" size="3" AutoPostback="" DataList="Model!.AuswahlData" For="@(() => Model!.Data)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+    </div>
+    <div class="row mt-1 g-0">
+      <LabelInputValid AutoPostback="" For="@(() => Model!.Von)" maxlength="255" VerticalColClass="form-group col-md-4"/>
+      <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" maxlength="255" VerticalColClass="form-group col ms-1"/>
+    </div>
+    <div class="row mt-1 g-0">
+      <LabelInputValid type="combobox" AutoPostback="x" For="@(() => Model!.Wertpapier)" DataList="@Model!.AuswahlWertpapier" VerticalColClass="form-group col"/>
+    </div>
+    <div class="row mt-1 g-0">
+      <LabelInputValid step="0.001" AutoPostback="" For="@(() => Model!.Box)" VerticalColClass="form-group col-md-4"/>
+      <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Skala)" maxlength="255" DataList="@Model!.AuswahlSkala" VerticalColClass="form-group col ms-1"/>
+    </div>
+    <div class="row mt-1 g-0">
+      <LabelInputValid AutoPostback="" For="@(() => Model!.Umkehr)" maxlength="255" VerticalColClass="form-group col-md-4"/>
+    </div>
+    <div class="row mt-1 g-0">
+      <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Methode)" maxlength="255" DataList="@Model!.AuswahlMethode" VerticalColClass="form-group col"/>
+      <LabelInputValid AutoPostback="" For="@(() => Model!.Relativ)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+    </div>
+    </div>
+    <div class="col">
+    <div class="row mt-1 g-0">
+      <LabelInputValid AutoPostback="" For="@(() => Model!.Chart)" maxlength="255" VerticalColClass="form-group col"/>
+    </div>
+    </div>
   </div>
-  <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Refresh)"/>
+  <div class="modal-footer mt-2">
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
   </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Data)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Von)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid type="combobox" AutoPostback="x" For="@(() => Model!.Wertpapier)" DataList="@Model!.AuswahlWertpapier" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Box)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Skala)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Umkehr)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Methode)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Relativ)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Chart)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Schliessen)"/>
-  </div>
-  <!-- TODO btn-primary festlegen -->
 </EditForm>
 
 @code {
@@ -56,9 +65,8 @@
       Model = new WP100Model
       {
         Nr = id,
-        // TODO Mandant = daten.MandantNr,
       };
-      Model.SetMhrf(DialogTypeEnum.New);
+      Model.SetMhrf(DialogTypeEnum.New, daten);
     }
     Model.Nr = id;
     InitEditContext(Model);
@@ -68,14 +76,9 @@
     Model.AuswahlWertpapier = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
     if (string.IsNullOrEmpty(Model.Wertpapier))
       Model.Wertpapier = GetStringData("WP100Wertpapier");
-  }
-
-  /// <summary>
-  /// Aktualisierung nach Undo/Redo.
-  /// </summary>
-  protected override void Refresh()
-  {
-    // TODO TableData(Table, Messages);
+    Model.AuswahlData = new List<ListItem> { new("MX", "Mexico"), new("CA", "Canada"), new("US", "USA") };
+    Model.AuswahlSkala = new List<ListItem> { new("D", "Daily"), new("W", "Weekly"), new("M", "Monthly") };
+    Model.AuswahlMethode = new List<ListItem> { new("MA", "Moving Average"), new("EMA", "Exponential Moving Average") };
   }
 
   /// <summary>
@@ -87,19 +90,6 @@
   {
     if (OnInitializedFormular("WP100", "Point and Figure - WP100", Id, true))
       return;
-
-    // TODO Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
-    // var handler = HttpContext.Request.Query["handler"];
-    // if (handler == "Table_All")
-    // {
-    //   Model.SetMhrf(DialogTypeEnum.Copy, ServiceDaten);
-    //   WriteFormularModel(Model.Nr ?? "0", Model);
-    // }
-    // var submit = Model.Submit ?? "";
-    // if (submit == nameof(Model.Import))
-    // {
-    //   var l = SaveUploadFiles("WP100", "filehochladen");
-    // }
   }
 
   /// <summary>
@@ -109,7 +99,25 @@
   /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
   protected override bool Submit(string? submit)
   {
-    if (valid && submit == "OK")
+    if (IsDateMhp(submit, nameof(Model.Von), Model.Von, out var d))
+    {
+      if (d.HasValue)
+      {
+        Model.Von = d;
+        WriteFormularModel(Model.Nr ?? "0", Model);
+        Refresh();
+      }
+    }
+    if (IsDateMhp(submit, nameof(Model.Bis), Model.Bis, out var db))
+    {
+      if (db.HasValue)
+      {
+        Model.Bis = db;
+        WriteFormularModel(Model.Nr ?? "0", Model);
+        Refresh();
+      }
+    }
+    @* if (valid && submit == "OK")
     {
       var daten = ServiceDaten;
       var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
@@ -119,10 +127,9 @@
         if (r.Ok)
           return true;
       }
-    }
-    // TODO if (submit == nameof(Model.Abbrechen))
-    // if (submit == nameof(Model.Schliessen))
-    //   return true;
+    } *@
+    if (submit == nameof(Model.Schliessen))
+      return true;
     return false;
   }
 

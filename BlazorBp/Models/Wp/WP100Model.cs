@@ -21,27 +21,22 @@ public class WP100Model : PageModelBase
   //// [MaxLength(255, ErrorMessage = "Aktualisieren darf maximal {1} Zeichen lang sein.")]
   public string? Refresh { get; set; }
 
+  /// <summary>Holt oder setzt die Auswahlliste von Daten.</summary>
+  public List<ListItem>? AuswahlData { get; set; } = default!;
+
   /// <summary>Holt oder setzt Daten.</summary>
   [Display(Name = "_Daten", Description = "")]
   public string? Data { get; set; }
 
-  /// <summary>Holt oder setzt Chart.</summary>
-  [Display(Name = "Chart", Description = "")]
-  //// [Required(ErrorMessage = "Chart muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Chart darf maximal {1} Zeichen lang sein.")]
-  public string? Chart { get; set; }
-
   /// <summary>Holt oder setzt Von.</summary>
   [Display(Name = "_Von", Description = "")]
   //// [Required(ErrorMessage = "Von muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Von darf maximal {1} Zeichen lang sein.")]
-  public string? Von { get; set; }
+  public DateTime? Von { get; set; }
 
   /// <summary>Holt oder setzt Bis.</summary>
   [Display(Name = "B_is", Description = "")]
   //// [Required(ErrorMessage = "Bis muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Bis darf maximal {1} Zeichen lang sein.")]
-  public string? Bis { get; set; }
+  public DateTime? Bis { get; set; }
 
   /// <summary>Holt oder setzt die Auswahlliste von Wertpapieren.</summary>
   public List<ListItem>? AuswahlWertpapier { get; set; } = default!;
@@ -55,7 +50,10 @@ public class WP100Model : PageModelBase
   [Display(Name = "Bo_xgröße", Description = "Boxgröße absolut oder prozentual")]
   //// [Required(ErrorMessage = "Boxgröße muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Boxgröße darf maximal {1} Zeichen lang sein.")]
-  public string? Box { get; set; }
+  public decimal? Box { get; set; }
+
+  /// <summary>Holt oder setzt die Auswahlliste von Skala.</summary>
+  public List<ListItem>? AuswahlSkala { get; set; } = default!;
 
   /// <summary>Holt oder setzt Skala.</summary>
   [Display(Name = "Skala", Description = "Zugrundeliegende Skala für die Boxgröße")]
@@ -64,14 +62,15 @@ public class WP100Model : PageModelBase
 
   /// <summary>Holt oder setzt Umkehr.</summary>
   [Display(Name = "_Umkehr", Description = "Anzahl der Boxen für Umkehr")]
-  //// [Required(ErrorMessage = "Umkehr muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Umkehr darf maximal {1} Zeichen lang sein.")]
-  public string? Umkehr { get; set; }
+  [Required(ErrorMessage = "Umkehr muss angegeben werden.")]
+  public int? Umkehr { get; set; }
+
+  /// <summary>Holt oder setzt die Auswahlliste von Methode.</summary>
+  public List<ListItem>? AuswahlMethode { get; set; } = default!;
 
   /// <summary>Holt oder setzt Methode.</summary>
   [Display(Name = "_Methode", Description = "Methode für Kursberechnung")]
-  //// [Required(ErrorMessage = "Methode muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Methode darf maximal {1} Zeichen lang sein.")]
+  [Required(ErrorMessage = "Methode muss angegeben werden.")]
   public string? Methode { get; set; }
 
   /// <summary>Holt oder setzt Relativ.</summary>
@@ -79,6 +78,12 @@ public class WP100Model : PageModelBase
   //// [Required(ErrorMessage = "Relativ muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Relativ darf maximal {1} Zeichen lang sein.")]
   public string? Relativ { get; set; }
+
+  /// <summary>Holt oder setzt Chart.</summary>
+  [Display(Name = "Chart", Description = "")]
+  //// [Required(ErrorMessage = "Chart muss angegeben werden.")]
+  //// [MaxLength(255, ErrorMessage = "Chart darf maximal {1} Zeichen lang sein.")]
+  public string? Chart { get; set; }
 
   /// <summary>Holt oder setzt Schließen.</summary>
   [Display(Name = "Schließen", Description = "Schließen")]
@@ -88,20 +93,20 @@ public class WP100Model : PageModelBase
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>
-  public void SetMhrf(DialogTypeEnum mode)
+  /// <param name="daten">Die Service-Daten.</param>
+  public void SetMhrf(DialogTypeEnum mode, ServiceDaten daten)
   {
-    if (mode == New || mode == Copy)
-    {
-      // TODO Nummer = "";
-    }
     if (mode == New)
     {
-      // TODO Thema = null;
+      Von = daten.Heute.AddDays(-180);
+      Bis = daten.Heute;
+      Box = 1;
+      Umkehr = 3;
     }
     // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
     // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
     // SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Relativ), false, true, true);
+    SetMandatoryHiddenReadonly(nameof(Schliessen), false, false, false, false);
   }
 }
