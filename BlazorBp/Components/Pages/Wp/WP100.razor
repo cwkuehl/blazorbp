@@ -67,6 +67,26 @@
         Nr = id,
       };
       Model.SetMhrf(DialogTypeEnum.New, daten);
+      var param = HttpContext?.Session?.GetFormParameter() ?? "";
+      var arr = param.Split('+');
+      var date = arr.Length > 0 ? Functions.ToDateTime(arr[0]) : null;
+      var wpuid = arr.Length > 1 ? arr[1] : "";
+      var kuid = arr.Length > 2 ? arr[2] : "";
+      // Konfiguration lesen.
+      if (date.HasValue)
+        Model.Bis = date;
+      if (!string.IsNullOrEmpty(wpuid))
+        Model.Wertpapier = wpuid;
+      var r = FactoryService.StockService.GetConfiguration(daten, kuid ?? "");
+      if (r.Ok && !string.IsNullOrEmpty(kuid) && r.Ergebnis != null)
+      {
+        if (Model.Bis.HasValue)
+          Model.Von = Model.Bis?.AddDays(-r.Ergebnis.Duration);
+        Model.Box = r.Ergebnis.Box;
+        Model.Skala = Functions.ToString(r.Ergebnis.Scale);
+        Model.Umkehr = r.Ergebnis.Reversal;
+        Model.Methode = Functions.ToString(r.Ergebnis.Method);
+      }
     }
     Model.Nr = id;
     InitEditContext(Model);
@@ -76,9 +96,11 @@
     Model.AuswahlWertpapier = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
     if (string.IsNullOrEmpty(Model.Wertpapier))
       Model.Wertpapier = GetStringData("WP100Wertpapier");
+    var l1 = Get(FactoryService.StockService.GetScaleList(daten));
+    Model.AuswahlSkala = l1?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
+    var l2 = Get(FactoryService.StockService.GetMethodList(daten));
+    Model.AuswahlMethode = l2?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
     Model.AuswahlData = new List<ListItem> { new("MX", "Mexico"), new("CA", "Canada"), new("US", "USA") };
-    Model.AuswahlSkala = new List<ListItem> { new("D", "Daily"), new("W", "Weekly"), new("M", "Monthly") };
-    Model.AuswahlMethode = new List<ListItem> { new("MA", "Moving Average"), new("EMA", "Exponential Moving Average") };
   }
 
   /// <summary>
@@ -90,6 +112,7 @@
   {
     if (OnInitializedFormular("WP100", "Point and Figure - WP100", Id, true))
       return;
+    SetStringData("WP100Wertpapier", Model.Wertpapier);
   }
 
   /// <summary>

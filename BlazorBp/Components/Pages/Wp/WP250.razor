@@ -176,7 +176,19 @@
     }
     if (submit == nameof(Model.Chart))
     {
-      SetError("TODO Formular WP100 Chart aufrufen.");
+      // Formular WP100 Chart aufrufen.
+      var id = GetTableRowId();
+      var r = FactoryService.StockService.GetInvestment(daten, id ?? "");
+      if (r.Ok && !string.IsNullOrEmpty(id) && r.Ergebnis != null)
+      {
+        var kuid = GetStringData("WP200Konfiguration");
+        var v = $"{Functions.ToString(Model.Bis)}+{r.Ergebnis.Wertpapier_Uid}+{kuid}";
+        var nr = Guid.NewGuid().ToString();
+        HttpContext?.Session?.SetFormParameter(v);
+        var f = OpenFormular("WP100", $"P{nr}");
+        if (f != null)
+          OpenFormular(f);
+      }
     }
     if (submit == nameof(Model.Abbrechen))
     {

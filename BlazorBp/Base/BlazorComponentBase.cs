@@ -667,6 +667,23 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   }
 
   /// <summary>
+  /// Liefert die Id des aktuell ausgewählten Datensatzes.
+  /// </summary>
+  /// <returns>Id des aktuell ausgewählten Datensatzes.</returns>
+  public string? GetTableRowId()
+  {
+    var i = Table?.SelectedRow ?? 0;
+    var l = Table?.Liste ?? TableData(Table, Messages);
+    if (l != null && i >= 1 && l.Count() >= i)
+    {
+      var ds = l.Skip(i - 1).FirstOrDefault();
+      var nr = ds?.Id ?? "";
+      return nr;
+    }
+    return null;
+  }
+
+  /// <summary>
   /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
   /// </summary>
   /// <param name="form">Betroffenes Postback-Formular.</param>

@@ -16,7 +16,7 @@ using static BlazorBp.Base.DialogTypeEnum;
 [Serializable]
 public class WP250TableRowModel : TableRowModelBase
 {
-  /// <summary>Holt oder setzt Nr..</summary>
+  /// <summary>Holt oder setzt Nr.</summary>
   [Display(Name = "Nr.", Description = "Anlagen-Nr.")]
   public string? Nummer { get { return Id; } set { Id = value; } }
 
