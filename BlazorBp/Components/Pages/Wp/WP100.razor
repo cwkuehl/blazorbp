@@ -67,8 +67,7 @@
         Nr = id,
       };
       Model.SetMhrf(DialogTypeEnum.New, daten);
-      var param = HttpContext?.Session?.GetFormParameter() ?? "";
-      var arr = param.Split('+');
+      var arr = HttpContext?.Session?.GetFormParameter() ?? [];
       var date = arr.Length > 0 ? Functions.ToDateTime(arr[0]) : null;
       var wpuid = arr.Length > 1 ? arr[1] : "";
       var kuid = arr.Length > 2 ? arr[2] : "";

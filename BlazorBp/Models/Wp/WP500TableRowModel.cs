@@ -70,7 +70,7 @@ public class WP500TableRowModel : TableRowModelBase
   {
     return new WP500TableRowModel
     {
-      Nummer = $"P{m.Wertpapier_Uid}+{Functions.ToString(m.Datum)}", // Parameter in Session speichern, damit die Daten nicht in der URL stehen.
+      Nummer = SessionExtensions.JoinFormParameter([ m.Wertpapier_Uid, Functions.ToString(m.Datum) ]), // Parameter in Session speichern, damit die Daten nicht in der URL stehen.
       Wertpapier = Functions.Left2(m.StockDescription),
       Valuta = Functions.ToString(m.Datum),
       Betrag = Functions.ToString(m.Stueckpreis),

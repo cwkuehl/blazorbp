@@ -182,9 +182,8 @@
       if (r.Ok && !string.IsNullOrEmpty(id) && r.Ergebnis != null)
       {
         var kuid = GetStringData("WP200Konfiguration");
-        var v = $"{Functions.ToString(Model.Bis)}+{r.Ergebnis.Wertpapier_Uid}+{kuid}";
         var nr = Guid.NewGuid().ToString();
-        HttpContext?.Session?.SetFormParameter(v);
+        HttpContext?.Session?.SetFormParameter(null, [Functions.ToString(Model.Bis), r.Ergebnis.Wertpapier_Uid, kuid]);
         var f = OpenFormular("WP100", $"P{nr}");
         if (f != null)
           OpenFormular(f);

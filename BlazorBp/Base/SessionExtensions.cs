@@ -135,12 +135,28 @@ public static class SessionExtensions
       session.SetObjectAsJson(key, value);
   }
 
+  /// <summary>Trenner für Formular-Parameter in der Session.</summary>
+  private const char FormParameterTrenner = '+';
+
+  /// <summary>
+  /// Erzeugt einen String aus einem Array von Formular-Parametern, die in der Session gespeichert werden sollen.
+  /// </summary>
+  /// <param name="arr">Betroffenes Array von Formular-Parametern.</param>
+  /// <returns>String mit den Formular-Parametern.</returns>
+  public static string JoinFormParameter(string?[] arr)
+  {
+    return $"P{string.Join(FormParameterTrenner, arr)}";
+  }
+
   /// <summary>Speichern der Parameter für einen Formular-Aufruf in der Session.</summary>
   /// <param name="session">Betroffene Session.</param>
   /// <param name="value">Betroffener Wert.</param>
-  public static void SetFormParameter(this ISession session, string? value)
+  /// <param name="arr">Array mit Parametern als String-Array.</param>
+  public static void SetFormParameter(this ISession session, string? value, string?[]? arr = null)
   {
     var key = "FormParameter";
+    if (value == null && arr != null)
+      value = string.Join(FormParameterTrenner, arr);
     if (value == null)
       session.Remove(key);
     else
@@ -149,11 +165,14 @@ public static class SessionExtensions
 
   /// <summary>Lesen der Parameter für einen Formular-Aufruf in der Session.</summary>
   /// <param name="session">Betroffene Session.</param>
-  /// <returns>Formular-Daten oder null.</returns>
-  public static string? GetFormParameter(this ISession session)
+  /// <returns>Parameter für das Formular als Array oder null.</returns>
+  public static string?[] GetFormParameter(this ISession session)
   {
     var key = "FormParameter";
-    return session.GetString(key);
+    var param = session.GetString(key);
+    if (param == null)
+      return [];
+    return param.Split(FormParameterTrenner);
   }
 
   /// <summary>

@@ -57,8 +57,7 @@
       if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
       {
         // Lesen des Models aus der Datenbank.
-        var param = HttpContext?.Session?.GetFormParameter() ?? "";
-        var arr = param.Split('+');
+        var arr = HttpContext?.Session?.GetFormParameter() ?? [];
         var uid = arr.Length > 0 ? arr[0] : "";
         var date = arr.Length > 1 ? Functions.ToDateTime(arr[1]) : null;
         if (string.IsNullOrEmpty(uid) || !date.HasValue)
