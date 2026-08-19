@@ -13,32 +13,32 @@
   <input type="hidden" name="SubmitControl"/>
   <div class="row g-0">
     <div class="col-md-6">
-    <div class="row mt-1 g-0">
-      <LabelInputValid type="listbox" size="3" AutoPostback="" DataList="Model!.AuswahlData" For="@(() => Model!.Data)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+      <div class="row mt-1 g-0">
+        <LabelInputValid type="listbox" size="10" AutoPostback="" DataList="Model!.AuswahlData" For="@(() => Model!.Data)" maxlength="255" VerticalColClass="form-group col"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid AutoPostback="" For="@(() => Model!.Von)" maxlength="255" VerticalColClass="form-group col-md-4"/>
+        <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" maxlength="255" VerticalColClass="form-group col ms-1"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid type="combobox" AutoPostback="x" For="@(() => Model!.Wertpapier)" DataList="@Model!.AuswahlWertpapier" VerticalColClass="form-group col"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid step="0.001" AutoPostback="" For="@(() => Model!.Box)" VerticalColClass="form-group col-md-4"/>
+        <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Skala)" maxlength="255" DataList="@Model!.AuswahlSkala" VerticalColClass="form-group col ms-1"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid AutoPostback="" For="@(() => Model!.Umkehr)" maxlength="255" VerticalColClass="form-group col-md-4"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Methode)" maxlength="255" DataList="@Model!.AuswahlMethode" VerticalColClass="form-group col"/>
+        <LabelInputValid type="checkbox" TrailingLabel="true" AutoPostback="" For="@(() => Model!.Relativ)" VerticalColClass="form-group col-md-2"/>
+      </div>
     </div>
-    <div class="row mt-1 g-0">
-      <LabelInputValid AutoPostback="" For="@(() => Model!.Von)" maxlength="255" VerticalColClass="form-group col-md-4"/>
-      <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" maxlength="255" VerticalColClass="form-group col ms-1"/>
-    </div>
-    <div class="row mt-1 g-0">
-      <LabelInputValid type="combobox" AutoPostback="x" For="@(() => Model!.Wertpapier)" DataList="@Model!.AuswahlWertpapier" VerticalColClass="form-group col"/>
-    </div>
-    <div class="row mt-1 g-0">
-      <LabelInputValid step="0.001" AutoPostback="" For="@(() => Model!.Box)" VerticalColClass="form-group col-md-4"/>
-      <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Skala)" maxlength="255" DataList="@Model!.AuswahlSkala" VerticalColClass="form-group col ms-1"/>
-    </div>
-    <div class="row mt-1 g-0">
-      <LabelInputValid AutoPostback="" For="@(() => Model!.Umkehr)" maxlength="255" VerticalColClass="form-group col-md-4"/>
-    </div>
-    <div class="row mt-1 g-0">
-      <LabelInputValid type="combobox" AutoPostback="" For="@(() => Model!.Methode)" maxlength="255" DataList="@Model!.AuswahlMethode" VerticalColClass="form-group col"/>
-      <LabelInputValid AutoPostback="" For="@(() => Model!.Relativ)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    </div>
-    </div>
-    <div class="col">
-    <div class="row mt-1 g-0">
-      <LabelInputValid AutoPostback="" For="@(() => Model!.Chart)" maxlength="255" VerticalColClass="form-group col"/>
-    </div>
+    <div class="col ms-1">
+      <div class="row mt-1 g-0">
+        <LabelInputValid AutoPostback="" For="@(() => Model!.Chart)" maxlength="255" VerticalColClass="form-group col"/>
+      </div>
     </div>
   </div>
   <div class="modal-footer mt-2">
@@ -99,7 +99,10 @@
     Model.AuswahlSkala = l1?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
     var l2 = Get(FactoryService.StockService.GetMethodList(daten));
     Model.AuswahlMethode = l2?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
-    Model.AuswahlData = new List<ListItem> { new("MX", "Mexico"), new("CA", "Canada"), new("US", "USA") };
+    var ld = Get(FactoryService.StockService.GetPriceList(daten, Model.Von ?? daten.Heute, Model.Bis ?? daten.Heute, Model.Wertpapier, Model.Relativ));
+    ld?.Reverse(); // Sortierung: Datum absteigend
+    //// Date;Date;Open_r;High_r;Low_r;Close_r
+    Model.AuswahlData = ld?.Select(a => new ListItem(Functions.ToString(a.Datum), $"{Functions.ToString(a.Datum)} | {Functions.ToString(a.Open, 4)} | {Functions.ToString(a.High, 4)} | {Functions.ToString(a.Low, 4)} | {Functions.ToString(a.Close, 4)}")).ToList();
   }
 
   /// <summary>

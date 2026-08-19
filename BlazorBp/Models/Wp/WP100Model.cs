@@ -75,20 +75,14 @@ public class WP100Model : PageModelBase
 
   /// <summary>Holt oder setzt Relativ.</summary>
   [Display(Name = "_Relativ", Description = "Soll die Auswertung relativ zur Relation erfolgen?")]
-  //// [Required(ErrorMessage = "Relativ muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Relativ darf maximal {1} Zeichen lang sein.")]
-  public string? Relativ { get; set; }
+  public bool Relativ { get; set; }
 
   /// <summary>Holt oder setzt Chart.</summary>
   [Display(Name = "Chart", Description = "")]
-  //// [Required(ErrorMessage = "Chart muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Chart darf maximal {1} Zeichen lang sein.")]
   public string? Chart { get; set; }
 
   /// <summary>Holt oder setzt Schließen.</summary>
   [Display(Name = "Schließen", Description = "Schließen")]
-  //// [Required(ErrorMessage = "Schließen muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Schließen darf maximal {1} Zeichen lang sein.")]
   public string? Schliessen { get; set; }
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
