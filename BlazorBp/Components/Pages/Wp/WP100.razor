@@ -1,5 +1,6 @@
 @page "/wp/wp100/{id?}"
 @using CSBP.Services.Apis.Models
+@using CSBP.Services.Pnf;
 @inherits BlazorComponentBase<WP100Model, TableRowModelBase>
 @attribute [Authorize(Roles = "User, Admin, Superadmin")]
 
@@ -17,8 +18,8 @@
         <LabelInputValid type="listbox" size="10" AutoPostback="" DataList="Model!.AuswahlData" For="@(() => Model!.Data)" maxlength="255" VerticalColClass="form-group col"/>
       </div>
       <div class="row mt-1 g-0">
-        <LabelInputValid AutoPostback="" For="@(() => Model!.Von)" maxlength="255" VerticalColClass="form-group col-md-4"/>
-        <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" maxlength="255" VerticalColClass="form-group col ms-1"/>
+        <LabelInputValid AutoPostback="" For="@(() => Model!.Von)" VerticalColClass="form-group col-md-4"/>
+        <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" VerticalColClass="form-group col ms-1"/>
       </div>
       <div class="row mt-1 g-0">
         <LabelInputValid type="combobox" AutoPostback="x" For="@(() => Model!.Wertpapier)" DataList="@Model!.AuswahlWertpapier" VerticalColClass="form-group col"/>
@@ -37,7 +38,7 @@
     </div>
     <div class="col ms-1">
       <div class="row mt-1 g-0">
-        <LabelInputValid AutoPostback="" For="@(() => Model!.Chart)" maxlength="255" VerticalColClass="form-group col"/>
+        <LabelInputValid type="canvas" width="@CanvasWidth" height="@CanvasHeight" AutoPostback="" For="@(() => Model!.Chart)" VerticalColClass="form-group col" class="w-100 border border-dark rounded"/>
       </div>
     </div>
   </div>
@@ -47,7 +48,20 @@
   </div>
 </EditForm>
 
+<script type="application/json" id="canvasdata">
+@((MarkupString)CanvasDaten)
+</script>
+
 @code {
+
+  /// <summary>Holt oder setzt die Canvas-Daten.</summary>
+  private string CanvasDaten = "";
+
+  /// <summary>Holt oder setzt die Canvas-Breite.</summary>
+  private string CanvasWidth = "400";
+
+  /// <summary>Holt oder setzt die Canvas-Höhe.</summary>
+  private string CanvasHeight = "520";
 
   /// <summary>
   /// Initialisierung des Models.
@@ -103,6 +117,8 @@
     ld?.Reverse(); // Sortierung: Datum absteigend
     //// Date;Date;Open_r;High_r;Low_r;Close_r
     Model.AuswahlData = ld?.Select(a => new ListItem(Functions.ToString(a.Datum), $"{Functions.ToString(a.Datum)} | {Functions.ToString(a.Open, 4)} | {Functions.ToString(a.High, 4)} | {Functions.ToString(a.Low, 4)} | {Functions.ToString(a.Close, 4)}")).ToList();
+    var wpbez = string.IsNullOrEmpty(Model.Wertpapier) ? null : l0?.FirstOrDefault(a => a.Uid == Model.Wertpapier)?.Bezeichnung;
+    ShowChart(true, ld, wpbez);
   }
 
   /// <summary>
@@ -142,17 +158,6 @@
         Refresh();
       }
     }
-    @* if (valid && submit == "OK")
-    {
-      var daten = ServiceDaten;
-      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
-      if (r != null)
-      {
-        Get(r);
-        if (r.Ok)
-          return true;
-      }
-    } *@
     if (submit == nameof(Model.Schliessen))
       return true;
     return false;
@@ -166,5 +171,32 @@
   protected override void CopyNotPostbackData(WP100Model model, WP100Model model0)
   {
     model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+  }
+
+  /// <summary>Show chart data.</summary>
+  /// <param name="init">Initial call or not.</param>
+  /// <param name="kurse">Affected list of price data.</param>
+  /// <param name="wpbez">Affected stock name.</param>
+  /// <returns>True, if chart data is shown, otherwise false.</returns>
+  private bool ShowChart(bool init = false, List<SoKurse>? kurse = null, string? wpbez = null)
+  {
+    var daten = ServiceDaten;
+    if (string.IsNullOrEmpty(wpbez))
+    {
+      if (init)
+      {
+        #pragma warning disable CS8603
+        Messages?.Add(() => Model.Wertpapier, $"Für Chartdaten muss ein Wertpapier ausgewählt werden.");
+        #pragma warning restore CS8603
+      }
+      return false;
+    }
+    var ctx = new CanvasCompiler();
+    ctx.AddControl(nameof(Model.Chart));
+    var chart = new PnfChart(Functions.ToInt32(Model.Methode), Model.Box ?? 0, Functions.ToInt32(Model.Skala), Model.Umkehr ?? 1, wpbez ?? "Kein Wertpapier");
+    chart.AddKurse(kurse);
+    ChartPane.OnChartDraw(ctx, chart, Functions.ToInt32(CanvasWidth), Functions.ToInt32(CanvasHeight));
+    CanvasDaten = ctx.Compile();
+    return true;
   }
 }

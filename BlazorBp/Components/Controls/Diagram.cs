@@ -137,7 +137,7 @@ public class Diagram
   /// <param name="font">Affected font.</param>
   /// <param name="color">Affected color.</param>
   /// <param name="vertikal">Is it a vertical text or not.</param>
-  private static void DrawString(CanvasCompiler pc, decimal x, decimal y, string str,
+  public static void DrawString(CanvasCompiler pc, decimal x, decimal y, string str,
       string? font = null, string? color = null, bool vertikal = false)
   {
     // Position links unten
@@ -161,7 +161,7 @@ public class Diagram
   /// <param name="x2">Affected x2 coordinate of target.</param>
   /// <param name="y2">Affected yy coordinate or target.</param>
   /// <param name="color">Affected color.</param>
-  private static void DrawLine(CanvasCompiler pc, decimal x, decimal y, decimal x2, decimal y2, string? color = null)
+  public static void DrawLine(CanvasCompiler pc, decimal x, decimal y, decimal x2, decimal y2, string? color = null)
   {
     // Position links oben
     if (color != null)
@@ -196,7 +196,7 @@ public class Diagram
   /// <param name="list">Affected list.</param>
   /// <param name="label2">Affected second label.</param>
   /// <param name="label3">Affected third label.</param>
-  public static void OnDiagramaDraw(CanvasCompiler pc, string label, List<KeyValuePair<string, decimal>>? list, string? label2 = null, string? label3 = null)
+  public static void OnDiagramDraw(CanvasCompiler pc, string label, List<KeyValuePair<string, decimal>>? list, string? label2 = null, string? label3 = null)
   {
     if (list == null)
       return;

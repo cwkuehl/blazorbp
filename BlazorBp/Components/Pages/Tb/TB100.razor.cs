@@ -372,27 +372,27 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
       var tt = 22;
       var list2 = templist?.Where(a => Functions.ToInt32(a.Key) >= tf && Functions.ToInt32(a.Key) <= tt).ToList();
       var avg2 = list2 == null || !list2.Any() ? 0m : list2.Average(a => a.Value);
-      Diagram.OnDiagramaDraw(ctx, "Temperatur °C", templist, $"Ø {avg:0.000} °C", $"Ø {avg2:0.000} °C ({tf}-{tt} Uhr)");
+      Diagram.OnDiagramDraw(ctx, "Temperatur °C", templist, $"Ø {avg:0.000} °C", $"Ø {avg2:0.000} °C ({tf}-{tt} Uhr)");
     }
     {
       ctx.AddControl(nameof(Model.Diagramb2));
-      Diagram.OnDiagramaDraw(ctx, "Luftdruck hPa", preslist);
+      Diagram.OnDiagramDraw(ctx, "Luftdruck hPa", preslist);
     }
     {
       ctx.AddControl(nameof(Model.Diagramb3));
-      Diagram.OnDiagramaDraw(ctx, "Rel. Luftfeucht. %", rhumlist);
+      Diagram.OnDiagramDraw(ctx, "Rel. Luftfeucht. %", rhumlist);
     }
     {
       ctx.AddControl(nameof(Model.Diagrama1));
-      Diagram.OnDiagramaDraw(ctx, "Niederschlag mm", prcplist);
+      Diagram.OnDiagramDraw(ctx, "Niederschlag mm", prcplist);
     }
     {
       ctx.AddControl(nameof(Model.Diagrama2));
-      Diagram.OnDiagramaDraw(ctx, "Windgeschwindigkeit km/h", wspdlist);
+      Diagram.OnDiagramDraw(ctx, "Windgeschwindigkeit km/h", wspdlist);
     }
     {
       ctx.AddControl(nameof(Model.Diagrama3));
-      Diagram.OnDiagramaDraw(ctx, "Windrichtung °", wdirlist);
+      Diagram.OnDiagramDraw(ctx, "Windrichtung °", wdirlist);
     }
     CanvasDaten = ctx.Compile();
     //// diagramb1.Window.InvalidateRect(new Gdk.Rectangle(0, 0, diagramb1.Window.Width, diagramb1.Window.Height), true);

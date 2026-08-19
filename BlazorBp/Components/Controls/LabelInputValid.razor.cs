@@ -204,6 +204,10 @@ public partial class LabelInputValid<TItem> : ComponentBase
     var listboxsize = obj?.ToString() ?? "";
     AdditionalAttributes.TryGetValue("multiple", out obj);
     var multiple = obj?.ToString();
+    AdditionalAttributes.TryGetValue("width", out obj);
+    var width = obj?.ToString();
+    AdditionalAttributes.TryGetValue("height", out obj);
+    var height = obj?.ToString();
     if (!string.IsNullOrWhiteSpace(listboxsize))
       listbox = true;
     if (listbox && listboxsize == "1")
@@ -451,7 +455,11 @@ public partial class LabelInputValid<TItem> : ComponentBase
     if (radio)
       SetAttribute(Attributes2, "id", null);
     if (canvas)
+    {
       SetAttribute(Attributes2, "id", name);
+      SetAttribute(Attributes2, "width", width ?? "400");
+      SetAttribute(Attributes2, "height", height ?? "200");
+    }
     if (InputType == "number" && !string.IsNullOrEmpty(Step))
     {
       SetAttribute(Attributes2, "step", Step);
