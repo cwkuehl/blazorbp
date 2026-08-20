@@ -63,7 +63,7 @@ public class FZ210Model : PageModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
-  public void From(FZ200TableRowModel m) =>
+  public void From(FzFahrrad m) =>
   (
     Nummer,
     Bezeichnung,
@@ -71,11 +71,11 @@ public class FZ210Model : PageModelBase
     Angelegt,
     Geaendert
   ) = (
-    m.Nummer,
+    m.Uid,
     m.Bezeichnung,
-    Functions.ToString(FzFahrrad.GetTyp(m.Typ)),
-    ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon),
-    ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon)
+    Functions.ToString(m.Typ),
+    ModelBase.FormatDateOf(m.Angelegt_Am, m.Angelegt_Von),
+    ModelBase.FormatDateOf(m.Geaendert_Am, m.Geaendert_Von)
   );
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>

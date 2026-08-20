@@ -6,6 +6,7 @@ namespace BlazorBp.Models.Fz;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Base;
+using CSBP.Services.Apis.Models;
 using CSBP.Services.Apis.Models.Views;
 using CSBP.Services.Base;
 using static BlazorBp.Base.DialogTypeEnum;
@@ -92,7 +93,7 @@ public class FZ260Model : PageModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
-  public void From(FZ250TableRowModel m) =>
+  public void From(FzFahrradstand m) =>
   (
     Nummer,
     Fahrrad,
@@ -104,15 +105,15 @@ public class FZ260Model : PageModelBase
     Beschreibung,
     Angelegt, Geaendert
   ) = (
-    m.Nummer,
-    m.Fahrrad,
+    m.Fahrrad_Uid,
+    m.Fahrrad_Uid,
     m.Datum,
-    m.UnterNr,
-    m.Zaehler,
-    m.Km,
-    m.Schnitt,
+    m.Nr,
+    m.Zaehler_km,
+    m.Periode_km,
+    m.Periode_Schnitt,
     m.Beschreibung,
-    ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon), ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon)
+    ModelBase.FormatDateOf(m.Angelegt_Am, m.Angelegt_Von), ModelBase.FormatDateOf(m.Geaendert_Am, m.Geaendert_Von)
   );
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>

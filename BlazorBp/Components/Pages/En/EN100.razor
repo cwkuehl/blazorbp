@@ -122,6 +122,7 @@
   /// <param name="id2">Id aus 2. modalen Dialog.</param>
   public override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
+    var daten = ServiceDaten;
     var (dt, msubmit, mvalid) = HandleModal1(form, "en100t", "en110modal", EN110Model.GetSubmit(HttpContext.Request), nameof(EN110Model.Abbrechen), handler, id);
     if (dt == DialogTypeEnum.New)
     {
@@ -136,7 +137,6 @@
       if (l != null && i >= 1 && l.Count() >= i)
       {
         var ds = l.Skip(i - 1).FirstOrDefault();
-        var daten = ServiceDaten;
         var r = FactoryService.EnergyService.GetQuery(daten, ds?.Nummer ?? "");
         if (r.Ok && ds != null && r.Ergebnis != null)
         {
@@ -160,7 +160,6 @@
       }
       else if (msubmit == nameof(EN110Model.Lesen))
       {
-        var daten = ServiceDaten;
         var o = EN110Model.To(daten);
         var r = FactoryService.EnergyService.QueryQuery(daten, o);
         if (r.Ok && r.Ergebnis != null)
@@ -170,7 +169,6 @@
       }
       else if (msubmit == nameof(EN110Model.Schreiben))
       {
-        var daten = ServiceDaten;
         var o = EN110Model.To(daten);
         var r = FactoryService.EnergyService.WriteQuery(daten, o, EN110Model.Wert);
         if (!r.Ok)
@@ -179,7 +177,6 @@
       if (mvalid && msubmit == nameof(EN110Model.Ok) && EN110Model != null)
       {
         var dt1 = Formular.GetTableDialogType(Model.ModalArt);
-        var daten = ServiceDaten;
         var o = EN110Model.To(daten);
         var r = dt1 == DialogTypeEnum.Delete
           ? FactoryService.EnergyService.DeleteQuery(daten, o)

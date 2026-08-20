@@ -154,7 +154,17 @@
     }
     if (submit == nameof(Model.Chart))
     {
-      SetError("TODO Formular WP100 Chart aufrufen.");
+      // Formular WP100 Chart aufrufen.
+      var wpuid = GetTableRowId();
+      if (!string.IsNullOrEmpty(wpuid))
+      {
+        var kuid = Model.Konfiguration ?? GetStringData("WP200Konfiguration");
+        var nr = Guid.NewGuid().ToString();
+        HttpContext?.Session?.SetFormParameter(null, [Functions.ToString(Model.Bis), wpuid, kuid]);
+        var f = OpenFormular("WP100", $"P{nr}");
+        if (f != null)
+          OpenFormular(f);
+      }
     }
     if (submit == nameof(Model.Floppy))
     {

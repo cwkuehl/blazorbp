@@ -128,9 +128,10 @@
       if (l != null && i >= 1 && l.Count() >= i)
       {
         var ds = l.Skip(i - 1).FirstOrDefault();
-        if (ds != null)
+        var r = FactoryService.PrivateService.GetMileage(daten, ds?.Nummer ?? "", ds?.Datum ?? daten.Heute, ds?.UnterNr ?? 0);
+        if (r.Ok && ds != null && r.Ergebnis != null)
         {
-          FZ260Model.From(ds);
+          FZ260Model.From(r.Ergebnis);
           FZ260Model.SetMhrf(dt);
           Model.ModalArt = handler;
           Model.ModalId = id;
