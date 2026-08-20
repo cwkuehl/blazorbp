@@ -131,6 +131,7 @@ public class Generator
     var sbt4 = new StringBuilder();
     var sbt5 = new StringBuilder();
     var sbt6 = new StringBuilder();
+    var sbt7 = new StringBuilder(); // für SetMandatoryHiddenReadonly
     var controls = GetControls(root.Children, a => (a.Name == "refresh" || !string.IsNullOrEmpty(a.Text)) && a.Children.Count <= 0, true); // mit Labels und End-Steuerelemente
     System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} GenerateModel: {controls.Count} controls: {string.Join(", ", controls.Select(a => a.Name))}");
     if (table) // || modal)
@@ -173,6 +174,7 @@ public class Generator
         sbt4.AppendLine($$"""    {{Functions.ToFirstUpper(c.Name)}} = {{Functions.ToFirstUpper(c.Name)}},""");
         sbt5.AppendLine($$"""    {{Functions.ToFirstUpper(c.Name)}},""");
         sbt6.AppendLine($$"""    m.{{Functions.ToFirstUpper(c.Name)}},""");
+        sbt7.AppendLine($$"""    // SetMandatoryHiddenReadonly(nameof({{Functions.ToFirstUpper(c.Name)}}), false, false, false, false);""");
       }
     }
     var model = $$"""
@@ -236,6 +238,7 @@ public class {{form}}TodoModel
 [Serializable]
 public class {{form}}{{prefix}}Model : {{baseclass}}
 {
+
 """;
     if (table)
     {
@@ -327,6 +330,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
     }
     // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
     // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
+{{sbt7.ToString()[..^2]}}
     // SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
     // SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
     // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);

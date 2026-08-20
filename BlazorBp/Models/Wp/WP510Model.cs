@@ -89,10 +89,6 @@ public class WP510Model : PageModelBase
   /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
   public void SetMhrf(DialogTypeEnum mode, ServiceDaten daten)
   {
-    if (mode == New || mode == Copy)
-    {
-      // TODO Nummer = "";
-    }
     if (mode == New)
     {
       Valuta = daten.Heute;
