@@ -42,7 +42,7 @@ public class ChartPane
     var red = "red";
     var blue = "blue";
     var green = "green";
-    var lightgray = "#D3D3D3";
+    var lightgray = "gray"; // "#D3D3D3";
     var darkviolet = "#9400D3";
     var color = black;
 
@@ -94,7 +94,6 @@ public class ChartPane
 
     // Werte schreiben
     color = lightgray;
-    //// gc.SetLineAttributes(1, LineStyle.Solid, CapStyle.Butt, JoinStyle.Bevel);
     x = xoffset + ((xanzahl + 2) * xgroesse);
     y = yoffset + (yanzahl * ygroesse);
     var aktkurs = c.Kurs;
