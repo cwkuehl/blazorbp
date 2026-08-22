@@ -174,8 +174,8 @@ public class Generator
         sbt4.AppendLine($$"""    {{Functions.ToFirstUpper(c.Name)}} = {{Functions.ToFirstUpper(c.Name)}},""");
         sbt5.AppendLine($$"""    {{Functions.ToFirstUpper(c.Name)}},""");
         sbt6.AppendLine($$"""    m.{{Functions.ToFirstUpper(c.Name)}},""");
-        sbt7.AppendLine($$"""    // SetMandatoryHiddenReadonly(nameof({{Functions.ToFirstUpper(c.Name)}}), false, false, false, false);""");
       }
+      sbt7.AppendLine($$"""    // SetMandatoryHiddenReadonly(nameof({{Functions.ToFirstUpper(c.Name)}}), false, false, false, false);""");
     }
     var model = $$"""
 // <copyright file="{{form}}{{prefix}}Model.cs" company="cwkuehl.de">
@@ -330,7 +330,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
     }
     // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
     // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
-{{sbt7.ToString()[..^2]}}
+{{Functions.Iif(sbt7.Length <= 2, "", sbt7.ToString()[..^2])}}
     // SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
     // SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
     // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
