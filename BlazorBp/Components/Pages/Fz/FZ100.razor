@@ -1,5 +1,7 @@
 @page "/fz/fz100/{id?}"
 @using CSBP.Services.Apis.Models
+@using static CSBP.Services.Resources.M;
+@using static CSBP.Services.Resources.Messages;
 @inherits BlazorComponentBase<FZ100Model, TableRowModelBase>
 @attribute [Authorize(Roles = "User, Admin, Superadmin")]
 
@@ -11,31 +13,36 @@
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
   <input type="hidden" name="SubmitControl"/>
-  <div class="row mt-1 g-0">
+  <div class="row g-0">
+    <div class="col-md-6">
+      <div class="row mt-1 g-0">
+        <LabelInputValid AutoPostback="" For="@(() => Model!.Datum)" VerticalColClass="form-group col-md-4"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid rows="11" AutoPostback="" For="@(() => Model!.Bilanz)" VerticalColClass="form-group col"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid rows="12" AutoPostback="" For="@(() => Model!.Buecher)" VerticalColClass="form-group col"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid rows="10" AutoPostback="" For="@(() => Model!.Fahrrad)" VerticalColClass="form-group col"/>
+      </div>
+    </div>
+    <div class="col ms-1">
+      <div class="row mt-1 g-0">
+        <LabelInputValid type="canvas" width="@CanvasWidth" height="@CanvasHeight" AutoPostback="" For="@(() => Model!.Diagram)" VerticalColClass="form-group col" class="w-100 border border-dark rounded"/>
+      </div>
+    </div>
   </div>
-  <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Refresh)"/>
+  <div class="modal-footer mt-2">
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
   </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Bilanz)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Buecher)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Fahrrad)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Datum)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Diagram)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Schliessen)"/>
-  </div>
-  <!-- TODO btn-primary festlegen -->
 </EditForm>
+
+<script type="application/json" id="canvasdata">
+@((MarkupString)CanvasDaten)
+</script>
 
 @code {
   /// <summary>Holt oder setzt die Canvas-Daten.</summary>
@@ -63,12 +70,43 @@
       Model = new FZ100Model
       {
         Nr = id,
-        // TODO Mandant = daten.MandantNr,
       };
-      Model.SetMhrf(DialogTypeEnum.New);
+      Model.SetMhrf(DialogTypeEnum.New, daten);
+      Refresh();
     }
     Model.Nr = id;
     InitEditContext(Model);
+  }
+
+  /// <summary>
+  /// Aktualisierung nach Undo/Redo.
+  /// </summary>
+  protected override void Refresh()
+  {
+    var daten = ServiceDaten;
+    var datum = Model.Datum ?? daten.Heute;
+    var str = Get(FactoryService.PrivateService.GetStatistics(daten, 1, datum));
+    Model.Bilanz = str;
+    str = Get(FactoryService.PrivateService.GetStatistics(daten, 2, datum));
+    Model.Buecher = str;
+    str = Get(FactoryService.PrivateService.GetStatistics(daten, 3, datum));
+    Model.Fahrrad = str;
+
+    var l = Get(FactoryService.BudgetService.GetProprietaryPlList(daten, datum));
+    l?.Reverse();
+    var pplList = l?.Select(a => new KeyValuePair<string, decimal>(Functions.ToString(a.Geaendert_Am), a.EBetrag)).ToList();
+    var l2 = Get(FactoryService.PrivateService.GetMileages(daten, datum));
+    var mileageList = l2?.Select(a => new KeyValuePair<string, decimal>(Functions.ToString(a.Datum), a.Periode_km)).ToList();
+    if (pplList != null && mileageList != null)
+    {
+      var ctx = new CanvasCompiler();
+      ctx.AddControl(nameof(Model.Diagram));
+      var w = Functions.ToInt32(CanvasWidth);
+      var h = Functions.ToInt32(CanvasHeight);
+      Diagram.Draw(M0(HH001), pplList, ctx, 0, 0, w, h / 2);
+      Diagram.Draw(M0(FZ044), mileageList, ctx, 0, h / 2, w, h / 2);
+      CanvasDaten = ctx.Compile();
+    }
   }
 
   /// <summary>
@@ -80,19 +118,6 @@
   {
     if (OnInitializedFormular("FZ100", "Statistik - FZ100", Id, true))
       return;
-
-    // TODO Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
-    // var handler = HttpContext.Request.Query["handler"];
-    // if (handler == "Table_All")
-    // {
-    //   Model.SetMhrf(DialogTypeEnum.Copy, ServiceDaten);
-    //   WriteFormularModel(Model.Nr ?? "0", Model);
-    // }
-    // var submit = Model.Submit ?? "";
-    // if (submit == nameof(Model.Import))
-    // {
-    //   var l = SaveUploadFiles("FZ100", "filehochladen");
-    // }
   }
 
   /// <summary>
@@ -102,17 +127,17 @@
   /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
   protected override bool Submit(string? submit)
   {
-    if (valid && submit == "OK")
+    if (IsDateMhp(submit, nameof(Model.Datum), Model.Datum, out var d))
     {
-      var daten = ServiceDaten;
-      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
-      if (r != null)
+      if (d.HasValue)
       {
-        Get(r);
-        if (r.Ok)
-          return true;
+        Model.Datum = d;
+        WriteFormularModel(Model.Nr ?? "0", Model);
+        Refresh();
       }
     }
+    if (submit == nameof(Model.Refresh))
+        Refresh();
     if (submit == nameof(Model.Schliessen))
       return true;
     return false;
