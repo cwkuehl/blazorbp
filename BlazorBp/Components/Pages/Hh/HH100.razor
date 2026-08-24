@@ -1,0 +1,116 @@
+@page "/hh/hh100/{id?}"
+@using CSBP.Services.Apis.Models
+@inherits BlazorComponentBase<HH100Model, TableRowModelBase>
+@attribute [Authorize(Roles = "User, Admin, Superadmin")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="hh100">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <input type="hidden" name="SubmitControl"/>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Perioden)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Laenge1)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Laenge2)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Laenge3)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Laenge4)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Art1)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Art2)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Anfang)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Ende)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Laenge0)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Art0)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="modal-footer mt-2">
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
+  </div>
+</EditForm>
+
+@code {
+
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id">Betroffene Id.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id, HH100Model? model = null, TableModelBase<TableRowModelBase>? table = null)
+  {
+    var daten = ServiceDaten;
+    if (model != null)
+      Model = model;
+    if (Model == null)
+    {
+      Model = new HH100Model
+      {
+        Nr = id,
+        // TODO Mandant = daten.MandantNr,
+      };
+      Model.SetMhrf(DialogTypeEnum.New);
+    }
+    Model.Nr = id;
+    InitEditContext(Model);
+  }
+
+  /// <summary>
+  /// Aktualisierung nach Undo/Redo.
+  /// </summary>
+  protected override void Refresh()
+  {
+    // TODO TableData(Table, Messages);
+  }
+
+  /// <summary>
+  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
+  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
+  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    if (OnInitializedFormular("HH100", "Perioden - HH100", Id, true))
+      return;
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// </summary>
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
+  {
+    if (valid && submit == "OK")
+    {
+      var daten = ServiceDaten;
+      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
+      if (r != null)
+      {
+        Get(r);
+        if (r.Ok)
+          return true;
+      }
+    }
+    if (submit == nameof(Model.Schliessen))
+      return true;
+    return false;
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData(HH100Model model, HH100Model model0)
+  {
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+  }
+}
