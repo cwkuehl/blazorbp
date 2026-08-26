@@ -15,17 +15,17 @@ using static BlazorBp.Base.DialogTypeEnum;
 [Serializable]
 public class FZ250Model : PageModelBase
 {
-  /// <summary>Holt oder setzt Aktualisieren.</summary>
-  [Display(Name = "Aktualisieren", Description = "Aktualisieren")]
-  //// [Required(ErrorMessage = "Aktualisieren muss angegeben werden.")]
-  public string? Refresh { get; set; }
-
   /// <summary>Holt oder setzt die Auswahlliste von Fahrrad.</summary>
   public List<ListItem>? AuswahlFahrrad { get; set; } = default!;
 
   /// <summary>Holt oder setzt Fahrrad.</summary>
   [Display(Name = "_Fahrrad", Description = "Selektions-Fahrrad")]
   public string? Fahrrad { get; set; }
+
+  /// <summary>Holt oder setzt Aktualisieren.</summary>
+  [Display(Name = "Aktualisieren", Description = "Aktualisieren")]
+  //// [Required(ErrorMessage = "Aktualisieren muss angegeben werden.")]
+  public string? Refresh { get; set; }
 
   /// <summary>Holt oder setzt Schließen.</summary>
   [Display(Name = "Schließen", Description = "Schließen")]

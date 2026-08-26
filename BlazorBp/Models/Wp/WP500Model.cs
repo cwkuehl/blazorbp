@@ -6,7 +6,6 @@ namespace BlazorBp.Models.Wp;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Base;
-using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorBp.Base.DialogTypeEnum;
 
@@ -54,10 +53,11 @@ public class WP500Model : PageModelBase
       Von = daten.Heute.AddMonths(-3);
       Bis = daten.Heute;
     }
-    if (mode == New)
-    {
-      Functions.MachNichts();
-    }
+    SetMandatoryHiddenReadonly(nameof(Wertpapier), false, false, false, mode == New);
+    SetMandatoryHiddenReadonly(nameof(Von), false, false, false, false);
+    SetMandatoryHiddenReadonly(nameof(Bis), false, false, false, false);
+    SetMandatoryHiddenReadonly(nameof(Thin), false, false, false, false);
+    SetMandatoryHiddenReadonly(nameof(Refresh), false, false, false, false);
     SetMandatoryHiddenReadonly(nameof(Schliessen), false, false, false, false);
   }
 }

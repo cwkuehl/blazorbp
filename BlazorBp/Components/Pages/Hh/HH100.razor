@@ -11,24 +11,24 @@
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
   <input type="hidden" name="SubmitControl"/>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Perioden)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Laenge1)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Laenge2)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Laenge3)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Laenge4)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Art1)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Art2)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Anfang)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Ende)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Laenge0)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Art0)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+  <div class="row g-0">
+    <div class="col-md-6">
+      <div class="row mt-1 g-0">
+        <LabelInputValid type="listbox" size="10" class="font-monospace" AutoPostback="" DataList="Model!.AuswahlPerioden" For="@(() => Model!.Perioden)" VerticalColClass="form-group col"/>
+      </div>
+    </div>
+    <div class="col ms-1">
+      <div class="row mt-1 g-0">
+        <LabelInputValid AutoPostback="" For="@(() => Model!.Anfang)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+        <LabelInputValid AutoPostback="" For="@(() => Model!.Ende)" maxlength="255" VerticalColClass="form-group col-md-2 mt-1"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid type="radio" DataList="Model!.AuswahlLaenge" AutoPostback="" For="@(() => Model!.Laenge)" VerticalColClassxxx="form-group col-md-2"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid type="radio" DataList="Model!.AuswahlArt" AutoPostback="" For="@(() => Model!.Art)" VerticalColClassxxx="form-group col-md-2"/>
+      </div>
+    </div>
   </div>
   <div class="modal-footer mt-2">
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
@@ -54,12 +54,25 @@
       Model = new HH100Model
       {
         Nr = id,
-        // TODO Mandant = daten.MandantNr,
       };
       Model.SetMhrf(DialogTypeEnum.New);
     }
     Model.Nr = id;
     InitEditContext(Model);
+    var l = Get(FactoryService.BudgetService.GetPeriodList(daten)) ?? new List<HhPeriode>();
+    Model.AuswahlPerioden = l.Select(a => new ListItem(Functions.ToString(a.Nr), $"{a.Nr:00000} | {Functions.CutOrPadRight(Functions.ToString(a.Period),14, '\u00A0')} | {Functions.ToString(a.Datum_Von)} | {Functions.ToString(a.Datum_Bis)} | {Functions.ToString(a.Geaendert_Am, true)} | {a.Geaendert_Von} | {Functions.ToString(a.Angelegt_Am, true)} | {a.Angelegt_Von}")).ToList();
+    Model.AuswahlArt = new List<ListItem>
+    {
+      new ListItem("0", "Anfang"),
+      new ListItem("1", "Ende"),
+    };
+    Model.AuswahlLaenge = new List<ListItem>
+    {
+      new ListItem("1", "Monatlich"),
+      new ListItem("3", "Vierteljährlich"),
+      new ListItem("6", "Halbjährlich"),
+      new ListItem("12", "Jährlich"),
+    };
   }
 
   /// <summary>
