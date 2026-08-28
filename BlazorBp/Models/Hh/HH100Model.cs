@@ -47,6 +47,14 @@ public class HH100Model : PageModelBase
   [Required(ErrorMessage = "Art muss angegeben werden.")]
   public string? Art { get; set; }
 
+  /// <summary>Holt oder setzt Neu.</summary>
+  [Display(Name = "Neu", Description = "Neue Periode an gewählter Position erzeugen")]
+  public string? New { get; set; }
+
+  /// <summary>Holt oder setzt Löschen.</summary>
+  [Display(Name = "Löschen", Description = "Löschen der ausgewählten Periode")]
+  public string? Delete { get; set; }
+
   /// <summary>Holt oder setzt Aktualisieren.</summary>
   [Display(Name = "Aktualisieren", Description = "Aktualisieren")]
   public string? Refresh { get; set; }
@@ -59,15 +67,17 @@ public class HH100Model : PageModelBase
   /// <param name="mode">Betroffener Modus.</param>
   public void SetMhrf(DialogTypeEnum mode)
   {
-    if (mode == New)
+    if (mode == DialogTypeEnum.New)
     {
       Functions.MachNichts();
     }
-    SetMandatoryHiddenReadonly(nameof(Perioden), false, false, false, mode == New);
+    SetMandatoryHiddenReadonly(nameof(Perioden), false, false, false, mode == DialogTypeEnum.New);
     SetMandatoryHiddenReadonly(nameof(Anfang), false, false, true, false);
     SetMandatoryHiddenReadonly(nameof(Ende), false, false, true, false);
     SetMandatoryHiddenReadonly(nameof(Laenge), false, false, false, false);
     SetMandatoryHiddenReadonly(nameof(Art), false, false, false, false);
+    SetMandatoryHiddenReadonly(nameof(New), false, false, false, false);
+    SetMandatoryHiddenReadonly(nameof(Delete), false, false, false, false);
     SetMandatoryHiddenReadonly(nameof(Refresh), false, false, false, false);
     SetMandatoryHiddenReadonly(nameof(Schliessen), false, false, false, false);
   }

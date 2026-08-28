@@ -159,6 +159,16 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   }
 
   /// <summary>
+  /// Postback mit Reload der Seite erzwingen, z.B. um Undo-Redo-Anzahl korrekt anzuzeigen.
+  /// </summary>
+  protected void DoPostbackReload()
+  {
+    // StateHasChanged(); // Geht nicht bei Blazor SSR
+    WriteFormularModel(Model?.Nr ?? "0", Model, Table);
+    Navigation.NavigateTo(Navigation.Uri, forceLoad: true); // forceLoad: true erzwingt ein Neu-Laden der Seite.
+  }
+
+  /// <summary>
   /// Öffnen eines Formulars mit Legen auf den Formular-Stapel.
   /// </summary>
   /// <param name="action">Name der Action, Formularname oder "" für aktuelles Formular.</param>

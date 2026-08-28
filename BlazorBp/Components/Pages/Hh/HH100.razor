@@ -20,7 +20,7 @@
     <div class="col ms-1">
       <div class="row mt-1 g-0">
         <LabelInputValid AutoPostback="" For="@(() => Model!.Anfang)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-        <LabelInputValid AutoPostback="" For="@(() => Model!.Ende)" maxlength="255" VerticalColClass="form-group col-md-2 mt-1"/>
+        <LabelInputValid AutoPostback="" For="@(() => Model!.Ende)" maxlength="255" VerticalColClass="form-group col-md-2 ms-1"/>
       </div>
       <div class="row mt-1 g-0">
         <LabelInputValid type="radio" DataList="Model!.AuswahlLaenge" AutoPostback="" For="@(() => Model!.Laenge)" VerticalColClassxxx="form-group col-md-2"/>
@@ -31,6 +31,8 @@
     </div>
   </div>
   <div class="modal-footer mt-2">
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-file-plus-button" For="@(() => Model!.New)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-file-x-button" For="@(() => Model!.Delete)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
   </div>
@@ -56,11 +58,18 @@
         Nr = id,
       };
       Model.SetMhrf(DialogTypeEnum.New);
+      if (string.IsNullOrEmpty(Model.Laenge))
+        Model.Laenge = GetStringData("HH100Length");
+      if (string.IsNullOrEmpty(Model.Laenge))
+        Model.Laenge = "1";
+      if (string.IsNullOrEmpty(Model.Art))
+        Model.Art = GetStringData("HH100When");
+      if (string.IsNullOrEmpty(Model.Art))
+        Model.Art = "1";
     }
     Model.Nr = id;
     InitEditContext(Model);
-    var l = Get(FactoryService.BudgetService.GetPeriodList(daten)) ?? new List<HhPeriode>();
-    Model.AuswahlPerioden = l.Select(a => new ListItem(Functions.ToString(a.Nr), $"{a.Nr:00000} | {Functions.CutOrPadRight(Functions.ToString(a.Period),14, '\u00A0')} | {Functions.ToString(a.Datum_Von)} | {Functions.ToString(a.Datum_Bis)} | {Functions.ToString(a.Geaendert_Am, true)} | {a.Geaendert_Von} | {Functions.ToString(a.Angelegt_Am, true)} | {a.Angelegt_Von}")).ToList();
+    Refresh();
     Model.AuswahlArt = new List<ListItem>
     {
       new ListItem("0", "Anfang"),
@@ -80,7 +89,14 @@
   /// </summary>
   protected override void Refresh()
   {
-    // TODO TableData(Table, Messages);
+    var daten = ServiceDaten;
+    var l = Get(FactoryService.BudgetService.GetPeriodList(daten)) ?? new List<HhPeriode>();
+    Model.AuswahlPerioden = l.Select(a => new ListItem(Functions.ToString(a.Nr), $"{a.Nr:00000} | {Functions.CutOrPadRight(Functions.ToString(a.Period),14, '\u00A0')} | {Functions.ToString(a.Datum_Von)} | {Functions.ToString(a.Datum_Bis)} | {Functions.ToString(a.Geaendert_Am, true)} | {a.Geaendert_Von} | {Functions.ToString(a.Angelegt_Am, true)} | {a.Angelegt_Von}")).ToList();
+    if (l.Count > 0)
+    {
+      Model.Anfang = Functions.ToString(l.Last().Datum_Von);
+      Model.Ende = Functions.ToString(l.First().Datum_Bis);
+    }
   }
 
   /// <summary>
@@ -92,6 +108,8 @@
   {
     if (OnInitializedFormular("HH100", "Perioden - HH100", Id, true))
       return;
+    SetStringData("HH100Length", Model.Laenge);
+    SetStringData("HH100When", Model.Art);
   }
 
   /// <summary>
@@ -101,15 +119,22 @@
   /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
   protected override bool Submit(string? submit)
   {
-    if (valid && submit == "OK")
+    if (valid && submit == "New")
     {
       var daten = ServiceDaten;
-      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
-      if (r != null)
+      if (Get(FactoryService.BudgetService.SavePeriod(daten, Functions.ToInt32(Model.Laenge), Functions.ToInt32(Model.Art) != 0)))
       {
-        Get(r);
-        if (r.Ok)
-          return true;
+        Refresh();
+        DoPostbackReload();
+      }
+    }
+    if (valid && submit == "Delete")
+    {
+      var daten = ServiceDaten;
+      if (Get(FactoryService.BudgetService.DeletePeriod(daten, Functions.ToInt32(Model.Art) != 0)))
+      {
+        Refresh();
+        DoPostbackReload();
       }
     }
     if (submit == nameof(Model.Schliessen))
