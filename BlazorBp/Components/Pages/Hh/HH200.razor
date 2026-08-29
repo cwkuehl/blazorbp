@@ -1,0 +1,140 @@
+@page "/hh/hh200/{id?}"
+@using CSBP.Services.Apis.Models
+@inherits BlazorComponentBase<HH200Model, HH200TableRowModel>
+@attribute [Authorize(Roles = "User, Admin, Superadmin")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<CascadingValue Value="this">
+<SortableTable Table="Table" NoData="" FormName="hh200" NoModal="true" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="HH200Model" TRTable="HH200TableRowModel">
+  <ChildContent>
+    <TableColumn Field="@nameof(HH200TableRowModel.Nummer)" SortField="@nameof(HhKonto.Uid)" TModel="HH200Model" TRTable="HH200TableRowModel"/>
+    <TableColumn Field="@nameof(HH200TableRowModel.Bezeichnung)" SortField="@nameof(HhKonto.Name)" TModel="HH200Model" TRTable="HH200TableRowModel"/>
+    <TableColumn Field="@nameof(HH200TableRowModel.Kennzeichen)" SortField="@nameof(HhKonto.Kz)" TModel="HH200Model" TRTable="HH200TableRowModel"/>
+    <TableColumn Field="@nameof(HH200TableRowModel.Kontoart)" SortField="@nameof(HhKonto.Art)" TModel="HH200Model" TRTable="HH200TableRowModel"/>
+    <TableColumn Field="@nameof(HH200TableRowModel.Von)" SortField="@nameof(HhKonto.Gueltig_Von)" TModel="HH200Model" TRTable="HH200TableRowModel"/>
+    <TableColumn Field="@nameof(HH200TableRowModel.Bis)" SortField="@nameof(HhKonto.Gueltig_Bis)" TModel="HH200Model" TRTable="HH200TableRowModel"/>
+    <TableColumn Field="@nameof(HH200TableRowModel.Betrag)" SortField="@nameof(HhKonto.EBetrag)" TModel="HH200Model" TRTable="HH200TableRowModel"/>
+    <TableColumn Field="@nameof(HH200TableRowModel.AngelegtAm)" SortField="@nameof(HhKonto.Angelegt_Am)" TModel="HH200Model" TRTable="HH200TableRowModel"/>
+    <TableColumn Field="@nameof(HH200TableRowModel.AngelegtVon)" SortField="@nameof(HhKonto.Angelegt_Von)" TModel="HH200Model" TRTable="HH200TableRowModel"/>
+    <TableColumn Field="@nameof(HH200TableRowModel.GeaendertAm)" SortField="@nameof(HhKonto.Geaendert_Am)" TModel="HH200Model" TRTable="HH200TableRowModel"/>
+    <TableColumn Field="@nameof(HH200TableRowModel.GeaendertVon)" SortField="@nameof(HhKonto.Geaendert_Von)" TModel="HH200Model" TRTable="HH200TableRowModel"/>
+  </ChildContent>
+</SortableTable>
+</CascadingValue>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="hh200">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <input type="hidden" name="SubmitControl"/>
+  <div class="modal-footer mt-2">
+    <SubmitButton class="btn btn-primary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
+  </div>
+</EditForm>
+
+@code {
+
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id">Betroffene Id.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id, HH200Model? model = null, TableModelBase<HH200TableRowModel>? table = null)
+  {
+    var daten = ServiceDaten;
+    if (model != null)
+      Model = model;
+    if (Model == null)
+    {
+      Model = new HH200Model
+      {
+        Nr = id,
+      };
+      Model.SetMhrf(DialogTypeEnum.New);
+    }
+    Model.Nr = id;
+    if (table != null)
+      Table = table;
+    if (Table == null)
+      Table = new TableModelBase<HH200TableRowModel>
+      {
+        SelectedPage = 1,
+        RowsPerPage = 10,
+        SelectedRow = 1,
+        SortColumn = $"{nameof(HhKonto.Name)}#+",
+      };
+    Table.Nr = id;
+    InitEditContext(Model);
+  }
+
+  /// <summary>
+  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
+  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
+  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    if (OnInitializedFormular("HH200", "Konten - HH200", Id, true))
+      return;
+
+    // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
+    var handler = HttpContext.Request.Query["handler"];
+    if (handler == "Table_All")
+    {
+      Model.SetMhrf(DialogTypeEnum.Copy);
+      WriteFormularModel(Model.Nr ?? "0", Model);
+    }
+  }
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines nicht modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  public override void HandleNoModal(string? form, string? handler, string? id)
+  {
+    HandleNoModal1(form, handler, id, "HH210");
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// </summary>
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
+  {
+    if (submit == nameof(Model.Schliessen))
+      return true;
+    return false;
+  }
+
+  /// <summary>
+  /// Bereitstellen der Tabellen-Daten mit Berücksichtigung der Filterung, Sortierung und Paginierung.
+  /// </summary>
+  /// <param name="m">Betroffenes TableRowModel.</param>
+  /// <param name="messages">Betroffene Fehlermeldungen.</param>
+  /// <returns>Tabellen-Daten als Liste.</returns>
+  protected override List<HH200TableRowModel> TableData(TableModelBase<HH200TableRowModel>? m, ValidationMessageStore? messages)
+  {
+    var rm = m?.ReadModel;
+    var daten = ServiceDaten;
+    var l0 = Get(FactoryService.BudgetService.GetAccountList(daten, rm), messages);
+    var l = l0?.Select(a => HH200TableRowModel.From(a)).ToList() ?? new List<HH200TableRowModel>();
+    return UpdateTable(m, rm, l);
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData(HH200Model model, HH200Model model0)
+  {
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+  }
+}
