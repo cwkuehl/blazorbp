@@ -18,121 +18,100 @@ public class HH210Model : PageModelBase
 {
   /// <summary>Holt oder setzt Nr..</summary>
   [Display(Name = "Nr.", Description = "Konto-Nr.")]
-  //// [Required(ErrorMessage = "Nr. muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Nr. darf maximal {1} Zeichen lang sein.")]
   public string? Nummer { get; set; }
 
   /// <summary>Holt oder setzt Bezeichnung.</summary>
   [Display(Name = "_Bezeichnung", Description = "Bezeichnung")]
-  //// [Required(ErrorMessage = "Bezeichnung muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Bezeichnung darf maximal {1} Zeichen lang sein.")]
+  [Required(ErrorMessage = "Bezeichnung muss angegeben werden.")]
+  [MaxLength(50, ErrorMessage = "Bezeichnung darf maximal {1} Zeichen lang sein.")]
   public string? Bezeichnung { get; set; }
 
+  /// <summary>Holt oder setzt die Auswahlliste von Kennzeichen.</summary>
+  public List<ListItem>? AuswahlKennzeichen { get; set; } = default!;
+
   /// <summary>Holt oder setzt Kennzeichen.</summary>
-  [Display(Name = "_Kennzeichen", Description = "")]
-  //// [Required(ErrorMessage = "Kennzeichen muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Kennzeichen darf maximal {1} Zeichen lang sein.")]
-  public string? Kennzeichen0 { get; set; }
+  [Display(Name = "_Kennzeichen", Description = "Kennzeichen des Kontos, z.B. Eigenkapitel-Konto, Gewinn+Verlust-Konto, Depot-Konto")]
+  public string? Kennzeichen { get; set; }
 
-  /// <summary>Holt oder setzt Ohne.</summary>
-  [Display(Name = "_Ohne", Description = "Ohne Kennzeichen")]
-  //// [Required(ErrorMessage = "Ohne muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Ohne darf maximal {1} Zeichen lang sein.")]
-  public string? Kennzeichen1 { get; set; }
-
-  /// <summary>Holt oder setzt Eigenkapitel.</summary>
-  [Display(Name = "Eigenkapitel", Description = "Eigenkapitel-Konto")]
-  //// [Required(ErrorMessage = "Eigenkapitel muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Eigenkapitel darf maximal {1} Zeichen lang sein.")]
-  public string? Kennzeichen2 { get; set; }
-
-  /// <summary>Holt oder setzt Gewinn+Verlust.</summary>
-  [Display(Name = "Gewinn+Verlust", Description = "Gewinn+Verlust-Konto")]
-  //// [Required(ErrorMessage = "Gewinn+Verlust muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Gewinn+Verlust darf maximal {1} Zeichen lang sein.")]
-  public string? Kennzeichen3 { get; set; }
-
-  /// <summary>Holt oder setzt Depot.</summary>
-  [Display(Name = "Depot", Description = "Depot-Konto")]
-  //// [Required(ErrorMessage = "Depot muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Depot darf maximal {1} Zeichen lang sein.")]
-  public string? Kennzeichen4 { get; set; }
+  /// <summary>Holt oder setzt die Auswahlliste von Kontoart.</summary>
+  public List<ListItem>? AuswahlKontoart { get; set; } = default!;
 
   /// <summary>Holt oder setzt Kontoart.</summary>
   [Display(Name = "Kontoa_rt", Description = "")]
-  //// [Required(ErrorMessage = "Kontoart muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Kontoart darf maximal {1} Zeichen lang sein.")]
-  public string? Kontoart0 { get; set; }
-
-  /// <summary>Holt oder setzt Aktiv (AK).</summary>
-  [Display(Name = "Aktiv (AK)", Description = "Aktiv-Konto")]
-  //// [Required(ErrorMessage = "Aktiv (AK) muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Aktiv (AK) darf maximal {1} Zeichen lang sein.")]
-  public string? Kontoart1 { get; set; }
-
-  /// <summary>Holt oder setzt Passiv (PK).</summary>
-  [Display(Name = "Passiv (PK)", Description = "Passiv-Konto")]
-  //// [Required(ErrorMessage = "Passiv (PK) muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Passiv (PK) darf maximal {1} Zeichen lang sein.")]
-  public string? Kontoart2 { get; set; }
-
-  /// <summary>Holt oder setzt Aufwand (AW).</summary>
-  [Display(Name = "Aufwand (AW)", Description = "Aufwand-Konto")]
-  //// [Required(ErrorMessage = "Aufwand (AW) muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Aufwand (AW) darf maximal {1} Zeichen lang sein.")]
-  public string? Kontoart3 { get; set; }
-
-  /// <summary>Holt oder setzt Ertrag (ER).</summary>
-  [Display(Name = "Ertrag (ER)", Description = "Ertrag-Konto")]
-  //// [Required(ErrorMessage = "Ertrag (ER) muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Ertrag (ER) darf maximal {1} Zeichen lang sein.")]
-  public string? Kontoart4 { get; set; }
+  [Required(ErrorMessage = "Kontoart muss angegeben werden.")]
+  public string? Kontoart { get; set; }
 
   /// <summary>Holt oder setzt Gültigkeit von.</summary>
-  [Display(Name = "Gültigkeit _von", Description = "")]
-  //// [Required(ErrorMessage = "Gültigkeit von muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Gültigkeit von darf maximal {1} Zeichen lang sein.")]
-  public string? Von { get; set; }
+  [Display(Name = "Gültigkeit _von", Description = "Buchungen ab diesem Datum zugelassen")]
+  public DateTime? Von { get; set; }
 
   /// <summary>Holt oder setzt Bis.</summary>
-  [Display(Name = "B_is", Description = "")]
-  //// [Required(ErrorMessage = "Bis muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Bis darf maximal {1} Zeichen lang sein.")]
-  public string? Bis { get; set; }
+  [Display(Name = "B_is", Description = "Buchungen bis zu diesem Datum zugelassen")]
+  public DateTime? Bis { get; set; }
 
   /// <summary>Holt oder setzt Betrag.</summary>
   [Display(Name = "B_etrag", Description = "Betrag am 1. Gültigkeitstag für Aktiv- und Passivkonten, negativ für Aktivkonten.")]
-  //// [Required(ErrorMessage = "Betrag muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Betrag darf maximal {1} Zeichen lang sein.")]
-  public string? Betrag { get; set; }
+  public decimal? Betrag { get; set; }
 
   /// <summary>Holt oder setzt Angelegt.</summary>
   [Display(Name = "Angelegt", Description = "Datum, Uhrzeit und Benutzer, der die Daten angelegt hat")]
-  //// [Required(ErrorMessage = "Angelegt muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Angelegt darf maximal {1} Zeichen lang sein.")]
   public string? Angelegt { get; set; }
 
   /// <summary>Holt oder setzt Geändert.</summary>
   [Display(Name = "Geändert", Description = "Datum, Uhrzeit und Benutzer, der die Daten geändert hat")]
-  //// [Required(ErrorMessage = "Geändert muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Geändert darf maximal {1} Zeichen lang sein.")]
   public string? Geaendert { get; set; }
 
-  /// <summary>Holt oder setzt die letzte Buchung.</summary>
-  [Display(Name = "Letzte Buchung", Description = "Letzte Buchung")]
+  /// <summary>Holt oder setzt die Buchung.</summary>
+  [Display(Name = "Buchungen", Description = "Zeitraum der Buchungen")]
   public string? Buchung { get; set; }
 
   /// <summary>Holt oder setzt OK.</summary>
   [Display(Name = "_OK", Description = "Dialog mit Speichern schließen")]
-  //// [Required(ErrorMessage = "OK muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "OK darf maximal {1} Zeichen lang sein.")]
   public string? Ok { get; set; }
 
   /// <summary>Holt oder setzt Abbrechen.</summary>
   [Display(Name = "Abbre_chen", Description = "Dialog ohne Speichern schließen")]
-  //// [Required(ErrorMessage = "Abbrechen muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Abbrechen darf maximal {1} Zeichen lang sein.")]
   public string? Abbrechen { get; set; }
+
+  /// <summary>Kopiert die Werte aus einem Model.</summary>
+  /// <param name="m">Zu kopierendes Model.</param>
+  public void From(HhKonto m) =>
+  (
+    Nummer,
+    Kontoart,
+    Kennzeichen,
+    Bezeichnung,
+    Von,
+    Bis,
+    Betrag,
+    Angelegt,
+    Geaendert
+  ) = (
+    m.Uid,
+    m.Art,
+    m.Kz,
+    m.Name,
+    m.Gueltig_Von,
+    m.Gueltig_Bis,
+    m.EBetrag,
+    ModelBase.FormatDateOf(m.Angelegt_Am, m.Angelegt_Von),
+    ModelBase.FormatDateOf(m.Geaendert_Am, m.Geaendert_Von)
+  );
+
+  /// <summary>Kopiert die Werte in ein Model.</summary>
+  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
+  /// <returns>Das kopierte Model.</returns>
+  public HhKonto To(ServiceDaten daten) => new()
+  {
+    Mandant_Nr = daten.MandantNr,
+    Uid = Nummer,
+    Art = Kontoart,
+    Kz = Kennzeichen,
+    Name = Bezeichnung,
+    Gueltig_Von = Von,
+    Gueltig_Bis = Bis,
+    EBetrag = Betrag ?? 0,
+  };
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>
@@ -140,35 +119,25 @@ public class HH210Model : PageModelBase
   {
     if (mode == New || mode == Copy)
     {
-      // TODO Nummer = "";
+      Nummer = "";
     }
     if (mode == New)
     {
-      // TODO Thema = null;
+      Kennzeichen = "";
+      Kontoart = "";
+      Betrag = 0;
     }
-    // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
-    // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
-    // SetMandatoryHiddenReadonly(nameof(Nummer), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Bezeichnung), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Kennzeichen0), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Kennzeichen1), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Kennzeichen2), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Kennzeichen3), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Kennzeichen4), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Kontoart0), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Kontoart1), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Kontoart2), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Kontoart3), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Kontoart4), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Von), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Bis), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Betrag), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Angelegt), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Geaendert), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, false);
-    // SetMandatoryHiddenReadonly(nameof(Abbrechen), false, false, false, false)
-    // SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Nummer), false, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Bezeichnung), true, false, mode == Delete, mode != Delete);
+    SetMandatoryHiddenReadonly(nameof(Kennzeichen), true, false, (mode == Edit && (Kennzeichen == Constants.KZK_EK || Kennzeichen == Constants.KZK_GV)) || mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Kontoart), true, false, mode == Edit || mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Von), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Bis), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Betrag), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
+    SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
+    SetMandatoryHiddenReadonly(nameof(Buchung), false, mode == New || mode == Copy, true);
+    SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Abbrechen), false, false, false, false);
   }
 }

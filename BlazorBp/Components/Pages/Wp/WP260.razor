@@ -130,7 +130,8 @@
         {
           Model.ModalArt = null;
           Model.ModalId = null;
-          Refresh();
+          SetFormRefresh();          
+          return true;
         }
         else
           Messages?.Add(() => Model, r.GetErrors());
@@ -153,7 +154,7 @@
         {
           Model.ModalArt = null;
           Model.ModalId = null;
-          Refresh();
+          SetFormRefresh();
           return true;
         }
         else
