@@ -1,0 +1,173 @@
+@page "/hh/hh300/{id?}"
+@using CSBP.Services.Apis.Models
+@inherits BlazorComponentBase<HH300Model, HH300TableRowModel>
+@attribute [Authorize(Roles = "User, Admin, Superadmin")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<CascadingValue Value="this">
+<SortableTable Table="Table" NoData="" FormName="hh300" NoModal="true" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="HH300Model" TRTable="HH300TableRowModel">
+  <ChildContent>
+    <TableColumn Field="@nameof(HH300TableRowModel.Nummer)" SortField="@nameof(HH300TodoModel.Nummer)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.Bezeichnung)" SortField="@nameof(HH300TodoModel.Bezeichnung)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.Kennzeichen)" SortField="@nameof(HH300TodoModel.Kennzeichen)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.EText)" SortField="@nameof(HH300TodoModel.EText)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.Sollkonto)" SortField="@nameof(HH300TodoModel.Sollkonto)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.Habenkonto)" SortField="@nameof(HH300TodoModel.Habenkonto)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.Kontentausch)" SortField="@nameof(HH300TodoModel.Kontentausch)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.AngelegtAm)" SortField="@nameof(HH300TodoModel.Angelegt_Am)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.AngelegtVon)" SortField="@nameof(HH300TodoModel.Angelegt_Von)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.GeaendertAm)" SortField="@nameof(HH300TodoModel.Geaendert_Am)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.GeaendertVon)" SortField="@nameof(HH300TodoModel.Geaendert_Von)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+  </ChildContent>
+</SortableTable>
+</CascadingValue>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="hh300">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <input type="hidden" name="SubmitControl"/>
+  <div class="modal-footer mt-2">
+    <SubmitButton class="btn btn-primary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
+  </div>
+</EditForm>
+
+@code {
+
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id">Betroffene Id.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id, HH300Model? model = null, TableModelBase<HH300TableRowModel>? table = null)
+  {
+    var daten = ServiceDaten;
+    if (model != null)
+      Model = model;
+    if (Model == null)
+    {
+      Model = new HH300Model
+      {
+        Nr = id,
+        // TODO Mandant = daten.MandantNr,
+      };
+      Model.SetMhrf(DialogTypeEnum.New);
+    }
+    Model.Nr = id;
+    if (table != null)
+      Table = table;
+    if (Table == null)
+      Table = new TableModelBase<HH300TableRowModel>
+      {
+        SelectedPage = 1,
+        RowsPerPage = 10,
+        SelectedRow = 1,
+        SortColumn = $"{nameof(HH300TodoModel.Nummer)}#+",
+      };
+    Table.Nr = id;
+    InitEditContext(Model);
+    // TODO Lesen der Listen für Auswahlfelder, z.B.:
+    // var lk = Get(FactoryService.StockService.GetConfigurationList(daten, null, "1"));
+    // Model.AuswahlKonfiguration = InsertEmpty(lk?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
+  }
+
+  /// <summary>
+  /// Aktualisierung nach Undo/Redo.
+  /// </summary>
+  protected override void Refresh()
+  {
+    // TODO TableData(Table, Messages);
+  }
+
+  /// <summary>
+  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
+  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
+  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    if (OnInitializedFormular("HH300", "Ereignisse - HH300", Id, true))
+      return;
+
+    // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
+    var handler = HttpContext.Request.Query["handler"];
+    if (handler == "Table_All")
+    {
+      Model.SetMhrf(DialogTypeEnum.Copy);
+      WriteFormularModel(Model.Nr ?? "0", Model);
+    }
+  }
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines nicht modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  public override void HandleNoModal(string? form, string? handler, string? id)
+  {
+    HandleNoModal1(form, handler, id, "HH310");
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// </summary>
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
+  {
+    if (valid && submit == "OK")
+    {
+      var daten = ServiceDaten;
+      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
+      if (r != null)
+      {
+        Get(r);
+        if (r.Ok)
+          return true;
+      }
+    }
+    if (submit == nameof(Model.Schliessen))
+      return true;
+    return false;
+  }
+
+  /// <summary>
+  /// Bereitstellen der Tabellen-Daten mit Berücksichtigung der Filterung, Sortierung und Paginierung.
+  /// </summary>
+  /// <param name="m">Betroffenes TableRowModel.</param>
+  /// <param name="messages">Betroffene Fehlermeldungen.</param>
+  /// <returns>Tabellen-Daten als Liste.</returns>
+  protected override List<HH300TableRowModel> TableData(TableModelBase<HH300TableRowModel>? m, ValidationMessageStore? messages)
+  {
+    var rm = m?.ReadModel;
+    var daten = ServiceDaten;
+    var r = new ServiceErgebnis<List<HH300TodoModel>>(new List<HH300TodoModel>());
+    r.Ergebnis.Add(new HH300TodoModel()
+    {
+      Nummer = "1",
+      Bezeichnung = "Bezeichnung1",
+      Kennzeichen = "Kennzeichen1",
+      EText = "EText1",
+    });
+    if (rm != null)
+      rm.PageCount = 0;
+    // TODO var l0 = Get(FactoryService.PrivateService.GetClientList(daten, rm), messages);
+    var l = r.Ergebnis?.Select(a => HH300TableRowModel.From(a)).ToList() ?? new List<HH300TableRowModel>();
+    return UpdateTable(m, rm, l);
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData(HH300Model model, HH300Model model0)
+  {
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+  }
+}
