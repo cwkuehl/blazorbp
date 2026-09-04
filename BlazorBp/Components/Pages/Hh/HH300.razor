@@ -9,17 +9,16 @@
 <CascadingValue Value="this">
 <SortableTable Table="Table" NoData="" FormName="hh300" NoModal="true" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="HH300Model" TRTable="HH300TableRowModel">
   <ChildContent>
-    <TableColumn Field="@nameof(HH300TableRowModel.Nummer)" SortField="@nameof(HH300TodoModel.Nummer)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
-    <TableColumn Field="@nameof(HH300TableRowModel.Bezeichnung)" SortField="@nameof(HH300TodoModel.Bezeichnung)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
-    <TableColumn Field="@nameof(HH300TableRowModel.Kennzeichen)" SortField="@nameof(HH300TodoModel.Kennzeichen)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
-    <TableColumn Field="@nameof(HH300TableRowModel.EText)" SortField="@nameof(HH300TodoModel.EText)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
-    <TableColumn Field="@nameof(HH300TableRowModel.Sollkonto)" SortField="@nameof(HH300TodoModel.Sollkonto)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
-    <TableColumn Field="@nameof(HH300TableRowModel.Habenkonto)" SortField="@nameof(HH300TodoModel.Habenkonto)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
-    <TableColumn Field="@nameof(HH300TableRowModel.Kontentausch)" SortField="@nameof(HH300TodoModel.Kontentausch)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
-    <TableColumn Field="@nameof(HH300TableRowModel.AngelegtAm)" SortField="@nameof(HH300TodoModel.Angelegt_Am)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
-    <TableColumn Field="@nameof(HH300TableRowModel.AngelegtVon)" SortField="@nameof(HH300TodoModel.Angelegt_Von)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
-    <TableColumn Field="@nameof(HH300TableRowModel.GeaendertAm)" SortField="@nameof(HH300TodoModel.Geaendert_Am)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
-    <TableColumn Field="@nameof(HH300TableRowModel.GeaendertVon)" SortField="@nameof(HH300TodoModel.Geaendert_Von)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.Nummer)" SortField="@nameof(HhEreignis.Uid)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.Bezeichnung)" SortField="@nameof(HhEreignis.Bezeichnung)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.Kennzeichen)" SortField="@nameof(HhEreignis.Kz)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.EText)" SortField="@nameof(HhEreignis.EText)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.Sollkonto)" SortField="@nameof(HhEreignis.Soll_Konto_Uid)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.Habenkonto)" SortField="@nameof(HhEreignis.Haben_Konto_Uid)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.AngelegtAm)" SortField="@nameof(HhEreignis.Angelegt_Am)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.AngelegtVon)" SortField="@nameof(HhEreignis.Angelegt_Von)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.GeaendertAm)" SortField="@nameof(HhEreignis.Geaendert_Am)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.GeaendertVon)" SortField="@nameof(HhEreignis.Geaendert_Von)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
   </ChildContent>
 </SortableTable>
 </CascadingValue>
@@ -53,7 +52,6 @@
       Model = new HH300Model
       {
         Nr = id,
-        // TODO Mandant = daten.MandantNr,
       };
       Model.SetMhrf(DialogTypeEnum.New);
     }
@@ -66,21 +64,10 @@
         SelectedPage = 1,
         RowsPerPage = 10,
         SelectedRow = 1,
-        SortColumn = $"{nameof(HH300TodoModel.Nummer)}#+",
+        SortColumn = $"{nameof(HhEreignis.Bezeichnung)}#+",
       };
     Table.Nr = id;
     InitEditContext(Model);
-    // TODO Lesen der Listen für Auswahlfelder, z.B.:
-    // var lk = Get(FactoryService.StockService.GetConfigurationList(daten, null, "1"));
-    // Model.AuswahlKonfiguration = InsertEmpty(lk?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
-  }
-
-  /// <summary>
-  /// Aktualisierung nach Undo/Redo.
-  /// </summary>
-  protected override void Refresh()
-  {
-    // TODO TableData(Table, Messages);
   }
 
   /// <summary>
@@ -146,18 +133,8 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var r = new ServiceErgebnis<List<HH300TodoModel>>(new List<HH300TodoModel>());
-    r.Ergebnis.Add(new HH300TodoModel()
-    {
-      Nummer = "1",
-      Bezeichnung = "Bezeichnung1",
-      Kennzeichen = "Kennzeichen1",
-      EText = "EText1",
-    });
-    if (rm != null)
-      rm.PageCount = 0;
-    // TODO var l0 = Get(FactoryService.PrivateService.GetClientList(daten, rm), messages);
-    var l = r.Ergebnis?.Select(a => HH300TableRowModel.From(a)).ToList() ?? new List<HH300TableRowModel>();
+    var l0 = Get(FactoryService.BudgetService.GetEventList(daten, rm), messages);
+    var l = l0?.Select(a => HH300TableRowModel.From(a)).ToList() ?? new List<HH300TableRowModel>();
     return UpdateTable(m, rm, l);
   }
 
