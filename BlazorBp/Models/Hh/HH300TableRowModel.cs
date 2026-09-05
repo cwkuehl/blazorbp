@@ -61,14 +61,15 @@ public class HH300TableRowModel : TableRowModelBase
   /// <param name="m">Zu kopierendes Model.</param>
   public static HH300TableRowModel From(HhEreignis m)
   {
+    // No.;Description;Posting text;Debit account;Credit account;Changed at;Changed by;Created at;Created by
     return new HH300TableRowModel
     {
       Nummer = m.Uid,
       Bezeichnung = m.Bezeichnung,
       Kennzeichen = m.Kz,
       EText = m.EText,
-      Sollkonto = m.Soll_Konto_Uid,
-      Habenkonto = m.Haben_Konto_Uid,
+      Sollkonto = Functions.Left2(m.DebitName),
+      Habenkonto = Functions.Left2(m.CreditName),
       AngelegtAm = m.Angelegt_Am,
       AngelegtVon = m.Angelegt_Von,
       GeaendertAm = m.Geaendert_Am,

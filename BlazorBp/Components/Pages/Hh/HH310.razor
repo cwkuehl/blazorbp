@@ -13,23 +13,27 @@
   <DataAnnotationsValidator/>
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
-  @* <InputText type="hidden" @bind-Value="Model!.ReadonlyHiddenError"/> *@
   <input type="hidden" name="SubmitControl"/>
   <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Nummer)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Bezeichnung)" VerticalColClass="form-group col ms-1"/>
   </div>
   <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Kennzeichen)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.EText)" VerticalColClass="form-group col ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid type="listbox" size="10" DataList="Model!.AuswahlSollkonto" AutoPostback="" For="@(() => Model!.Sollkonto)" VerticalColClass="form-group col-md-6"/>
+    <LabelInputValid type="listbox" size="10" DataList="Model!.AuswahlHabenkonto" AutoPostback="" For="@(() => Model!.Habenkonto)" VerticalColClass="form-group col ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Angelegt)" VerticalColClass="form-group col-md-6"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Geaendert)" VerticalColClass="form-group col ms-1"/>
+  </div>
+  <div class="modal-footer mt-2">
     <SubmitButton class="btn btn-primary col-md-2 ms-1" For="@(() => Model!.Ok)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Kontentausch)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Abbrechen)"/>
-    @* TODO <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button> *@
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Nummer)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Bezeichnung)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Kennzeichen)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.EText)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Angelegt)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Geaendert)" VerticalColClass="form-group col-md-2"/>
   </div>
 </EditForm>
 
@@ -55,24 +59,25 @@
       };
       if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
       {
-        // TODO Lesen des Models aus der Datenbank, z.B.:
-        // var r = FactoryService.StockService.GetStock(daten, id ?? "");
-        // if (r.Ok && r.Ergebnis != null)
-        //   Model.From(r.Ergebnis);
+        // Lesen des Models aus der Datenbank.
+        var r = FactoryService.BudgetService.GetEvent(daten, id ?? "");
+        if (r.Ok && r.Ergebnis != null)
+          Model.From(r.Ergebnis);
       }
       Model.SetMhrf(dt);
     }
     Model.Nr = id;
     InitEditContext(Model);
-    // TODO Lesen der Listen für Auswahlfelder, z.B.:
-    // var l0 = Get(FactoryService.StockService.GetStateList(daten));
-    // Model.AuswahlStatus = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
+    // Lesen der Listen für Auswahlfelder
+    var l0 = Get(FactoryService.BudgetService.GetAccountList(daten, null, null));
+    Model.AuswahlSollkonto = l0?.Select(a => new ListItem(a.Uid, a.Name)).ToList();
+    Model.AuswahlHabenkonto = l0?.Select(a => new ListItem(a.Uid, a.Name)).ToList();
   }
 
   /// <summary>Initialisierung der Komponente.</summary>
   protected override void OnInitialized()
   {
-    if (OnInitializedFormular("HH310", "TODO Titel - HH310", Id, false))
+    if (OnInitializedFormular("HH310", "Ereignis - HH310", Id, false))
       return;
   }
  
@@ -86,17 +91,23 @@
     var daten = ServiceDaten;
     if (valid && submit == nameof(Model.Ok))
     {
-      // var o = Model.To(daten);
-      // var r = Model.DialogType == DialogTypeEnum.Delete
-      //   ? FactoryService.StockService.DeleteStock(daten, o)
-      //   : FactoryService.StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, Model.Anlage);
-      // if (r.Ok)
-      // {
-      //   SetFormRefresh();
-      //   return true;
-      // }
-      // else
-      //   Get(r, ModalMessages);
+      var o = Model.To(daten);
+      var r = Model.DialogType == DialogTypeEnum.Delete
+        ? FactoryService.BudgetService.DeleteEvent(daten, o)
+       : FactoryService.BudgetService.SaveEvent(daten, o.Uid, o.Kz, o.Soll_Konto_Uid, o.Haben_Konto_Uid, o.Bezeichnung, o.EText);
+      if (r.Ok)
+      {
+        SetFormRefresh();
+        return true;
+      }
+      else
+        Get(r, Messages);
+    }
+    if (submit == nameof(Model.Kontentausch) && Model.DialogType != DialogTypeEnum.Delete)
+    {
+      var s = Model.Sollkonto;
+      Model.Sollkonto = Model.Habenkonto;
+      Model.Habenkonto = s;
     }
     if (submit == nameof(Model.Abbrechen))
       return true;

@@ -13,8 +13,8 @@
     <TableColumn Field="@nameof(HH300TableRowModel.Bezeichnung)" SortField="@nameof(HhEreignis.Bezeichnung)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
     <TableColumn Field="@nameof(HH300TableRowModel.Kennzeichen)" SortField="@nameof(HhEreignis.Kz)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
     <TableColumn Field="@nameof(HH300TableRowModel.EText)" SortField="@nameof(HhEreignis.EText)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
-    <TableColumn Field="@nameof(HH300TableRowModel.Sollkonto)" SortField="@nameof(HhEreignis.Soll_Konto_Uid)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
-    <TableColumn Field="@nameof(HH300TableRowModel.Habenkonto)" SortField="@nameof(HhEreignis.Haben_Konto_Uid)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.Sollkonto)" SortField="@nameof(HhEreignis.DebitName)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
+    <TableColumn Field="@nameof(HH300TableRowModel.Habenkonto)" SortField="@nameof(HhEreignis.CreditName)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
     <TableColumn Field="@nameof(HH300TableRowModel.AngelegtAm)" SortField="@nameof(HhEreignis.Angelegt_Am)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
     <TableColumn Field="@nameof(HH300TableRowModel.AngelegtVon)" SortField="@nameof(HhEreignis.Angelegt_Von)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
     <TableColumn Field="@nameof(HH300TableRowModel.GeaendertAm)" SortField="@nameof(HhEreignis.Geaendert_Am)" TModel="HH300Model" TRTable="HH300TableRowModel"/>
@@ -107,17 +107,6 @@
   /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
   protected override bool Submit(string? submit)
   {
-    if (valid && submit == "OK")
-    {
-      var daten = ServiceDaten;
-      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
-      if (r != null)
-      {
-        Get(r);
-        if (r.Ok)
-          return true;
-      }
-    }
     if (submit == nameof(Model.Schliessen))
       return true;
     return false;
