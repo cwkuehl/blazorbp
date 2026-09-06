@@ -1,0 +1,173 @@
+@page "/hh/hh400/{id?}"
+@using CSBP.Services.Apis.Models
+@inherits BlazorComponentBase<HH400Model, HH400TableRowModel>
+@attribute [Authorize(Roles = "User, Admin, Superadmin")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<CascadingValue Value="this">
+<SortableTable Table="Table" NoData="" FormName="hh400" NoModal="true" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="HH400Model" TRTable="HH400TableRowModel">
+  <ChildContent>
+    <TableColumn Field="@nameof(HH400TableRowModel.Nummer)" SortField="@nameof(HhBuchung.Uid)" TModel="HH400Model" TRTable="HH400TableRowModel"/>
+    <TableColumn Field="@nameof(HH400TableRowModel.Valuta)" SortField="@nameof(HhBuchung.Soll_Valuta)" TModel="HH400Model" TRTable="HH400TableRowModel"/>
+    <TableColumn Field="@nameof(HH400TableRowModel.Kennzeichen)" SortField="@nameof(HhBuchung.Kz)" TModel="HH400Model" TRTable="HH400TableRowModel"/>
+    <TableColumn Field="@nameof(HH400TableRowModel.Betrag)" SortField="@nameof(HhBuchung.EBetrag)" TModel="HH400Model" TRTable="HH400TableRowModel"/>
+    <TableColumn Field="@nameof(HH400TableRowModel.BText)" SortField="@nameof(HhBuchung.BText)" TModel="HH400Model" TRTable="HH400TableRowModel"/>
+    <TableColumn Field="@nameof(HH400TableRowModel.Sollkonto)" SortField="@nameof(HhBuchung.DebitName)" TModel="HH400Model" TRTable="HH400TableRowModel"/>
+    <TableColumn Field="@nameof(HH400TableRowModel.Habenkonto)" SortField="@nameof(HhBuchung.CreditName)" TModel="HH400Model" TRTable="HH400TableRowModel"/>
+    <TableColumn Field="@nameof(HH400TableRowModel.BelegNr)" SortField="@nameof(HhBuchung.Beleg_Nr)" TModel="HH400Model" TRTable="HH400TableRowModel"/>
+    <TableColumn Field="@nameof(HH400TableRowModel.BelegDatum)" SortField="@nameof(HhBuchung.Beleg_Datum)" TModel="HH400Model" TRTable="HH400TableRowModel"/>
+    <TableColumn Field="@nameof(HH400TableRowModel.AngelegtAm)" SortField="@nameof(HhBuchung.Angelegt_Am)" TModel="HH400Model" TRTable="HH400TableRowModel"/>
+    <TableColumn Field="@nameof(HH400TableRowModel.AngelegtVon)" SortField="@nameof(HhBuchung.Angelegt_Von)" TModel="HH400Model" TRTable="HH400TableRowModel"/>
+    <TableColumn Field="@nameof(HH400TableRowModel.GeaendertAm)" SortField="@nameof(HhBuchung.Geaendert_Am)" TModel="HH400Model" TRTable="HH400TableRowModel"/>
+    <TableColumn Field="@nameof(HH400TableRowModel.GeaendertVon)" SortField="@nameof(HhBuchung.Geaendert_Von)" TModel="HH400Model" TRTable="HH400TableRowModel"/>
+  </ChildContent>
+</SortableTable>
+</CascadingValue>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="hh400">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <input type="hidden" name="SubmitControl"/>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.Betrag)" maxlength="18" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid type="combobox" DataList="Model!.AuswahlKonto" AutoPostback="x" For="@(() => Model!.Konto)" VerticalColClass="form-group col ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid type="radio" AutoPostback="x" DataList="Model!.AuswahlKennzeichen" For="@(() => Model!.Kennzeichen)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Von)" VerticalColClass="form-group col-md-4"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" VerticalColClass="form-group col ms-1"/>
+  </div>
+  <div class="modal-footer mt-2">
+    <SubmitButton class="btn btn-primary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
+  </div>
+</EditForm>
+
+@code {
+
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id">Betroffene Id.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id, HH400Model? model = null, TableModelBase<HH400TableRowModel>? table = null)
+  {
+    var daten = ServiceDaten;
+    if (model != null)
+      Model = model;
+    if (Model == null)
+    {
+      Model = new HH400Model
+      {
+        Nr = id,
+      };
+      Model.SetMhrf(DialogTypeEnum.New, daten);
+    }
+    Model.Nr = id;
+    if (table != null)
+      Table = table;
+    if (Table == null)
+      Table = new TableModelBase<HH400TableRowModel>
+      {
+        SelectedPage = 1,
+        RowsPerPage = 10,
+        SelectedRow = 1,
+        SortColumn = $"{nameof(HhBuchung.Soll_Valuta)}#-",
+      };
+    Table.Nr = id;
+    InitEditContext(Model);
+    // Listen für Auswahlfelder.
+    Model.AuswahlKennzeichen = new List<ListItem>
+    {
+      new ListItem("1", "Valuta"),
+      new ListItem("0", "Revision"),
+    };
+    var l0 = Get(FactoryService.BudgetService.GetAccountList(daten, null, null));
+    Model.AuswahlKonto = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Name)).ToList());
+  }
+
+  /// <summary>
+  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
+  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
+  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    if (OnInitializedFormular("HH400", "Buchungen - HH400", Id, true))
+      return;
+
+    // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
+    var handler = HttpContext.Request.Query["handler"];
+    if (handler == "Table_All")
+    {
+      Model.SetMhrf(DialogTypeEnum.Copy, ServiceDaten);
+      WriteFormularModel(Model.Nr ?? "0", Model);
+    }
+  }
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines nicht modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  public override void HandleNoModal(string? form, string? handler, string? id)
+  {
+    HandleNoModal1(form, handler, id, "HH410");
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// </summary>
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
+  {
+    if (IsDateMhp(submit, nameof(Model.Von), Model.Von, out var d))
+    {
+      if (d.HasValue)
+        Model.Von = d;
+    }
+    if (IsDateMhp(submit, nameof(Model.Bis), Model.Bis, out var db))
+    {
+      if (db.HasValue)
+        Model.Bis = db;
+    }
+    if (Table != null && (submit == nameof(Model.Betrag) || submit == nameof(Model.Konto) || submit == nameof(Model.Kennzeichen) || (submit?.StartsWith(nameof(Model.Von)) ?? false) || (submit?.StartsWith(nameof(Model.Bis)) ?? false)))
+    {
+      Refresh();
+    }
+    if (submit == nameof(Model.Schliessen))
+      return true;
+    return false;
+  }
+
+  /// <summary>
+  /// Bereitstellen der Tabellen-Daten mit Berücksichtigung der Filterung, Sortierung und Paginierung.
+  /// </summary>
+  /// <param name="m">Betroffenes TableRowModel.</param>
+  /// <param name="messages">Betroffene Fehlermeldungen.</param>
+  /// <returns>Tabellen-Daten als Liste.</returns>
+  protected override List<HH400TableRowModel> TableData(TableModelBase<HH400TableRowModel>? m, ValidationMessageStore? messages)
+  {
+    var rm = m?.ReadModel;
+    var daten = ServiceDaten;
+    var l0 = Get(FactoryService.BudgetService.GetBookingList(daten, rm, Model.Kennzeichen == "1", Model.Von, Model.Bis, null, Model.Konto, Model.Betrag), messages);
+    var l = l0?.Select(a => HH400TableRowModel.From(a)).ToList() ?? new List<HH400TableRowModel>();
+    return UpdateTable(m, rm, l);
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData(HH400Model model, HH400Model model0)
+  {
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+  }
+}
