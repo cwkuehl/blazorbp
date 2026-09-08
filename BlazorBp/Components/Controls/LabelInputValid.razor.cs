@@ -441,7 +441,7 @@ public partial class LabelInputValid<TItem> : ComponentBase
     if (InputType == "date")
       SetAttribute(Attributes2, "value", Functions.ToString(CurrentValueAsDateTime));
     else if (currency > 0)
-      SetAttribute(Attributes2, "value", Functions.ToString(CurrentValueAsDecimal, currency, Functions.CultureInfoEn));
+      SetAttribute(Attributes2, "value", Functions.ToString(CurrentValueAsDecimal, currency, Functions.CultureInfoEn, true));
     if (checkbox)
     {
       SetAttribute(Attributes2, "value", true.ToString());

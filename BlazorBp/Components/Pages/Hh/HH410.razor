@@ -1,5 +1,7 @@
 @page "/hh/hh410/{id?}"
+@using System.Text
 @using CSBP.Services.Apis.Models
+@using CSBP.Services.Resources
 @inherits BlazorComponentBase<HH410Model, TableRowModelBase>
 @attribute [Authorize(Roles = "User, Admin, Superadmin")]
 
@@ -13,31 +15,38 @@
   <DataAnnotationsValidator/>
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
-  @* <InputText type="hidden" @bind-Value="Model!.ReadonlyHiddenError"/> *@
   <input type="hidden" name="SubmitControl"/>
   <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Nummer)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.Valuta)" VerticalColClass="form-group col-md-2 ms-1"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Betrag)" VerticalColClass="form-group col-md-2 ms-1"/>
+    <LabelInputValid step="0.01" AutoPostback="" For="@(() => Model!.Summe)" VerticalColClass="form-group col-md-2 ms-1"/>
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.BelegDatum)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid type="listbox" size="10" DataList="Model!.AuswahlEreignis" AutoPostback="x" For="@(() => Model!.Ereignis)" VerticalColClass="form-group col-md-4"/>
+    <LabelInputValid type="listbox" size="10" DataList="Model!.AuswahlSollkonto" AutoPostback="" For="@(() => Model!.Sollkonto)" VerticalColClass="form-group col-md-4 ms-1"/>
+    <LabelInputValid type="listbox" size="10" DataList="Model!.AuswahlHabenkonto" AutoPostback="" For="@(() => Model!.Habenkonto)" VerticalColClass="form-group col ms-1"/>
   </div>
   <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.BText)" VerticalColClass="form-group col"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.BelegNr)" VerticalColClass="form-group col-md-2"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.NeueNr)"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.BelegDatum)" VerticalColClass="form-group col ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Angelegt)" VerticalColClass="form-group col-md-6"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Geaendert)" VerticalColClass="form-group col ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Buchung)" VerticalColClass="form-group col"/>
+  </div>
+  <div class="modal-footer mt-2">
     <SubmitButton class="btn btn-primary col-md-2 ms-1" For="@(() => Model!.Ok)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Kontentausch)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Addition)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Abbrechen)"/>
-    @* TODO <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button> *@
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Nummer)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Valuta)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Betrag)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Summe)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.BText)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.BelegNr)" VerticalColClass="form-group col-md-2"/>
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.NeueNr)"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Angelegt)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Geaendert)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Buchung)" VerticalColClass="form-group col-md-2"/>
   </div>
 </EditForm>
 
@@ -61,26 +70,34 @@
         DialogType = dt,
         Nr = id,
       };
-      if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
+      if (dt == DialogTypeEnum.New)
       {
-        // TODO Lesen des Models aus der Datenbank, z.B.:
-        // var r = FactoryService.StockService.GetStock(daten, id ?? "");
-        // if (r.Ok && r.Ergebnis != null)
-        //   Model.From(r.Ergebnis);
+        Model.Valuta = Functions.ToDateTime(GetStringData("HH410Valuta")) ?? daten.Heute;
+        Model.BelegDatum = Functions.ToDateTime(GetStringData("HH410BelegDatum")) ?? daten.Heute;
+      }
+      else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
+      {
+        // Lesen des Models aus der Datenbank.
+        var r = FactoryService.BudgetService.GetBooking(daten, id ?? "");
+        if (r.Ok && r.Ergebnis != null)
+          Model.From(r.Ergebnis);
       }
       Model.SetMhrf(dt);
     }
     Model.Nr = id;
     InitEditContext(Model);
-    // TODO Lesen der Listen für Auswahlfelder, z.B.:
-    // var l0 = Get(FactoryService.StockService.GetStateList(daten));
-    // Model.AuswahlStatus = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
+    // Lesen der Listen für Auswahlfelder
+    var le = Get(FactoryService.BudgetService.GetEventList(daten, null, null));
+    Model.AuswahlEreignis = le?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList();
+    var l0 = Get(FactoryService.BudgetService.GetAccountList(daten, null, null));
+    Model.AuswahlSollkonto = l0?.Select(a => new ListItem(a.Uid, a.Name)).ToList();
+    Model.AuswahlHabenkonto = l0?.Select(a => new ListItem(a.Uid, a.Name)).ToList();
   }
 
   /// <summary>Initialisierung der Komponente.</summary>
   protected override void OnInitialized()
   {
-    if (OnInitializedFormular("HH410", "TODO Titel - HH410", Id, false))
+    if (OnInitializedFormular("HH410", "Buchung - HH410", Id, false))
       return;
   }
  
@@ -92,22 +109,94 @@
   protected override bool Submit(string? submit)
   {
     var daten = ServiceDaten;
+    if (IsDateMhp(submit, nameof(Model.Valuta), Model.Valuta, out var d))
+    {
+      if (d.HasValue)
+      {
+        Model.Valuta = d;
+        Model.BelegDatum = d;
+      }
+    }
+    if (submit == nameof(Model.Ereignis) && Model.DialogType != DialogTypeEnum.Delete)
+    {
+      var s = Model.Ereignis;
+      if (!string.IsNullOrEmpty(s))
+      {
+        var r = FactoryService.BudgetService.GetEvent(daten, s);
+        if (r.Ok && r.Ergebnis != null)
+        {
+          Model.Sollkonto = r.Ergebnis.Soll_Konto_Uid;
+          Model.Habenkonto = r.Ergebnis.Haben_Konto_Uid;
+          Model.BText = r.Ergebnis.EText;
+        }
+      }
+    }
+    if (IsDateMhp(submit, nameof(Model.BelegDatum), Model.BelegDatum, out var db))
+    {
+      if (db.HasValue)
+        Model.BelegDatum = db;
+    }
     if (valid && submit == nameof(Model.Ok))
     {
-      // var o = Model.To(daten);
-      // var r = Model.DialogType == DialogTypeEnum.Delete
-      //   ? FactoryService.StockService.DeleteStock(daten, o)
-      //   : FactoryService.StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, Model.Anlage);
-      // if (r.Ok)
-      // {
-      //   SetFormRefresh();
-      //   return true;
-      // }
-      // else
-      //   Get(r, ModalMessages);
+      // TODO Stornierung mit DialogTypeEnum.Reverse.
+      var o = Model.To(daten);
+      var r = Model.DialogType == DialogTypeEnum.Delete
+        ? FactoryService.BudgetService.DeleteBooking(daten, o)
+        : FactoryService.BudgetService.SaveBooking(daten, o.Uid, o.Soll_Valuta, o.Betrag, o.EBetrag, o.Soll_Konto_Uid, o.Haben_Konto_Uid, o.BText, o.Beleg_Nr, o.Beleg_Datum);
+      if (r.Ok)
+      {
+        SetStringData("HH410Valuta", Functions.ToString(Model.Valuta));
+        SetStringData("HH410BelegDatum", Functions.ToString(Model.BelegDatum));
+        if (Model.DialogType == DialogTypeEnum.New)
+        {
+          var sb = new StringBuilder();
+          var sollkonto = Get(FactoryService.BudgetService.GetAccount(daten, o.Soll_Konto_Uid));
+          var habenkonto = Get(FactoryService.BudgetService.GetAccount(daten, o.Haben_Konto_Uid));
+          sb.Append(M.HH057(o.Soll_Valuta, o.EBetrag,
+            sollkonto?.Name ?? o.Soll_Konto_Uid, habenkonto?.Name ?? o.Haben_Konto_Uid, o.BText));
+          if (!string.IsNullOrEmpty(o.Beleg_Nr))
+            sb.Append(M.HH058(o.Beleg_Nr));
+          if (o.Soll_Valuta != o.Beleg_Datum)
+            sb.Append(M.HH059(o.Beleg_Datum));
+          Model.Buchung = sb.ToString();
+          Model.Betrag = null;
+          Model.Summe = 0;
+          if (!string.IsNullOrEmpty(o.Beleg_Nr))
+            Model.BelegNr = Functions.ToString(Functions.ToInt64(o.Beleg_Nr) + 1);
+          Model.SetMhrf(Model.DialogType);
+          Model.Focus = nameof(Model.Betrag);
+          DoPostbackReload();
+          return false;
+        }
+        SetFormRefresh();
+        return true;
+      }
+      else
+        Get(r, Messages);
+    }
+    if (submit == nameof(Model.NeueNr) && Model.DialogType != DialogTypeEnum.Delete)
+    {
+      var no = Get(FactoryService.BudgetService.GetNewReceipt(daten, Model.BelegDatum ?? daten.Heute));
+      Model.BelegNr = no;
+    }
+    if (submit == nameof(Model.Kontentausch) && Model.DialogType != DialogTypeEnum.Delete)
+    {
+      var s = Model.Sollkonto;
+      Model.Sollkonto = Model.Habenkonto;
+      Model.Habenkonto = s;
+    }
+    if (submit == nameof(Model.Addition) && Model.DialogType != DialogTypeEnum.Delete)
+    {
+      // Berechnung des Betrags mit dem Operator +, -, * oder /.
+      var s = Model.CalculateValue();
+      Model.Betrag = null;
+      Model.Summe = s;
     }
     if (submit == nameof(Model.Abbrechen))
+    {
+      SetFormRefresh();
       return true;
+    }
     return false;
   }
 
