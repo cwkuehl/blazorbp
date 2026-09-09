@@ -1,0 +1,168 @@
+@page "/hh/hh500/{id?}"
+@using CSBP.Services.Apis.Models
+@using static CSBP.Services.Resources.Messages;
+@inherits BlazorComponentBase<HH500Model, TableRowModelBase>
+@attribute [Authorize(Roles = "User, Admin, Superadmin")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="hh500">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <input type="hidden" name="SubmitControl"/>
+  <div class="row g-0">
+    <div class="col-md-4">
+      <div class="row mt-1 g-0">
+        <LabelInputValid type="label" For="@(() => Model!.Soll0)" VerticalColClass="form-group col-md-2"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid type="listbox" size="10" NoLabel="true" class="font-monospace" AutoPostback="" DataList="Model!.AuswahlSoll" For="@(() => Model!.Soll)" VerticalColClass="form-group col"/>
+      </div>
+    </div>
+    <div class="col-md-4 ms-1">
+      <div class="row mt-1 g-0">
+        <LabelInputValid type="label" For="@(() => Model!.Haben0)" VerticalColClass="form-group col-md-2"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid type="listbox" size="10" NoLabel="true" class="font-monospace" AutoPostback="" DataList="Model!.AuswahlHaben" For="@(() => Model!.Haben)" VerticalColClass="form-group col"/>
+      </div>
+    </div>
+    <div class="col ms-1">
+      <div class="row mt-1 g-0">
+        <LabelInputValid AutoPostback="" For="@(() => Model!.Von)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+        <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+        <LabelInputValid AutoPostback="" For="@(() => Model!.Konto0)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+        <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Oben)"/>
+        <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Unten)"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid AutoPostback="" For="@(() => Model!.SollSumme0)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+        <LabelInputValid AutoPostback="" For="@(() => Model!.SollBetrag0)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+        <LabelInputValid AutoPostback="" For="@(() => Model!.HabenSumme0)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+        <LabelInputValid AutoPostback="" For="@(() => Model!.HabenBetrag0)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer mt-2">
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-printer-fill-nav-menu" For="@(() => Model!.Print)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
+  </div>
+</EditForm>
+
+@code {
+
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id">Betroffene Id.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id, HH500Model? model = null, TableModelBase<TableRowModelBase>? table = null)
+  {
+    var daten = ServiceDaten;
+    if (model != null)
+      Model = model;
+    if (Model == null)
+    {
+      Model = new HH500Model
+      {
+        Nr = id,
+      };
+      if (id == Constants.KZBI_GV)
+      {
+        Model.Soll0 = HH500_soll_GV;
+        Model.Haben0 = HH500_haben_GV;
+      }
+      else
+      {
+        Model.Soll0 = HH500_soll_EB;
+        Model.Haben0 = HH500_haben_EB;
+      }
+      Model.SetMhrf(DialogTypeEnum.New);
+    }
+    Model.Nr = id;
+    InitEditContext(Model);
+    if (Model.AuswahlSoll == null)
+      Model.AuswahlSoll = new List<ListItem>
+      {
+        new ListItem("0", "Anfang"),
+        new ListItem("1", "Ende soll"),
+      };
+    if (Model.AuswahlHaben == null)
+      Model.AuswahlHaben = new List<ListItem>
+      {
+        new ListItem("0", "Anfang"),
+        new ListItem("1", "Ende haben"),
+      };
+  }
+
+  /// <summary>
+  /// Aktualisierung nach Undo/Redo.
+  /// </summary>
+  protected override void Refresh()
+  {
+    // TODO TableData(Table, Messages);
+  }
+
+  /// <summary>
+  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
+  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
+  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    if (OnInitializedFormular("HH500", "Bilanzen - HH500", Id, true))
+      return;
+
+    // TODO Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
+    // var handler = HttpContext.Request.Query["handler"];
+    // if (handler == "Table_All")
+    // {
+    //   Model.SetMhrf(DialogTypeEnum.Copy, ServiceDaten);
+    //   WriteFormularModel(Model.Nr ?? "0", Model);
+    // }
+    // var submit = Model.Submit ?? "";
+    // if (submit == nameof(Model.Import))
+    // {
+    //   var l = SaveUploadFiles("HH500", "filehochladen");
+    // }
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// </summary>
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
+  {
+    if (valid && submit == "OK")
+    {
+      var daten = ServiceDaten;
+      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
+      if (r != null)
+      {
+        Get(r);
+        if (r.Ok)
+          return true;
+      }
+    }
+    if (submit == nameof(Model.Schliessen))
+      return true;
+    return false;
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData(HH500Model model, HH500Model model0)
+  {
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+    model.AuswahlSoll = model0.AuswahlSoll;
+    model.AuswahlHaben = model0.AuswahlHaben;
+  }
+}

@@ -41,6 +41,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       { "HH310", new Formular { Action = "hh310", Area = "hh", Name = "Ereignis" } },
       { "HH400", new Formular { Action = "hh400", Area = "hh", Name = "Buchungen" } },
       { "HH410", new Formular { Action = "hh410", Area = "hh", Name = "Buchung" } },
+      { "HH500", new Formular { Action = "hh500", Area = "hh", Name = "Schlussbilanz  " } },
       { "TB100", new Formular { Action = "tb100", Area = "tb", Name = "Tagebuch" } },
       { "TB200", new Formular { Action = "tb200", Area = "tb", Name = "Positionen" } },
       { "WP100", new Formular { Action = "wp100", Area = "wp", Name = "Wertpapier-Chart" } },
