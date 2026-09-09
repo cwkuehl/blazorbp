@@ -18,6 +18,10 @@
   {
     <label class="col-form-label col-md-2 @CssClassLabel" for="@Id">@LabelMu</label>
   }
+  else if (label)
+  {
+    <label class="form-label @CssClassLabel">@LabelMu</label>
+  }
   else
   {
     <label class="form-label @CssClassLabel" for="@Id">@LabelMu</label>
@@ -125,7 +129,7 @@ else if (InputType != "label") // Standard-Input
 {
   @((MarkupString)"</div>")
 }
-@if (!hidden && !NoValidation)
+@if (!hidden && !NoValidation && !label)
 {
   if (string.IsNullOrWhiteSpace(VerticalColClass))
   {

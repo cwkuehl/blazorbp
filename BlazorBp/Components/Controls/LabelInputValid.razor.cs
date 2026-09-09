@@ -112,6 +112,8 @@ public partial class LabelInputValid<TItem> : ComponentBase
 
   private bool hidden = false;
 
+  private bool label = false;
+
   private bool textarea = false;
 
   private bool combobox = false;
@@ -187,6 +189,7 @@ public partial class LabelInputValid<TItem> : ComponentBase
     submit = InputType == "submit";
     var checkbox = InputType == "checkbox";
     var radio = InputType == "radio";
+    label = InputType == "label";
     combobox = InputType == "combobox";
     listbox = InputType == "listbox";
     canvas = InputType == "canvas";
@@ -363,6 +366,8 @@ public partial class LabelInputValid<TItem> : ComponentBase
         }
       }
     }
+    if (label && !string.IsNullOrEmpty(CurrentValue?.ToString()))
+      lbl = CurrentValue?.ToString() ?? "";
     if (string.IsNullOrEmpty(lbl))
       lbl = "Label";
     if (checkbox)
