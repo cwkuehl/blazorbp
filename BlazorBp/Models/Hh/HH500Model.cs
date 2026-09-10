@@ -24,34 +24,30 @@ public class HH500Model : PageModelBase
   [Display(Name = "Passiva", Description = "")]
   public string? Haben0 { get; set; }
 
+  /// <summary>Holt oder setzt Überschrift von Von-Datum.</summary>
+  [Display(Name = "Von", Description = "")]
+  public string? Von0 { get; set; }
+
   /// <summary>Holt oder setzt Von.</summary>
   [Display(Name = "_Von", Description = "")]
   //// [Required(ErrorMessage = "Von muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Von darf maximal {1} Zeichen lang sein.")]
-  public string? Von { get; set; }
+  public DateTime? Von { get; set; }
 
   /// <summary>Holt oder setzt Bis.</summary>
   [Display(Name = "_Bis", Description = "")]
   //// [Required(ErrorMessage = "Bis muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Bis darf maximal {1} Zeichen lang sein.")]
-  public string? Bis { get; set; }
+  public DateTime? Bis { get; set; }
 
   /// <summary>Holt oder setzt Konto.</summary>
-  [Display(Name = "Konto", Description = "")]
-  //// [Required(ErrorMessage = "Konto muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Konto darf maximal {1} Zeichen lang sein.")]
+  [Display(Name = "Konto", Description = "Konto")]
   public string? Konto0 { get; set; }
 
   /// <summary>Holt oder setzt   ^  .</summary>
   [Display(Name = "  ^  ", Description = "Ausgewähltes Konto mit oberem tauschen")]
-  //// [Required(ErrorMessage = "  ^   muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "  ^   darf maximal {1} Zeichen lang sein.")]
   public string? Oben { get; set; }
 
   /// <summary>Holt oder setzt   v  .</summary>
   [Display(Name = "  v  ", Description = "Ausgewähltes Konto mit unterem tauschen")]
-  //// [Required(ErrorMessage = "  v   muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "  v   darf maximal {1} Zeichen lang sein.")]
   public string? Unten { get; set; }
 
   /// <summary>Holt oder setzt die Auswahlliste von Soll.</summary>

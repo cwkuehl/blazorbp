@@ -66,6 +66,9 @@ public partial class LabelInputValid<TItem> : ComponentBase
   /// <summary>CSS-Class für Input (Eine Kombination von modified, valid, invalid).</summary>
   private string CssClass { get; set; } = "";
 
+  /// <summary>CSS-Class für Buttons bei DateTime-Input.</summary>
+  private string CssClassButtons { get; set; } = "";
+
   /// <summary>Step für Input mit Dezimalwerten.</summary>
   private string Step { get; set; } = "";
 
@@ -186,6 +189,8 @@ public partial class LabelInputValid<TItem> : ComponentBase
     var name = "";
     AdditionalAttributes.TryGetValue("type", out obj);
     InputType = obj?.ToString() ?? "";
+    AdditionalAttributes.TryGetValue("buttonclass", out obj);
+    CssClassButtons = obj?.ToString() ?? "col-md-2";
     submit = InputType == "submit";
     var checkbox = InputType == "checkbox";
     var radio = InputType == "radio";

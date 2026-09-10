@@ -15,33 +15,33 @@
   <div class="row g-0">
     <div class="col-md-4">
       <div class="row mt-1 g-0">
-        <LabelInputValid type="label" For="@(() => Model!.Soll0)" VerticalColClass="form-group col-md-2"/>
+        <LabelInputValid type="listbox" size="10" label="@Model.Soll0" class="font-monospace" AutoPostback="" DataList="Model!.AuswahlSoll" For="@(() => Model!.Soll)" VerticalColClass="form-group col"/>
       </div>
       <div class="row mt-1 g-0">
-        <LabelInputValid type="listbox" size="10" NoLabel="true" class="font-monospace" AutoPostback="" DataList="Model!.AuswahlSoll" For="@(() => Model!.Soll)" VerticalColClass="form-group col"/>
+        <LabelInputValid type="label" AutoPostback="" For="@(() => Model!.SollSumme0)" VerticalColClass="form-group col-md-4"/>
+        <LabelInputValid type="label" AutoPostback="" For="@(() => Model!.SollBetrag0)" VerticalColClass="form-group col ms-1"/>
       </div>
     </div>
     <div class="col-md-4 ms-1">
       <div class="row mt-1 g-0">
-        <LabelInputValid type="label" For="@(() => Model!.Haben0)" VerticalColClass="form-group col-md-2"/>
+        <LabelInputValid type="listbox" size="10" label="@Model.Haben0" class="font-monospace" AutoPostback="" DataList="Model!.AuswahlHaben" For="@(() => Model!.Haben)" VerticalColClass="form-group col"/>
       </div>
       <div class="row mt-1 g-0">
-        <LabelInputValid type="listbox" size="10" NoLabel="true" class="font-monospace" AutoPostback="" DataList="Model!.AuswahlHaben" For="@(() => Model!.Haben)" VerticalColClass="form-group col"/>
+        <LabelInputValid type="label" AutoPostback="" For="@(() => Model!.HabenSumme0)" VerticalColClass="form-group col-md-4"/>
+        <LabelInputValid type="label" AutoPostback="" For="@(() => Model!.HabenBetrag0)" VerticalColClass="form-group col ms-1"/>
       </div>
     </div>
     <div class="col ms-1">
       <div class="row mt-1 g-0">
-        <LabelInputValid AutoPostback="" For="@(() => Model!.Von)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-        <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-        <LabelInputValid AutoPostback="" For="@(() => Model!.Konto0)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-        <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Oben)"/>
-        <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Unten)"/>
+        <LabelInputValid AutoPostback="" label="@Model.Von0" For="@(() => Model!.Von)" VerticalColClass="form-group col-md-4" buttonclass="col-md-4"/>
       </div>
       <div class="row mt-1 g-0">
-        <LabelInputValid AutoPostback="" For="@(() => Model!.SollSumme0)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-        <LabelInputValid AutoPostback="" For="@(() => Model!.SollBetrag0)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-        <LabelInputValid AutoPostback="" For="@(() => Model!.HabenSumme0)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-        <LabelInputValid AutoPostback="" For="@(() => Model!.HabenBetrag0)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+        <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" VerticalColClass="form-group col-md-4" buttonclass="col-md-4"/>
+      </div>
+      <div class="row mt-1 g-0">
+        <LabelInputValid type="label" AutoPostback="" For="@(() => Model!.Konto0)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+        <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Oben)"/>
+        <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Unten)"/>
       </div>
     </div>
   </div>
@@ -80,11 +80,43 @@
       {
         Model.Soll0 = HH500_soll_EB;
         Model.Haben0 = HH500_haben_EB;
+        Model.Von0 = HH500_von_EB;
+        Model.SetHidden(nameof(Model.Bis));
       }
+      Model.SetMandatory(nameof(Model.SollSumme0));
+      Model.SetMandatory(nameof(Model.HabenSumme0));
       Model.SetMhrf(DialogTypeEnum.New);
     }
     Model.Nr = id;
     InitEditContext(Model);
+    if (Model.Von == null)
+    {
+      var max = Get(FactoryService.BudgetService.GetMinMaxPeriod(daten));
+      var dB = daten.Heute;
+      dB = new DateTime(dB.Year, dB.Month, DateTime.DaysInMonth(dB.Year, dB.Month));
+      if (max != null && max.Datum_Bis < dB)
+        dB = max.Datum_Bis;
+      var dV = new DateTime(dB.Year, 1, 1);
+      if (max != null && max.Datum_Von > dV)
+        dV = max.Datum_Von;
+      if (id == Constants.KZBI_GV)
+      {
+        Model.Von = dV;
+        Model.Bis = dB;
+      }
+      else if (id == Constants.KZBI_EROEFFNUNG)
+      {
+        Model.Von = dV;
+        Model.Bis = dV;
+      }
+      else
+      {
+        Model.Von = dB;
+        Model.Bis = dB;
+      }
+      Model.SollBetrag0 = Functions.ToString(123456789.12m, 2);
+      Model.HabenBetrag0 = Functions.ToString(987654321.98m, 2);
+    }
     if (Model.AuswahlSoll == null)
       Model.AuswahlSoll = new List<ListItem>
       {
@@ -162,6 +194,8 @@
   protected override void CopyNotPostbackData(HH500Model model, HH500Model model0)
   {
     model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+    model.Soll0 = model0.Soll0;
+    model.Haben0 = model0.Haben0;
     model.AuswahlSoll = model0.AuswahlSoll;
     model.AuswahlHaben = model0.AuswahlHaben;
   }
