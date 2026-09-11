@@ -15,7 +15,7 @@
   <div class="row g-0">
     <div class="col-md-4">
       <div class="row mt-1 g-0">
-        <LabelInputValid type="listbox" size="10" label="@Model.Soll0" class="font-monospace" AutoPostback="" DataList="Model!.AuswahlSoll" For="@(() => Model!.Soll)" VerticalColClass="form-group col"/>
+        <LabelInputValid type="listbox" size="25" label="@Model.Soll0" class="font-monospace" AutoPostback="x" DataList="Model!.AuswahlSoll" For="@(() => Model!.Soll)" VerticalColClass="form-group col"/>
       </div>
       <div class="row mt-1 g-0">
         <LabelInputValid type="label" AutoPostback="" For="@(() => Model!.SollSumme0)" VerticalColClass="form-group col-md-4"/>
@@ -24,7 +24,7 @@
     </div>
     <div class="col-md-4 ms-1">
       <div class="row mt-1 g-0">
-        <LabelInputValid type="listbox" size="10" label="@Model.Haben0" class="font-monospace" AutoPostback="" DataList="Model!.AuswahlHaben" For="@(() => Model!.Haben)" VerticalColClass="form-group col"/>
+        <LabelInputValid type="listbox" size="25" label="@Model.Haben0" class="font-monospace" AutoPostback="x" DataList="Model!.AuswahlHaben" For="@(() => Model!.Haben)" VerticalColClass="form-group col"/>
       </div>
       <div class="row mt-1 g-0">
         <LabelInputValid type="label" AutoPostback="" For="@(() => Model!.HabenSumme0)" VerticalColClass="form-group col-md-4"/>
@@ -39,7 +39,7 @@
         <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" VerticalColClass="form-group col-md-4" buttonclass="col-md-4"/>
       </div>
       <div class="row mt-1 g-0">
-        <LabelInputValid type="label" AutoPostback="" For="@(() => Model!.Konto0)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+        <LabelInputValid type="label" AutoPostback="" For="@(() => Model!.Konto0)" VerticalColClass="form-group col-md-2"/>
         <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Oben)"/>
         <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Unten)"/>
       </div>
@@ -114,21 +114,8 @@
         Model.Von = dB;
         Model.Bis = dB;
       }
-      Model.SollBetrag0 = Functions.ToString(123456789.12m, 2);
-      Model.HabenBetrag0 = Functions.ToString(987654321.98m, 2);
     }
-    if (Model.AuswahlSoll == null)
-      Model.AuswahlSoll = new List<ListItem>
-      {
-        new ListItem("0", "Anfang"),
-        new ListItem("1", "Ende soll"),
-      };
-    if (Model.AuswahlHaben == null)
-      Model.AuswahlHaben = new List<ListItem>
-      {
-        new ListItem("0", "Anfang"),
-        new ListItem("1", "Ende haben"),
-      };
+    Refresh();
   }
 
   /// <summary>
@@ -136,7 +123,20 @@
   /// </summary>
   protected override void Refresh()
   {
-    // TODO TableData(Table, Messages);
+    if (Model.AuswahlSoll != null)
+      return;
+    var kz = Model.Nr;
+    var daten = ServiceDaten;
+    var v = Model.Von ?? daten.Heute;
+    var b = (kz == Constants.KZBI_GV ? Model.Bis : Model.Von) ?? daten.Heute;
+    var l = Get(FactoryService.BudgetService.GetBalanceList(daten, kz, v, b)) ?? new List<HhBilanz>();
+    var sollListe = l.Where(a => a.AccountType > 0).ToList();
+    var habenListe = l.Where(a => a.AccountType <= 0).ToList();
+    //// No.;Description;Value_r;Changed at;Changed by;Created at;Created by
+    Model.AuswahlSoll = sollListe.Select(a => new ListItem(Functions.ToString(a.Konto_Uid), $"{Functions.CutOrPadRight(Functions.ToString(a.AccountName),25, '\u00A0')} | {Functions.CutOrPadLeft(Functions.ToString(a.AccountEsum, 2),12, '\u00A0')} | {Functions.ToString(a.Geaendert_Am, true)} | {a.Geaendert_Von} | {Functions.ToString(a.Angelegt_Am, true)} | {a.Angelegt_Von}")).ToList();
+    Model.AuswahlHaben = habenListe.Select(a => new ListItem(Functions.ToString(a.Konto_Uid), $"{Functions.CutOrPadRight(Functions.ToString(a.AccountName),25, '\u00A0')} | {Functions.CutOrPadLeft(Functions.ToString(a.AccountEsum, 2),12, '\u00A0')} | {Functions.ToString(a.Geaendert_Am, true)} | {a.Geaendert_Von} | {Functions.ToString(a.Angelegt_Am, true)} | {a.Angelegt_Von}")).ToList();
+    Model.SollBetrag0 = Functions.ToString(sollListe.Sum(a => a.AccountEsum), 2);
+    Model.HabenBetrag0 = Functions.ToString(habenListe.Sum(a => a.AccountEsum), 2);
   }
 
   /// <summary>
@@ -148,19 +148,6 @@
   {
     if (OnInitializedFormular("HH500", "Bilanzen - HH500", Id, true))
       return;
-
-    // TODO Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
-    // var handler = HttpContext.Request.Query["handler"];
-    // if (handler == "Table_All")
-    // {
-    //   Model.SetMhrf(DialogTypeEnum.Copy, ServiceDaten);
-    //   WriteFormularModel(Model.Nr ?? "0", Model);
-    // }
-    // var submit = Model.Submit ?? "";
-    // if (submit == nameof(Model.Import))
-    // {
-    //   var l = SaveUploadFiles("HH500", "filehochladen");
-    // }
   }
 
   /// <summary>
@@ -170,6 +157,7 @@
   /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
   protected override bool Submit(string? submit)
   {
+    // TODO HH400 mit Konto öffnen.
     if (valid && submit == "OK")
     {
       var daten = ServiceDaten;
@@ -181,7 +169,33 @@
           return true;
       }
     }
-    if (submit == nameof(Model.Schliessen))
+    if (IsDateMhp(submit, nameof(Model.Von), Model.Von, out var dv))
+    {
+      Model.Von = dv;
+    }
+    else if (IsDateMhp(submit, nameof(Model.Bis), Model.Bis, out var db))
+    {
+      Model.Bis = db;
+    }
+    else if (submit == nameof(Model.Oben))
+    {
+      SetError("TODO Funkion Oben.");
+    }
+    else if (submit == nameof(Model.Unten))
+    {
+      SetError("TODO Funkion Unten.");
+    }
+    else if (submit == nameof(Model.Print))
+    {
+      SetError("TODO Formular HH510 Drucken aufrufen.");
+    }
+    else if (submit == nameof(Model.Refresh))
+    {
+      SetError("TODO Funkion CalculateBalances.");
+      Model.AuswahlSoll = null;
+      Refresh();
+    }
+    else if (submit == nameof(Model.Schliessen))
       return true;
     return false;
   }
@@ -198,5 +212,7 @@
     model.Haben0 = model0.Haben0;
     model.AuswahlSoll = model0.AuswahlSoll;
     model.AuswahlHaben = model0.AuswahlHaben;
+    model.SollBetrag0 = model0.SollBetrag0;
+    model.HabenBetrag0 = model0.HabenBetrag0;
   }
 }

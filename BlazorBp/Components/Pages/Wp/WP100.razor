@@ -105,7 +105,7 @@
 
     // Lesen der Listen für Auswahlfelder.
     var l0 = Get(FactoryService.StockService.GetStockList(daten));
-    Model.AuswahlWertpapier = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
+    Model.AuswahlWertpapier = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList() ?? new List<ListItem> { new ListItem("", "Keine Wertpapiere") });
     if (string.IsNullOrEmpty(Model.Wertpapier))
       Model.Wertpapier = GetStringData("WP100Wertpapier");
     var l1 = Get(FactoryService.StockService.GetScaleList(daten));
@@ -115,7 +115,7 @@
     var ld = Get(FactoryService.StockService.GetPriceList(daten, Model.Von ?? daten.Heute, Model.Bis ?? daten.Heute, Model.Wertpapier, Model.Relativ));
     ld?.Reverse(); // Sortierung: Datum absteigend
     //// Date;Date;Open_r;High_r;Low_r;Close_r
-    Model.AuswahlData = ld?.Select(a => new ListItem(Functions.ToString(a.Datum), $"{Functions.ToString(a.Datum)} | {Functions.ToString(a.Open, 4)} | {Functions.ToString(a.High, 4)} | {Functions.ToString(a.Low, 4)} | {Functions.ToString(a.Close, 4)}")).ToList();
+    Model.AuswahlData = ld?.Select(a => new ListItem(Functions.ToString(a.Datum), $"{Functions.ToString(a.Datum)} | {Functions.ToString(a.Open, 4)} | {Functions.ToString(a.High, 4)} | {Functions.ToString(a.Low, 4)} | {Functions.ToString(a.Close, 4)}")).ToList() ?? new List<ListItem>{ new ListItem("", "Keine Daten") };
     var wpbez = string.IsNullOrEmpty(Model.Wertpapier) ? null : l0?.FirstOrDefault(a => a.Uid == Model.Wertpapier)?.Bezeichnung;
     ShowChart(true, ld, wpbez);
   }
