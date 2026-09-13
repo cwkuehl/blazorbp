@@ -44,7 +44,7 @@ public class WP250Model : PageModelBase
   public DateTime? Bis { get; set; }
 
   /// <summary>Holt oder setzt Details.</summary>
-  [Display(Name = "Details", Description = "Details")]
+  [Display(Name = "Details", Description = "Buchungen für die ausgewählte Anlage anzeigen")]
   public string? Details { get; set; }
 
   /// <summary>Holt oder setzt Abbrechen.</summary>

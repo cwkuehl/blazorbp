@@ -46,6 +46,7 @@
     </div>
   </div>
   <div class="modal-footer mt-2">
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-list-button" For="@(() => Model!.Details)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-printer-fill-nav-menu" For="@(() => Model!.Print)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise" For="@(() => Model!.Refresh)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
@@ -157,7 +158,6 @@
   /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
   protected override bool Submit(string? submit)
   {
-    // TODO HH400 mit Konto öffnen.
     if (valid && submit == "OK")
     {
       var daten = ServiceDaten;
@@ -184,6 +184,10 @@
     else if (submit == nameof(Model.Unten))
     {
       SetError("TODO Funkion Unten.");
+    }
+    else if (submit == nameof(Model.Details))
+    {
+      SetError("TODO Formular HH400 Buchungen aufrufen.");
     }
     else if (submit == nameof(Model.Print))
     {

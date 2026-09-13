@@ -80,6 +80,10 @@ public class HH500Model : PageModelBase
   [Display(Name = "", Description = "")]
   public string? HabenBetrag0 { get; set; }
 
+  /// <summary>Holt oder setzt Details.</summary>
+  [Display(Name = "Details", Description = "Buchungen für das ausgewählte Konto anzeigen.")]
+  public string? Details { get; set; }
+
   /// <summary>Holt oder setzt Drucken.</summary>
   [Display(Name = "Drucken", Description = "Drucken von Bilanzen")]
   public string? Print { get; set; }
