@@ -12,9 +12,9 @@
   <input type="hidden" name="SubmitControl"/>
   <div class="row ms-0 mt-1">
     <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-copy-button" For="@(() => Model!.Copy)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-clipboard" For="@(() => Model!.Paste)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-cloud-sun" For="@(() => Model!.Weather)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-download" For="@(() => Model!.Download)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-clipboard-button" For="@(() => Model!.Paste)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-cloud-sun-button" For="@(() => Model!.Weather)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 me-1" imageclass="bi bi-download-button" For="@(() => Model!.Download)"/>
   </div>
   <div class="row ms-0 mt-1 g-1">
     <div class="col-md-3">
@@ -53,7 +53,7 @@
       </div>
       <div class="row mt-1 g-0">
         <LabelInputValid type="listbox" size="3" AutoPostback="" DataList="Model!.AuswahlPositions" For="@(() => Model!.Positions)" VerticalColClass="form-group col"/>
-        <SubmitButton class="btn btn-secondary col-md-1 ms-1" imageclass="bi bi-dash-lg" For="@(() => Model!.Remove)"/>
+        <SubmitButton class="btn btn-secondary col-md-1 ms-1" imageclass="bi bi-dash-lg-button" For="@(() => Model!.Remove)"/>
         <SubmitButton class="btn btn-secondary col-md-1 ms-1" imageclass="bi bi-file-plus-button" For="@(() => Model!.New)"/>
       </div>
       <div class="row mt-1 g-0">
@@ -123,7 +123,7 @@
     <SubmitButton class="btn btn-secondary col ms-1" For="@(() => Model!.Forward)"/>
     <SubmitButton class="btn btn-secondary col ms-1" For="@(() => Model!.Last)"/>
     <SubmitButton class="btn btn-secondary col ms-1" href="@($"/download/TB100/{Model!.Nr}")" download="tagebuch.txt" For="@(() => Model!.Save)"/>
-    <SubmitButton class="btn btn-secondary col ms-1" imageclass="bi bi-x-lg" For="@(() => Model!.Schliessen)"/>
+    <SubmitButton class="btn btn-secondary col ms-1" imageclass="bi bi-x-lg-button" For="@(() => Model!.Schliessen)"/>
   </div>
 </EditForm>
 
