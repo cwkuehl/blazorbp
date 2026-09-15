@@ -33,7 +33,7 @@
           <th>Aktion
             @if (NewAktion)
             {
-              <button type="submit" class="btn btn-outline-info border-0 btn-sm ms-1" formaction="@actionpath?handler=Table_New" value="-1" name="@Functions.Iif(NoModal, "Table.NoModalId", "Table.ModalId")" title="Neuen Datensatz erfassen"><i class="bi bi-plus-lg-button"></i></button>
+              <button type="submit" class="btn btn-outline-info border-0 btn-sm ms-1" formaction="@actionpath?handler=Table_New" value="-1" name="@Functions.Iif(NoModal, "Table.NoModalId", "Table.ModalId")" title="Neuen Datensatz erfassen"><i class="bi bi-plus-square-button"></i></button>
             }
           </th>
         }
@@ -73,7 +73,7 @@
                 }
                 @if (DeleteAktion)
                 {
-                 <button type="submit" class="btn btn-outline-info border-0 btn-sm ms-1" formaction="@actionpath?handler=Table_Delete" value="@ix" name="@Functions.Iif(NoModal, "Table.NoModalId", "Table.ModalId")" title="Datensatz löschen"><i class="bi bi-file-x-button"></i></button>
+                 <button type="submit" class="btn btn-outline-info border-0 btn-sm ms-1" formaction="@actionpath?handler=Table_Delete" value="@ix" name="@Functions.Iif(NoModal, "Table.NoModalId", "Table.ModalId")" title="Datensatz löschen"><i class="bi bi-dash-square-button"></i></button>
                 }
                 @if (CopyAktion)
                 {
