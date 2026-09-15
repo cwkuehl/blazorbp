@@ -158,9 +158,9 @@
   /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
   protected override bool Submit(string? submit)
   {
+    var daten = ServiceDaten;
     if (valid && submit == "OK")
     {
-      var daten = ServiceDaten;
       var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
       if (r != null)
       {
@@ -168,6 +168,14 @@
         if (r.Ok)
           return true;
       }
+    }
+    else if (submit == nameof(Model.Soll))
+    {
+      Model.SollTabelle = true;
+    }
+    else if (submit == nameof(Model.Haben))
+    {
+      Model.SollTabelle = false;
     }
     if (IsDateMhp(submit, nameof(Model.Von), Model.Von, out var dv))
     {
@@ -187,7 +195,26 @@
     }
     else if (submit == nameof(Model.Details))
     {
-      SetError("TODO Formular HH400 Buchungen aufrufen.");
+      var uid = Model.SollTabelle ? Model.Soll : Model.Haben;
+      if (string.IsNullOrEmpty(uid))
+        SetError("Bitte ein Konto auswählen.");
+      else
+      {
+        var v = Model.Von ?? daten.Heute;
+        var b = Model.Bis ?? daten.Heute;
+        if (Model.Nr == Constants.KZBI_EROEFFNUNG)
+          b = v.AddYears(1).AddDays(-1);
+        else if (Model.Nr == Constants.KZBI_SCHLUSS)
+        {
+          b = v;
+          v = b.AddDays(1 - b.DayOfYear);
+        }
+        var nr = Guid.NewGuid().ToString();
+        HttpContext?.Session?.SetFormParameter(null, [Functions.ToString(v), Functions.ToString(b), uid]);
+        var f = OpenFormular("HH400", $"P{nr}");
+        if (f != null)
+          OpenFormular(f);
+      }
     }
     else if (submit == nameof(Model.Print))
     {
@@ -218,5 +245,6 @@
     model.AuswahlHaben = model0.AuswahlHaben;
     model.SollBetrag0 = model0.SollBetrag0;
     model.HabenBetrag0 = model0.HabenBetrag0;
+    model.SollTabelle = model0.SollTabelle;
   }
 }

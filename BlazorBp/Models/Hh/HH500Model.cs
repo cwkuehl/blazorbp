@@ -96,6 +96,9 @@ public class HH500Model : PageModelBase
   [Display(Name = "Schließen", Description = "Schließen")]
   public string? Schliessen { get; set; }
 
+  /// <summary>Holt oder setzt einen Wert, der angibt, ob zuletzt eine Soll-Tabelle ausgewählt wurde.</summary>
+  public bool SollTabelle { get; set; }
+
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>
   public void SetMhrf(DialogTypeEnum mode)

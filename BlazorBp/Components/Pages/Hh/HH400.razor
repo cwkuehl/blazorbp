@@ -66,6 +66,17 @@
         Nr = id,
       };
       Model.SetMhrf(DialogTypeEnum.New, daten);
+      // Parameter auslesen.
+      var arr = HttpContext?.Session?.GetFormParameter() ?? [];
+      var von = arr.Length > 0 ? Functions.ToDateTime(arr[0]) : null;
+      var bis = arr.Length > 1 ? Functions.ToDateTime(arr[1]) : null;
+      var uid = arr.Length > 2 ? arr[2] : "";
+      if (von.HasValue)
+        Model.Von = von;
+      if (bis.HasValue)
+        Model.Bis = bis;
+      if (!string.IsNullOrEmpty(uid))
+        Model.Konto = uid;
     }
     Model.Nr = id;
     if (table != null)
