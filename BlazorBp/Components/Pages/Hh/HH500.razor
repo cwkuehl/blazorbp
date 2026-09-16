@@ -1,5 +1,6 @@
 @page "/hh/hh500/{id?}"
 @using CSBP.Services.Apis.Models
+@using System.Text
 @using static CSBP.Services.Resources.Messages;
 @inherits BlazorComponentBase<HH500Model, TableRowModelBase>
 @attribute [Authorize(Roles = "User, Admin, Superadmin")]
@@ -134,8 +135,8 @@
     var sollListe = l.Where(a => a.AccountType > 0).ToList();
     var habenListe = l.Where(a => a.AccountType <= 0).ToList();
     //// No.;Description;Value_r;Changed at;Changed by;Created at;Created by
-    Model.AuswahlSoll = sollListe.Select(a => new ListItem(Functions.ToString(a.Konto_Uid), $"{Functions.CutOrPadRight(Functions.ToString(a.AccountName),25, '\u00A0')} | {Functions.CutOrPadLeft(Functions.ToString(a.AccountEsum, 2),12, '\u00A0')} | {Functions.ToString(a.Geaendert_Am, true)} | {a.Geaendert_Von} | {Functions.ToString(a.Angelegt_Am, true)} | {a.Angelegt_Von}")).ToList();
-    Model.AuswahlHaben = habenListe.Select(a => new ListItem(Functions.ToString(a.Konto_Uid), $"{Functions.CutOrPadRight(Functions.ToString(a.AccountName),25, '\u00A0')} | {Functions.CutOrPadLeft(Functions.ToString(a.AccountEsum, 2),12, '\u00A0')} | {Functions.ToString(a.Geaendert_Am, true)} | {a.Geaendert_Von} | {Functions.ToString(a.Angelegt_Am, true)} | {a.Angelegt_Von}")).ToList();
+    Model.AuswahlSoll = sollListe.Select(a => new ListItem(Functions.ToString(a.Konto_Uid), $"{Functions.CutOrPadRight(Functions.ToString(a.AccountName),25, '\u00A0')}|{Functions.CutOrPadLeft(Functions.ToString(a.AccountEsum, 2),12, '\u00A0')}|{Functions.ToString(a.Geaendert_Am, true)}|{a.Geaendert_Von}|{Functions.ToString(a.Angelegt_Am, true)}|{a.Angelegt_Von}")).ToList();
+    Model.AuswahlHaben = habenListe.Select(a => new ListItem(Functions.ToString(a.Konto_Uid), $"{Functions.CutOrPadRight(Functions.ToString(a.AccountName),25, '\u00A0')}|{Functions.CutOrPadLeft(Functions.ToString(a.AccountEsum, 2),12, '\u00A0')}|{Functions.ToString(a.Geaendert_Am, true)}|{a.Geaendert_Von}|{Functions.ToString(a.Angelegt_Am, true)}|{a.Angelegt_Von}")).ToList();
     Model.SollBetrag0 = Functions.ToString(sollListe.Sum(a => a.AccountEsum), 2);
     Model.HabenBetrag0 = Functions.ToString(habenListe.Sum(a => a.AccountEsum), 2);
   }
@@ -222,9 +223,7 @@
     }
     else if (submit == nameof(Model.Refresh))
     {
-      SetError("TODO Funkion CalculateBalances.");
-      Model.AuswahlSoll = null;
-      Refresh();
+      CalculateBalances();
     }
     else if (submit == nameof(Model.Schliessen))
       return true;
@@ -274,6 +273,58 @@
           Model.Soll = uid;
         else
           Model.Haben = uid;
+      }
+    }
+  }
+
+  /// <summary>Berechnung der Bilanzen.</summary>
+  protected void CalculateBalances()
+  {
+    // Calculates balances.
+    var daten = ServiceDaten;
+    var state = new StringBuilder();
+    var cancel = new StringBuilder();
+    var keine = true;
+    var weiter = 2;
+    DateTime? v = null;
+    ServiceErgebnis<string[]>? r = null;
+    try
+    {
+      if (Model.Calculate > 0)
+      {
+        v = Model.Von ?? daten.Heute;
+        Model.Calculate = 0;
+      }
+      while (weiter >= 2 && (r == null || r.Ok))
+      {
+        r = FactoryService.BudgetService.CalculateBalances(daten, state, cancel, true, v);
+        v = null;
+        if (r.Ok)
+        {
+          var l = r.Ergebnis;
+          if (l != null && l.Length >= 1)
+          {
+            weiter = Functions.ToInt32(l[0]);
+            if (weiter > 0)
+              keine = false;
+          }
+        }
+        else
+          Get(r);
+      }
+    }
+    catch (Exception ex)
+    {
+      Functions.MachNichts(ex);
+    }
+    finally
+    {
+      if (keine)
+        Model.Calculate++;
+      else
+      {
+        Model.AuswahlSoll = null;
+        Refresh();
       }
     }
   }
