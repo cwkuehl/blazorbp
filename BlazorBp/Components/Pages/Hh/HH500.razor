@@ -187,11 +187,11 @@
     }
     else if (submit == nameof(Model.Oben))
     {
-      SetError("TODO Funkion Oben.");
+      SwapSortings(true);
     }
     else if (submit == nameof(Model.Unten))
     {
-      SetError("TODO Funkion Unten.");
+      SwapSortings(false);
     }
     else if (submit == nameof(Model.Details))
     {
@@ -246,5 +246,35 @@
     model.SollBetrag0 = model0.SollBetrag0;
     model.HabenBetrag0 = model0.HabenBetrag0;
     model.SollTabelle = model0.SollTabelle;
+  }
+
+  /// <summary>Swap accouts sorting.</summary>
+  /// <param name="up">Move up or down.</param>
+  private void SwapSortings(bool up)
+  {
+    var uid = Model.SollTabelle ? Model.Soll : Model.Haben;
+    if (string.IsNullOrEmpty(uid))
+      return;
+    var l = Model.SollTabelle ? Model.AuswahlSoll : Model.AuswahlHaben;
+    var acc = l?.FirstOrDefault(a => a.Key == uid);
+    if (l == null || acc == null)
+      return;
+    var i = l.IndexOf(acc);
+    var d = up ? -1 : 1;
+    if (i >= 0 && i < l.Count && i + d >= 0 && i + d < l.Count)
+    {
+      var uid2 = l[i + d].Key;
+      var r = FactoryService.BudgetService.SwapAccountSort(ServiceDaten, uid, uid2);
+      Get(r);
+      if (r.Ok)
+      {
+        Model.AuswahlSoll = null;
+        Refresh();
+        if (Model.SollTabelle)
+          Model.Soll = uid;
+        else
+          Model.Haben = uid;
+      }
+    }
   }
 }
