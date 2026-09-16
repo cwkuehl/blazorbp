@@ -160,17 +160,7 @@
   protected override bool Submit(string? submit)
   {
     var daten = ServiceDaten;
-    if (valid && submit == "OK")
-    {
-      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
-      if (r != null)
-      {
-        Get(r);
-        if (r.Ok)
-          return true;
-      }
-    }
-    else if (submit == nameof(Model.Soll))
+    if (submit == nameof(Model.Soll))
     {
       Model.SollTabelle = true;
     }

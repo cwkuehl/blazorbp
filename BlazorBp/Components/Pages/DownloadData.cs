@@ -9,6 +9,7 @@ using BlazorBp.Models.Ag;
 using BlazorBp.Models.Am;
 using BlazorBp.Models.Demo;
 using BlazorBp.Models.Fz;
+using BlazorBp.Models.Hh;
 using BlazorBp.Models.Tb;
 using BlazorBp.Models.Wp;
 using BlazorBp.Services.Apis;
@@ -78,6 +79,24 @@ public static class DownloadData
         {
           var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ700TableRowModel>>(s, page, id)?.ReadModel;
           r = FactoryService.PrivateService.GetCsvString(daten, page, rm);
+          break;
+        }
+        case "HH200":
+        {
+          var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<HH200TableRowModel>>(s, page, id)?.ReadModel;
+          r = FactoryService.BudgetService.GetCsvString(daten, page, rm);
+          break;
+        }
+        case "HH300":
+        {
+          var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<HH300TableRowModel>>(s, page, id)?.ReadModel;
+          r = FactoryService.BudgetService.GetCsvString(daten, page, rm);
+          break;
+        }
+        case "HH400":
+        {
+          var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<HH400TableRowModel>>(s, page, id)?.ReadModel;
+          r = FactoryService.BudgetService.GetCsvString(daten, page, rm);
           break;
         }
         case "TB100":
