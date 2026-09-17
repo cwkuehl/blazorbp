@@ -96,7 +96,8 @@ public static class DownloadData
         case "HH400":
         {
           var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<HH400TableRowModel>>(s, page, id)?.ReadModel;
-          r = FactoryService.BudgetService.GetCsvString(daten, page, rm);
+          var pm = BlazorComponentBaseStatic.ReadFormularFormModel<HH400Model>(s, page, id);
+          r = FactoryService.BudgetService.GetCsvString(daten, page, rm, pm?.Kennzeichen != "0", pm?.Von, pm?.Bis, pm?.Konto, pm?.Betrag);
           break;
         }
         case "TB100":
