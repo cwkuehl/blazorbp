@@ -191,13 +191,6 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
   {
     if (OnInitializedFormular("TB100", "Tagebuch - TB100", Id, true))
       return;
-
-    // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
-    // var submit = Model.Submit ?? "";
-    // if (submit == nameof(Model.Import))
-    // {
-    //   var l = SaveUploadFiles("TB100", "filehochladen");
-    // }
   }
 
   /// <summary>Initialises the lists.</summary>

@@ -209,7 +209,14 @@
     }
     else if (submit == nameof(Model.Print))
     {
-      SetError("TODO Formular HH510 Drucken aufrufen.");
+      // Formular HH510 Drucken aufrufen.
+      var v = Model.Von ?? daten.Heute;
+      var b = Model.Bis ?? daten.Heute;
+      var nr = Guid.NewGuid().ToString();
+      HttpContext?.Session?.SetFormParameter(null, [Model.Nr, Functions.ToString(v), Functions.ToString(b)]);
+      var f = OpenFormular("HH510", $"P{nr}");
+      if (f != null)
+        OpenFormular(f);
     }
     else if (submit == nameof(Model.Refresh))
     {

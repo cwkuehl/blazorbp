@@ -42,6 +42,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       { "HH400", new Formular { Action = "hh400", Area = "hh", Name = "Buchungen" } },
       { "HH410", new Formular { Action = "hh410", Area = "hh", Name = "Buchung" } },
       { "HH500", new Formular { Action = "hh500", Area = "hh", Name = "Schlussbilanz  " } },
+      { "HH510", new Formular { Action = "hh510", Area = "hh", Name = "Drucken" } },
       { "TB100", new Formular { Action = "tb100", Area = "tb", Name = "Tagebuch" } },
       { "TB200", new Formular { Action = "tb200", Area = "tb", Name = "Positionen" } },
       { "WP100", new Formular { Action = "wp100", Area = "wp", Name = "Wertpapier-Chart" } },
@@ -857,7 +858,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     var fliste = new List<string>();
     var folderPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "uploads");
     Directory.CreateDirectory(folderPath);
-    var files = HttpContext.Request?.Form?.Files;
+    var files = HttpContext.Request.Method == HttpMethods.Post ? HttpContext.Request.Form?.Files : null;
     if (files != null && files.Count > 0)
     {
       foreach (var f in files)
