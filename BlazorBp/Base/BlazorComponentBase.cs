@@ -9,6 +9,7 @@ using CSBP.Services.Base;
 using CSBP.Services.Base.Csv;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using static CSBP.Services.Resources.Messages;
 
 /// <summary>
 /// Basis-Klasse für alle Blazor-Formulare.
@@ -41,7 +42,9 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       { "HH310", new Formular { Action = "hh310", Area = "hh", Name = "Ereignis" } },
       { "HH400", new Formular { Action = "hh400", Area = "hh", Name = "Buchungen" } },
       { "HH410", new Formular { Action = "hh410", Area = "hh", Name = "Buchung" } },
-      { "HH500", new Formular { Action = "hh500", Area = "hh", Name = "Schlussbilanz  " } },
+      { "HH500" + Constants.KZBI_SCHLUSS, new Formular { Action = "hh500", Area = "hh", Name = HH500_title_SB, Id = Constants.KZBI_SCHLUSS } },
+      { "HH500" + Constants.KZBI_GV, new Formular { Action = "hh500", Area = "hh", Name = HH500_title_GV, Id = Constants.KZBI_GV } },
+      { "HH500" + Constants.KZBI_EROEFFNUNG, new Formular { Action = "hh500", Area = "hh", Name = HH500_title_EB, Id = Constants.KZBI_EROEFFNUNG } },
       { "HH510", new Formular { Action = "hh510", Area = "hh", Name = "Drucken" } },
       { "TB100", new Formular { Action = "tb100", Area = "tb", Name = "Tagebuch" } },
       { "TB200", new Formular { Action = "tb200", Area = "tb", Name = "Positionen" } },
@@ -211,6 +214,14 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       if (f == null)
       {
         if (!Formulare.TryGetValue(action, out f))
+        {
+          if (!string.IsNullOrEmpty(id))
+          {
+            // Formular mit passendem Action und Id suchen, z.B. für HH500 mit KZBI_SCHLUSS, KZBI_GV oder KZBI_EROEFFNUNG.
+            Formulare.TryGetValue(action + id, out f);
+          }
+        }
+        if (f == null)
           Formulare.TryGetValue("Index", out f);
         if (string.IsNullOrEmpty(id))
           id = Guid.NewGuid().ToString(); // neue ID vergeben
