@@ -121,6 +121,8 @@
           var cr = new CsvReader(fn);
           var lines = cr.GetLines();
           var message = Get(FactoryService.BudgetService.ImportBookingList(ServiceDaten, lines, Model.Loeschen));
+          if (!string.IsNullOrEmpty(message))
+            SetError(message);
         }
       }
     }
