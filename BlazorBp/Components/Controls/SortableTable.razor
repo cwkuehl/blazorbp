@@ -114,7 +114,7 @@
     </div>
     <div class="form-group col-md-1">
       @* <button type="submit" class="btn btn-secondary" formaction="@actionpath?handler=Table_Export" value="Export" name="Table.Export" title="Die Daten aller Seiten in csv-Datei exportieren.">Export</button> *@
-      <a id="exportCsv" class="btn btn-secondary" href="@($"/download/{FormName}/{Table!.Nr}")" title="Alle ausgewählten Zeilen als csv-Datei exportieren." download="Export.csv" target="=_top">Export</a>
+      <a id="exportCsv" class="btn btn-secondary" href="@($"/downloadcsv/{FormName}/{Table!.Nr}")" title="Alle ausgewählten Zeilen als csv-Datei exportieren." download="Export.csv" target="=_top">Export</a>
     </div>
     <div class="form-group col-md-1">
       <LabelInputValid type="combobox" AutoPostback="x" DataList="Table!.AuswahlRowsPerPage" For="@(() => Table!.RowsPerPage)" NoLabel="true" NoValidation="true"/>

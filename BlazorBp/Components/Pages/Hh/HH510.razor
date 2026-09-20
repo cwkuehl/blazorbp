@@ -12,17 +12,27 @@
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
   <input type="hidden" name="SubmitControl"/>
   <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Titel)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Von)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Bis)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Berichte0)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Eb)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Gv)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Sb)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Kassenbericht)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.Titel)" maxlength="255" VerticalColClass="form-group col"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.Von)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.Bis)" VerticalColClass="form-group col-md-2 ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid type="label" AutoPostback="" For="@(() => Model!.Berichte0)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid type="checkbox" NoLabel="true" TrailingLabel="true" AutoPostback="x" For="@(() => Model!.Eb)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid type="checkbox" NoLabel="true" TrailingLabel="true" AutoPostback="x" For="@(() => Model!.Gv)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid type="checkbox" NoLabel="true" TrailingLabel="true" AutoPostback="x" For="@(() => Model!.Sb)" VerticalColClass="form-group col-md-2"/>
   </div>
   <div class="modal-footer mt-2">
-    <SubmitButton class="btn btn-primary col-md-2 ms-1" For="@(() => Model!.Ok)"/>
+    <SubmitButton class="btn btn-primary col-md-2 ms-1" href="@($"/downloadhtml/HH510BL/{Model!.Nr}")" download="bilanzen.html" For="@(() => Model!.Ok)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" href="@($"/downloadhtml/HH510KB/{Model!.Nr}")" download="kassenbericht.html" For="@(() => Model!.Kassenbericht)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Abbrechen)"/>
   </div>
   <div class="row mt-1 g-0">
@@ -30,7 +40,7 @@
   </div>
   <div class="row mt-1 g-0">
     <LabelInputValid type="checkbox" NoLabel="true" TrailingLabel="true" AutoPostback="" For="@(() => Model!.Loeschen)" VerticalColClass="form-group col-md-2"/>
-    <SubmitButton class="btn btn-secondary col-md-4 ms-1" For="@(() => Model!.Import1)"/>
+    <SubmitButton class="btn btn-secondary col-md-4 ms-1" onclick="return confimp();" For="@(() => Model!.Import1)"/>
   </div>
 </EditForm>
 
@@ -53,21 +63,41 @@
       {
         Nr = id,
       };
-      Model.Titel = "Kassenbericht";
-      Model.Von = DateTime.Now.AddDays(-7);
-      Model.Bis = DateTime.Now;
+      Model.Titel = GetStringData("HH510Titel") ?? "Bilanzen";
       Model.SetMhrf(DialogTypeEnum.New);
+      // Parameter auslesen.
+      var arr = HttpContext?.Session?.GetFormParameter() ?? [];
+      var kez = arr.Length > 0 ? Functions.ToString(arr[0]) : null;
+      var v = arr.Length > 1 ? Functions.ToDateTime(arr[1]) : null;
+      var b = arr.Length > 2 ? Functions.ToDateTime(arr[2]) : null;
+      if (!string.IsNullOrEmpty(kez) && v.HasValue && b.HasValue)
+      {
+        // Model.Nr = kez;
+        // id = kez;
+        if (kez == Constants.KZBI_EROEFFNUNG)
+        {
+          Model.Von = v;
+          Model.Bis = new DateTime(v.Value.Year, 12, 31);
+          Model.Eb = true;
+        }
+        else if (kez == Constants.KZBI_SCHLUSS)
+        {
+          Model.Bis = v;
+          Model.Von = b <= v ? b.Value.AddDays(1 - b.Value.DayOfYear) : new DateTime(v.Value.Year, 1, 1);
+          Model.Sb = true;
+        }
+        else
+        {
+          Model.Von = v;
+          Model.Bis = b;
+          Model.Gv = true;
+        }
+        if (!(Model.Eb || Model.Gv || Model.Sb))
+          Model.Sb = true;
+      }
     }
     Model.Nr = id;
     InitEditContext(Model);
-  }
-
-  /// <summary>
-  /// Aktualisierung nach Undo/Redo.
-  /// </summary>
-  protected override void Refresh()
-  {
-    // TODO TableData(Table, Messages);
   }
 
   /// <summary>
@@ -83,7 +113,18 @@
     if (submit == nameof(Model.Import1))
     {
       var l = SaveUploadFiles("HH510", "filehochladen");
+      if (l != null)
+      {
+        var fn = l.FirstOrDefault();
+        if (!string.IsNullOrEmpty(fn))
+        {
+          var cr = new CsvReader(fn);
+          var lines = cr.GetLines();
+          var message = Get(FactoryService.BudgetService.ImportBookingList(ServiceDaten, lines, Model.Loeschen));
+        }
+      }
     }
+    SetStringData("HH510Titel", Model.Titel);
   }
 
   /// <summary>
@@ -93,16 +134,14 @@
   /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
   protected override bool Submit(string? submit)
   {
-    if (valid && submit == "OK")
+    var daten = ServiceDaten;
+    if (IsDateMhp(submit, nameof(Model.Von), Model.Von, out var dv))
     {
-      var daten = ServiceDaten;
-      var r = new ServiceErgebnis(); // TODO FactoryService.LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId, Model.KennwortAlt, Model.KennwortNeu, true);
-      if (r != null)
-      {
-        Get(r);
-        if (r.Ok)
-          return true;
-      }
+      Model.Von = dv;
+    }
+    else if (IsDateMhp(submit, nameof(Model.Bis), Model.Bis, out var db))
+    {
+      Model.Bis = db;
     }
     if (submit == nameof(Model.Abbrechen))
       return true;

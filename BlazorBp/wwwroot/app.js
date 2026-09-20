@@ -62,6 +62,23 @@ function statec(ctrl) {
   });
 }
 
+/** Bestätigen einer Aktion.
+ * @param aktion Betroffene Aktion.
+ */
+function conf(aktion) {
+  aktion = aktion || "Aktion";
+  if (!confirm('Wollen Sie die Aktion "' + aktion + '" wirklich ausführen?')) {
+    return false;
+  }
+  return true;
+}
+
+/** Bestätigen einer Aktion.
+ */
+function confimp() {
+  return conf("Import");
+}
+
 /** Alle Controls deaktivieren.
  */
 function disableAllControls() {

@@ -464,7 +464,7 @@ public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
       // try
       // {
       //     // Hier könntest du auch eine externe API oder einen internen Endpunkt ansprechen.
-      //     var response = client.GetAsync($"/download/TB100/{Model.Nr}").GetAwaiter().GetResult();
+      //     var response = client.GetAsync($"/downloadcsv/TB100/{Model.Nr}").GetAwaiter().GetResult();
       //     if (response.IsSuccessStatusCode)
       //       statusMessage = "API call successful!";
       //     else

@@ -20,9 +20,39 @@ public class HH500Model : PageModelBase
   [Display(Name = "Aktiva", Description = "")]
   public string? Soll0 { get; set; }
 
+  /// <summary>Holt oder setzt die Auswahlliste von Soll.</summary>
+  public List<ListItem>? AuswahlSoll { get; set; } = default!;
+
+  /// <summary>Holt oder setzt Soll.</summary>
+  [Display(Name = "_Soll", Description = "Linke T-Konto-Seite")]
+  public string? Soll { get; set; }
+
+  /// <summary>Holt oder setzt Summe.</summary>
+  [Display(Name = "Summe", Description = "")]
+  public string? SollSumme0 { get; set; }
+
+  /// <summary>Holt oder setzt </summary>
+  [Display(Name = "", Description = "")]
+  public string? SollBetrag0 { get; set; }
+
   /// <summary>Holt oder setzt Überschrift der Haben-Spalte.</summary>
   [Display(Name = "Passiva", Description = "")]
   public string? Haben0 { get; set; }
+
+  /// <summary>Holt oder setzt die Auswahlliste von Haben.</summary>
+  public List<ListItem>? AuswahlHaben { get; set; } = default!;
+
+  /// <summary>Holt oder setzt Haben.</summary>
+  [Display(Name = "_Haben", Description = "Rechte T-Konto-Seite")]
+  public string? Haben { get; set; }
+
+  /// <summary>Holt oder setzt Summe.</summary>
+  [Display(Name = "Summe", Description = "")]
+  public string? HabenSumme0 { get; set; }
+
+  /// <summary>Holt oder setzt .</summary>
+  [Display(Name = "", Description = "")]
+  public string? HabenBetrag0 { get; set; }
 
   /// <summary>Holt oder setzt Überschrift von Von-Datum.</summary>
   [Display(Name = "Von", Description = "")]
@@ -49,36 +79,6 @@ public class HH500Model : PageModelBase
   /// <summary>Holt oder setzt   v  .</summary>
   [Display(Name = "  v  ", Description = "Ausgewähltes Konto mit unterem tauschen")]
   public string? Unten { get; set; }
-
-  /// <summary>Holt oder setzt die Auswahlliste von Soll.</summary>
-  public List<ListItem>? AuswahlSoll { get; set; } = default!;
-
-  /// <summary>Holt oder setzt Soll.</summary>
-  [Display(Name = "_Soll", Description = "Linke T-Konto-Seite")]
-  public string? Soll { get; set; }
-
-  /// <summary>Holt oder setzt die Auswahlliste von Haben.</summary>
-  public List<ListItem>? AuswahlHaben { get; set; } = default!;
-
-  /// <summary>Holt oder setzt Haben.</summary>
-  [Display(Name = "_Haben", Description = "Rechte T-Konto-Seite")]
-  public string? Haben { get; set; }
-
-  /// <summary>Holt oder setzt Summe.</summary>
-  [Display(Name = "Summe", Description = "")]
-  public string? SollSumme0 { get; set; }
-
-  /// <summary>Holt oder setzt </summary>
-  [Display(Name = "", Description = "")]
-  public string? SollBetrag0 { get; set; }
-
-  /// <summary>Holt oder setzt Summe.</summary>
-  [Display(Name = "Summe", Description = "")]
-  public string? HabenSumme0 { get; set; }
-
-  /// <summary>Holt oder setzt .</summary>
-  [Display(Name = "", Description = "")]
-  public string? HabenBetrag0 { get; set; }
 
   /// <summary>Holt oder setzt Details.</summary>
   [Display(Name = "Details", Description = "Buchungen für das ausgewählte Konto anzeigen.")]
@@ -108,27 +108,24 @@ public class HH500Model : PageModelBase
   {
     if (mode == New || mode == Copy)
     {
-      // Nummer = "";
+      Functions.MachNichts();
     }
-    // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
-    // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
-    // SetMandatoryHiddenReadonly(nameof(Refresh), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Print), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Von), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Bis), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Konto0), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Oben), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Unten), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Soll), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Haben), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(SollSumme0), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(SollBetrag0), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(HabenSumme0), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(HabenBetrag0), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Schliessen), false, false, mode == Delete, false);
-
-    // SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
-    // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Soll0), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Soll), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(SollSumme0), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(SollBetrag0), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Haben0), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Haben), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(HabenSumme0), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(HabenBetrag0), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Von), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Bis), true, Nr != Constants.KZBI_GV, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Konto0), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Oben), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Unten), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Details), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Print), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Refresh), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Schliessen), false, false, mode == Delete, false);
   }
 }

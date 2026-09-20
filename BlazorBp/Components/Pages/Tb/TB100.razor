@@ -122,7 +122,7 @@
     <SubmitButton class="btn btn-secondary col ms-1" For="@(() => Model!.Back)"/>
     <SubmitButton class="btn btn-secondary col ms-1" For="@(() => Model!.Forward)"/>
     <SubmitButton class="btn btn-secondary col ms-1" For="@(() => Model!.Last)"/>
-    <SubmitButton class="btn btn-secondary col ms-1" href="@($"/download/TB100/{Model!.Nr}")" download="tagebuch.txt" For="@(() => Model!.Save)"/>
+    <SubmitButton class="btn btn-secondary col ms-1" href="@($"/downloadcsv/TB100/{Model!.Nr}")" download="tagebuch.txt" For="@(() => Model!.Save)"/>
     <SubmitButton class="btn btn-secondary col ms-1" imageclass="bi bi-x-lg-button" For="@(() => Model!.Schliessen)"/>
   </div>
 </EditForm>

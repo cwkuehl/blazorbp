@@ -148,7 +148,8 @@
   /// </summary>
   protected override void OnInitialized()
   {
-    if (OnInitializedFormular("HH500", "Bilanzen - HH500", Id, true))
+    var titel = Id == Constants.KZBI_SCHLUSS ? HH500_title_SB : Id == Constants.KZBI_GV ? HH500_title_GV : HH500_title_EB;
+    if (OnInitializedFormular("HH500", $"{titel} - HH500", Id, true))
       return;
   }
 
@@ -241,6 +242,7 @@
     model.AuswahlHaben = model0.AuswahlHaben;
     model.SollBetrag0 = model0.SollBetrag0;
     model.HabenBetrag0 = model0.HabenBetrag0;
+    model.Von0 = model0.Von0;
     model.SollTabelle = model0.SollTabelle;
   }
 
