@@ -135,8 +135,8 @@
     var sollListe = l.Where(a => a.AccountType > 0).ToList();
     var habenListe = l.Where(a => a.AccountType <= 0).ToList();
     //// No.;Description;Value_r;Changed at;Changed by;Created at;Created by
-    Model.AuswahlSoll = sollListe.Select(a => new ListItem(Functions.ToString(a.Konto_Uid), $"{Functions.CutOrPadRight(Functions.ToString(a.AccountName),25, '\u00A0')}|{Functions.CutOrPadLeft(Functions.ToString(a.AccountEsum, 2),12, '\u00A0')}|{Functions.ToString(a.Geaendert_Am, true)}|{a.Geaendert_Von}|{Functions.ToString(a.Angelegt_Am, true)}|{a.Angelegt_Von}")).ToList();
-    Model.AuswahlHaben = habenListe.Select(a => new ListItem(Functions.ToString(a.Konto_Uid), $"{Functions.CutOrPadRight(Functions.ToString(a.AccountName),25, '\u00A0')}|{Functions.CutOrPadLeft(Functions.ToString(a.AccountEsum, 2),12, '\u00A0')}|{Functions.ToString(a.Geaendert_Am, true)}|{a.Geaendert_Von}|{Functions.ToString(a.Angelegt_Am, true)}|{a.Angelegt_Von}")).ToList();
+    Model.AuswahlSoll = InsertEmptyIfEmpty(sollListe.Select(a => new ListItem(Functions.ToString(a.Konto_Uid), $"{Functions.CutOrPadRight(Functions.ToString(a.AccountName),25, '\u00A0')}|{Functions.CutOrPadLeft(Functions.ToString(a.AccountEsum, 2),12, '\u00A0')}|{Functions.ToString(a.Geaendert_Am, true)}|{a.Geaendert_Von}|{Functions.ToString(a.Angelegt_Am, true)}|{a.Angelegt_Von}")).ToList());
+    Model.AuswahlHaben = InsertEmptyIfEmpty(habenListe.Select(a => new ListItem(Functions.ToString(a.Konto_Uid), $"{Functions.CutOrPadRight(Functions.ToString(a.AccountName),25, '\u00A0')}|{Functions.CutOrPadLeft(Functions.ToString(a.AccountEsum, 2),12, '\u00A0')}|{Functions.ToString(a.Geaendert_Am, true)}|{a.Geaendert_Von}|{Functions.ToString(a.Angelegt_Am, true)}|{a.Angelegt_Von}")).ToList());
     Model.SollBetrag0 = Functions.ToString(sollListe.Sum(a => a.AccountEsum), 2);
     Model.HabenBetrag0 = Functions.ToString(habenListe.Sum(a => a.AccountEsum), 2);
   }

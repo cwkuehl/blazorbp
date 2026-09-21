@@ -968,6 +968,18 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
    }
 
   /// <summary>
+  /// Inserts empty entry, if the list is empty.
+  /// </summary>
+  /// <param name="l">Affected list.</param>
+  /// <returns>List with empty entry.</returns>
+  protected List<ListItem>? InsertEmptyIfEmpty(List<ListItem>? l)
+  {
+    if (l != null && l.Count <= 0)
+      l.Insert(0, new ListItem("", ""));
+    return l;
+   }
+
+  /// <summary>
   /// Gehört der Submit zu einem Datum oder m, h, p?
   /// </summary>
   /// <param name="submit">Betroffener Submit.</param>
