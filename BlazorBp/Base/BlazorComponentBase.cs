@@ -1050,4 +1050,22 @@ public static class BlazorComponentBaseStatic
     var model = session.GetObjectFromJson<U>($"{form}.Form.{id}");
     return model;
   }
+
+  /// <summary>
+  /// Prüfen, ob die ReturnUrl gültig ist, d.h. ein relativer Pfad ohne externe Protokolle oder doppelte Slashes.
+  /// </summary>
+  /// <param name="returnUrl">Zu prüfende ReturnUrl.</param>
+  /// <returns>True, wenn die ReturnUrl gültig ist.</returns>
+  public static bool IsValidReturnUrl(string returnUrl)
+  {
+    if (string.IsNullOrWhiteSpace(returnUrl))
+      return false;
+
+    // Prüfen, ob es sich um einen relativen Pfad handelt (beginnt mit '/')
+    // und ob keine externen Protokolle oder doppelte Slashes (//) verwendet werden.
+    return returnUrl.StartsWith("/") 
+      && !returnUrl.StartsWith("//") 
+      && !returnUrl.StartsWith("/\\")
+      && Uri.IsWellFormedUriString(returnUrl, UriKind.Relative);
+  }
 }

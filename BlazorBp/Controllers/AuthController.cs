@@ -17,13 +17,6 @@ using Microsoft.AspNetCore.Mvc;
   /// <summary>Controller für die Anmeldung und Abmeldung eines Benutzers.</summary>
 public class AuthController : Controller
 {
-  // [HttpGet("/auth/login")]
-  // [AllowAnonymous]
-  // public async Task<IActionResult> LoginUser(string u, string p)
-  // {
-  //   return Redirect("/");
-  // }
-
   /// <summary>Daten für die Anmeldung eines Benutzers.</summary>
   public class UserInfo
   {
@@ -40,8 +33,8 @@ public class AuthController : Controller
   /// <summary>Anmeldung für einen Benutzer.</summary>
   /// <param name="Model">Daten für die Anmeldung eines Benutzers.</param>
   /// <returns>Daten des angemeldeten Benutzers.</returns>
-  [HttpPost("/auth/login")]
   [AllowAnonymous]
+  [HttpPost("/auth/login")]
   public async Task<IActionResult> LoginUser([FromBody] UserInfo Model)
   {
     if (Model == null)
@@ -52,19 +45,7 @@ public class AuthController : Controller
     // var Model = System.Text.Json.JsonSerializer.Deserialize<UserInfo>(str);
     var sessionId = UserDaten.GetNewSessionId();
     var daten = new ServiceDaten(sessionId, Model.Client, Model.Username, null);
-    var r = CSBP.Services.Factory.FactoryService.LoginService.Login(daten, Model?.Password, false);
-  #if DEBUG
-    if (!r.Ok || r.Ergebnis == null)
-    {
-      r = new ServiceErgebnis<UserDaten>(new UserDaten(sessionId, daten.MandantNr, daten.BenutzerId, new List<string> { UserDaten.RoleUser, UserDaten.RoleAdmin, UserDaten.RoleSuperadmin }));
-      if (!(daten.MandantNr == 1 && daten.BenutzerId == "admin" && Model?.Password == "test1"))
-      {
-        var r0 = CSBP.Services.Factory.FactoryService.LoginService.Login(daten, Model?.Password, false);
-        if (!r0.Ok)
-          r.Errors.Add(Message.New("M0000Login fehlgeschlagen"));
-      }
-    }
-  #endif
+    var r = FactoryService.LoginService.Login(daten, Model?.Password, false);
     if (r.Ok && r.Ergebnis != null)
     {
       // Rollen bestimmen.
@@ -93,10 +74,12 @@ public class AuthController : Controller
   /// <summary>
   /// Logout und Weiterleitung an die Startseite.
   /// </summary>
+  [Authorize] // Kein Redirect mit ReturnUrl.
+  //// [ValidateAntiForgeryToken] // Fehler: No service for type 'Microsoft.AspNetCore.Mvc.ViewFeatures.Filters.ValidateAntiforgeryTokenAuthorizationFilter' has been registered.
   [HttpGet("/auth/logout")]
-  //// [Authorize] // Kein Redirect mit ReturnUrl.
   public async Task<IActionResult> LogoutUser()
   {
+    // TODO evtl. POST+CSRF-Schutz.
     var userdaten = HttpContext.Session?.GetUserDaten();
     if (userdaten != null)
     {

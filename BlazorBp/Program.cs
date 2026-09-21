@@ -130,7 +130,15 @@ builder.Services.AddSingleton<IDemoService, DemoService>();
 builder.Services.AddHttpClient("HttpClientWithSSLUntrusted").ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
 {
   ClientCertificateOptions = ClientCertificateOption.Manual,
-  ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => { return true; },
+  ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, certChain, policyErrors) =>
+  {
+    var today = DateTime.Now;
+    if (cert == null || cert.NotBefore > today || cert.NotAfter < today)
+      return false;
+    //// if (policyErrors != System.Net.Security.SslPolicyErrors.None)
+    ////   return false;
+    return true;
+ },
   SslProtocols = SslProtocols.Tls13,
 });
 builder.Services.AddFactoryService();
@@ -203,10 +211,12 @@ app.UseCookiePolicy(new CookiePolicyOptions
 app.UseSession();
 
 app.MapGet("/hello",
+  // [Microsoft.AspNetCore.Authorization.Authorize]
   [EndpointSummary("Test API.")]
   [EndpointDescription("Liefert immer 'Hello World'.")]
   () => "Hello World");
 app.MapGet("/downloadcsv/{page}/{id}",
+  [Microsoft.AspNetCore.Authorization.Authorize]
   [EndpointSummary("Herunterladen von CSV-Dateien.")]
   [EndpointDescription("Page und ID des Formulars müssen angegeben werden.")]
   (string page, string id, HttpContext context, IServiceProvider sp) =>
@@ -218,6 +228,7 @@ app.MapGet("/downloadcsv/{page}/{id}",
   return Results.NotFound();
 });
 app.MapGet("/downloadhtml/{page}/{id}",
+  [Microsoft.AspNetCore.Authorization.Authorize]
   [EndpointSummary("Herunterladen von HTML-Dateien.")]
   [EndpointDescription("Page und ID des Formulars müssen angegeben werden.")]
   (string page, string id, HttpContext context, IServiceProvider sp) =>
@@ -228,6 +239,7 @@ app.MapGet("/downloadhtml/{page}/{id}",
   return Results.NotFound();
 });
 app.MapGet("/starttask/{page}/{id}",
+  [Microsoft.AspNetCore.Authorization.Authorize]
   [EndpointSummary("Starten von asynchronen, länger laufenden Aufgaben.")]
   [EndpointDescription("Page und ID des Formulars müssen angegeben werden.")]
   (string page, string id, HttpContext context, IServiceProvider sp) =>

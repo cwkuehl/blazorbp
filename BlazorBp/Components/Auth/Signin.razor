@@ -113,6 +113,8 @@
             HttpContext.Session?.SetFormData(formdata);
           }
           var ru = Functions.TrimNull(HttpContext.Request.Query["returnurl"].ToString()) ?? "/";
+          if (!BlazorComponentBaseStatic.IsValidReturnUrl(ru))
+            ru = "/";
           navigation.NavigateTo(ru);
         }
       }
