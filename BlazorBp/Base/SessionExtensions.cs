@@ -135,6 +135,19 @@ public static class SessionExtensions
       session.SetObjectAsJson(key, value);
   }
 
+  /// <summary>
+  /// Entfernen der Modelle eine Formular-Instanz.
+  /// </summary>
+  /// <param name="session">Betroffene Session.</param>
+  public static void RemoveAllModels(this ISession session)
+  {
+    foreach (var key in session.Keys)
+    {
+      if (key.Contains($".Form.") || key.Contains($".Table."))
+        session.Remove(key);
+    }
+  }
+
   /// <summary>Trenner für Formular-Parameter in der Session.</summary>
   private const char FormParameterTrenner = '+';
 

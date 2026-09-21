@@ -91,6 +91,7 @@ public class AuthController : Controller
     HttpContext.Session?.SetFormState(null);
     HttpContext.Session?.SetUserDaten(null);
     HttpContext.Session?.SetFormData(null);
+    HttpContext.Session?.RemoveAllModels();
     if (userdaten != null)
       ServiceBase.RemoveUndoRedoStack(userdaten.SessionId);
     await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
