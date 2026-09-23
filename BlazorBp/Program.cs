@@ -177,7 +177,9 @@ if (interactive)
   app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 else
   app.MapRazorComponents<App>().AddAdditionalAssemblies(
-    typeof(BlazorBp.Forms.Demo.DemoModule).Assembly);
+    typeof(BlazorBp.Core.Modules.IFormModule).Assembly,
+    typeof(BlazorBp.Forms.Demo.DemoModule).Assembly
+    );
 
 app.Use(async (context, next) =>
 {

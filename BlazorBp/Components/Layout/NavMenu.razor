@@ -1,4 +1,9 @@
-﻿<header>
+﻿@using BlazorBp.Core.Modules
+@using System.Security.Claims
+@inject IEnumerable<IFormModule> FormModules
+@inject AuthenticationStateProvider AuthStateProvider
+
+<header>
   <div class="border border-2 border-secondary rounded-3 bg-info-subtle mt-1">
     <NavLink class="navbar-brand ms-1" href="" Match="NavLinkMatch.All" title="Blazor Haushaltsprogramm 2026"><span class="bi bi-house-door-nav-menu" aria-hidden="true"></span>Blazor HH</NavLink>
   </div>
@@ -55,20 +60,24 @@
       <NavLink class="nav-link" href="wp/wp500" title="Stände" aria-label="Stände"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Stände</NavLink>
     </div>
   </AuthorizeView>
-  <AuthorizeView>
+  <AuthorizeView Roles="xxx">
     <NavLink class="nav-link ms-1" href="#" title="Menü Energie" data-bs-toggle="collapse" data-bs-target="#submenuenergy" aria-expanded="false" aria-controls="submenuprivate"><span class="bi bi-person-nav-menu" aria-hidden="true"></span>Energie</NavLink>
     <div class="collapse show ms-3" id="submenuenergy">
       <NavLink class="nav-link" href="en/en100" title="Abfrage-Parameter" aria-label="Abfrage-Parameter"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Abfrage-Parameter</NavLink>
     </div>
   </AuthorizeView>
-  <AuthorizeView Roles="@UserDaten.RoleAdmin">
-  <NavLink class="nav-link ms-1" href="#" title="Menü Demo" data-bs-toggle="collapse" data-bs-target="#submenudemo" aria-expanded="false" aria-controls="submenudemo"><span class="bi bi-screwdriver-nav-menu" aria-hidden="true"></span>Demo</NavLink>
-  <div class="collapse showxxx ms-3" id="submenudemo">
-    <NavLink class="nav-link" href="demo/dm010" title="Statisches Server Side Rendering testen" aria-label="SSR testen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>SSR</NavLink>
-      <NavLink class="nav-link" href="demo/dm100" title="Steuerelemente testen" aria-label="Steuerelemente testen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Steuerelemente</NavLink>
-      <NavLink class="nav-link" href="demo/dm200" title="Tabelle testen" aria-label="Tabelle testen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Tabelle</NavLink>
-  </div>
-  </AuthorizeView>
+  @foreach (var (module, entries) in _visibleModules ?? Enumerable.Empty<(IFormModule, List<MenuEntry>)>())
+  {
+    if (entries.Count == 0)
+      continue;
+    <NavLink class="nav-link ms-1" href="#" title=@($"Menü {module.Key}") data-bs-toggle="collapse" data-bs-target=@($"#{module.SubKey}") aria-expanded="false" aria-controls="@module.SubKey")><span class="@module.Icon" aria-hidden="true"></span>@module.Key</NavLink>
+    <div class=@($"collapse {(module.Expanded ? "show" : "")} ms-3") id="@module.SubKey">
+      @foreach (var entry in entries)
+      {
+        <NavLink class="nav-link" href="@entry.Route" title="@entry.Description" aria-label="@entry.Description"><span class="@entry.Icon" aria-hidden="true"></span>@entry.Text</NavLink>
+      }
+    </div>
+  }
   <NavLink class="nav-link ms-1" href="impressum" title="Verwendung der Daten"><span class="bi bi-incognito-nav-menu" aria-hidden="true"></span>Impressum</NavLink>
 </div>
 <OpenForms/>
@@ -76,4 +85,25 @@
 @code {
   [Parameter]
   public bool Interactive { get; set; }
+
+  private List<(IFormModule Module, List<MenuEntry> Entries)>? _visibleModules;
+
+  protected override async Task OnInitializedAsync()
+  {
+    if (!Interactive)
+      Functions.MachNichts();
+    var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+    var user = authState.User;
+
+    _visibleModules = FormModules
+      .Where(m => m.RequiredRoles.Any(role => user.IsInRole(role)) || !m.RequiredRoles.Any())
+      .Select(m => (
+          Module: m,
+          Entries: m.GetMenuEntries().Where(a => a.RequiredRole is null || user.IsInRole(a.RequiredRole)).ToList()
+      ))
+      .Where(a => a.Entries.Count > 0)
+      .OrderBy(a => a.Module.SortOrder)
+      .OrderBy(a => a.Module.Key)
+      .ToList();
+  }
 }
