@@ -185,10 +185,10 @@ public class Generator
 namespace BlazorBp.Models.{{area}};
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Base;
+using BlazorBp.Core.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
-using static BlazorBp.Base.DialogTypeEnum;
+using static BlazorBp.Core.Base.DialogTypeEnum;
 
 """;
     if (table)

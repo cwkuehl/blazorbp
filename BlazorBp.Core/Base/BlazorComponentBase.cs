@@ -2,13 +2,14 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Base;
+namespace BlazorBp.Core.Base;
 
-using BlazorBp.Models;
+using BlazorBp.Core.Models;
 using CSBP.Services.Base;
 using CSBP.Services.Base.Csv;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Http;
 using static CSBP.Services.Resources.Messages;
 
 /// <summary>

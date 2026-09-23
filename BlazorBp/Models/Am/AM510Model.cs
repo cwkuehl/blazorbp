@@ -5,8 +5,8 @@
 namespace BlazorBp.Models.Am;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Base;
-using static BlazorBp.Base.DialogTypeEnum;
+using BlazorBp.Core.Base;
+using static BlazorBp.Core.Base.DialogTypeEnum;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 

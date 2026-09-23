@@ -5,7 +5,7 @@
 namespace BlazorBp.Models.Ag;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Base;
+using BlazorBp.Core.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 

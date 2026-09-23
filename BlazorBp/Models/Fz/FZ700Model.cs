@@ -5,8 +5,8 @@
 namespace BlazorBp.Models.Fz;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Base;
-using static BlazorBp.Base.DialogTypeEnum;
+using BlazorBp.Core.Base;
+using static BlazorBp.Core.Base.DialogTypeEnum;
 
 /// <summary>
 /// Model-Klasse für das Formular FZ700 Notizen.

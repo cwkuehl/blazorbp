@@ -1,11 +1,11 @@
-using BlazorBp.Models;
+namespace BlazorBp.Components.Controls;
+
+using BlazorBp.Core.Models;
 using CSBP.Services.Base;
 using Microsoft.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using System.Reflection;
-
-namespace BlazorBp.Components.Controls;
 
 /// <summary>
 /// LabelInputValid: Label und Input mit Validierung, Readonly, Hidden, Error, Mandatory, Fokus, Accesskey, Tooltip.

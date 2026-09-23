@@ -2,10 +2,10 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
+namespace BlazorBp.Core.Base;
+
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
-namespace BlazorBp.Base;
 
 /// <summary>
 /// Die Klasse speichert Daten Formulare.

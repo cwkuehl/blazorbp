@@ -2,7 +2,7 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Base;
+namespace BlazorBp.Core.Base;
 
 /// <summary>Konstanten für die Anwendung.</summary>
 public static class Konstanten
@@ -13,6 +13,6 @@ public static class Konstanten
   /// <summary>Session Timeout in Sekunden.</summary>
   public const int SESSION_TIMEOUT = 7205; // Countdown hat (x - 5) / 2 Sekunden, weil Cookie Expiration erst nach der Hälfte der Zeit verlängert wird.
 
-  /// <summary>Session Timeout in Sekunden.</summary>
+  /// <summary>Claim für Session ID.</summary>
   public const string CLAIM_SID = "123xQp5ß";
 }

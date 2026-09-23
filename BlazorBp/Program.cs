@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
-using BlazorBp.Base;
+using BlazorBp.Core.Base;
 using BlazorBp.Components; // für App
 using BlazorBp.Components.Pages;
 using BlazorBp.Core.Modules;

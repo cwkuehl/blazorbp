@@ -2,9 +2,10 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Base;
+namespace BlazorBp.Core.Base;
 
 using CSBP.Services.NonService;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 /// <summary>Static class for extension methods.</summary>

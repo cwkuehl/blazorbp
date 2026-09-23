@@ -2,10 +2,11 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Base;
+namespace BlazorBp.Core.Base;
 
 using System.Text.Json;
 using CSBP.Services.Base;
+using Microsoft.AspNetCore.Http;
 
 /// <summary>Zugriffe auf die Session-Daten.</summary>
 public static class SessionExtensions

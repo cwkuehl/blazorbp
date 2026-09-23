@@ -5,11 +5,12 @@
 namespace BlazorBp.Models.Fz;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Base;
+using BlazorBp.Core.Base;
+using BlazorBp.Core.Models;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Apis.Models.Views;
 using CSBP.Services.Base;
-using static BlazorBp.Base.DialogTypeEnum;
+using static BlazorBp.Core.Base.DialogTypeEnum;
 
 /// <summary>
 /// Model-Klasse für das modale Formular FZ260 Fahrradstand.

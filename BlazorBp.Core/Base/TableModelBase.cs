@@ -2,12 +2,13 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Base;
+namespace BlazorBp.Core.Base;
 
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using BlazorBp.Models;
+using BlazorBp.Core.Models;
 using CSBP.Services.Base;
+using Microsoft.AspNetCore.Http;
 
 /// <summary>
 /// Basis-Klasse für alle Table-Models zur Behandlung von Postbacks in Tabellen.

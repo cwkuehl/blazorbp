@@ -5,7 +5,7 @@
 namespace BlazorBp.Models.Ag;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Base;
+using BlazorBp.Core.Base;
 
 /// <summary>
 /// Model-Klasse für das Formular AG100 Mandanten.

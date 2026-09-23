@@ -5,9 +5,9 @@
 namespace BlazorBp.Models.Fz;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Base;
+using BlazorBp.Core.Base;
 using CSBP.Services.Base;
-using static BlazorBp.Base.DialogTypeEnum;
+using static BlazorBp.Core.Base.DialogTypeEnum;
 
 /// <summary>
 /// Model-Klasse für das Formular FZ200 Fahrräder.

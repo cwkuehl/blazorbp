@@ -5,7 +5,7 @@
 namespace BlazorBp.Models.Demo;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Base;
+using BlazorBp.Core.Base;
 
 /// <summary>
 /// Model-Klasse für das Formular DM200 Tabelle.

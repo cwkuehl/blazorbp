@@ -5,7 +5,7 @@
 namespace BlazorBp.Models.Demo;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Base;
+using BlazorBp.Core.Base;
 using BlazorBp.Forms.Demo.Models;
 
 /// <summary>

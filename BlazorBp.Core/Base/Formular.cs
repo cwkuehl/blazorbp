@@ -2,7 +2,7 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Base;
+namespace BlazorBp.Core.Base;
 
 using CSBP.Services.Base;
 
@@ -33,7 +33,7 @@ public class Formular
   /// <param name="id">Gibt an, ob die ID mit übergeben werden soll.</param>
   /// <param name="close">Gibt an, ob die Action mit ID geschlossen werden soll.</param>
   /// <returns>URL für das Formular.</returns>
-  internal string GetHref(bool id = false, bool close = false)
+  public string GetHref(bool id = false, bool close = false)
   {
     if (close)
       return $"/close/{Action}/{Id}";
@@ -128,3 +128,4 @@ public class Formular
     }
   }
 }
+

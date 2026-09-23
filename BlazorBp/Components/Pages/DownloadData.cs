@@ -5,7 +5,7 @@
 namespace BlazorBp.Components.Pages;
 
 using System.Text;
-using BlazorBp.Base;
+using BlazorBp.Core.Base;
 using BlazorBp.Models.Ag;
 using BlazorBp.Models.Am;
 using BlazorBp.Models.Demo;

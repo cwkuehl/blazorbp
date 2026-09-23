@@ -2,12 +2,13 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Base;
+namespace BlazorBp.Core.Base;
 
 using CSBP.Services.Base;
+using Microsoft.AspNetCore.Http;
 
 /// <summary>
-/// Basis-Klasse für alle Models in PageModels zur Behandlung von Postbacks.
+/// Basis-Klasse für alle Models in PageModels zur Behandlung von Postbacks.
 /// </summary>
 [Serializable]
 public class PageModelBase

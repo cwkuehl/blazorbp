@@ -2,10 +2,11 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Models.Demo;
+namespace BlazorBp.Forms.Demo.Models;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Base;
+using BlazorBp.Core.Base;
+using BlazorBp.Core.Models;
 
 /// <summary>
 /// Model-Klasse für das Formular DM100 Steuerelemente.
