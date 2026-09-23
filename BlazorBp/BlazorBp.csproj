@@ -10,8 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlazorBp.Services\BlazorBp.Services.csproj" />
     <ProjectReference Include="..\..\csbp\CSBP.Services\CSBP.Services.csproj" />
+    <ProjectReference Include="..\BlazorBp.Forms.Demo\BlazorBp.Forms.Demo.csproj" />
+    <ProjectReference Include="..\BlazorBp.Core\BlazorBp.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup> <!-- Empfehlung von GPT-6: Wildcard-Version sind aus Security-Gründen nicht optimal. -->

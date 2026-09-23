@@ -1,5 +1,8 @@
 ﻿<CascadingAuthenticationState>
-  <Router AppAssembly="typeof(Program).Assembly">
+  <Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="new[] {
+    typeof(BlazorBp.Core.Modules.IFormModule).Assembly,
+    typeof(BlazorBp.Forms.Demo.DemoModule).Assembly,
+  }">
     <Found Context="routeData">
       <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
       <FocusOnNavigate RouteData="routeData" Selector="h1" />

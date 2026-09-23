@@ -1,6 +1,5 @@
 ﻿@page "/ag/ag200/{Id?}"
 @inherits BlazorComponentBase<AG200Model, AG200TableRowModel>
-@inject IDemoService DemoService
 @attribute [Authorize(Roles = "Admin, Superadmin")]
 @using CSBP.Services.Apis.Models;
 

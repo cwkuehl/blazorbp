@@ -2,10 +2,10 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Services.Impl;
+namespace BlazorBp.Forms.Demo.Impl;
 
-using BlazorBp.Services.Apis;
-using BlazorBp.Services.Models;
+using BlazorBp.Forms.Demo.Apis;
+using BlazorBp.Forms.Demo.Models;
 using CSBP.Services.Base;
 using CSBP.Services.Base.Csv;
 

@@ -6,10 +6,10 @@ namespace BlazorBp.Models.Demo;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Base;
-using BlazorBp.Services.Models;
+using BlazorBp.Forms.Demo.Models;
 
 /// <summary>
-/// Model-Klasse für eine Zeile in der Tabelle.
+/// Model-Klasse für eine Zeile in der Tabelle.
 /// </summary>
 [Serializable]
 public class DM200TableRowModel : TableRowModelBase

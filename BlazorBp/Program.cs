@@ -9,8 +9,7 @@ using System.Text;
 using BlazorBp.Base;
 using BlazorBp.Components; // für App
 using BlazorBp.Components.Pages;
-using BlazorBp.Services.Apis;
-using BlazorBp.Services.Impl;
+using BlazorBp.Core.Modules;
 using CSBP.Services.Base;
 using CSBP.Services.Factory;
 using Microsoft.AspNetCore.Authentication;
@@ -125,13 +124,23 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+var modules = new IFormModule[]
+{
+  // Formular-Module explizit eintragen (Alternative: Assembly-Scan)
+  new BlazorBp.Forms.Demo.DemoModule(),
+};
+foreach (var module in modules)
+{
+    module.ConfigureServices(builder.Services);
+}
+builder.Services.AddSingleton<IEnumerable<IFormModule>>(modules);
 
-builder.Services.AddSingleton<IDemoService, DemoService>();
 builder.Services.AddHttpClient("HttpClientWithSSLUntrusted").ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
 {
   ClientCertificateOptions = ClientCertificateOption.Manual,
   ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, certChain, policyErrors) =>
   {
+    // Untrusted SSL-Zertifikate akzeptieren, nur für eigenen Login-Aufruf über localhost.
     var today = DateTime.Now;
     if (cert == null || cert.NotBefore > today || cert.NotAfter < today)
       return false;
@@ -167,7 +176,8 @@ app.MapControllers();
 if (interactive)
   app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 else
-  app.MapRazorComponents<App>();
+  app.MapRazorComponents<App>().AddAdditionalAssemblies(
+    typeof(BlazorBp.Forms.Demo.DemoModule).Assembly);
 
 app.Use(async (context, next) =>
 {
@@ -308,5 +318,14 @@ Authorisierung mit Cookies: https://www.youtube.com/watch?v=B3zvX_CWKVc
 
 Swagger für Endpoints:
 dotnet add package Swashbuckle.AspNetCore
+
+Redesign BlazorBp mit Razor Class Libraries:
+dotnet new razorclasslib -o BlazorBp.Core
+dotnet sln blazorbp.sln add ./BlazorBp.Core/BlazorBp.Core.csproj
+dotnet add ./BlazorBp/BlazorBp.csproj reference ./BlazorBp.Core/BlazorBp.Core.csproj
+dotnet new razorclasslib -o BlazorBp.Forms.Demo
+dotnet sln blazorbp.sln add ./BlazorBp.Forms.Demo/BlazorBp.Forms.Demo.csproj
+dotnet add ./BlazorBp/BlazorBp.csproj reference ./BlazorBp.Forms.Demo/BlazorBp.Forms.Demo.csproj
+BlazorBp.Services entfernt, da die Funktionen in BlazorBp.Forms.Demo eingebaut sind.
 
 */

@@ -6,10 +6,10 @@ namespace BlazorBp.Models.Demo;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Base;
-using BlazorBp.Services.Models;
+using BlazorBp.Forms.Demo.Models;
 
 /// <summary>
-/// Model-Klasse für das modale Formular DM200 Tabelle.
+/// Model-Klasse für das modale Formular DM200 Tabelle.
 /// </summary>
 [Serializable]
 public class DM200ModalModel : PageModelBase
