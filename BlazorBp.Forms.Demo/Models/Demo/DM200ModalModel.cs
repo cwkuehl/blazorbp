@@ -1,18 +1,17 @@
-// <copyright file="DM200TableRowModel.cs" company="cwkuehl.de">
+// <copyright file="DM200ModalModel.cs" company="cwkuehl.de">
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Models.Demo;
+namespace BlazorBp.Forms.Demo.Models.Demo;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Core.Base;
-using BlazorBp.Forms.Demo.Models;
 
 /// <summary>
-/// Model-Klasse für eine Zeile in der Tabelle.
+/// Model-Klasse für das modale Formular DM200 Tabelle.
 /// </summary>
 [Serializable]
-public class DM200TableRowModel : TableRowModelBase
+public class DM200ModalModel : PageModelBase
 {
   /// <summary>Holt oder setzt die Nummer.</summary>
   [Display(Name = "_Nr.", Description = "Die Nummer des Objekts kann nicht geändert werden.")]
@@ -28,26 +27,18 @@ public class DM200TableRowModel : TableRowModelBase
   // [Required(ErrorMessage = "Die Beschreibung muss angegeben werden.")]
   public string? Beschreibung { get; set; } = default!;
 
-  /// <summary>Kopiert die Werte in ein Model.</summary>
-  public Objekt ToObjekt()
-  {
-    return new Objekt
-    {
-      Id = Nummer ?? 0,
-      Name = Bezeichnung ?? "",
-      Description = Beschreibung ?? "",
-    };
-  }
+  /// <summary>Holt oder setzt den OK-Button.</summary>
+  [Display(Name = "_OK", Description = "Formular schließen mit Speichern.")]
+  public string? Ok { get; set; } = default!;
+
+  /// <summary>Holt oder setzt den Schließen-Button.</summary>
+  [Display(Name = "S_chließen", Description = "Formular schließen ohne Speichern.")]
+  public string? Schliessen { get; set; } = default!;
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
-  /// <param name="b">Zu kopierendes Model.</param>
-  public static DM200TableRowModel FromObjekt(Objekt b)
-  {
-    return new DM200TableRowModel
-    {
-      Nummer = b.Id,
-      Bezeichnung = b.Name,
-      Beschreibung = b.Description,
-    };
-  }
+  /// <param name="m">Zu kopierendes Model.</param>
+  public void From(DM200TableRowModel m) => (Nummer, Bezeichnung, Beschreibung) = (m.Nummer, m.Bezeichnung, m.Beschreibung);
+
+  /// <summary>Kopiert die Werte in ein Model.</summary>
+  public Objekt ToObjekt() => new() { Id = Nummer ?? 0, Name = Bezeichnung ?? "", Description = Beschreibung ?? "" };
 }

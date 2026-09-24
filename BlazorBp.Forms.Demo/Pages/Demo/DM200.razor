@@ -1,7 +1,5 @@
 ﻿@page "/demo/dm200/{Id?}"
 @inherits BlazorComponentBase<DM200Model, DM200TableRowModel>
-@using BlazorBp.Forms.Demo.Apis
-@using BlazorBp.Forms.Demo.Models
 @inject IDemoService DemoService
 @attribute [Authorize(Roles = "Admin, Superadmin")]
 

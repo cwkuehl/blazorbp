@@ -8,12 +8,12 @@ using System.Text;
 using BlazorBp.Core.Base;
 using BlazorBp.Models.Ag;
 using BlazorBp.Models.Am;
-using BlazorBp.Models.Demo;
 using BlazorBp.Models.Fz;
 using BlazorBp.Models.Hh;
 using BlazorBp.Models.Tb;
 using BlazorBp.Models.Wp;
 using BlazorBp.Forms.Demo.Apis;
+using BlazorBp.Forms.Demo.Models.Demo;
 using CSBP.Services.Base;
 using CSBP.Services.Factory;
 

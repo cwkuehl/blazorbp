@@ -2,7 +2,7 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Components.Controls;
+namespace BlazorBp.Core.Components.Controls;
 
 using System;
 using CSBP.Services.Base;

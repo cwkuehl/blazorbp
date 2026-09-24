@@ -1,4 +1,4 @@
-namespace BlazorBp.Components.Controls;
+namespace BlazorBp.Core.Components.Controls;
 
 using BlazorBp.Core.Models;
 using CSBP.Services.Base;

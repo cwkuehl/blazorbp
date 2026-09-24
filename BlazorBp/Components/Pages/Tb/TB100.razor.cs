@@ -1,6 +1,6 @@
 using BlazorBp.Core.Base;
 using BlazorBp.Core.Models;
-using BlazorBp.Components.Controls;
+using BlazorBp.Core.Components.Controls;
 using BlazorBp.Models.Tb;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;

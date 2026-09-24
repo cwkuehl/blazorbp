@@ -2,7 +2,7 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Models.Demo;
+namespace BlazorBp.Forms.Demo.Models.Demo;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Core.Base;

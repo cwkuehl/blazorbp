@@ -4,7 +4,7 @@
 
 namespace BlazorBp.Forms.Demo.Apis;
 
-using BlazorBp.Forms.Demo.Models;
+using BlazorBp.Forms.Demo.Models.Demo;
 using CSBP.Services.Base;
 
 /// <summary>
