@@ -33,6 +33,8 @@ function unregisterPageScriptElement(src) {
 async function initializePageScriptModule(src, pageScriptInfo) {
   if (src.startsWith("./")) {
     src = new URL(src.substr(2), document.baseURI).toString();
+  } else {
+    src = new URL(src, document.baseURI).toString();
   }
 
   const module = await import(src);
