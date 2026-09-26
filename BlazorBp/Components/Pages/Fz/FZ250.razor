@@ -1,6 +1,5 @@
 @page "/fz/fz250/{id?}"
-@using CSBP.Services.Apis.Models.Views
-@inherits BlazorComponentBase<FZ250Model, FZ250TableRowModel>
+@inherits BlazorComponent<FZ250Model, FZ250TableRowModel>
 @attribute [Authorize(Roles = "User, Admin, Superadmin")]
 
 <SectionContent SectionName="title">@Title</SectionContent>

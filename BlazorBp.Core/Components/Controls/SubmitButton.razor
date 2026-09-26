@@ -90,7 +90,7 @@
     AdditionalAttributes.TryGetValue("accesskey", out obj);
     Accesskey = obj?.ToString() ?? "";
     AdditionalAttributes.TryGetValue("imageclass", out obj);
-    ImageClass = Functions.TrimNull(obj?.ToString());
+    ImageClass = Funktionen.TrimNull(obj?.ToString());
     AdditionalAttributes.TryGetValue("href", out obj);
     Href = obj?.ToString() ?? "";
     AdditionalAttributes.TryGetValue("download", out obj);
@@ -179,7 +179,7 @@
     {
       SetAttribute(Attributes2, "type", "submit");
       SetAttribute(Attributes2, "name", NameAttributeValue);
-      SetAttribute(Attributes2, "value", Functions.TrimNull(Name));
+      SetAttribute(Attributes2, "value", Funktionen.TrimNull(Name));
     }
     else if (string.IsNullOrEmpty(Download))
       Download = "download.txt";
@@ -187,9 +187,9 @@
       SetAttribute(Attributes2, "hidden", "");
     else
     {
-      SetAttribute(Attributes2, "class", Functions.TrimNull(CssClass));
-      SetAttribute(Attributes2, "title", Functions.TrimNull(Title));
-      SetAttribute(Attributes2, "accesskey", Functions.TrimNull(Accesskey));
+      SetAttribute(Attributes2, "class", Funktionen.TrimNull(CssClass));
+      SetAttribute(Attributes2, "title", Funktionen.TrimNull(Title));
+      SetAttribute(Attributes2, "accesskey", Funktionen.TrimNull(Accesskey));
       SetAttribute(Attributes2, "autofocus", autofocus);
     }
     //if (Name == "Not Mandatory")

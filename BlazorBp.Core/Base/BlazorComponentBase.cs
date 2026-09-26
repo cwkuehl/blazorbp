@@ -4,13 +4,12 @@
 
 namespace BlazorBp.Core.Base;
 
+using BlazorBp.Core.Core;
 using BlazorBp.Core.Models;
 using CSBP.Services.Base;
-using CSBP.Services.Base.Csv;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
-using static CSBP.Services.Resources.Messages;
 
 /// <summary>
 /// Basis-Klasse für alle Blazor-Formulare.
@@ -43,9 +42,12 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       { "HH310", new Formular { Action = "hh310", Area = "hh", Name = "Ereignis" } },
       { "HH400", new Formular { Action = "hh400", Area = "hh", Name = "Buchungen" } },
       { "HH410", new Formular { Action = "hh410", Area = "hh", Name = "Buchung" } },
-      { "HH500" + Constants.KZBI_SCHLUSS, new Formular { Action = "hh500", Area = "hh", Name = HH500_title_SB, Id = Constants.KZBI_SCHLUSS } },
-      { "HH500" + Constants.KZBI_GV, new Formular { Action = "hh500", Area = "hh", Name = HH500_title_GV, Id = Constants.KZBI_GV } },
-      { "HH500" + Constants.KZBI_EROEFFNUNG, new Formular { Action = "hh500", Area = "hh", Name = HH500_title_EB, Id = Constants.KZBI_EROEFFNUNG } },
+      // { "HH500" + Constants.KZBI_SCHLUSS, new Formular { Action = "hh500", Area = "hh", Name = HH500_title_SB, Id = Constants.KZBI_SCHLUSS } },
+      // { "HH500" + Constants.KZBI_GV, new Formular { Action = "hh500", Area = "hh", Name = HH500_title_GV, Id = Constants.KZBI_GV } },
+      // { "HH500" + Constants.KZBI_EROEFFNUNG, new Formular { Action = "hh500", Area = "hh", Name = HH500_title_EB, Id = Constants.KZBI_EROEFFNUNG } },
+      { "HH500SB", new Formular { Action = "hh500", Area = "hh", Name = "Schlussbilanz", Id = "SB" } },
+      { "HH500GV", new Formular { Action = "hh500", Area = "hh", Name = "G+V-Rechnung", Id = "GV" } },
+      { "HH500EB", new Formular { Action = "hh500", Area = "hh", Name = "Eröffnungsbilanz", Id = "EB" } },
       { "HH510", new Formular { Action = "hh510", Area = "hh", Name = "Drucken" } },
       { "TB100", new Formular { Action = "tb100", Area = "tb", Name = "Tagebuch" } },
       { "TB200", new Formular { Action = "tb200", Area = "tb", Name = "Positionen" } },
@@ -110,18 +112,6 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
 
   /// <summary>Postback-Zustand: 0=kein Postback, 1=Postback vom Model, 2=Postback vom Table.</summary>
   protected int Postback = 0;
-
-  /// <summary>Holt eine neue Instanz der ServiceDaten.</summary>
-  protected ServiceDaten ServiceDaten
-  {
-    get
-    {
-      var ud = HttpContext?.Session.GetUserDaten();
-      if (ud == null)
-        OpenEmptyPage();
-      return new ServiceDaten(ud);
-    }
-  }
 
   /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
   /// <param name="model">Betroffenes Model für den EditContext und Messages.</param>

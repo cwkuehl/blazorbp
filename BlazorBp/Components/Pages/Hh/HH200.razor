@@ -1,6 +1,6 @@
 @page "/hh/hh200/{id?}"
 @using CSBP.Services.Apis.Models
-@inherits BlazorComponentBase<HH200Model, HH200TableRowModel>
+@inherits BlazorComponent<HH200Model, HH200TableRowModel>
 @attribute [Authorize(Roles = "User, Admin, Superadmin")]
 
 <SectionContent SectionName="title">@Title</SectionContent>

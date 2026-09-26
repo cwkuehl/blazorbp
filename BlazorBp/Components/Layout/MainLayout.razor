@@ -45,7 +45,7 @@
   <div class="container">
     &copy; 2026 BlazorBp
     <a href="/impressum">Impressum</a>
-    <a class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover ms-2" href="@GetUrlWithParameter("bsmode", Functions.Iif(bsmode == "dark", "light", "dark"))">@Functions.Iif(bsmode == "dark", "Light Mode", "Dark Mode")</a>
+    <a class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover ms-2" href="@GetUrlWithParameter("bsmode", Functions.Iif(bsmode == "dark", "light", "dark") ?? "")">@Functions.Iif(bsmode == "dark", "Light Mode", "Dark Mode")</a>
   </div>
 </footer>
 

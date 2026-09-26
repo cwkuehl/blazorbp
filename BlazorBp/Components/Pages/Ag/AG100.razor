@@ -1,7 +1,7 @@
 ﻿@page "/ag/ag100/{Id?}"
-@inherits BlazorComponentBase<AG100Model, AG100TableRowModel>
+@using CSBP.Services.Apis.Models
+@inherits BlazorComponent<AG100Model, AG100TableRowModel>
 @attribute [Authorize(Roles = "Admin, Superadmin")]
-@using CSBP.Services.Apis.Models;
 
 <SectionContent SectionName="title">@Title</SectionContent>
 <PageTitle>@Title</PageTitle>

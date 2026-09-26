@@ -2,13 +2,12 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Core.Components.Controls;
+namespace BlazorBp.Components.Controls;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using CSBP.Services.Base;
-
 
 /// <summary>
 /// Function for drawing a diagram.

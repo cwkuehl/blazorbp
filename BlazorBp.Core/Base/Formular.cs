@@ -4,7 +4,7 @@
 
 namespace BlazorBp.Core.Base;
 
-using CSBP.Services.Base;
+using BlazorBp.Core.Core;
 
 /// <summary>
 /// Die Klasse speichert ein Formular mit Controller und Action.
@@ -37,7 +37,7 @@ public class Formular
   {
     if (close)
       return $"/close/{Action}/{Id}";
-    return $"{Functions.Iif(string.IsNullOrEmpty(Area), "", $"/{Area}")}/{Action}{Functions.Iif(string.IsNullOrEmpty(Id) || !id, "", $"/{Id}")}";
+    return $"{Funktionen.Iif(string.IsNullOrEmpty(Area), "", $"/{Area}")}/{Action}{Funktionen.Iif(string.IsNullOrEmpty(Id) || !id, "", $"/{Id}")}";
   }
 
   /// <summary>

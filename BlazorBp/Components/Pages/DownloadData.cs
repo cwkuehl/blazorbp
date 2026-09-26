@@ -16,6 +16,7 @@ using BlazorBp.Forms.Demo.Apis;
 using BlazorBp.Forms.Demo.Models.Demo;
 using CSBP.Services.Base;
 using CSBP.Services.Factory;
+using BlazorBp.Base;
 
 /// <summary>
 /// Komponente zum Lesen der Download-Daten.

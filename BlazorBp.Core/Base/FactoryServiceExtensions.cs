@@ -4,7 +4,7 @@
 
 namespace BlazorBp.Core.Base;
 
-using CSBP.Services.NonService;
+using BlazorBp.Core.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 

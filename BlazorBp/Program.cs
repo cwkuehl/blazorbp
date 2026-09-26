@@ -15,6 +15,7 @@ using CSBP.Services.Factory;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using NeoSmart.Caching.Sqlite;
+using BlazorBp.Base;
 
 var interactive = Konstanten.Interactive;
 var builder = WebApplication.CreateBuilder(args);

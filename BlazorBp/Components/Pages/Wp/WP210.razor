@@ -1,6 +1,5 @@
 @page "/wp/wp210/{id?}"
-@using CSBP.Services.Apis.Models
-@inherits BlazorComponentBase<WP210Model, TableRowModelBase>
+@inherits BlazorComponent<WP210Model, TableRowModelBase>
 @attribute [Authorize(Roles = "User, Admin, Superadmin")]
 
 <SectionContent SectionName="title">@Title</SectionContent>

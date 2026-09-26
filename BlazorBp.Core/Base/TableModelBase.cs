@@ -6,6 +6,7 @@ namespace BlazorBp.Core.Base;
 
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using BlazorBp.Core.Core;
 using BlazorBp.Core.Models;
 using CSBP.Services.Base;
 using Microsoft.AspNetCore.Http;
@@ -90,7 +91,7 @@ public class TableModelBase<T>
       PageCount = PageCount,
       RowsPerPage = RowsPerPage,
       SortColumn = SortColumn,
-      Search = CsbpBase.GetSuche(Search),
+      Search = Funktionen.GetSuche(Search),
     };
   }
 
@@ -115,13 +116,13 @@ public class TableModelBase<T>
         VisibleColumns = "";
         for (int i = 0; i < columns.Count; i++)
         {
-          columns[i].Visible = Functions.ToBool(Request.Form[$"Table.Column{i}"]) ?? false;
-          VisibleColumns += Functions.Iif(columns[i].Visible, "1", "0");
+          columns[i].Visible = Funktionen.ToBool(Request.Form[$"Table.Column{i}"]) ?? false;
+          VisibleColumns += Funktionen.Iif(columns[i].Visible, "1", "0");
         }
       }
       SortColumn = GetLastValue(Request.Form["Table.SortColumn"]);
       var sr0 = SelectedRow;
-      SelectedRow = Functions.ToNullableInt32(GetLastValue(Request.Form["Table.SelectedRow"])) ?? -1;
+      SelectedRow = Funktionen.ToNullableInt32(GetLastValue(Request.Form["Table.SelectedRow"])) ?? -1;
       ModalId = GetLastValue(Request.Form["Table.ModalId"]);
       if (SelectedRow != sr0)
         return true;

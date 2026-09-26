@@ -5,7 +5,6 @@
 namespace BlazorBp.Core.Base;
 
 using System.Text.Json;
-using CSBP.Services.Base;
 using Microsoft.AspNetCore.Http;
 
 /// <summary>Zugriffe auf die Session-Daten.</summary>
@@ -86,28 +85,6 @@ public static class SessionExtensions
   public static void SetFormState(this ISession session, FormularZustand? value)
   {
     var key = typeof(FormularZustand).FullName ?? "";
-    if (value == null)
-      session.Remove(key);
-    else
-      session.SetObjectAsJson(key, value);
-  }
-
-  /// <summary>Lesen der User-Daten in der Session.</summary>
-  /// <param name="session">Betroffene Session.</param>
-  /// <returns>User-Daten oder null.</returns>
-  public static UserDaten? GetUserDaten(this ISession session)
-  {
-    var key = typeof(UserDaten).FullName ?? "";
-    var data = session.GetObjectFromJson<UserDaten>(key);
-    return data;
-  }
-
-  /// <summary>Speichern der User-Daten in der Session.</summary>
-  /// <param name="session">Betroffene Session.</param>
-  /// <param name="value">Betroffener Wert.</param>
-  public static void SetUserDaten(this ISession session, UserDaten? value)
-  {
-    var key = typeof(UserDaten).FullName ?? "";
     if (value == null)
       session.Remove(key);
     else

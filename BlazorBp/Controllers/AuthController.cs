@@ -6,6 +6,7 @@ namespace blazorbp.Controllers;
 
 using System.Security.Claims;
 using System.Text.Json;
+using BlazorBp.Base;
 using BlazorBp.Core.Base;
 using CSBP.Services.Base;
 using CSBP.Services.Factory;

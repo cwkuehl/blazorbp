@@ -1,6 +1,6 @@
 @page "/en/en100/{id?}"
 @using CSBP.Services.Apis.Models
-@inherits BlazorComponentBase<EN100Model, EN100TableRowModel>
+@inherits BlazorComponent<EN100Model, EN100TableRowModel>
 @attribute [Authorize(Roles = "User, Admin, Superadmin")]
 
 <SectionContent SectionName="title">@Title</SectionContent>

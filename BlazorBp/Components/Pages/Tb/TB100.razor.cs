@@ -1,18 +1,18 @@
+namespace BlazorBp.Components.Pages.Tb;
+
+using BlazorBp.Components.Controls;
 using BlazorBp.Core.Base;
 using BlazorBp.Core.Models;
-using BlazorBp.Core.Components.Controls;
 using BlazorBp.Models.Tb;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using CSBP.Services.Factory;
 using Microsoft.AspNetCore.Components;
 
-namespace BlazorBp.Components.Pages.Tb;
-
 /// <summary>
 /// Code-Behind des Formulars TB100 Tagebuch.
 /// </summary>
-public partial class TB100 : BlazorComponentBase<TB100Model, TableRowModelBase>
+public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
 {
   /// <summary>Holt oder setzt das Modal-Model.</summary>
   [SupplyParameterFromForm]

@@ -2,7 +2,7 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Core.Components.Controls;
+namespace BlazorBp.Components.Controls;
 
 using System.Text.Json;
 
