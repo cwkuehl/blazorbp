@@ -97,7 +97,7 @@ public class WP260Model : PageModelBase
 
   /// <summary>Holt oder setzt Stand.</summary>
   [Display(Name = "_Stand", Description = "Wert aller Anteile der Anlage am Datum")]
-  public decimal? Stand { get; set; }
+  public string? Stand { get; set; }
 
   /// <summary>Holt oder setzt OK.</summary>
   [Display(Name = "_OK", Description = "Dialog mit Speichern schließen")]
