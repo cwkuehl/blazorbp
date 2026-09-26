@@ -33,7 +33,7 @@ public class CsvWriter
   /// Anhängen einer CSV-Zeile.
   /// </summary>
   /// <param name="s">Betroffene CSV-Zeile getrennt nach Spalten.</param>
-  public void AddCsvLine(string[] s)
+  public void AddCsvLine(string?[] s)
   {
     var sb = new StringBuilder();
     if (s != null)

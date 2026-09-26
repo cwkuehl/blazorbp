@@ -148,5 +148,15 @@ public static partial class Funktionen
       st += "%";
     return st;
   }
+
+  /// <summary>
+  /// Checks if it is a filtering like expression. Empty, % and %% are not.
+  /// </summary>
+  /// <param name="t">Affected like expression.</param>
+  /// <returns>It is a filtering like expression or not.</returns>
+  public static bool IsLike(string t)
+  {
+    return !(string.IsNullOrEmpty(t) || t == "%" || t == "%%");
+  }
 }
 

@@ -6,8 +6,8 @@ namespace BlazorBp.Forms.Demo.Impl;
 
 using BlazorBp.Forms.Demo.Apis;
 using BlazorBp.Forms.Demo.Models.Demo;
+using BlazorBp.Core.Core;
 using CSBP.Services.Base;
-using CSBP.Services.Base.Csv;
 
 public class DemoService : IDemoService
 {
@@ -49,7 +49,7 @@ public class DemoService : IDemoService
       }
     }
     var l = objlist.ToList();
-    if (CsbpBase.IsLike(rm.Search))
+    if (Funktionen.IsLike(rm.Search))
     {
       l = l.Where(a => Like(a.Name, rm.Search) || Like(a.Description, rm.Search)).ToList();
     }
@@ -201,7 +201,7 @@ public class DemoService : IDemoService
     // The 'Like' method is not supported because the query has switched to client-evaluation.
     // This usually happens when the arguments to the method cannot be translated to server.
     // Rewrite the query to avoid client evaluation of arguments so that method can be translated to server.
-    if (!CsbpBase.IsLike(exp))
+    if (!Funktionen.IsLike(exp))
       return true;
     if (string.IsNullOrEmpty(s))
       return false;

@@ -14,7 +14,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.12" />
     <ProjectReference Include="..\BlazorBp.Core\BlazorBp.Core.csproj" />
-    <ProjectReference Include="..\..\csbp\CSBP.Services\CSBP.Services.csproj" />
   </ItemGroup>
 
 </Project>

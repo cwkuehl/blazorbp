@@ -3,7 +3,6 @@ namespace BlazorBp.Forms.Demo;
 using BlazorBp.Core.Modules;
 using BlazorBp.Forms.Demo.Apis;
 using BlazorBp.Forms.Demo.Impl;
-using CSBP.Services.Base;
 using Microsoft.Extensions.DependencyInjection;
 
 public class DemoModule : IFormModule
@@ -18,7 +17,8 @@ public class DemoModule : IFormModule
 
   public bool Expanded => false;
 
-  public IEnumerable<string> RequiredRoles => [UserDaten.RoleAdmin, UserDaten.RoleSuperadmin];
+  // public IEnumerable<string> RequiredRoles => [UserDaten.RoleAdmin, UserDaten.RoleSuperadmin];
+  public IEnumerable<string> RequiredRoles => ["Admin", "Superadmin"];
 
   public IEnumerable<MenuEntry> GetMenuEntries() =>
   [
