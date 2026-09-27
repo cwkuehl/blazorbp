@@ -6,9 +6,9 @@ namespace BlazorBp.Models.Wp;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Core.Base;
+using BlazorSpa.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
-using static BlazorBp.Core.Base.DialogTypeEnum;
 
 /// <summary>
 /// Model-Klasse für eine Zeile in der Tabelle von Formular WP500 Stände.
@@ -70,10 +70,10 @@ public class WP500TableRowModel : TableRowModelBase
   {
     return new WP500TableRowModel
     {
-      Nummer = SessionExtensions.JoinFormParameter([ m.Wertpapier_Uid, Functions.ToString(m.Datum) ]), // Parameter in Session speichern, damit die Daten nicht in der URL stehen.
+      Nummer = SessionExtensions.JoinFormParameter([ m.Wertpapier_Uid, Funktionen.ToString(m.Datum) ]), // Parameter in Session speichern, damit die Daten nicht in der URL stehen.
       Wertpapier = Functions.Left2(m.StockDescription),
-      Valuta = Functions.ToString(m.Datum),
-      Betrag = Functions.ToString(m.Stueckpreis),
+      Valuta = Funktionen.ToString(m.Datum),
+      Betrag = Funktionen.ToString(m.Stueckpreis),
       AngelegtAm = m.Angelegt_Am,
       AngelegtVon = m.Angelegt_Von,
       GeaendertAm = m.Geaendert_Am,

@@ -4,6 +4,7 @@ using BlazorBp.Components.Controls;
 using BlazorBp.Core.Base;
 using BlazorBp.Core.Models;
 using BlazorBp.Models.Tb;
+using BlazorSpa.Base;
 using BlazorSpa.Base.Services;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
@@ -152,8 +153,8 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
           var r = dtp == DialogTypeEnum.Delete
             ? FactoryService.DiaryService.DeletePosition(daten, o)
             : FactoryService.DiaryService.SavePosition(daten, o.Uid, o.Bezeichnung,
-                Functions.ToString(o.Breite, 5), Functions.ToString(o.Laenge, 5),
-                Functions.ToString(o.Hoehe, 2), o.Zeitzone, o.Notiz);
+                Funktionen.ToString(o.Breite, 5), Funktionen.ToString(o.Laenge, 5),
+                Funktionen.ToString(o.Hoehe, 2), o.Zeitzone, o.Notiz);
           if (r.Ok)
           {
             Model.ModalArt = null;

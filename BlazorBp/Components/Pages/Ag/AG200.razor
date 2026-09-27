@@ -178,7 +178,7 @@
     var r = FactoryService.ClientService.GetUserList(daten, rm);
     var l = r.Ergebnis?.Select(a => AG200TableRowModel.From(a)).ToList() ?? new List<AG200TableRowModel>();
     if (!r.Ok)
-      messages?.Add(() => Model, r.GetErrors());
+      messages?.Add(() => Model, r.GetErrors() ?? "");
     return UpdateTable(m, rm, l);
   }
 }

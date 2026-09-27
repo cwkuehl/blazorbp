@@ -91,9 +91,9 @@
 
     var l = Get(FactoryService.BudgetService.GetProprietaryPlList(daten, datum));
     l?.Reverse();
-    var pplList = l?.Select(a => new KeyValuePair<string, decimal>(Functions.ToString(a.Geaendert_Am), a.EBetrag)).ToList();
+    var pplList = l?.Select(a => new KeyValuePair<string, decimal>(Funktionen.ToString(a.Geaendert_Am), a.EBetrag)).ToList();
     var l2 = Get(FactoryService.PrivateService.GetMileages(daten, datum));
-    var mileageList = l2?.Select(a => new KeyValuePair<string, decimal>(Functions.ToString(a.Datum), a.Periode_km)).ToList();
+    var mileageList = l2?.Select(a => new KeyValuePair<string, decimal>(Funktionen.ToString(a.Datum), a.Periode_km)).ToList();
     if (pplList != null && mileageList != null)
     {
       var ctx = new CanvasCompiler();

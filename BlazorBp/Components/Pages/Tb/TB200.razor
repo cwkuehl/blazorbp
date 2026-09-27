@@ -140,8 +140,8 @@
         var r = dt1 == DialogTypeEnum.Delete
           ? FactoryService.DiaryService.DeletePosition(daten, o)
           : FactoryService.DiaryService.SavePosition(daten, o.Uid, o.Bezeichnung,
-              Functions.ToString(o.Breite, 5), Functions.ToString(o.Laenge, 5),
-              Functions.ToString(o.Hoehe, 2), o.Zeitzone, o.Notiz);
+              Funktionen.ToString(o.Breite, 5), Funktionen.ToString(o.Laenge, 5),
+              Funktionen.ToString(o.Hoehe, 2), o.Zeitzone, o.Notiz);
         if (r.Ok)
         {
           Model.ModalArt = null;
@@ -149,7 +149,7 @@
           Refresh();
         }
         else
-          ModalMessages?.Add(() => TB210Model, r.GetErrors());
+          ModalMessages?.Add(() => TB210Model, r.GetErrors() ?? "");
       }
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
@@ -191,7 +191,7 @@
   /// <returns>True, wenn am Model etwas geändert wurde, sonst false.</returns>
   protected override bool OnRowChanged(TB200TableRowModel? row, int selrow, ValidationMessageStore? messages)
   {
-    Model.MapHref = row == null ? null : $"https://www.openstreetmap.org/#map=19/{Functions.ToString(Functions.ToDecimal(row.Breite, 5), 5, Functions.CultureInfoEn)}/{Functions.ToString(Functions.ToDecimal(row.Laenge, 5), 5, Functions.CultureInfoEn)}";
+    Model.MapHref = row == null ? null : $"https://www.openstreetmap.org/#map=19/{Funktionen.ToString(Functions.ToDecimal(row.Breite, 5), 5, Functions.CultureInfoEn)}/{Funktionen.ToString(Functions.ToDecimal(row.Laenge, 5), 5, Functions.CultureInfoEn)}";
     return true;
   }
 

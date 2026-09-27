@@ -114,7 +114,7 @@
     var ld = Get(FactoryService.StockService.GetPriceList(daten, Model.Von ?? daten.Heute, Model.Bis ?? daten.Heute, Model.Wertpapier, Model.Relativ));
     ld?.Reverse(); // Sortierung: Datum absteigend
     //// Date;Date;Open_r;High_r;Low_r;Close_r
-    Model.AuswahlData = ld?.Select(a => new ListItem(Functions.ToString(a.Datum), $"{Functions.ToString(a.Datum)} | {Functions.ToString(a.Open, 4)} | {Functions.ToString(a.High, 4)} | {Functions.ToString(a.Low, 4)} | {Functions.ToString(a.Close, 4)}")).ToList() ?? new List<ListItem>{ new ListItem("", "Keine Daten") };
+    Model.AuswahlData = ld?.Select(a => new ListItem(Funktionen.ToString(a.Datum), $"{Funktionen.ToString(a.Datum)} | {Funktionen.ToString(a.Open, 4)} | {Funktionen.ToString(a.High, 4)} | {Funktionen.ToString(a.Low, 4)} | {Funktionen.ToString(a.Close, 4)}")).ToList() ?? new List<ListItem>{ new ListItem("", "Keine Daten") };
     var wpbez = string.IsNullOrEmpty(Model.Wertpapier) ? null : l0?.FirstOrDefault(a => a.Uid == Model.Wertpapier)?.Bezeichnung;
     ShowChart(true, ld, wpbez);
   }

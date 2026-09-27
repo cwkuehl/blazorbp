@@ -72,7 +72,7 @@
   {
     if (Model == null || Messages == null)
       return;
-    if (Functions.MachNichts() == 01)
+    if (Funktionen.MachNichts() == 01)
       navigation.NavigateTo($"/auth/login?u={Model?.Username}&p={Model?.Password}", true);
     else
     {

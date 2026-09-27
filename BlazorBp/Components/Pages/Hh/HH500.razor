@@ -133,10 +133,10 @@
     var sollListe = l.Where(a => a.AccountType > 0).ToList();
     var habenListe = l.Where(a => a.AccountType <= 0).ToList();
     //// No.;Description;Value_r;Changed at;Changed by;Created at;Created by
-    Model.AuswahlSoll = InsertEmptyIfEmpty(sollListe.Select(a => new ListItem(Functions.ToString(a.Konto_Uid), $"{Functions.CutOrPadRight(Functions.ToString(a.AccountName),25, '\u00A0')}|{Functions.CutOrPadLeft(Functions.ToString(a.AccountEsum, 2),12, '\u00A0')}|{Functions.ToString(a.Geaendert_Am, true)}|{a.Geaendert_Von}|{Functions.ToString(a.Angelegt_Am, true)}|{a.Angelegt_Von}")).ToList());
-    Model.AuswahlHaben = InsertEmptyIfEmpty(habenListe.Select(a => new ListItem(Functions.ToString(a.Konto_Uid), $"{Functions.CutOrPadRight(Functions.ToString(a.AccountName),25, '\u00A0')}|{Functions.CutOrPadLeft(Functions.ToString(a.AccountEsum, 2),12, '\u00A0')}|{Functions.ToString(a.Geaendert_Am, true)}|{a.Geaendert_Von}|{Functions.ToString(a.Angelegt_Am, true)}|{a.Angelegt_Von}")).ToList());
-    Model.SollBetrag0 = Functions.ToString(sollListe.Sum(a => a.AccountEsum), 2);
-    Model.HabenBetrag0 = Functions.ToString(habenListe.Sum(a => a.AccountEsum), 2);
+    Model.AuswahlSoll = InsertEmptyIfEmpty(sollListe.Select(a => new ListItem(Functions.ToString(a.Konto_Uid), $"{Functions.CutOrPadRight(Functions.ToString(a.AccountName),25, '\u00A0')}|{Functions.CutOrPadLeft(Funktionen.ToString(a.AccountEsum, 2),12, '\u00A0')}|{Funktionen.ToString(a.Geaendert_Am, true)}|{a.Geaendert_Von}|{Funktionen.ToString(a.Angelegt_Am, true)}|{a.Angelegt_Von}")).ToList());
+    Model.AuswahlHaben = InsertEmptyIfEmpty(habenListe.Select(a => new ListItem(Functions.ToString(a.Konto_Uid), $"{Functions.CutOrPadRight(Functions.ToString(a.AccountName),25, '\u00A0')}|{Functions.CutOrPadLeft(Funktionen.ToString(a.AccountEsum, 2),12, '\u00A0')}|{Funktionen.ToString(a.Geaendert_Am, true)}|{a.Geaendert_Von}|{Funktionen.ToString(a.Angelegt_Am, true)}|{a.Angelegt_Von}")).ToList());
+    Model.SollBetrag0 = Funktionen.ToString(sollListe.Sum(a => a.AccountEsum), 2);
+    Model.HabenBetrag0 = Funktionen.ToString(habenListe.Sum(a => a.AccountEsum), 2);
   }
 
   /// <summary>
@@ -200,7 +200,7 @@
           v = b.AddDays(1 - b.DayOfYear);
         }
         var nr = Guid.NewGuid().ToString();
-        HttpContext?.Session?.SetFormParameter(null, [Functions.ToString(v), Functions.ToString(b), uid]);
+        HttpContext?.Session?.SetFormParameter(null, [Funktionen.ToString(v), Funktionen.ToString(b), uid]);
         var f = OpenFormular("HH400", $"P{nr}");
         if (f != null)
           OpenFormular(f);
@@ -212,7 +212,7 @@
       var v = Model.Von ?? daten.Heute;
       var b = Model.Bis ?? daten.Heute;
       var nr = Guid.NewGuid().ToString();
-      HttpContext?.Session?.SetFormParameter(null, [Model.Nr, Functions.ToString(v), Functions.ToString(b)]);
+      HttpContext?.Session?.SetFormParameter(null, [Model.Nr, Funktionen.ToString(v), Funktionen.ToString(b)]);
       var f = OpenFormular("HH510", $"P{nr}");
       if (f != null)
         OpenFormular(f);
@@ -312,7 +312,7 @@
     }
     catch (Exception ex)
     {
-      Functions.MachNichts(ex);
+      Funktionen.MachNichts(ex);
     }
     finally
     {

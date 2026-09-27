@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Text;
 using System.Xml;
+using BlazorSpa.Base;
 using CSBP.Services.Base;
 
 namespace GladeBlazor;
@@ -123,7 +124,7 @@ public class Generator
       baseclass = "TableRowModelBase";
       besch = "eine Zeile in der Tabelle von ";
     }
-    Functions.MachNichts(nomodal);
+    Funktionen.MachNichts(nomodal);
     var sb = new StringBuilder();
     var sbt = new StringBuilder();
     var sbt2 = new StringBuilder();
@@ -1014,11 +1015,11 @@ else
           var n = reader.Name;
           if (ignore || n == "interface" || n == "requires" || n == "packing" || n == "placeholder" || n == "signal")
           {
-            Functions.MachNichts();
+            Funktionen.MachNichts();
           }
           else if (n == "GtkTreeSelection")
           {
-            Functions.MachNichts();
+            Funktionen.MachNichts();
           }
           else if (n == "child")
           {
@@ -1040,7 +1041,7 @@ else
               if (type == "GtkButton" && name.EndsWith("Action"))
               {
                 if (name == "newAction")
-                  Functions.MachNichts();
+                  Funktionen.MachNichts();
                 else
                   name = name.Substring(0, name.Length - 6);
               }

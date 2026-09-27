@@ -138,7 +138,7 @@
           Refresh();
         }
         else
-          ModalMessages?.Add(() => AM510Model, r.GetErrors());
+          ModalMessages?.Add(() => AM510Model, r.GetErrors() ?? "");
       }
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
@@ -169,7 +169,7 @@
     var r = FactoryService.ClientService.GetOptionList(daten, daten.MandantNr, Parameter.Params, rm);
     var l = r.Ergebnis?.Select(a => AM500TableRowModel.From(a)).ToList() ?? new List<AM500TableRowModel>();
     if (!r.Ok)
-      messages?.Add(() => Model, r.GetErrors());
+      messages?.Add(() => Model, r.GetErrors() ?? "");
     return UpdateTable(m, rm, l);
   }
 }

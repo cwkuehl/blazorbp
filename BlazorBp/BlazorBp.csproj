@@ -19,6 +19,6 @@
   <ItemGroup> <!-- Empfehlung von GPT-6: Wildcard-Version sind aus Security-Gründen nicht optimal. -->
     <PackageReference Include="NeoSmart.Caching.Sqlite.AspNetCore" Version="9.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
-    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.10.0" />
+    <!-- <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.10.0" /> -->
   </ItemGroup>
 </Project>

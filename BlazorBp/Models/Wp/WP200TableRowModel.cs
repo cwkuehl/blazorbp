@@ -6,6 +6,7 @@ namespace BlazorBp.Models.Wp;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Core.Base;
+using BlazorSpa.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorBp.Core.Base.DialogTypeEnum;
@@ -99,9 +100,9 @@ public class WP200TableRowModel : TableRowModelBase
       Provider = m.Datenquelle,
       Kuerzel = m.Kuerzel,
       Status = CsbpBase.GetStockState(m.Status, m.Kuerzel),
-      AktKurs = Functions.ToString(m.CurrentPrice),
-      StopKurs = Functions.ToString(m.StopPrice),
-      SignalKurs1 = Functions.ToString(m.SignalPrice1),
+      AktKurs = Funktionen.ToString(m.CurrentPrice),
+      StopKurs = Funktionen.ToString(m.StopPrice),
+      SignalKurs1 = Funktionen.ToString(m.SignalPrice1),
       Muster = Functions.Left2(m.Pattern),
       Typ = m.Type,
       Waehrung = m.Currency,

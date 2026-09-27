@@ -159,7 +159,7 @@
       {
         var kuid = Model.Konfiguration ?? GetStringData("WP200Konfiguration");
         var nr = Guid.NewGuid().ToString();
-        HttpContext?.Session?.SetFormParameter(null, [Functions.ToString(Model.Bis), wpuid, kuid]);
+        HttpContext?.Session?.SetFormParameter(null, [Funktionen.ToString(Model.Bis), wpuid, kuid]);
         var f = OpenFormular("WP100", $"P{nr}");
         if (f != null)
           OpenFormular(f);

@@ -7,6 +7,7 @@ namespace BlazorBp.Models.Hh;
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Core.Base;
 using BlazorBp.Core.Models;
+using BlazorSpa.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorBp.Core.Base.DialogTypeEnum;
@@ -124,7 +125,7 @@ public class HH410Model : PageModelBase
   ) = (
     m.Uid,
     m.Soll_Valuta,
-    Functions.ToString(m.EBetrag, 2),
+    Funktionen.ToString(m.EBetrag, 2),
     0,
     m.Soll_Konto_Uid,
     m.Haben_Konto_Uid,

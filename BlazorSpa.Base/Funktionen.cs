@@ -5,12 +5,17 @@
 namespace BlazorSpa.Base;
 
 using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
 
 /// <summary>
 /// General useful functions.
 /// </summary>
 public static partial class Funktionen
 {
+  /// <summary>Instance of random number generator.</summary>
+  private static readonly RandomNumberGenerator Csp = RandomNumberGenerator.Create();
+
   /// <summary>German culture info.</summary>
   private static readonly CultureInfo CultureInfoDeRo = CultureInfo.CreateSpecificCulture("de-DE");
 
@@ -108,7 +113,7 @@ public static partial class Funktionen
   /// </summary>
   /// <returns>Converted value.</returns>
   /// <param name="s">Affected string.</param>
-  public static int ToInt32(string s)
+  public static int ToInt32(string? s)
   {
     var d = ToDecimal(s, 0);
     if (d.HasValue && d.Value >= int.MinValue && d.Value <= int.MaxValue)
@@ -148,6 +153,94 @@ public static partial class Funktionen
   }
 
   /// <summary>
+  /// Converts nullable DateTime to string in format yyyy-MM-dd, yyyy-MM-dd HH:mm:ss or yyyy-MM-dd HH:mm:ss.fffffff.
+  /// </summary>
+  /// <param name="d">Affected value.</param>
+  /// <param name="time">Formats with time or not.</param>
+  /// <param name="milli">Formats with milliseconds or not.</param>
+  /// <returns>Converted value.</returns>
+  public static string ToString(DateTime? d, bool time = false, bool milli = false)
+  {
+    if (!d.HasValue)
+      return string.Empty;
+    if (time)
+    {
+      if (milli)
+        return d.Value.ToString("yyyy-MM-dd HH:mm:ss.fffffff");
+      return d.Value.ToString("yyyy-MM-dd HH:mm:ss");
+    }
+    return d.Value.ToString("yyyy-MM-dd");
+  }
+
+  /// <summary>
+  /// Returns the right part of a string with the given length.
+  /// If the string is too short, it is returned unchanged.
+  /// If the string is null, the empty string is returned.
+  /// </summary>
+  /// <param name="value">Affected string.</param>
+  /// <param name="length">The number of characters to return.</param>
+  /// <returns>A shorter, the same or the empty string.</returns>
+  public static string Right(this string? value, int length)
+  {
+    return value == null
+      ? string.Empty
+      : (length > value.Length ? value : value.Substring(value.Length - length, length));
+  }
+
+  /// <summary>
+  /// Returns file name optionally with date and random number.
+  /// </summary>
+  /// <param name="name">Name am Anfang.</param>
+  /// <param name="datum">With current date or not.</param>
+  /// <param name="zeit">With current time or not.</param>
+  /// <param name="zufall">With random number or not.</param>
+  /// <param name="endung">Dateiendung ohne Punkt.</param>
+  /// <returns>File name.</returns>
+  public static string GetDateiname(string name, bool datum, bool zeit, bool zufall, string endung)
+  {
+    var sb = new StringBuilder();
+    if (!string.IsNullOrEmpty(name))
+      sb.Append(name);
+    if (datum)
+    {
+      if (zeit)
+        sb.Append('_').Append(DateTime.Now.ToString("yyyyMMddHHmmss"));
+      else
+        sb.Append('_').Append(DateTime.Today.ToString("yyyyMMdd"));
+    }
+    else if (zeit)
+      sb.Append('_').Append(DateTime.Now.ToString("HHmmss"));
+    if (zufall)
+      sb.Append('_').Append(NextRandom(1000, 10000));
+    if (!string.IsNullOrEmpty(endung))
+      sb.Append('.').Append(endung);
+    return sb.ToString();
+  }
+
+  /// <summary>
+  /// Gets the next random number between two values.
+  /// </summary>
+  /// <param name="minValue">Minimal value.</param>
+  /// <param name="maxExclusiveValue">Exclusive maximal value.</param>
+  /// <returns>Random number between two values.</returns>
+  public static int NextRandom(int minValue, int maxExclusiveValue)
+  {
+    if (minValue >= maxExclusiveValue)
+      throw new ArgumentOutOfRangeException(nameof(minValue)); // "minValue must be lower than maxExclusiveValue");
+
+    var diff = (long)maxExclusiveValue - minValue;
+    var upperBound = uint.MaxValue / diff * diff;
+
+    uint ui;
+    do
+    {
+      ui = GetRandomUInt();
+    }
+    while (ui >= upperBound);
+    return (int)(minValue + (ui % diff));
+  }
+
+  /// <summary>
   /// Liefert den Suchtext für eine Like-Suche: aus * wird % und falls kein %, wird % angehängt.
   /// </summary>
   /// <param name="s">Betroffener Suchstring.</param>
@@ -170,6 +263,28 @@ public static partial class Funktionen
   public static bool IsLike(string? t)
   {
     return !(string.IsNullOrEmpty(t) || t == "%" || t == "%%");
+  }
+
+  /// <summary>
+  /// Gets a random integer.
+  /// </summary>
+  /// <returns>Random integer.</returns>
+  private static uint GetRandomUInt()
+  {
+    var randomBytes = GenerateRandomBytes(sizeof(uint));
+    return BitConverter.ToUInt32(randomBytes, 0);
+  }
+
+  /// <summary>
+  /// Gets random bytes.
+  /// </summary>
+  /// <param name="bytesNumber">Number of bytes.</param>
+  /// <returns>Random bytes.</returns>
+  private static byte[] GenerateRandomBytes(int bytesNumber)
+  {
+    var buffer = new byte[bytesNumber];
+    Csp.GetBytes(buffer);
+    return buffer;
   }
 }
 

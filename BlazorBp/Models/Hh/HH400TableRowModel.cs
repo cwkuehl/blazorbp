@@ -6,6 +6,7 @@ namespace BlazorBp.Models.Hh;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Core.Base;
+using BlazorSpa.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorBp.Core.Base.DialogTypeEnum;
@@ -77,14 +78,14 @@ public class HH400TableRowModel : TableRowModelBase
     return new HH400TableRowModel
     {
       Nummer = m.Uid,
-      Valuta = Functions.ToString(m.Soll_Valuta),
+      Valuta = Funktionen.ToString(m.Soll_Valuta),
       Betrag = m.EBetrag,
       Kennzeichen = m.Kz,
       BText = Functions.Left2(m.BText),
       Sollkonto = m.DebitName,
       Habenkonto = m.CreditName,
       BelegNr = m.Beleg_Nr,
-      BelegDatum = Functions.ToString(m.Beleg_Datum),
+      BelegDatum = Funktionen.ToString(m.Beleg_Datum),
       AngelegtAm = m.Angelegt_Am,
       AngelegtVon = m.Angelegt_Von,
       GeaendertAm = m.Geaendert_Am,

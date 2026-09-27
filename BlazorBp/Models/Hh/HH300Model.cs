@@ -6,7 +6,7 @@ namespace BlazorBp.Models.Hh;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Core.Base;
-using CSBP.Services.Base;
+using BlazorSpa.Base;
 using static BlazorBp.Core.Base.DialogTypeEnum;
 
 /// <summary>
@@ -29,7 +29,7 @@ public class HH300Model : PageModelBase
   {
     if (mode == New || mode == Copy)
     {
-      Functions.MachNichts();
+      Funktionen.MachNichts();
     }
     SetMandatoryHiddenReadonly(nameof(Refresh), false, false, false, false);
     SetMandatoryHiddenReadonly(nameof(Schliessen), false, false, false, false);

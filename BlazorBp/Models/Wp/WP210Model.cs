@@ -7,6 +7,7 @@ namespace BlazorBp.Models.Wp;
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Core.Base;
 using BlazorBp.Core.Models;
+using BlazorSpa.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorBp.Core.Base.DialogTypeEnum;
@@ -170,9 +171,9 @@ public class WP210Model : PageModelBase
     m.Datenquelle,
     m.Kuerzel,
     m.Status,
-    Functions.ToString(m.CurrentPrice),
-    Functions.ToString(m.StopPrice),
-    Functions.ToString(m.SignalPrice1),
+    Funktionen.ToString(m.CurrentPrice),
+    Funktionen.ToString(m.StopPrice),
+    Funktionen.ToString(m.SignalPrice1),
     m.Pattern,
     m.Type,
     m.Currency,

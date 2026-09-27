@@ -91,7 +91,7 @@
   protected override async Task OnInitializedAsync()
   {
     if (!Interactive)
-      Functions.MachNichts();
+      Funktionen.MachNichts();
     var authState = await AuthStateProvider.GetAuthenticationStateAsync();
     var user = authState.User;
 

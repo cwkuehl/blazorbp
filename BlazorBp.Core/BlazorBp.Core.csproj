@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\csbp\CSBP.Services\CSBP.Services.csproj" />
+    <ProjectReference Include="..\BlazorSpa.Base\BlazorSpa.Base.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,10 +20,7 @@
   </ItemGroup>
 
   <ItemGroup> <!-- Empfehlung von GPT-6: Wildcard-Version sind aus Security-Gründen nicht optimal. -->
-    <!-- <PackageReference Include="Microsoft.AspNetCore.Components" Version="10.0.12" /> -->
-    <!-- <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.12" /> -->
-    <!-- <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.12" /> -->
-    <!-- <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.10.0" /> -->
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.10.0" />
   </ItemGroup>
 
 </Project>

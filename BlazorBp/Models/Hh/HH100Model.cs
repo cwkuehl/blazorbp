@@ -7,9 +7,7 @@ namespace BlazorBp.Models.Hh;
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Core.Base;
 using BlazorBp.Core.Models;
-using CSBP.Services.Apis.Models;
-using CSBP.Services.Base;
-using static BlazorBp.Core.Base.DialogTypeEnum;
+using BlazorSpa.Base;
 
 /// <summary>
 /// Model-Klasse für das Formular HH100 Perioden.
@@ -70,7 +68,7 @@ public class HH100Model : PageModelBase
   {
     if (mode == DialogTypeEnum.New)
     {
-      Functions.MachNichts();
+      Funktionen.MachNichts();
     }
     SetMandatoryHiddenReadonly(nameof(Perioden), false, false, false, mode == DialogTypeEnum.New);
     SetMandatoryHiddenReadonly(nameof(Anfang), false, false, true, false);

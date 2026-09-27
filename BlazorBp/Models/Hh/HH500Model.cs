@@ -7,7 +7,7 @@ namespace BlazorBp.Models.Hh;
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Core.Base;
 using BlazorBp.Core.Models;
-using CSBP.Services.Apis.Models;
+using BlazorSpa.Base;
 using CSBP.Services.Base;
 using static BlazorBp.Core.Base.DialogTypeEnum;
 
@@ -109,7 +109,7 @@ public class HH500Model : PageModelBase
   {
     if (mode == New || mode == Copy)
     {
-      Functions.MachNichts();
+      Funktionen.MachNichts();
     }
     SetMandatoryHiddenReadonly(nameof(Soll0), false, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Soll), false, false, mode == Delete, false);

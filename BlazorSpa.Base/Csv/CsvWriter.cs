@@ -2,10 +2,9 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Core.Core;
+namespace BlazorSpa.Base.Csv;
 
 using System.Text;
-using BlazorBp.Core.Base;
 using BlazorSpa.Base;
 
 /// <summary>

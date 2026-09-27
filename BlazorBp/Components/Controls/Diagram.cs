@@ -7,7 +7,7 @@ namespace BlazorBp.Components.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CSBP.Services.Base;
+using BlazorSpa.Base;
 
 /// <summary>
 /// Function for drawing a diagram.
@@ -19,7 +19,7 @@ public class Diagram
   /// </summary>
   public Diagram()
   {
-    Functions.MachNichts();
+    Funktionen.MachNichts();
   }
 
   /// <summary>Draws a diagram.</summary>
@@ -91,7 +91,7 @@ public class Diagram
       yl = (decimal)h0 + (decimal)wh - yoffset - ylegende - ((val - ymin) * ystep);
       //// waagerechte Gitterlinie mit y-Wert
       DrawLine(pc, xl, yl, xl2, yl, lightgray);
-      DrawString(pc, xl2 + yoffset, yl + (ygroesse / 3), Functions.ToString(val, 0), fontplain, black);
+      DrawString(pc, xl2 + yoffset, yl + (ygroesse / 3), Funktionen.ToString(val, 0), fontplain, black);
       val -= stellen;
     }
     xl = -1m;

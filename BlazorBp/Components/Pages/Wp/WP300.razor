@@ -144,7 +144,7 @@
           Refresh();
         }
         else
-          ModalMessages?.Add(() => WP310Model, r.GetErrors());
+          ModalMessages?.Add(() => WP310Model, r.GetErrors() ?? "");
       }
     }
     WriteFormularModel(Model.Nr ?? "0", Model);

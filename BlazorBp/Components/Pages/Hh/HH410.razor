@@ -143,8 +143,8 @@
         : FactoryService.BudgetService.SaveBooking(daten, o.Uid, o.Soll_Valuta, o.Betrag, o.EBetrag, o.Soll_Konto_Uid, o.Haben_Konto_Uid, o.BText, o.Beleg_Nr, o.Beleg_Datum);
       if (r.Ok)
       {
-        SetStringData("HH410Valuta", Functions.ToString(Model.Valuta));
-        SetStringData("HH410BelegDatum", Functions.ToString(Model.BelegDatum));
+        SetStringData("HH410Valuta", Funktionen.ToString(Model.Valuta));
+        SetStringData("HH410BelegDatum", Funktionen.ToString(Model.BelegDatum));
         if (Model.DialogType == DialogTypeEnum.New)
         {
           var sb = new StringBuilder();

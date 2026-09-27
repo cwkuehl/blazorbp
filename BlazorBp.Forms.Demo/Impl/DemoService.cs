@@ -6,11 +6,10 @@ namespace BlazorBp.Forms.Demo.Impl;
 
 using BlazorBp.Forms.Demo.Apis;
 using BlazorBp.Forms.Demo.Models.Demo;
-using BlazorBp.Core.Core;
 using BlazorSpa.Base.Services;
-using CSBP.Services.Base;
 using BlazorSpa.Base.Models;
 using BlazorSpa.Base;
+using BlazorSpa.Base.Csv;
 
 public class DemoService : IDemoService
 {
@@ -129,7 +128,7 @@ public class DemoService : IDemoService
     {
       var desc = sortColumn.EndsWith("-");
       var sort = sortColumn.TrimEnd(['-', '+']).TrimEnd('#');
-      var l1 = l.AsQueryable().OrderBy(sort ?? "", desc).ToList();
+      var l1 = l.AsQueryable().OrderBy(sort ?? "", desc)?.ToList() ?? [];
       l.Clear();
       l.AddRange(l1);
     }
@@ -151,7 +150,7 @@ public class DemoService : IDemoService
     cs.AddCsvLine(["Id", "Name", "Description"]);
     foreach (var o in l)
     {
-      cs.AddCsvLine([Functions.ToString(o.Id), o.Name, o.Description]);
+      cs.AddCsvLine([Funktionen.ToString(o.Id), o.Name, o.Description]);
     }
     return cs.GetContent();
   }
@@ -176,7 +175,7 @@ public class DemoService : IDemoService
         {
           var o = new Objekt
           {
-            Id = Functions.ToInt32(sp[2]),
+            Id = Funktionen.ToInt32(sp[2]),
             Name = sp[0],
             Description = sp[1]
           };

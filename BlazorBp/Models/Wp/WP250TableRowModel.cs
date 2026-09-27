@@ -6,9 +6,9 @@ namespace BlazorBp.Models.Wp;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Core.Base;
+using BlazorSpa.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
-using static BlazorBp.Core.Base.DialogTypeEnum;
 
 /// <summary>
 /// Model-Klasse für eine Zeile in der Tabelle von Formular WP250 Anlagen.
@@ -91,12 +91,12 @@ public class WP250TableRowModel : TableRowModelBase
       Status = CsbpBase.GetStockState(m.State.ToString(), m.StockShortcut),
       Provider = m.StockProvider,
       Kuerzel = m.StockShortcut,
-      Zahlung = Functions.ToString(m.Payment, 2),
-      Anteile = Functions.ToString(m.Shares, 5),
-      Wert = Functions.ToString(m.Value, 2),
-      Gewinn = Functions.ToString(m.Profit, 2),
-      WertDiff = Functions.ToString(m.ValueDiff, 2),
-      Valuta = Functions.ToString(m.PriceDate),
+      Zahlung = Funktionen.ToString(m.Payment, 2),
+      Anteile = Funktionen.ToString(m.Shares, 5),
+      Wert = Funktionen.ToString(m.Value, 2),
+      Gewinn = Funktionen.ToString(m.Profit, 2),
+      WertDiff = Funktionen.ToString(m.ValueDiff, 2),
+      Valuta = Funktionen.ToString(m.PriceDate),
       Waehrung = m.Currency,
       AngelegtAm = m.Angelegt_Am,
       AngelegtVon = m.Angelegt_Von,

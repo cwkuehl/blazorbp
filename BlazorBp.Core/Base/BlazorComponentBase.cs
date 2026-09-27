@@ -6,9 +6,10 @@ namespace BlazorBp.Core.Base;
 
 using BlazorBp.Core.Core;
 using BlazorBp.Core.Models;
+using BlazorSpa.Base;
+using BlazorSpa.Base.Csv;
 using BlazorSpa.Base.Models;
 using BlazorSpa.Base.Services;
-using CSBP.Services.Base;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
@@ -658,7 +659,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   public void HandleNoModal1(string? form, string? handler, string? id, string detailform)
   {
     // Basis-Funktion mit Formularkennung und Id, die ein Formular öffnet.
-    var i = Functions.ToInt32(id);
+    var i = Funktionen.ToInt32(id);
     if (i < 0 && handler == "Table_New")
     {
       var dt = Formular.ToShortString(Formular.GetTableDialogType(handler));
@@ -870,7 +871,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
         if (fileid != null && f.Name != fileid)
           continue; // Andere Dateien ignorieren.
         var extension = Path.GetExtension(f.FileName);
-        var fn = Functions.GetDateiname(fileprefix, true, false, true, extension);
+        var fn = Funktionen.GetDateiname(fileprefix, true, false, true, extension);
         var filePath = Path.Combine(folderPath, fn);
         try
         {

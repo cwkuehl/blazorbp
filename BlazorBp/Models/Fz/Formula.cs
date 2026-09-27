@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.RegularExpressions;
+using BlazorSpa.Base;
 using CSBP.Services.Base;
 
 /// <summary>
@@ -355,7 +356,7 @@ public class Formulas
               sum += Functions.ToDecimalCi(Functions.MakeBold(v, true)) ?? 0;
             }
           }
-          val = Functions.ToString(sum);
+          val = Funktionen.ToString(sum);
         }
       }
       else if (f.Function == "count")
@@ -387,17 +388,17 @@ public class Formulas
             v = store[f.Row2][f.Column2 + Formula.Offset];
             var val2 = Functions.ToDateTime(Functions.MakeBold(v, true));
             if (val2.HasValue)
-              val = Functions.ToString((long)(val1.Value - val2.Value).TotalDays, 0);
+              val = Funktionen.ToString((long)(val1.Value - val2.Value).TotalDays, 0);
           }
         }
       }
       else if (f.Function == "now")
       {
-        val = Functions.ToString(DateTime.Now, true);
+        val = Funktionen.ToString(DateTime.Now, true);
       }
       else if (f.Function == "today")
       {
-        val = Functions.ToString(DateTime.Today, false);
+        val = Funktionen.ToString(DateTime.Today, false);
       }
       if (val != null)
       {

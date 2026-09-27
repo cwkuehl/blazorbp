@@ -133,7 +133,7 @@
           return true;
         }
         else
-          Messages?.Add(() => Model, r.GetErrors());
+          Messages?.Add(() => Model, r.GetErrors() ?? "");
       }
       else
       {
@@ -157,7 +157,7 @@
           return true;
         }
         else
-          Messages?.Add(() => Model, r.GetErrors());
+          Messages?.Add(() => Model, r.GetErrors() ?? "");
       }
     }
     else if (IsDateMhp(submit, nameof(Model.Valuta), Model.Valuta, out var d))

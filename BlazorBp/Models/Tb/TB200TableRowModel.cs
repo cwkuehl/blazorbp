@@ -6,6 +6,7 @@ namespace BlazorBp.Models.Tb;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Core.Base;
+using BlazorSpa.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorBp.Core.Base.DialogTypeEnum;
@@ -79,9 +80,9 @@ public class TB200TableRowModel : TableRowModelBase
     {
       Nummer = m.Uid,
       Bezeichnung = Functions.Left2(m.Bezeichnung),
-      Breite = Functions.ToString(m.Breite, 5),
-      Laenge = Functions.ToString(m.Laenge, 5),
-      Hoehe = Functions.ToString(m.Hoehe, 2),
+      Breite = Funktionen.ToString(m.Breite, 5),
+      Laenge = Funktionen.ToString(m.Laenge, 5),
+      Hoehe = Funktionen.ToString(m.Hoehe, 2),
       Zeitzone = m.Zeitzone,
       Notiz = Functions.Left2(m.Notiz),
       AngelegtAm = m.Angelegt_Am,

@@ -2,7 +2,6 @@ namespace BlazorBp.Core.Components.Controls;
 
 using BlazorBp.Core.Models;
 using BlazorSpa.Base;
-using CSBP.Services.Base;
 using Microsoft.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
@@ -260,7 +259,7 @@ public partial class LabelInputValid<TItem> : ComponentBase
       textareacols = null;
     }
     CssClass = (checkbox || radio ? "form-check-input" : combobox || listbox ? "form-select" : "form-control")
-      + Functions.Iif(string.IsNullOrEmpty(CssClass), "", " ") + CssClass;
+      + Funktionen.Iif(string.IsNullOrEmpty(CssClass), "", " ") + CssClass;
     if (For?.Body is MemberExpression me)
     {
       var mb = me.Member;
@@ -338,26 +337,26 @@ public partial class LabelInputValid<TItem> : ComponentBase
           }
           if (rhe.Contains($"#{name}#E"))
           {
-            CssClassLabel += Functions.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "text-danger";
-            CssClass += Functions.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "border-danger";
+            CssClassLabel += Funktionen.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "text-danger";
+            CssClass += Funktionen.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "border-danger";
           }
           if (rhe.Contains($"#{name}#M"))
           {
             if (submit)
-              CssClass += Functions.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "fw-bold";
-            CssClassLabel += Functions.Iif(string.IsNullOrEmpty(CssClassLabel), "", " ") + "fw-bold";
+              CssClass += Funktionen.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "fw-bold";
+            CssClassLabel += Funktionen.Iif(string.IsNullOrEmpty(CssClassLabel), "", " ") + "fw-bold";
           }
           if (rhe.Contains($"#{name}#C1"))
           {
-            CssClass += Functions.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "text-bg-success"; // grün
+            CssClass += Funktionen.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "text-bg-success"; // grün
           }
           if (rhe.Contains($"#{name}#C2"))
           {
-            CssClass += Functions.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "text-bg-warning"; // gelb
+            CssClass += Funktionen.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "text-bg-warning"; // gelb
           }
           if (rhe.Contains($"#{name}#C3"))
           {
-            CssClass += Functions.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "text-bg-danger"; // rot
+            CssClass += Funktionen.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "text-bg-danger"; // rot
           }
         }
         // Fokus
@@ -450,9 +449,9 @@ public partial class LabelInputValid<TItem> : ComponentBase
       //}
     }
     if (InputType == "date")
-      SetAttribute(Attributes2, "value", Functions.ToString(CurrentValueAsDateTime));
+      SetAttribute(Attributes2, "value", Funktionen.ToString(CurrentValueAsDateTime));
     else if (currency > 0)
-      SetAttribute(Attributes2, "value", Functions.ToString(CurrentValueAsDecimal, currency, Functions.CultureInfoEn, true));
+      SetAttribute(Attributes2, "value", Funktionen.ToString(CurrentValueAsDecimal, currency, Funktionen.CultureInfoEn, true));
     if (checkbox)
     {
       SetAttribute(Attributes2, "value", true.ToString());

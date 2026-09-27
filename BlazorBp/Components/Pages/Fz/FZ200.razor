@@ -141,7 +141,7 @@
           Refresh();
         }
         else
-          ModalMessages?.Add(() => FZ210Model, r.GetErrors());
+          ModalMessages?.Add(() => FZ210Model, r.GetErrors() ?? "");
       }
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
