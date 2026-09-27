@@ -26,7 +26,7 @@
         <span class="btn btn-secondary fw-bold"><SectionOutlet SectionName="title"/></span>
       </div>
       <div class="col-3 text-end">
-        <Countdown Sekunden="@((Konstanten.SESSION_TIMEOUT - 5) / 2)"></Countdown>
+        <Countdown Sekunden="@((BlazorBp.Base.Konstanten.SESSION_TIMEOUT - 5) / 2)"></Countdown>
       </div>
     </div>
     <div class="row border border-2 border-primary rounded-3 mt-1 ms-0 me-0">
@@ -64,7 +64,7 @@
   [CascadingParameter]
   protected string bsmode { get; set; } = default!;
 
-  private bool Interactive { get; set; } = Konstanten.Interactive;
+  private bool Interactive { get; set; } = BlazorBp.Base.Konstanten.Interactive;
 
   private string helpurl { get; set; } = "";
 

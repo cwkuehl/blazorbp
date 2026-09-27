@@ -6,6 +6,8 @@ namespace BlazorBp.Core.Base;
 
 using BlazorBp.Core.Core;
 using BlazorBp.Core.Models;
+using BlazorSpa.Base.Models;
+using BlazorSpa.Base.Services;
 using CSBP.Services.Base;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -921,7 +923,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
         messages = Messages;
       if (messages != null)
         foreach (var e in r.Errors)
-          messages.Add(() => Model, e.MessageText);
+          messages.Add(() => Model, e.MessageText ?? "");
     }
     return r.Ergebnis;
   }
@@ -942,7 +944,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       messages = Messages;
     if (messages != null)
       foreach (var e in r.Errors)
-        messages.Add(() => Model, e.MessageText);
+        messages.Add(() => Model, e.MessageText ?? "");
     return false;
   }
 

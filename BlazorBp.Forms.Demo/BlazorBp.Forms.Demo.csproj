@@ -12,8 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.12" />
+    <ProjectReference Include="..\BlazorSpa.Base\BlazorSpa.Base.csproj" />
     <ProjectReference Include="..\BlazorBp.Core\BlazorBp.Core.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.12" />
   </ItemGroup>
 
 </Project>

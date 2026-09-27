@@ -1,6 +1,7 @@
 namespace BlazorBp.Core.Components.Controls;
 
 using BlazorBp.Core.Models;
+using BlazorSpa.Base;
 using CSBP.Services.Base;
 using Microsoft.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations;
@@ -379,10 +380,10 @@ public partial class LabelInputValid<TItem> : ComponentBase
       lbl += "&nbsp;&nbsp;";
     if (InputType == "date" && !string.IsNullOrEmpty(Accesskey) && Accesskey.Length > 3)
     {
-      accesskey1 = Functions.TrimNull(Accesskey.Substring(1, 1));
-      accesskey2 = Functions.TrimNull(Accesskey.Substring(2, 1));
-      accesskey3 = Functions.TrimNull(Accesskey.Substring(3, 1));
-      Accesskey = Functions.TrimNull(Accesskey.Substring(0, 1));
+      accesskey1 = Accesskey.Substring(1, 1).TrimNull();
+      accesskey2 = Accesskey.Substring(2, 1).TrimNull();
+      accesskey3 = Accesskey.Substring(3, 1).TrimNull();
+      Accesskey = Accesskey.Substring(0, 1).TrimNull();
     }
     if (string.IsNullOrEmpty(Accesskey))
     {

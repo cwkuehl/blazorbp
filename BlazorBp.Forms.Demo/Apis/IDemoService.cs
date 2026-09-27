@@ -5,7 +5,8 @@
 namespace BlazorBp.Forms.Demo.Apis;
 
 using BlazorBp.Forms.Demo.Models.Demo;
-using CSBP.Services.Base;
+using BlazorSpa.Base.Models;
+using BlazorSpa.Base.Services;
 
 /// <summary>
 /// Interface für DemoService.

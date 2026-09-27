@@ -1,4 +1,5 @@
 ﻿@page "/demo/dm200/{Id?}"
+@using BlazorSpa.Base
 @inherits BlazorComponentBase<DM200Model, DM200TableRowModel>
 @inject IDemoService DemoService
 @attribute [Authorize(Roles = "Admin, Superadmin")]
@@ -39,7 +40,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="lbldetails">@Functions.Iif(Model?.ModalArt == "Table_Edit", "Objekt ändern", Functions.Iif(Model?.ModalArt == "Table_Delete", "Objekt löschen", "Neues Objekt"))</h5>
+        <h5 class="modal-title" id="lbldetails">@Funktionen.Iif(Model?.ModalArt == "Table_Edit", "Objekt ändern", Funktionen.Iif(Model?.ModalArt == "Table_Delete", "Objekt löschen", "Neues Objekt"))</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
       </div>
       <div class="modal-body">
@@ -137,7 +138,7 @@ else
       if (!string.IsNullOrEmpty(fn))
       {
         if (Get(DemoService.SaveObjektList(fn)))
-          Functions.MachNichts(); // OK
+          Funktionen.MachNichts(); // OK
       }
     }
   }
@@ -167,7 +168,7 @@ else
       else
       {
         var edit = handler == "Table_Edit";
-        var i = Functions.ToInt32(id);
+        var i = Funktionen.ToInt32(id);
         var l = Table?.Liste ?? TableData(Table, ModalMessages);
         if (l != null && i >= 1 && l.Count() >= i)
         {
@@ -206,7 +207,7 @@ else
           TableData(Table, ModalMessages);
         }
         else
-          ModalMessages?.Add(() => ModalModel, r.GetErrors());
+          ModalMessages?.Add(() => ModalModel, r.GetErrors() ?? "");
       }
       else if (form != "dm200modal")
       {

@@ -6,9 +6,9 @@ namespace BlazorBp.Core.Base;
 
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using BlazorBp.Core.Core;
 using BlazorBp.Core.Models;
-using CSBP.Services.Base;
+using BlazorSpa.Base;
+using BlazorSpa.Base.Models;
 using Microsoft.AspNetCore.Http;
 
 /// <summary>

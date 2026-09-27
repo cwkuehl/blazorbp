@@ -4,6 +4,7 @@ using BlazorBp.Components.Controls;
 using BlazorBp.Core.Base;
 using BlazorBp.Core.Models;
 using BlazorBp.Models.Tb;
+using BlazorSpa.Base.Services;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using CSBP.Services.Factory;
@@ -160,7 +161,7 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
             Refresh();
           }
           else
-            Modal2Messages?.Add(() => TB210Model, r.GetErrors());
+            Modal2Messages?.Add(() => TB210Model, r.GetErrors() ?? "");
         }
       }
     }

@@ -2,9 +2,9 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-using System.Globalization;
+namespace BlazorSpa.Base;
 
-namespace BlazorBp.Core.Core;
+using System.Globalization;
 
 /// <summary>
 /// General useful functions.
@@ -108,6 +108,19 @@ public static partial class Funktionen
   /// </summary>
   /// <returns>Converted value.</returns>
   /// <param name="s">Affected string.</param>
+  public static int ToInt32(string s)
+  {
+    var d = ToDecimal(s, 0);
+    if (d.HasValue && d.Value >= int.MinValue && d.Value <= int.MaxValue)
+      return (int)d.Value;
+    return 0;
+  }
+
+  /// <summary>
+  /// Converts string to integer.
+  /// </summary>
+  /// <returns>Converted value.</returns>
+  /// <param name="s">Affected string.</param>
   public static int? ToNullableInt32(string? s)
   {
     var d = ToDecimal(s, 0);
@@ -154,7 +167,7 @@ public static partial class Funktionen
   /// </summary>
   /// <param name="t">Affected like expression.</param>
   /// <returns>It is a filtering like expression or not.</returns>
-  public static bool IsLike(string t)
+  public static bool IsLike(string? t)
   {
     return !(string.IsNullOrEmpty(t) || t == "%" || t == "%%");
   }

@@ -9,9 +9,10 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using BlazorBp.Core.Base;
+using BlazorSpa.Base;
+using static BlazorBp.Core.Base.DialogTypeEnum;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
-using static BlazorBp.Core.Base.DialogTypeEnum;
 
 /// <summary>
 /// Model-Klasse für das modale Formular FZ710 Notiz.
@@ -244,7 +245,7 @@ public class FZ710Model : PageModelBase
     var root = doc.DocumentElement;
     var node = root?.SelectSingleNode("//tabelle//notiz");
     if (node != null)
-      node.InnerText = Functions.TrimNull(memo) ?? "";
+      node.InnerText = memo.TrimNull() ?? "";
     using var sw = new StringWriter();
     using var tw = XmlWriter.Create(sw);
     doc.WriteTo(tw);

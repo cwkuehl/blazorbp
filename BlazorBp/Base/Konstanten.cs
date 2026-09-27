@@ -2,7 +2,7 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Core.Base;
+namespace BlazorBp.Base;
 
 /// <summary>Konstanten für die Anwendung.</summary>
 public static class Konstanten

@@ -5,7 +5,8 @@
 namespace BlazorBp.Core.Core;
 
 using System.Text;
-using CSBP.Services.Base;
+using BlazorBp.Core.Base;
+using BlazorSpa.Base;
 
 /// <summary>
 /// Writer writes CSV files with Windows-1252 or UTF-8 characters.
@@ -22,7 +23,7 @@ public class CsvWriter
   private readonly string trenner = ";";
 
   /// <summary>Interner Zeilenumbruch.</summary>
-  private readonly string crlf = Constants.CrLf;
+  private readonly string crlf = Konstanten.CrLf;
 
   /// <summary>Initializes a new instance of the <see cref="CsvWriter"/> class.</summary>
   public CsvWriter()

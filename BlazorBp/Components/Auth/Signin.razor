@@ -112,7 +112,7 @@
             formdata.FromJsonString(r.Ergebnis ?? "");
             HttpContext.Session?.SetFormData(formdata);
           }
-          var ru = Functions.TrimNull(HttpContext.Request.Query["returnurl"].ToString()) ?? "/";
+          var ru = HttpContext.Request.Query["returnurl"].ToString().TrimNull() ?? "/";
           if (!BlazorComponentBaseStatic.IsValidReturnUrl(ru))
             ru = "/";
           navigation.NavigateTo(ru);

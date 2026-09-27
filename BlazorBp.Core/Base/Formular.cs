@@ -4,7 +4,7 @@
 
 namespace BlazorBp.Core.Base;
 
-using BlazorBp.Core.Core;
+using BlazorSpa.Base;
 
 /// <summary>
 /// Die Klasse speichert ein Formular mit Controller und Action.

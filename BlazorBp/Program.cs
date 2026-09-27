@@ -6,18 +6,19 @@ using System.Reflection;
 using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
+using BlazorBp.Base;
 using BlazorBp.Core.Base;
 using BlazorBp.Components; // für App
 using BlazorBp.Components.Pages;
 using BlazorBp.Core.Modules;
+using BlazorSpa.Base;
 using CSBP.Services.Base;
 using CSBP.Services.Factory;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using NeoSmart.Caching.Sqlite;
-using BlazorBp.Base;
 
-var interactive = Konstanten.Interactive;
+var interactive = BlazorBp.Base.Konstanten.Interactive;
 var builder = WebApplication.CreateBuilder(args);
 
 // Trace = 0, Debug = 1, Information = 2, Warning = 3, Error = 4, Critical = 5, and None = 6.
@@ -30,8 +31,8 @@ var r1 = FactoryService.ClientService.InitDb(daten);
 r1.ThrowAllErrors("InitDb");
 var r2 = FactoryService.ClientService.GetOptionList(daten, daten.MandantNr, CSBP.Services.Base.Parameter.Params, null);
 r2.ThrowAllErrors("GetOptionList");
-var sharedpath = Functions.TrimNull(builder.Configuration["App:SharedPath"]);
-var temppath = Functions.TrimNull(builder.Configuration["App:TempPath"]);
+var sharedpath = builder.Configuration["App:SharedPath"].TrimNull();
+var temppath = builder.Configuration["App:TempPath"].TrimNull();
 CsbpBase.SetValues(sharedpath, temppath);
 StatusTask.Aufraeumen();
 
@@ -55,7 +56,7 @@ builder.Services.AddAuthentication(o => {
 })
   .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, o => {
     o.LoginPath = "/";
-    o.ExpireTimeSpan = TimeSpan.FromSeconds(Konstanten.SESSION_TIMEOUT);
+    o.ExpireTimeSpan = TimeSpan.FromSeconds(BlazorBp.Base.Konstanten.SESSION_TIMEOUT);
     o.Cookie.MaxAge = o.ExpireTimeSpan;
     o.SlidingExpiration = true;
     o.LogoutPath = "/auth/logout";
@@ -76,7 +77,7 @@ builder.Services.AddAuthentication(o => {
           {
             var sid = claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid);
             var sidValue = sid?.Value;
-            if (sidValue != Konstanten.CLAIM_SID)
+            if (sidValue != BlazorBp.Base.Konstanten.CLAIM_SID)
             {
               context.RejectPrincipal();
               return context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -121,7 +122,7 @@ else
 // });
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromSeconds(Konstanten.SESSION_TIMEOUT);
+    options.IdleTimeout = TimeSpan.FromSeconds(BlazorBp.Base.Konstanten.SESSION_TIMEOUT);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
@@ -330,5 +331,11 @@ dotnet new razorclasslib -o BlazorBp.Forms.Demo
 dotnet sln blazorbp.sln add ./BlazorBp.Forms.Demo/BlazorBp.Forms.Demo.csproj
 dotnet add ./BlazorBp/BlazorBp.csproj reference ./BlazorBp.Forms.Demo/BlazorBp.Forms.Demo.csproj
 BlazorBp.Services entfernt, da die Funktionen in BlazorBp.Forms.Demo eingebaut sind.
+
+Neues Projekt BlazorSpa.Base für TableReadModel erstellt.
+dotnet new classlib -o BlazorSpa.Base
+dotnet sln blazorbp.sln add ./BlazorSpa.Base/BlazorSpa.Base.csproj
+dotnet add ./BlazorBp/BlazorBp.csproj reference ./BlazorSpa.Base/BlazorSpa.Base.csproj
+dotnet add ./BlazorBp.Forms.Demo/BlazorBp.Forms.Demo.csproj reference ./BlazorSpa.Base/BlazorSpa.Base.csproj
 
 */

@@ -141,7 +141,7 @@
           Refresh();
         }
         else
-          ModalMessages?.Add(() => AG110Model, r.GetErrors());
+          ModalMessages?.Add(() => AG110Model, r.GetErrors() ?? "");
       }
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
@@ -172,7 +172,7 @@
     var r = FactoryService.ClientService.GetClientList(daten, rm);
     var l = r.Ergebnis?.Select(a => AG100TableRowModel.From(a)).ToList() ?? new List<AG100TableRowModel>();
     if (!r.Ok)
-      messages?.Add(() => Model, r.GetErrors());
+      messages?.Add(() => Model, r.GetErrors() ?? "");
     return UpdateTable(m, rm, l);
   }
 }

@@ -7,7 +7,10 @@ namespace BlazorBp.Forms.Demo.Impl;
 using BlazorBp.Forms.Demo.Apis;
 using BlazorBp.Forms.Demo.Models.Demo;
 using BlazorBp.Core.Core;
+using BlazorSpa.Base.Services;
 using CSBP.Services.Base;
+using BlazorSpa.Base.Models;
+using BlazorSpa.Base;
 
 public class DemoService : IDemoService
 {
@@ -196,12 +199,12 @@ public class DemoService : IDemoService
   /// <param name="s">Affected string.</param>
   /// <param name="exp">Affected like expression.</param>
   /// <returns>The string fulfills the like expression.</returns>
-  protected static bool Like(string? s, string exp)
+  protected static bool Like(string? s, string? exp)
   {
     // The 'Like' method is not supported because the query has switched to client-evaluation.
     // This usually happens when the arguments to the method cannot be translated to server.
     // Rewrite the query to avoid client evaluation of arguments so that method can be translated to server.
-    if (!Funktionen.IsLike(exp))
+    if (exp == null || !Funktionen.IsLike(exp))
       return true;
     if (string.IsNullOrEmpty(s))
       return false;
