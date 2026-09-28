@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlazorBp.Core\BlazorBp.Core.csproj" />
+    <ProjectReference Include="..\..\csbp\CSBP.Services\CSBP.Services.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.12" />
   </ItemGroup>
 

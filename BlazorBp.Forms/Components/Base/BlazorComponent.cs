@@ -2,9 +2,10 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Core.Base;
+namespace BlazorBp.Forms.Components.Base;
 
-using BlazorBp.Base;
+using BlazorBp.Core.Base;
+using BlazorBp.Forms.Base;
 using CSBP.Services.Base;
 
 /// <summary>

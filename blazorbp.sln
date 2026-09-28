@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorBp.Core", "BlazorBp.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorSpa.Base", "BlazorSpa.Base\BlazorSpa.Base.csproj", "{461B9134-3CCA-4954-8C33-F961841BC370}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorBp.Forms", "BlazorBp.Forms\BlazorBp.Forms.csproj", "{2B0B1B51-444A-4D49-84AE-59EF807F1990}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,18 @@ Global
 		{461B9134-3CCA-4954-8C33-F961841BC370}.Release|x64.Build.0 = Release|Any CPU
 		{461B9134-3CCA-4954-8C33-F961841BC370}.Release|x86.ActiveCfg = Release|Any CPU
 		{461B9134-3CCA-4954-8C33-F961841BC370}.Release|x86.Build.0 = Release|Any CPU
+		{2B0B1B51-444A-4D49-84AE-59EF807F1990}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B0B1B51-444A-4D49-84AE-59EF807F1990}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B0B1B51-444A-4D49-84AE-59EF807F1990}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2B0B1B51-444A-4D49-84AE-59EF807F1990}.Debug|x64.Build.0 = Debug|Any CPU
+		{2B0B1B51-444A-4D49-84AE-59EF807F1990}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2B0B1B51-444A-4D49-84AE-59EF807F1990}.Debug|x86.Build.0 = Debug|Any CPU
+		{2B0B1B51-444A-4D49-84AE-59EF807F1990}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B0B1B51-444A-4D49-84AE-59EF807F1990}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B0B1B51-444A-4D49-84AE-59EF807F1990}.Release|x64.ActiveCfg = Release|Any CPU
+		{2B0B1B51-444A-4D49-84AE-59EF807F1990}.Release|x64.Build.0 = Release|Any CPU
+		{2B0B1B51-444A-4D49-84AE-59EF807F1990}.Release|x86.ActiveCfg = Release|Any CPU
+		{2B0B1B51-444A-4D49-84AE-59EF807F1990}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

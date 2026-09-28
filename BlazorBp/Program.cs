@@ -6,11 +6,11 @@ using System.Reflection;
 using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
-using BlazorBp.Base;
 using BlazorBp.Core.Base;
 using BlazorBp.Components; // für App
 using BlazorBp.Components.Pages;
 using BlazorBp.Core.Modules;
+using BlazorBp.Forms.Base;
 using BlazorSpa.Base;
 using CSBP.Services.Base;
 using CSBP.Services.Factory;
@@ -129,6 +129,7 @@ builder.Services.AddSession(options =>
 var modules = new IFormModule[]
 {
   // Formular-Module explizit eintragen (Alternative: Assembly-Scan)
+  new BlazorBp.Forms.FormsModule(),
   new BlazorBp.Forms.Demo.DemoModule(),
 };
 foreach (var module in modules)
@@ -180,6 +181,7 @@ if (interactive)
 else
   app.MapRazorComponents<App>().AddAdditionalAssemblies(
     typeof(BlazorBp.Core.Modules.IFormModule).Assembly,
+    typeof(BlazorBp.Forms.FormsModule).Assembly,
     typeof(BlazorBp.Forms.Demo.DemoModule).Assembly
     );
 
@@ -337,5 +339,10 @@ dotnet new classlib -o BlazorSpa.Base
 dotnet sln blazorbp.sln add ./BlazorSpa.Base/BlazorSpa.Base.csproj
 dotnet add ./BlazorBp/BlazorBp.csproj reference ./BlazorSpa.Base/BlazorSpa.Base.csproj
 dotnet add ./BlazorBp.Forms.Demo/BlazorBp.Forms.Demo.csproj reference ./BlazorSpa.Base/BlazorSpa.Base.csproj
+
+Neues Projekt BlazorBp.Forms als Razor Class Library für alle Formulare außer Demo:
+dotnet new razorclasslib -o BlazorBp.Forms
+dotnet sln blazorbp.sln add ./BlazorBp.Forms/BlazorBp.Forms.csproj
+dotnet add ./BlazorBp/BlazorBp.csproj reference ./BlazorBp.Forms/BlazorBp.Forms.csproj
 
 */

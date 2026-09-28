@@ -13,6 +13,7 @@
     <ProjectReference Include="..\..\csbp\CSBP.Services\CSBP.Services.csproj" />
     <ProjectReference Include="..\BlazorSpa.Base\BlazorSpa.Base.csproj" />
     <ProjectReference Include="..\BlazorBp.Core\BlazorBp.Core.csproj" />
+    <ProjectReference Include="..\BlazorBp.Forms\BlazorBp.Forms.csproj" />
     <ProjectReference Include="..\BlazorBp.Forms.Demo\BlazorBp.Forms.Demo.csproj" />
   </ItemGroup>
 

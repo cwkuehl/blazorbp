@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using BlazorBp.Base;
 using BlazorBp.Core.Base;
+using BlazorBp.Forms.Base;
 using CSBP.Services.Base;
 using CSBP.Services.Factory;
 using Microsoft.AspNetCore.Authentication;
