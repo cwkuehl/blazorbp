@@ -183,7 +183,7 @@ public class Generator
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Models.{{area}};
+namespace BlazorBp.Forms.Models.{{area}};
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Core.Base;
