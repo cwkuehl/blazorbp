@@ -423,7 +423,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
     sbr.Append($$"""
 @page "/{{area.ToLower()}}/{{form.ToLower()}}/{id?}"
 @using CSBP.Services.Apis.Models
-@inherits BlazorComponentBase<{{form}}Model, {{rowmodel}}>
+@inherits BlazorComponent<{{form}}Model, {{rowmodel}}>
 @attribute [Authorize(Roles = "User, Admin, Superadmin")]
 
 <SectionContent SectionName="title">@Title</SectionContent>
@@ -581,7 +581,7 @@ else
       sbr2.Append($$"""
 @page "/{{area.ToLower()}}/{{form2?.ToLower()}}/{id?}"
 @using CSBP.Services.Apis.Models
-@inherits BlazorComponentBase<{{form2}}Model, TableRowModelBase>
+@inherits BlazorComponent<{{form2}}Model, TableRowModelBase>
 @attribute [Authorize(Roles = "User, Admin, Superadmin")]
 
 <SectionContent SectionName="title">@Title</SectionContent>
