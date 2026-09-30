@@ -8,7 +8,7 @@ public class GladeParserTests
   public void GenerateBlazor()
   {
     var basepath = @"/home/wolfgang/cs/csbp/CSBP/GtkGui";
-    var genpath = @"/home/wolfgang/cs/blazorbp/BlazorBp";
+    var genpath = @"/home/wolfgang/cs/blazorbp/BlazorBp.Forms";
     var resfile = @"/home/wolfgang/cs/csbp/CSBP.Services/Resources/Messages.de.resx";
     // Generator.Generate($"{basepath}/AM/AM000Login.glade", null, resfile, genpath);
     // Generator.Generate($"{basepath}/FZ/FZ250Mileagesxxx.glade", $"{basepath}/FZ/FZ260Mileage.glade", resfile, genpath);
