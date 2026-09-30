@@ -21,6 +21,7 @@ public class CodeRulesTests : CodeRuleTestBase
   [Fact]
   public async Task SolutionTest()
   {
+    // siehe https://github.com/RenePeuser/basta-autumn-2026
     // ProjectReference.Name is the referenced .csproj file name without extension
     var testProjectNames = Solution.UnitTestProjects
                                     .Select(testProject => testProject.AssemblyName)
