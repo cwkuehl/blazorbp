@@ -4,27 +4,27 @@ using Microsoft.Extensions.DependencyInjection;
 
 public interface IFormModule
 {
-    /// Eindeutiger Schlüssel, z.B. "Demo"
-    string Key { get; }
+  // Eindeutiger Schlüssel, z.B. "Demo"
+  string Key { get; }
 
-    // Default, überschreibbar
-    int SortOrder => 100;
-    
-    /// Schlüssel für Untermenü, z.B. "submenudemo"
-    string SubKey { get; }
+  // Default, überschreibbar
+  int SortOrder => 100;
 
-    /// Icon für Untermenü, z.B. "bi bi-screwdriver-nav-menu"
-    string Icon { get; }
+  // Schlüssel für Untermenü, z.B. "submenudemo"
+  string SubKey { get; }
 
-    /// Gibt an, ob das Untermenü standardmäßig geöffnet sein soll.
-    bool Expanded { get; }
+  // Icon für Untermenü, z.B. "bi bi-screwdriver-nav-menu"
+  string Icon { get; }
 
-    /// Menüeinträge, die dieses Modul beisteuert
-    IEnumerable<MenuEntry> GetMenuEntries();
+  // Gibt an, ob das Untermenü standardmäßig geöffnet sein soll.
+  bool Expanded { get; }
 
-    /// Rollen, die für den Zugriff auf dieses Modul nötig sind
-    IEnumerable<string> RequiredRoles { get; }
+  // Menüeinträge, die dieses Modul beisteuert
+  IEnumerable<MenuEntry> GetMenuEntries();
 
-    /// DI-Registrierung modul-eigener Services
-    void ConfigureServices(IServiceCollection services);
+  // Rollen, die für den Zugriff auf dieses Modul nötig sind
+  IEnumerable<string> RequiredRoles { get; }
+
+  // DI-Registrierung modul-eigener Services
+  void ConfigureServices(IServiceCollection services);
 }
