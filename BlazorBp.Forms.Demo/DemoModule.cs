@@ -1,5 +1,6 @@
 namespace BlazorBp.Forms.Demo;
 
+using BlazorBp.Core.Base;
 using BlazorBp.Core.Modules;
 using BlazorBp.Forms.Demo.Apis;
 using BlazorBp.Forms.Demo.Impl;
@@ -30,5 +31,14 @@ public class DemoModule : IFormModule
   public void ConfigureServices(IServiceCollection services)
   {
     services.AddSingleton<IDemoService, DemoService>();
+  }
+
+  public Dictionary<string, Formular> GetForms()
+  {
+    return new Dictionary<string, Formular>
+    {
+      { "DM100", new Formular { Action = "dm100", Area = "demo", Name = "Steuerelemente" } },
+      { "DM200", new Formular { Action = "dm200", Area = "demo", Name = "Tabelle" } },
+    };
   }
 }

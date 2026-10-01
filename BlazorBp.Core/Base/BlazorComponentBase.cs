@@ -4,7 +4,6 @@
 
 namespace BlazorBp.Core.Base;
 
-using BlazorBp.Core.Core;
 using BlazorBp.Core.Models;
 using BlazorSpa.Base;
 using BlazorSpa.Base.Csv;
@@ -20,50 +19,6 @@ using Microsoft.AspNetCore.Http;
 public class BlazorComponentBase<T, V> : LayoutComponentBase
   where T : PageModelBase where V : TableRowModelBase
 {
-  /// <summary>
-  /// Alle möglichen Formulare als Kopiervorlage für Use cases.
-  /// </summary>
-  private static readonly Dictionary<string, Formular> Formulare = new()
-  {
-      { "Index", new Formular { Action = "index", Area = "", Name = "Startseite" } },
-      { "AG100", new Formular { Action = "ag100", Area = "ag", Name = "Mandanten" } },
-      // { "AG110", new Formular { Action = "ag110", Area = "ag", Name = "Mandant" } },
-      { "AG200", new Formular { Action = "ag200", Area = "ag", Name = "Benutzer" } },
-      { "AM100", new Formular { Action = "am100", Area = "am", Name = "Kennwort ändern" } },
-      { "AM500", new Formular { Action = "am500", Area = "am", Name = "Einstellungen" } },
-      { "DM100", new Formular { Action = "dm100", Area = "demo", Name = "Steuerelemente" } },
-      { "DM200", new Formular { Action = "dm200", Area = "demo", Name = "Tabelle" } },
-      { "EN100", new Formular { Action = "en100", Area = "en", Name = "Abfrage-Parameter" } },
-      { "FZ100", new Formular { Action = "fz100", Area = "fz", Name = "Statistik" } },
-      { "FZ200", new Formular { Action = "fz200", Area = "fz", Name = "Fahrräder" } },
-      { "FZ250", new Formular { Action = "fz250", Area = "fz", Name = "Fahrradstände" } },
-      { "FZ700", new Formular { Action = "fz700", Area = "fz", Name = "Notizen" } },
-      { "HH100", new Formular { Action = "hh100", Area = "hh", Name = "Perioden" } },
-      { "HH200", new Formular { Action = "hh200", Area = "hh", Name = "Konten" } },
-      { "HH210", new Formular { Action = "hh210", Area = "hh", Name = "Konto" } },
-      { "HH300", new Formular { Action = "hh300", Area = "hh", Name = "Ereignisse" } },
-      { "HH310", new Formular { Action = "hh310", Area = "hh", Name = "Ereignis" } },
-      { "HH400", new Formular { Action = "hh400", Area = "hh", Name = "Buchungen" } },
-      { "HH410", new Formular { Action = "hh410", Area = "hh", Name = "Buchung" } },
-      // { "HH500" + Constants.KZBI_SCHLUSS, new Formular { Action = "hh500", Area = "hh", Name = HH500_title_SB, Id = Constants.KZBI_SCHLUSS } },
-      // { "HH500" + Constants.KZBI_GV, new Formular { Action = "hh500", Area = "hh", Name = HH500_title_GV, Id = Constants.KZBI_GV } },
-      // { "HH500" + Constants.KZBI_EROEFFNUNG, new Formular { Action = "hh500", Area = "hh", Name = HH500_title_EB, Id = Constants.KZBI_EROEFFNUNG } },
-      { "HH500SB", new Formular { Action = "hh500", Area = "hh", Name = "Schlussbilanz", Id = "SB" } },
-      { "HH500GV", new Formular { Action = "hh500", Area = "hh", Name = "G+V-Rechnung", Id = "GV" } },
-      { "HH500EB", new Formular { Action = "hh500", Area = "hh", Name = "Eröffnungsbilanz", Id = "EB" } },
-      { "HH510", new Formular { Action = "hh510", Area = "hh", Name = "Drucken" } },
-      { "TB100", new Formular { Action = "tb100", Area = "tb", Name = "Tagebuch" } },
-      { "TB200", new Formular { Action = "tb200", Area = "tb", Name = "Positionen" } },
-      { "WP100", new Formular { Action = "wp100", Area = "wp", Name = "Wertpapier-Chart" } },
-      { "WP200", new Formular { Action = "wp200", Area = "wp", Name = "Wertpapiere" } },
-      { "WP210", new Formular { Action = "wp210", Area = "wp", Name = "Wertpapier" } },
-      { "WP250", new Formular { Action = "wp250", Area = "wp", Name = "Anlagen" } },
-      { "WP260", new Formular { Action = "wp260", Area = "wp", Name = "Anlage" } },
-      { "WP300", new Formular { Action = "wp300", Area = "wp", Name = "Konfigurationen" } },
-      { "WP500", new Formular { Action = "wp500", Area = "wp", Name = "Stände" } },
-      { "WP510", new Formular { Action = "wp510", Area = "wp", Name = "Stand" } },
-};
-
   /// <summary>
   /// Standard-Model für Steuerelemente.
   /// </summary>
@@ -138,9 +93,9 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       ////     Console.WriteLine("Validation triggered");
       //// };
       //// kein <DataAnnotationsValidator/> in EditForm, daher hier die Validierung aktivieren, damit die Fehlermeldungen in ModalMessages gesetzt werden.
-      #pragma warning disable CS0618
+#pragma warning disable CS0618
       ModalEditContext.EnableDataAnnotationsValidation();
-      #pragma warning disable CS0618
+#pragma warning disable CS0618
       ModalMessages = new(ModalEditContext);
     }
     if (modal2model != null)
@@ -207,16 +162,16 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       }
       if (f == null)
       {
-        if (!Formulare.TryGetValue(action, out f))
+        if (!BlazorComponentBaseStatic.TryGetFormular(action, out f))
         {
           if (!string.IsNullOrEmpty(id))
           {
             // Formular mit passendem Action und Id suchen, z.B. für HH500 mit KZBI_SCHLUSS, KZBI_GV oder KZBI_EROEFFNUNG.
-            Formulare.TryGetValue(action + id, out f);
+            BlazorComponentBaseStatic.TryGetFormular(action + id, out f);
           }
         }
         if (f == null)
-          Formulare.TryGetValue("Index", out f);
+          BlazorComponentBaseStatic.TryGetFormular("Index", out f);
         if (string.IsNullOrEmpty(id))
           id = Guid.NewGuid().ToString(); // neue ID vergeben
         f = new Formular { Action = f?.Action, Area = f?.Area, Name = f?.Name, Id = id };
@@ -414,7 +369,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     {
       model = ReadFormularModel(id); // Bei Model-Postback ist kein Read notwendig.
       if ((!string.IsNullOrEmpty(model?.ModalId) || !string.IsNullOrEmpty(model?.Modal2Id))
-        && HttpContext.Request.QueryString.Value?.Contains("init=1") == true) 
+        && HttpContext.Request.QueryString.Value?.Contains("init=1") == true)
       {
         model.ModalId = null; // Unterformulare nicht anzeigen.
         model.Modal2Id = null;
@@ -462,13 +417,13 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       Refresh();
     }
 
-//     #pragma warning disable CS8604
-//     EditContext = new(Model);
-//     #pragma warning restore CS8604
-//     // #pragma warning disable CS0618
-//     // EditContext.EnableDataAnnotationsValidation();
-//     // #pragma warning disable CS0618
-//     Messages = new(EditContext);
+    //     #pragma warning disable CS8604
+    //     EditContext = new(Model);
+    //     #pragma warning restore CS8604
+    //     // #pragma warning disable CS0618
+    //     // EditContext.EnableDataAnnotationsValidation();
+    //     // #pragma warning disable CS0618
+    //     Messages = new(EditContext);
 
     if (Model != null) // && Table != null)
     {
@@ -959,7 +914,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     if (l != null)
       l.Insert(0, new ListItem("", ""));
     return l;
-   }
+  }
 
   /// <summary>
   /// Inserts empty entry, if the list is empty.
@@ -971,7 +926,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     if (l != null && l.Count <= 0)
       l.Insert(0, new ListItem("", ""));
     return l;
-   }
+  }
 
   /// <summary>
   /// Gehört der Submit zu einem Datum oder m, h, p?
@@ -993,7 +948,8 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       result = date?.AddDays(-1);
       return true;
     }
-    if (submit == $"{valueSubmit}h")    {
+    if (submit == $"{valueSubmit}h")
+    {
       result = DateTime.Today;
       return true;
     }
@@ -1034,7 +990,38 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
 public static class BlazorComponentBaseStatic
 {
   /// <summary>
-  /// Lesen des Table-Models einer Formular-Instanz.
+  /// Alle möglichen Formulare als Kopiervorlage für Use cases.
+  /// </summary>
+  private static readonly Dictionary<string, Formular> Formulare = new()
+  {
+    { "Index", new Formular { Action = "index", Area = "", Name = "Startseite" } },
+  };
+
+  /// <summary>
+  /// Hinzufügen von Formularen, die in der statischen Formulare-Liste nicht enthalten sind.
+  /// </summary>
+  /// <param name="forms">Neue Formulare.</param>
+  public static void AddFormulare(Dictionary<string, Formular> forms)
+  {
+    foreach (var kv in forms)
+    {
+      Formulare[kv.Key] = kv.Value;
+    }
+  }
+
+  /// <summary>
+  /// Versuch, ein Formular aus der statischen Formulare-Liste zu lesen.
+  /// </summary>
+  /// <param name="name">Name des zu lesenden Formulars.</param>
+  /// <param name="formular">Das gelesene Formular oder null.</param>
+  /// <returns>True, wenn das Formular gefunden wurde.</returns>
+  internal static bool TryGetFormular(string name, out Formular? formular)
+  {
+    return Formulare.TryGetValue(name, out formular);
+  }
+
+  /// <summary>
+  /// Lesen des Table-Model einer Formular-Instanz.
   /// </summary>
   /// <param name="session">Betroffene Session.</param>
   /// <param name="form">Betroffener Formularname.</param>
@@ -1046,7 +1033,7 @@ public static class BlazorComponentBaseStatic
   }
 
   /// <summary>
-  /// Lesen des Form-Models einer Formular-Instanz.
+  /// Lesen des Form-Model einer Formular-Instanz.
   /// </summary>
   /// <param name="session">Betroffene Session.</param>
   /// <param name="form">Betroffener Formularname.</param>

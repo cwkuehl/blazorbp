@@ -134,7 +134,8 @@ var modules = new IFormModule[]
 };
 foreach (var module in modules)
 {
-    module.ConfigureServices(builder.Services);
+  module.ConfigureServices(builder.Services);
+  BlazorComponentBaseStatic.AddFormulare(module.GetForms());
 }
 builder.Services.AddSingleton<IEnumerable<IFormModule>>(modules);
 
