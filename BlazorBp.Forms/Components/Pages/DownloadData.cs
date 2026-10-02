@@ -2,13 +2,11 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Components.Pages;
+namespace BlazorBp.Forms.Components.Pages;
 
 using System.Text;
 using BlazorBp.Core.Base;
 using BlazorBp.Forms.Base;
-using BlazorBp.Forms.Demo.Apis;
-using BlazorBp.Forms.Demo.Models.Demo;
 using BlazorBp.Forms.Models.Ag;
 using BlazorBp.Forms.Models.Am;
 using BlazorBp.Forms.Models.Fz;
@@ -18,6 +16,7 @@ using BlazorBp.Forms.Models.Wp;
 using BlazorSpa.Base.Services;
 using CSBP.Services.Base;
 using CSBP.Services.Factory;
+using Microsoft.AspNetCore.Http;
 
 /// <summary>
 /// Komponente zum Lesen der Download-Daten.
@@ -32,10 +31,9 @@ public static class DownloadData
   /// <returns>CSV-String oder null.</returns>
   public static string? GetCsv(string page, string id, HttpContext context, IServiceProvider sp)
   {
-    var ds = sp.GetService<IDemoService>();
     var s = context?.Session;
     string? fehler = null;
-    if (!string.IsNullOrEmpty(page) && !string.IsNullOrEmpty(id) && ds != null && s != null)
+    if (!string.IsNullOrEmpty(page) && !string.IsNullOrEmpty(id) && s != null)
     {
       page = page.ToUpper();
       var daten = new ServiceDaten(s.GetUserDaten());
@@ -58,13 +56,6 @@ public static class DownloadData
         {
           var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<AM500TableRowModel>>(s, page, id)?.ReadModel;
           r = FactoryService.ClientService.GetCsvString(daten, page, rm);
-          break;
-        }
-        case "DM200":
-        {
-          var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<DM200TableRowModel>>(s, page, id)?.ReadModel;
-          var csv = ds.GetCsvString(page, rm);
-          r = new ServiceErgebnis<string>(csv);
           break;
         }
         case "FZ200":

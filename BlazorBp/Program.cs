@@ -5,15 +5,10 @@
 using System.Reflection;
 using System.Security.Authentication;
 using System.Security.Claims;
-using System.Text;
 using BlazorBp.Core.Base;
 using BlazorBp.Components; // für App
-using BlazorBp.Components.Pages;
 using BlazorBp.Core.Modules;
-using BlazorBp.Forms.Base;
 using BlazorSpa.Base;
-using CSBP.Services.Base;
-using CSBP.Services.Factory;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using NeoSmart.Caching.Sqlite;
@@ -27,14 +22,14 @@ builder.Logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
 var connect = builder.Configuration["App:ConnectionString"] ?? "Data Source=blazorbp.db";
 CSBP.Services.Base.Parameter.Connect = connect;
 var daten = new CSBP.Services.Base.ServiceDaten("0", 1, "Administrator", null);
-var r1 = FactoryService.ClientService.InitDb(daten);
+var r1 = CSBP.Services.Factory.FactoryService.ClientService.InitDb(daten);
 r1.ThrowAllErrors("InitDb");
-var r2 = FactoryService.ClientService.GetOptionList(daten, daten.MandantNr, CSBP.Services.Base.Parameter.Params, null);
+var r2 = CSBP.Services.Factory.FactoryService.ClientService.GetOptionList(daten, daten.MandantNr, CSBP.Services.Base.Parameter.Params, null);
 r2.ThrowAllErrors("GetOptionList");
 var sharedpath = builder.Configuration["App:SharedPath"].TrimNull();
 var temppath = builder.Configuration["App:TempPath"].TrimNull();
-CsbpBase.SetValues(sharedpath, temppath);
-StatusTask.Aufraeumen();
+CSBP.Services.Base.CsbpBase.SetValues(sharedpath, temppath);
+CSBP.Services.Base.StatusTask.Aufraeumen();
 
 // Add services to the container.
 if (interactive || true)
@@ -227,60 +222,11 @@ app.UseCookiePolicy(new CookiePolicyOptions
 });
 app.UseSession();
 
-app.MapGet("/hello",
-  // [Microsoft.AspNetCore.Authorization.Authorize]
-  [EndpointSummary("Test API.")]
-  [EndpointDescription("Liefert immer 'Hello World'.")]
-  () => "Hello World");
-app.MapGet("/downloadcsv/{page}/{id}",
-  [Microsoft.AspNetCore.Authorization.Authorize]
-  [EndpointSummary("Herunterladen von CSV-Dateien.")]
-  [EndpointDescription("Page und ID des Formulars müssen angegeben werden.")]
-  (string page, string id, HttpContext context, IServiceProvider sp) =>
+foreach (var module in modules)
 {
-  // var cs = sp.GetService<IClientService>();
-  var s = DownloadData.GetCsv(page, id, context, sp);
-  if (!string.IsNullOrEmpty(s))
-    return Results.Text(s, "text/csv", Encoding.UTF8);
-  return Results.NotFound();
-});
-app.MapGet("/downloadhtml/{page}/{id}",
-  [Microsoft.AspNetCore.Authorization.Authorize]
-  [EndpointSummary("Herunterladen von HTML-Dateien.")]
-  [EndpointDescription("Page und ID des Formulars müssen angegeben werden.")]
-  (string page, string id, HttpContext context, IServiceProvider sp) =>
-{
-  var s = DownloadData.GetHtml(page, id, context, sp);
-  if (s != null && s.Length > 0)
-    return Results.File(s, "text/html");
-  return Results.NotFound();
-});
-app.MapGet("/starttask/{page}/{id}",
-  [Microsoft.AspNetCore.Authorization.Authorize]
-  [EndpointSummary("Starten von asynchronen, länger laufenden Aufgaben.")]
-  [EndpointDescription("Page und ID des Formulars müssen angegeben werden.")]
-  (string page, string id, HttpContext context, IServiceProvider sp) =>
-{
-    System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} starttask {page} ...{id.Right(6)}");
-  if (string.IsNullOrEmpty(page) || string.IsNullOrEmpty(id))
-    return Results.BadRequest();
-  // Task.Run(() => StartTask.Do(page, id, context, sp));
-  // return Results.Ok();
-  StartTask.Do(page, id, context, sp);
-  return Results.NoContent();
-});
-app.MapGet("/statustask/{name}",
-  [EndpointSummary("Abrufen des Status asynchroner, länger laufender Aufgaben.")]
-  [EndpointDescription("Name der Aufgabe muss angegeben werden.")]
-  (string name, HttpContext context, IServiceProvider sp) =>
-{
-  var s = context?.Session;
-  if (string.IsNullOrEmpty(name) || s?.GetUserDaten() == null)
-    return Results.BadRequest();
-  var daten = new ServiceDaten(s.GetUserDaten());
-  var status = StatusTask.GetStatus(daten.MandantNr, [name], true);
-  return Results.Text(status, "text/plain; charset=utf-8");
-});
+  // MapGet-Endpunkte für jedes Modul registrieren, z.B. /hello.
+  module.ConfigureApp(app);
+}
 
 // app.UseStaticFiles(new StaticFileOptions()
 // {

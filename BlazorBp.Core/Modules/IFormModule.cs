@@ -1,6 +1,7 @@
 namespace BlazorBp.Core.Modules;
 
 using BlazorBp.Core.Base;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 public interface IFormModule
@@ -29,8 +30,9 @@ public interface IFormModule
   // DI-Registrierung modul-eigener Services
   void ConfigureServices(IServiceCollection services);
 
-  /// <summary>
-  /// Liefert die Formulare, die dieses Modul bereitstellt.
-  /// </summary>
+  /// <summary>App-Konfiguration ergänzen, z.B. mit MapGet.</summary>
+  void ConfigureApp(WebApplication app);
+
+  /// <summary>Liefert die Formulare, die dieses Modul bereitstellt.</summary>
   Dictionary<string, Formular> GetForms();
 }

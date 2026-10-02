@@ -1,8 +1,14 @@
 namespace BlazorBp.Forms;
 
+using System.Text;
 using BlazorBp.Core.Base;
 using BlazorBp.Core.Modules;
+using BlazorBp.Forms.Base;
+using BlazorBp.Forms.Components.Pages;
 using BlazorSpa.Base;
+using CSBP.Services.Base;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 public class FormsModule : IFormModule
@@ -71,5 +77,58 @@ public class FormsModule : IFormModule
       { "WP500", new Formular { Action = "wp500", Area = "wp", Name = "Stände" } },
       { "WP510", new Formular { Action = "wp510", Area = "wp", Name = "Stand" } },
     };
+  }
+
+  public void ConfigureApp(WebApplication app)
+  {
+    app.MapGet("/downloadcsv/{page}/{id}",
+      [Microsoft.AspNetCore.Authorization.Authorize]
+    [EndpointSummary("Herunterladen von CSV-Dateien.")]
+    [EndpointDescription("Page und ID des Formulars müssen angegeben werden.")]
+    (string page, string id, HttpContext context, IServiceProvider sp) =>
+    {
+      // var cs = sp.GetService<IClientService>();
+      var s = DownloadData.GetCsv(page, id, context, sp);
+      if (!string.IsNullOrEmpty(s))
+        return Results.Text(s, "text/csv", Encoding.UTF8);
+      return Results.NotFound();
+    });
+    app.MapGet("/downloadhtml/{page}/{id}",
+      [Microsoft.AspNetCore.Authorization.Authorize]
+    [EndpointSummary("Herunterladen von HTML-Dateien.")]
+    [EndpointDescription("Page und ID des Formulars müssen angegeben werden.")]
+    (string page, string id, HttpContext context, IServiceProvider sp) =>
+    {
+      var s = DownloadData.GetHtml(page, id, context, sp);
+      if (s != null && s.Length > 0)
+        return Results.File(s, "text/html");
+      return Results.NotFound();
+    });
+    app.MapGet("/starttask/{page}/{id}",
+      [Microsoft.AspNetCore.Authorization.Authorize]
+    [EndpointSummary("Starten von asynchronen, länger laufenden Aufgaben.")]
+    [EndpointDescription("Page und ID des Formulars müssen angegeben werden.")]
+    (string page, string id, HttpContext context, IServiceProvider sp) =>
+    {
+      System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} starttask {page} ...{id.Right(6)}");
+      if (string.IsNullOrEmpty(page) || string.IsNullOrEmpty(id))
+        return Results.BadRequest();
+      // Task.Run(() => StartTask.Do(page, id, context, sp));
+      // return Results.Ok();
+      StartTask.Do(page, id, context, sp);
+      return Results.NoContent();
+    });
+    app.MapGet("/statustask/{name}",
+      [EndpointSummary("Abrufen des Status asynchroner, länger laufender Aufgaben.")]
+    [EndpointDescription("Name der Aufgabe muss angegeben werden.")]
+    (string name, HttpContext context, IServiceProvider sp) =>
+    {
+      var s = context?.Session;
+      if (string.IsNullOrEmpty(name) || s?.GetUserDaten() == null)
+        return Results.BadRequest();
+      var daten = new ServiceDaten(s.GetUserDaten());
+      var status = StatusTask.GetStatus(daten.MandantNr, [name], true);
+      return Results.Text(status, "text/plain; charset=utf-8");
+    });
   }
 }
