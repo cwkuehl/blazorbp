@@ -5,6 +5,7 @@ using BlazorBp.Core.Base;
 using BlazorBp.Core.Modules;
 using BlazorBp.Forms.Components.Pages;
 using BlazorSpa.Base;
+using BlazorSpa.Base.Models;
 using CSBP.Services.Base;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -12,25 +13,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 public class FormsModule : IFormModule
 {
-  public string Key => "Administrator";
-
-  public int SortOrder => 100;
-
-  public string SubKey => "submenufile";
-
-  public string Icon => "bi bi-file-nav-menu";
-
-  public bool Expanded => false;
-
-  // public IEnumerable<string> RequiredRoles => [UserDaten.RoleAdmin, UserDaten.RoleSuperadmin];
-  public IEnumerable<string> RequiredRoles => ["Admin", "Superadmin"];
-
-  public IEnumerable<MenuEntry> GetMenuEntries() =>
-  [
-    new("Mandanten", "Mandanten bearbeiten", "/ag/ag100", "bi bi-dot-nav-menu"),
-    new("Benutzer", "Benutzer bearbeiten", "/ag/ag200", "bi bi-dot-nav-menu"),
-  ];
-
+  public IEnumerable<MainMenu> GetMainMenues()
+  {
+    return new List<MainMenu>
+    {
+      new MainMenu("Administrator", 100, "submenufile", "bi bi-file-nav-menu", false, [UserDaten.RoleAdmin, UserDaten.RoleSuperadmin], [
+        new("Mandanten", "Mandanten bearbeiten", "/ag/ag100", "bi bi-dot-nav-menu"),
+        new("Benutzer", "Benutzer bearbeiten", "/ag/ag200", "bi bi-dot-nav-menu"),
+      ]),
+    };
+  }
   public void ConfigureServices(IServiceCollection services)
   {
     // services.AddSingleton<IDemoService, DemoService>();

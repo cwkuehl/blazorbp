@@ -1,5 +1,4 @@
 ﻿@using BlazorBp.Core.Modules
-@using System.Security.Claims
 @inject IEnumerable<IFormModule> FormModules
 @inject AuthenticationStateProvider AuthStateProvider
 
@@ -66,16 +65,14 @@
       <NavLink class="nav-link" href="en/en100" title="Abfrage-Parameter" aria-label="Abfrage-Parameter"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Abfrage-Parameter</NavLink>
     </div>
   </AuthorizeView>
-  @foreach (var (module, entries) in _visibleModules ?? Enumerable.Empty<(IFormModule, List<MenuEntry>)>())
+  @foreach (var menu in _visibleMenues ?? Enumerable.Empty<MainMenu>())
   {
-    if (entries.Count == 0)
-      continue;
-    <NavLink class="nav-link ms-1" href="#" title=@($"Menü {module.Key}") data-bs-toggle="collapse" data-bs-target=@($"#{module.SubKey}") aria-expanded="false" aria-controls="@module.SubKey")><span class="@module.Icon" aria-hidden="true"></span>@module.Key</NavLink>
-    <div class=@($"collapse {(module.Expanded ? "show" : "")} ms-3") id="@module.SubKey">
-      @foreach (var entry in entries)
-      {
-        <NavLink class="nav-link" href="@entry.Route" title="@entry.Description" aria-label="@entry.Description"><span class="@entry.Icon" aria-hidden="true"></span>@entry.Text</NavLink>
-      }
+    <NavLink class="nav-link ms-1" href="#" title=@($"Menü {menu.Key}") data-bs-toggle="collapse" data-bs-target=@($"#{menu.SubKey}") aria-expanded="false" aria-controls="@menu.SubKey")><span class="@menu.Icon" aria-hidden="true"></span>@menu.Key</NavLink>
+    <div class=@($"collapse {(menu.Expanded ? "show" : "")} ms-3") id="@menu.SubKey">
+    @foreach (var entry in menu.Entries)
+    {
+      <NavLink class="nav-link" href="@entry.Route" title="@entry.Description" aria-label="@entry.Description"><span class="@entry.Icon" aria-hidden="true"></span>@entry.Text</NavLink>
+    }
     </div>
   }
   <NavLink class="nav-link ms-1" href="impressum" title="Verwendung der Daten"><span class="bi bi-incognito-nav-menu" aria-hidden="true"></span>Impressum</NavLink>
@@ -86,7 +83,7 @@
   [Parameter]
   public bool Interactive { get; set; }
 
-  private List<(IFormModule Module, List<MenuEntry> Entries)>? _visibleModules;
+  private List<MainMenu>? _visibleMenues;
 
   protected override async Task OnInitializedAsync()
   {
@@ -95,15 +92,18 @@
     var authState = await AuthStateProvider.GetAuthenticationStateAsync();
     var user = authState.User;
 
-    _visibleModules = FormModules
-      .Where(m => m.RequiredRoles.Any(role => user.IsInRole(role)) || !m.RequiredRoles.Any())
-      .Select(m => (
-          Module: m,
-          Entries: m.GetMenuEntries().Where(a => a.RequiredRole is null || user.IsInRole(a.RequiredRole)).ToList()
-      ))
-      .Where(a => a.Entries.Count > 0)
-      .OrderBy(a => a.Module.SortOrder)
-      .OrderBy(a => a.Module.Key)
+    _visibleMenues = FormModules
+      .SelectMany(module => module.GetMainMenues())
+      .Where(menu => menu.RequiredRoles == null || !menu.RequiredRoles.Any() || menu.RequiredRoles.Any(user.IsInRole))
+      .Select(menu => menu with
+      {
+        Entries = menu.Entries
+          .Where(entry => entry.RequiredRole is null || user.IsInRole(entry.RequiredRole))
+          .ToList()
+      })
+      .Where(menu => menu.Entries.Any()) // leere Menüs nicht anzeigen
+      .OrderBy(menu => menu.SortOrder)
+      .ThenBy(menu => menu.Key)
       .ToList();
   }
 }
