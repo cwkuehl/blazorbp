@@ -2,11 +2,9 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Forms.Components.Pages;
 
 using System.Text;
 using BlazorBp.Core.Base;
-using BlazorBp.Forms.Base;
 using BlazorBp.Forms.Models.Ag;
 using BlazorBp.Forms.Models.Am;
 using BlazorBp.Forms.Models.Fz;
@@ -18,6 +16,7 @@ using CSBP.Services.Base;
 using CSBP.Services.Factory;
 using Microsoft.AspNetCore.Http;
 
+namespace BlazorBp.Forms.Components.Pages;
 /// <summary>
 /// Komponente zum Lesen der Download-Daten.
 /// </summary>

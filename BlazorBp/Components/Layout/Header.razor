@@ -50,8 +50,8 @@ else
     if (userDaten != null)
     {
       // Anzahl für Undo und Redo anzeigen.
-      var daten = new ServiceDaten(userDaten);
-      var r = ServiceBase.GetUndoRedoSize(userDaten.SessionId);
+      var daten = new CSBP.Services.Base.ServiceDaten(userDaten);
+      var r = CSBP.Services.Base.ServiceBase.GetUndoRedoSize(userDaten.SessionId);
       AnzahlUndo = r.Item1;
       AnzahlRedo = r.Item2;
     }
@@ -64,12 +64,12 @@ else
     // await Task.Delay(1);
     if (userDaten == null)
       return;
-    var daten = new ServiceDaten(userDaten);
+    var daten = new CSBP.Services.Base.ServiceDaten(userDaten);
     if (Model == "undo")
     {
       // Rückgängig machen
       // TODO Session-spezifisches Undo.
-      var r = FactoryService.LoginService.Undo(daten);
+      var r = CSBP.Services.Factory.FactoryService.LoginService.Undo(daten);
       if (r.Ok && r.Ergebnis)
       {
         // Aktualisieren der aktuellen Seite.
@@ -80,7 +80,7 @@ else
     else if (Model == "redo")
     {
       // Wiederherstellen.
-      var r = FactoryService.LoginService.Redo(daten);
+      var r = CSBP.Services.Factory.FactoryService.LoginService.Redo(daten);
       if (r.Ok && r.Ergebnis)
       {
         HttpContext.Session?.SetFormRefresh();

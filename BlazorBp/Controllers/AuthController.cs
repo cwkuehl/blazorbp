@@ -8,9 +8,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using BlazorBp.Base;
 using BlazorBp.Core.Base;
-using BlazorBp.Forms.Base;
-using CSBP.Services.Base;
-using CSBP.Services.Factory;
+using BlazorSpa.Base.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -46,8 +44,8 @@ public class AuthController : Controller
     // // {"id":"1x","client":1,"username":"admin","password":"test","nr":null,"submitControl":null,"handler":null,"modalArt":null,"modalId":null,"focus":"Password","readonlyHiddenError":null,"submit":null}
     // var Model = System.Text.Json.JsonSerializer.Deserialize<UserInfo>(str);
     var sessionId = UserDaten.GetNewSessionId();
-    var daten = new ServiceDaten(sessionId, Model.Client, Model.Username, null);
-    var r = FactoryService.LoginService.Login(daten, Model?.Password, false);
+    var daten = new CSBP.Services.Base.ServiceDaten(sessionId, Model.Client, Model.Username, null);
+    var r = CSBP.Services.Factory.FactoryService.LoginService.Login(daten, Model?.Password, false);
     if (r.Ok && r.Ergebnis != null)
     {
       // Rollen bestimmen.
@@ -85,9 +83,9 @@ public class AuthController : Controller
     var userdaten = HttpContext.Session?.GetUserDaten();
     if (userdaten != null)
     {
-      var daten = new ServiceDaten(userdaten);
+      var daten = new CSBP.Services.Base.ServiceDaten(userdaten);
       var formdata = HttpContext.Session?.GetFormData()?.ToJsonString();
-      FactoryService.LoginService.Logout(daten, formdata);
+      CSBP.Services.Factory.FactoryService.LoginService.Logout(daten, formdata);
     }
     System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} LogoutUser {userdaten?.MandantNr} {userdaten?.BenutzerId}");
     HttpContext.Session?.SetFormState(null);
@@ -95,7 +93,7 @@ public class AuthController : Controller
     HttpContext.Session?.SetFormData(null);
     HttpContext.Session?.RemoveAllModels();
     if (userdaten != null)
-      ServiceBase.RemoveUndoRedoStack(userdaten.SessionId);
+      CSBP.Services.Base.ServiceBase.RemoveUndoRedoStack(userdaten.SessionId);
     await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     return Redirect("/");
   }

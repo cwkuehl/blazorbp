@@ -173,6 +173,30 @@ public static partial class Funktionen
   }
 
   /// <summary>
+  /// Get the string between two strings.
+  /// </summary>
+  /// <param name="str">Affected string.</param>
+  /// <param name="from">Affected from string.</param>
+  /// <param name="to">Affected to string.</param>
+  /// <returns>Affected string in between.</returns>
+  public static string? Between(string str, string from, string? to)
+  {
+    if (string.IsNullOrEmpty(str))
+      return null;
+    var anfang = string.IsNullOrEmpty(from) ? 0 : str.IndexOf(from);
+    if (anfang >= 0)
+    {
+      var l = from?.Length ?? 0;
+      if (string.IsNullOrEmpty(to))
+        return str.Substring(anfang + l);
+      var ende = str.IndexOf(to, anfang + l);
+      if (ende > anfang + l)
+        return str.Substring(anfang + l, ende - anfang - l);
+    }
+    return null;
+  }
+
+  /// <summary>
   /// Returns the right part of a string with the given length.
   /// If the string is too short, it is returned unchanged.
   /// If the string is null, the empty string is returned.
