@@ -21,6 +21,37 @@ public class FormsModule : IFormModule
         new("Mandanten", "Mandanten bearbeiten", "/ag/ag100", "bi bi-dot-nav-menu"),
         new("Benutzer", "Benutzer bearbeiten", "/ag/ag200", "bi bi-dot-nav-menu"),
       ]),
+      new MainMenu("Einstellungen", 110, "submenuuser", "bi bi-person-nav-menu", false, [], [
+        new("Kennwort ändern", "Kennwort ändern", "/am/am100", "bi bi-dot-nav-menu"),
+        new("Einstellungen", "Einstellungen bearbeiten", "/am/am500", "bi bi-dot-nav-menu"),
+      ]),
+      new MainMenu("Privat", 120, "submenuprivate", "bi bi-person-nav-menu", true, [], [
+        new("Tagebuch", "Tagebuch", "/tb/tb100", "bi bi-dot-nav-menu"),
+        new("Positionen", "Positionen bearbeiten", "/tb/tb200", "bi bi-dot-nav-menu"),
+        new("Notizen", "Notizen bearbeiten", "/fz/fz700", "bi bi-dot-nav-menu"),
+        new("Fahrradstände", "Fahrradstände bearbeiten", "/fz/fz250", "bi bi-dot-nav-menu"),
+        new("Fahrräder", "Fahrräder bearbeiten", "/fz/fz200", "bi bi-dot-nav-menu"),
+        new("Statistik", "Statistik", "/fz/fz100", "bi bi-dot-nav-menu"),
+      ]),
+      new MainMenu("Haushalt", 130, "submenubudget", "bi bi-person-nav-menu", true, [], [
+        new("Perioden", "Perioden bearbeiten", "/hh/hh100", "bi bi-dot-nav-menu"),
+        new("Konten", "Konten bearbeiten", "/hh/hh200", "bi bi-dot-nav-menu"),
+        new("Ereignisse", "Ereignisse bearbeiten", "/hh/hh300", "bi bi-dot-nav-menu"),
+        new("Buchungen", "Buchungen bearbeiten", "/hh/hh400", "bi bi-dot-nav-menu"),
+        new("Schlussbilanz", "Schlussbilanz", "/hh/hh500/SB", "bi bi-dot-nav-menu"),
+        new("G+V-Rechnung", "G+V-Rechnung", "/hh/hh500/GV", "bi bi-dot-nav-menu"),
+        new("Eröffnungsbilanz", "Eröffnungsbilanz", "/hh/hh500/EB", "bi bi-dot-nav-menu"),
+      ]),
+      new MainMenu("Wertpapiere", 140, "submenustocks", "bi bi-person-nav-menu", true, [], [
+        new("Wertpapiere", "Wertpapiere bearbeiten", "/wp/wp200", "bi bi-dot-nav-menu"),
+        new("Konfigurationen", "Konfigurationen bearbeiten", "/wp/wp300", "bi bi-dot-nav-menu"),
+        new("Wertpapier-Chart", "Wertpapier-Chart", "/wp/wp100", "bi bi-dot-nav-menu"),
+        new("Anlagen", "Anlagen bearbeiten", "/wp/wp250", "bi bi-dot-nav-menu"),
+        new("Stände", "Stände bearbeiten", "/wp/wp500", "bi bi-dot-nav-menu"),
+      ]),
+      new MainMenu("Energie", 150, "submenuenergy", "bi bi-person-nav-menu", true, [], [
+        new("Abfrage-Parameter", "Abfrage-Parameter bearbeiten", "/en/en100", "bi bi-dot-nav-menu"),
+      ]),
     };
   }
   public void ConfigureServices(IServiceCollection services)

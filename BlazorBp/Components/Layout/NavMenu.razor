@@ -12,59 +12,7 @@
 </div>
 <div class="border border-2 border-secondary rounded-3 mt-1 mb-1">
   <span class="ms-1 fw-bold">Menü</span>
-  <AuthorizeView Roles="@(UserDaten.RoleAdmin+","+UserDaten.RoleSuperadmin)">
-    <NavLink class="nav-link ms-1" href="#" title="Menü Administrator" data-bs-toggle="collapse" data-bs-target="#submenufile" aria-expanded="false" aria-controls="submenufile"><span class="bi bi-file-nav-menu" aria-hidden="true"></span>Administrator</NavLink>
-    <div class="collapse showxxx ms-3" id="submenufile">
-      <NavLink class="nav-link" href="ag/ag100" title="Mandanten" aria-label="Mandanten"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Mandanten</NavLink>
-      <NavLink class="nav-link" href="ag/ag200" title="Benutzer" aria-label="Benutzer"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Benutzer</NavLink>
-    </div>
-  </AuthorizeView>
-  <AuthorizeView>
-    <NavLink class="nav-link ms-1" href="#" title="Menü Einstellungen" data-bs-toggle="collapse" data-bs-target="#submenuuser" aria-expanded="false" aria-controls="submenuuser"><span class="bi bi-person-nav-menu" aria-hidden="true"></span>Einstellungen</NavLink>
-    <div class="collapse showxxx ms-3" id="submenuuser">
-      <NavLink class="nav-link" href="am/am100" title="Kennwort ändern" aria-label="Kennwort ändern"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Kennwort ändern</NavLink>
-      <NavLink class="nav-link" href="am/am500" title="Einstellungen" aria-label="Einstellungen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Einstellungen</NavLink>
-    </div>
-  </AuthorizeView>
-  <AuthorizeView>
-    <NavLink class="nav-link ms-1" href="#" title="Menü Privat" data-bs-toggle="collapse" data-bs-target="#submenuprivate" aria-expanded="false" aria-controls="submenuprivate"><span class="bi bi-person-nav-menu" aria-hidden="true"></span>Privat</NavLink>
-    <div class="collapse show ms-3" id="submenuprivate">
-      <NavLink class="nav-link" href="tb/tb100" title="Tagebuch" aria-label="Tagebuch"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Tagebuch</NavLink>
-      <NavLink class="nav-link" href="tb/tb200" title="Positionen" aria-label="Positionen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Positionen</NavLink>
-      <NavLink class="nav-link" href="fz/fz700" title="Notizen" aria-label="Notizen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Notizen</NavLink>
-      <NavLink class="nav-link" href="fz/fz250" title="Fahrradstände" aria-label="Fahrradstände"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Fahrradstände</NavLink>
-      <NavLink class="nav-link" href="fz/fz200" title="Fahrräder" aria-label="Fahrräder"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Fahrräder</NavLink>
-      <NavLink class="nav-link" href="fz/fz100" title="Statistik" aria-label="Statistik"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Statistik</NavLink>
-    </div>
-  </AuthorizeView>
-  <AuthorizeView>
-    <NavLink class="nav-link ms-1" href="#" title="Menü Haushalt" data-bs-toggle="collapse" data-bs-target="#submenubudget" aria-expanded="false" aria-controls="submenubudget"><span class="bi bi-person-nav-menu" aria-hidden="true"></span>Haushalt</NavLink>
-    <div class="collapse show ms-3" id="submenubudget">
-      <NavLink class="nav-link" href="hh/hh100" title="Perioden" aria-label="Perioden"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Perioden</NavLink>
-      <NavLink class="nav-link" href="hh/hh200" title="Konten" aria-label="Konten"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Konten</NavLink>
-      <NavLink class="nav-link" href="hh/hh300" title="Ereignisse" aria-label="Ereignisse"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Ereignisse</NavLink>
-      <NavLink class="nav-link" href="hh/hh400" title="Buchungen" aria-label="Buchungen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Buchungen</NavLink>
-      <NavLink class="nav-link" href="hh/hh500/SB" title="Schlussbilanz" aria-label="Schlussbilanz"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Schlussbilanz</NavLink>
-      <NavLink class="nav-link" href="hh/hh500/GV" title="G+V-Rechnung" aria-label="G+V-Rechnung"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>G+V-Rechnung</NavLink>
-      <NavLink class="nav-link" href="hh/hh500/EB" title="Eröffnungsbilanz" aria-label="Eröffnungsbilanz"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Eröffnungsbilanz</NavLink>
-    </div>
-  </AuthorizeView>
-  <AuthorizeView>
-    <NavLink class="nav-link ms-1" href="#" title="Menü Wertpapiere" data-bs-toggle="collapse" data-bs-target="#submenustocks" aria-expanded="false" aria-controls="submenuprivate"><span class="bi bi-person-nav-menu" aria-hidden="true"></span>Wertpapiere</NavLink>
-    <div class="collapse show ms-3" id="submenustocks">
-      <NavLink class="nav-link" href="wp/wp200" title="Wertpapiere" aria-label="Wertpapiere"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Wertpapiere</NavLink>
-      <NavLink class="nav-link" href="wp/wp300" title="Konfigurationen" aria-label="Konfigurationen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Konfigurationen</NavLink>
-      <NavLink class="nav-link" href="wp/wp100" title="Wertpapier-Chart" aria-label="Wertpapier-Chart"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Wertpapier-Chart</NavLink>
-      <NavLink class="nav-link" href="wp/wp250" title="Anlagen" aria-label="Anlagen"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Anlagen</NavLink>
-      <NavLink class="nav-link" href="wp/wp500" title="Stände" aria-label="Stände"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Stände</NavLink>
-    </div>
-  </AuthorizeView>
-  <AuthorizeView>
-    <NavLink class="nav-link ms-1" href="#" title="Menü Energie" data-bs-toggle="collapse" data-bs-target="#submenuenergy" aria-expanded="false" aria-controls="submenuprivate"><span class="bi bi-person-nav-menu" aria-hidden="true"></span>Energie</NavLink>
-    <div class="collapse show ms-3" id="submenuenergy">
-      <NavLink class="nav-link" href="en/en100" title="Abfrage-Parameter" aria-label="Abfrage-Parameter"><span class="bi bi-dot-nav-menu" aria-hidden="true"></span>Abfrage-Parameter</NavLink>
-    </div>
-  </AuthorizeView>
+  <AuthorizeView>&nbsp;</AuthorizeView><!-- Stehenlassen, sonst wird Menü nach Anmeldung nicht angezeigt. -->
   @foreach (var menu in _visibleMenues ?? Enumerable.Empty<MainMenu>())
   {
     <NavLink class="nav-link ms-1" href="#" title=@($"Menü {menu.Key}") data-bs-toggle="collapse" data-bs-target=@($"#{menu.SubKey}") aria-expanded="false" aria-controls="@menu.SubKey")><span class="@menu.Icon" aria-hidden="true"></span>@menu.Key</NavLink>
@@ -91,10 +39,11 @@
       Funktionen.MachNichts();
     var authState = await AuthStateProvider.GetAuthenticationStateAsync();
     var user = authState.User;
+    var isAuthenticated = user.Identity?.IsAuthenticated ?? false;
 
     _visibleMenues = FormModules
       .SelectMany(module => module.GetMainMenues())
-      .Where(menu => menu.RequiredRoles == null || !menu.RequiredRoles.Any() || menu.RequiredRoles.Any(user.IsInRole))
+      .Where(menu => isAuthenticated && (menu.RequiredRoles == null || !menu.RequiredRoles.Any() || menu.RequiredRoles.Any(user.IsInRole)))
       .Select(menu => menu with
       {
         Entries = menu.Entries
