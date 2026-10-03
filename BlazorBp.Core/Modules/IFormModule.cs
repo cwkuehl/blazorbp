@@ -6,6 +6,7 @@ namespace BlazorBp.Core.Modules;
 
 using BlazorBp.Core.Base;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 public interface IFormModule
@@ -25,4 +26,12 @@ public interface IFormModule
   /// <summary>Liefert die Formulare, die dieses Modul bereitstellt.</summary>
   /// <returns>Dictionary mit den Formularen.</returns>
   Dictionary<string, Formular> GetForms();
+
+  /// <summary>Liefert eine Funktion zum Erzeugen von CSV-Dateien.</summary>
+  /// <returns>Funktion zum Erzeugen von CSV-Dateien.</returns>
+  Func<string, string, HttpContext, IServiceProvider, (string?, string?)> GetFuncCsv();
+
+  /// <summary>Liefert eine Funktion zum Erzeugen von HTML-Dateien.</summary>
+  /// <returns>Funktion zum Erzeugen von HTML-Dateien.</returns>
+  Func<string, string, HttpContext, IServiceProvider, (byte[]?, string?)> GetFuncHtml();
 }

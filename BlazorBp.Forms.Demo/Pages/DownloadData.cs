@@ -22,8 +22,8 @@ public static class DownloadData
   /// <param name="id">Betroffene Formular-ID.</param>
   /// <param name="context">Betroffener HttpContext.</param>
   /// <param name="sp">Betroffener IServiceProvider.</param>
-  /// <returns>CSV-String oder null.</returns>
-  public static string? GetCsv(string page, string id, HttpContext context, IServiceProvider sp)
+  /// <returns>CSV-String oder null sowie Fehlermeldung.</returns>
+  public static (string?, string?) GetCsv(string page, string id, HttpContext context, IServiceProvider sp)
   {
     var ds = sp.GetService<IDemoService>();
     var s = context?.Session;
@@ -35,28 +35,24 @@ public static class DownloadData
       switch (page)
       {
         case "DM200":
-        {
-          var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<DM200TableRowModel>>(s, page, id)?.ReadModel;
-          var csv = ds.GetCsvString(page, rm);
-          r = new ServiceErgebnis<string>(csv);
-          break;
-        }
+          {
+            var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<DM200TableRowModel>>(s, page, id)?.ReadModel;
+            var csv = ds.GetCsvString(page, rm);
+            r = new ServiceErgebnis<string>(csv);
+            break;
+          }
         default:
           break;
       }
       if (r != null && r.Ok && !string.IsNullOrEmpty(r.Ergebnis))
       {
         if (r.Ok && !string.IsNullOrEmpty(r.Ergebnis))
-          return r.Ergebnis;
+          return (r.Ergebnis, null);
         else
           fehler = r.GetErrors();
       }
     }
-    var csv0 = $"""
-      Seite;Fehler
-      {page};{fehler ?? "CSV-Export nicht implementiert"}
-      """;
-    return csv0;
+    return (null, fehler);
   }
 
   /// <summary>Daten für HTML-Dateien lesen.</summary>
@@ -64,8 +60,8 @@ public static class DownloadData
   /// <param name="id">Betroffene Formular-ID.</param>
   /// <param name="context">Betroffener HttpContext.</param>
   /// <param name="sp">Betroffener IServiceProvider.</param>
-  /// <returns>Byte-Array oder null.</returns>
-  public static byte[]? GetHtml(string page, string id, HttpContext context, IServiceProvider sp)
+  /// <returns>Byte-Array oder null sowie Fehlermeldung.</returns>
+  public static (byte[]?, string?) GetHtml(string page, string id, HttpContext context, IServiceProvider sp)
   {
     var s = context?.Session;
     string? fehler = null;
@@ -90,14 +86,10 @@ public static class DownloadData
       if (r != null)
       {
         if (r.Ok && r.Ergebnis != null)
-          return r.Ergebnis;
+          return (r.Ergebnis, null);
         fehler = r.GetErrors();
       }
     }
-    var s0 = $"""
-      Seite;Fehler
-      {page};{fehler ?? "HTML-Export nicht implementiert"}
-      """;
-    return Encoding.UTF8.GetBytes(s0);
+    return (null, fehler);
   }
 }

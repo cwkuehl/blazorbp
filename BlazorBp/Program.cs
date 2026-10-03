@@ -5,8 +5,10 @@
 using System.Reflection;
 using System.Security.Authentication;
 using System.Security.Claims;
-using BlazorBp.Core.Base;
 using BlazorBp.Components; // für App
+using BlazorBp.Core;
+using BlazorBp.Core.Base;
+using BlazorBp.Core.Components.Pages;
 using BlazorBp.Core.Modules;
 using BlazorSpa.Base;
 using Microsoft.AspNetCore.Authentication;
@@ -117,9 +119,9 @@ else
 // });
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromSeconds(BlazorBp.Base.Konstanten.SESSION_TIMEOUT);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
+  options.IdleTimeout = TimeSpan.FromSeconds(BlazorBp.Base.Konstanten.SESSION_TIMEOUT);
+  options.Cookie.HttpOnly = true;
+  options.Cookie.IsEssential = true;
 });
 var modules = new IFormModule[]
 {
@@ -131,6 +133,8 @@ foreach (var module in modules)
 {
   module.ConfigureServices(builder.Services);
   BlazorComponentBaseStatic.AddFormulare(module.GetForms());
+  DownloadData.RegisterFuncCsv(module.GetFuncCsv());
+  DownloadData.RegisterFuncHtml(module.GetFuncHtml());
 }
 builder.Services.AddSingleton<IEnumerable<IFormModule>>(modules);
 
@@ -222,6 +226,7 @@ app.UseCookiePolicy(new CookiePolicyOptions
 });
 app.UseSession();
 
+ProgramCore.ConfigureApp(app);
 foreach (var module in modules)
 {
   // MapGet-Endpunkte für jedes Modul registrieren, z.B. /hello.
