@@ -39,6 +39,12 @@ public class DemoModule : IFormModule
     };
   }
 
+  /// <summary>Builder-Konfiguration ergänzen.</summary>
+  /// <param name="builder">Betroffener WebApplicationBuilder.</param>
+  public void ConfigureBuilder(WebApplicationBuilder builder)
+  {
+  }
+
   public void ConfigureApp(WebApplication app)
   {
     app.MapGet("/hello",

@@ -19,6 +19,10 @@ public interface IFormModule
   /// <param name="services">Betroffene Service-Collection.</param>
   void ConfigureServices(IServiceCollection services);
 
+  /// <summary>Builder-Konfiguration ergänzen.</summary>
+  /// <param name="builder">Betroffener WebApplicationBuilder.</param>
+  void ConfigureBuilder(WebApplicationBuilder builder);
+
   /// <summary>App-Konfiguration ergänzen, z.B. mit MapGet.</summary>
   /// <param name="app">Betroffene WebApplication.</param>
   void ConfigureApp(WebApplication app);
@@ -28,10 +32,10 @@ public interface IFormModule
   Dictionary<string, Formular> GetForms();
 
   /// <summary>Liefert eine Funktion zum Erzeugen von CSV-Dateien.</summary>
-  /// <returns>Funktion zum Erzeugen von CSV-Dateien.</returns>
-  Func<string, string, HttpContext, IServiceProvider, (string?, string?)> GetFuncCsv();
+  /// <returns>Funktion zum Erzeugen von CSV-Dateien oder null.</returns>
+  Func<string, string, HttpContext, IServiceProvider, (string?, string?)>? GetFuncCsv();
 
   /// <summary>Liefert eine Funktion zum Erzeugen von HTML-Dateien.</summary>
-  /// <returns>Funktion zum Erzeugen von HTML-Dateien.</returns>
-  Func<string, string, HttpContext, IServiceProvider, (byte[]?, string?)> GetFuncHtml();
+  /// <returns>Funktion zum Erzeugen von HTML-Dateien oder null.</returns>
+  Func<string, string, HttpContext, IServiceProvider, (byte[]?, string?)>? GetFuncHtml();
 }

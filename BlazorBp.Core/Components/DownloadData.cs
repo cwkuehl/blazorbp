@@ -21,7 +21,7 @@ public static class DownloadData
 
   /// <summary>Funktion zum Erzeugen von CSV-Dateien registrieren.</summary>
   /// <param name="func">Zu registrierende Funktion.</param>
-  public static void RegisterFuncCsv(Func<string, string, HttpContext, IServiceProvider, (string?, string?)> func)
+  public static void RegisterFuncCsv(Func<string, string, HttpContext, IServiceProvider, (string?, string?)>? func)
   {
     if (func != null)
       _funcCsv.Add(func);
@@ -29,7 +29,7 @@ public static class DownloadData
 
   /// <summary>Funktion zum Erzeugen von HTML-Dateien registrieren.</summary>
   /// <param name="func">Zu registrierende Funktion.</param>
-  public static void RegisterFuncHtml(Func<string, string, HttpContext, IServiceProvider, (byte[]?, string?)> func)
+  public static void RegisterFuncHtml(Func<string, string, HttpContext, IServiceProvider, (byte[]?, string?)>? func)
   {
     if (func != null) 
       _funcHtml.Add(func);

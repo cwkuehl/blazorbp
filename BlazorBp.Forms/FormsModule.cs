@@ -101,6 +101,23 @@ public class FormsModule : IFormModule
     };
   }
 
+  /// <summary>Builder-Konfiguration ergänzen.</summary>
+  /// <param name="builder">Betroffener WebApplicationBuilder.</param>
+  public void ConfigureBuilder(WebApplicationBuilder builder)
+  {
+    var connect = builder.Configuration["App:ConnectionString"] ?? "Data Source=blazorbp.db";
+    CSBP.Services.Base.Parameter.Connect = connect;
+    var daten = new CSBP.Services.Base.ServiceDaten("0", 1, "Administrator", null);
+    var r1 = CSBP.Services.Factory.FactoryService.ClientService.InitDb(daten);
+    r1.ThrowAllErrors("InitDb");
+    var r2 = CSBP.Services.Factory.FactoryService.ClientService.GetOptionList(daten, daten.MandantNr, CSBP.Services.Base.Parameter.Params, null);
+    r2.ThrowAllErrors("GetOptionList");
+    var sharedpath = builder.Configuration["App:SharedPath"].TrimNull();
+    var temppath = builder.Configuration["App:TempPath"].TrimNull();
+    CSBP.Services.Base.CsbpBase.SetValues(sharedpath, temppath);
+    CSBP.Services.Base.StatusTask.Aufraeumen();
+  }
+
   public void ConfigureApp(WebApplication app)
   {
     app.MapGet("/starttask/{page}/{id}",
@@ -132,15 +149,15 @@ public class FormsModule : IFormModule
   }
 
   /// <summary>Liefert eine Funktion zum Erzeugen von CSV-Dateien.</summary>
-  /// <returns>Funktion zum Erzeugen von CSV-Dateien.</returns>
-  public Func<string, string, HttpContext, IServiceProvider, (string?, string?)> GetFuncCsv()
+  /// <returns>Funktion zum Erzeugen von CSV-Dateien oder null.</returns>
+  public Func<string, string, HttpContext, IServiceProvider, (string?, string?)>? GetFuncCsv()
   {
     return DownloadData.GetCsv;
   }
 
   /// <summary>Liefert eine Funktion zum Erzeugen von HTML-Dateien.</summary>
-  /// <returns>Funktion zum Erzeugen von HTML-Dateien.</returns>
-  public Func<string, string, HttpContext, IServiceProvider, (byte[]?, string?)> GetFuncHtml()
+  /// <returns>Funktion zum Erzeugen von HTML-Dateien oder null.</returns>
+  public Func<string, string, HttpContext, IServiceProvider, (byte[]?, string?)>? GetFuncHtml()
   {
     return DownloadData.GetHtml;
   }

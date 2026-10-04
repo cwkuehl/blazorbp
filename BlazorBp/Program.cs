@@ -10,28 +10,23 @@ using BlazorBp.Core;
 using BlazorBp.Core.Base;
 using BlazorBp.Core.Components.Pages;
 using BlazorBp.Core.Modules;
-using BlazorSpa.Base;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using NeoSmart.Caching.Sqlite;
 
 var interactive = BlazorBp.Base.Konstanten.Interactive;
+var modules = new IFormModule[]
+{
+  // Formular-Module explizit eintragen (Alternative: Assembly-Scan)
+  new BlazorBp.Core.CoreModule(),
+  new BlazorBp.Forms.FormsModule(),
+  new BlazorBp.Forms.Demo.DemoModule(),
+};
 var builder = WebApplication.CreateBuilder(args);
-
-// Trace = 0, Debug = 1, Information = 2, Warning = 3, Error = 4, Critical = 5, and None = 6.
-builder.Logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
-
-var connect = builder.Configuration["App:ConnectionString"] ?? "Data Source=blazorbp.db";
-CSBP.Services.Base.Parameter.Connect = connect;
-var daten = new CSBP.Services.Base.ServiceDaten("0", 1, "Administrator", null);
-var r1 = CSBP.Services.Factory.FactoryService.ClientService.InitDb(daten);
-r1.ThrowAllErrors("InitDb");
-var r2 = CSBP.Services.Factory.FactoryService.ClientService.GetOptionList(daten, daten.MandantNr, CSBP.Services.Base.Parameter.Params, null);
-r2.ThrowAllErrors("GetOptionList");
-var sharedpath = builder.Configuration["App:SharedPath"].TrimNull();
-var temppath = builder.Configuration["App:TempPath"].TrimNull();
-CSBP.Services.Base.CsbpBase.SetValues(sharedpath, temppath);
-CSBP.Services.Base.StatusTask.Aufraeumen();
+foreach (var module in modules)
+{
+  module.ConfigureBuilder(builder);
+}
 
 // Add services to the container.
 if (interactive || true)
@@ -123,12 +118,6 @@ builder.Services.AddSession(options =>
   options.Cookie.HttpOnly = true;
   options.Cookie.IsEssential = true;
 });
-var modules = new IFormModule[]
-{
-  // Formular-Module explizit eintragen (Alternative: Assembly-Scan)
-  new BlazorBp.Forms.FormsModule(),
-  new BlazorBp.Forms.Demo.DemoModule(),
-};
 foreach (var module in modules)
 {
   module.ConfigureServices(builder.Services);
@@ -137,7 +126,6 @@ foreach (var module in modules)
   DownloadData.RegisterFuncHtml(module.GetFuncHtml());
 }
 builder.Services.AddSingleton<IEnumerable<IFormModule>>(modules);
-
 builder.Services.AddHttpClient("HttpClientWithSSLUntrusted").ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
 {
   ClientCertificateOptions = ClientCertificateOption.Manual,
@@ -226,7 +214,6 @@ app.UseCookiePolicy(new CookiePolicyOptions
 });
 app.UseSession();
 
-ProgramCore.ConfigureApp(app);
 foreach (var module in modules)
 {
   // MapGet-Endpunkte für jedes Modul registrieren, z.B. /hello.
