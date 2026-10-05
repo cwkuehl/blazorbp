@@ -6,9 +6,9 @@ using System.Reflection;
 using System.Security.Authentication;
 using System.Security.Claims;
 using BlazorBp.Components; // für App
-using BlazorBp.Core;
 using BlazorBp.Core.Base;
 using BlazorBp.Core.Components.Pages;
+using BlazorBp.Core.Core;
 using BlazorBp.Core.Modules;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -126,19 +126,16 @@ foreach (var module in modules)
   DownloadData.RegisterFuncHtml(module.GetFuncHtml());
 }
 builder.Services.AddSingleton<IEnumerable<IFormModule>>(modules);
-builder.Services.AddHttpClient("HttpClientWithSSLUntrusted").ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+var localhostCertificateSha256 = Convert.FromHexString(
+  builder.Configuration["Security:LocalhostCertificateSha256"]
+    ?? throw new InvalidOperationException("Security:LocalhostCertificateSha256 must be configured."));
+if (localhostCertificateSha256.Length != 32)
+  throw new InvalidOperationException("Security:LocalhostCertificateSha256 must contain a SHA-256 fingerprint.");
+builder.Services.AddHttpClient("HttpClientWithLocalhostCertificatePinning").ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
 {
   ClientCertificateOptions = ClientCertificateOption.Manual,
-  ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, certChain, policyErrors) =>
-  {
-    // Untrusted SSL-Zertifikate akzeptieren, nur für eigenen Login-Aufruf über localhost.
-    var today = DateTime.Now;
-    if (cert == null || cert.NotBefore > today || cert.NotAfter < today)
-      return false;
-    //// if (policyErrors != System.Net.Security.SslPolicyErrors.None)
-    ////   return false;
-    return true;
- },
+  ServerCertificateCustomValidationCallback = (request, certificate, _, policyErrors) =>
+    LocalhostCertificateValidator.IsValid(certificate, request.RequestUri?.Host, policyErrors,  localhostCertificateSha256),
   SslProtocols = SslProtocols.Tls13,
 });
 builder.Services.AddFactoryService();

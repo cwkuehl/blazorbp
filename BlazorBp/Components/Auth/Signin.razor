@@ -76,7 +76,7 @@
       navigation.NavigateTo($"/auth/login?u={Model?.Username}&p={Model?.Password}", true);
     else
     {
-      var http = clientFactory.CreateClient("HttpClientWithSSLUntrusted");
+      var http = clientFactory.CreateClient("HttpClientWithLocalhostCertificatePinning");
       //// var response = await http.PostAsJsonAsync($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/auth/login", Model);
       var response = http.PostAsJsonAsync($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/auth/login", Model).Result;
       if (response.IsSuccessStatusCode)

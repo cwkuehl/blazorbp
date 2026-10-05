@@ -17,8 +17,7 @@ public static class HttpClientFactory
   /// <summary>HttpClient factory can be null.</summary>
   private static IHttpClientFactory? factory;
 
-  /// <summary>Static resiliant HttpClient is used if factory is null.
-  /// For name HttpClientWithSSLUntrusted.</summary>
+  /// <summary>Static resilient HttpClient used if the factory is null.</summary>
   private static HttpClient? httpsclient0;
 
   /// <summary>Initializes a new instance of the <see cref="HttpClientFactory"/> class with dependency injection.</summary>
@@ -42,7 +41,7 @@ public static class HttpClientFactory
   /// <param name="timeout">The timeout in milliseconds or -1 for standard timeout.</param>
   /// <param name="tls12">Use TLS 1.2.</param>
   /// <returns>The HTTP client.</returns>
-  public static HttpClient CreateClient(string name = "HttpClientWithSSLUntrusted", int timeout = -1, bool tls12 = false)
+  public static HttpClient CreateClient(string name = "HttpClientWithLocalhostCertificatePinning", int timeout = -1, bool tls12 = false)
   {
     HttpClient client;
     if (factory == null || (timeout >= 0 && timeout != Konstanten.HttpTimeout) || tls12)
@@ -57,7 +56,7 @@ public static class HttpClientFactory
   /// <param name="timeout">The timeout in milliseconds or -1 for standard timeout.</param>
   /// <param name="tls12">Use TLS 1.2.</param>
   /// <returns>The HTTP client.</returns>
-  private static HttpClient GetClient(string name = "HttpClientWithSSLUntrusted", int timeout = -1, bool tls12 = false)
+  private static HttpClient GetClient(string name = "HttpClientWithLocalhostCertificatePinning", int timeout = -1, bool tls12 = false)
   {
     HttpClient? client = null;
     var special = (timeout >= 0 && timeout != Konstanten.HttpTimeout) || tls12;
@@ -67,21 +66,6 @@ public static class HttpClientFactory
     }
     if (client == null)
     {
-      // https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines#resilience-policies-with-static-clients
-      // var handler = new HttpClientHandler
-      // {
-      //   ClientCertificateOptions = ClientCertificateOption.Manual,
-      //   SslProtocols = SslProtocols.Tls13,
-      //   ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) =>
-      //   {
-      //     return true;
-      //   },
-      // };
-      // var httpsclient = new HttpClient(handler)
-      // {
-      //   Timeout = TimeSpan.FromMilliseconds(timeout),
-      // };
-      // httpsclient.DefaultRequestHeaders.Add("X-RapidAPI-Host", "meteostat.p.rapidapi.com'");
       var retryPipeline = new ResiliencePipelineBuilder<HttpResponseMessage>()
         .AddRetry(new HttpRetryStrategyOptions
         {
@@ -97,7 +81,7 @@ public static class HttpClientFactory
         {
           ClientCertificates = null,
           EnabledSslProtocols = tls12 ? SslProtocols.Tls12 | SslProtocols.Tls13 : SslProtocols.Tls13,
-          RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true,
+          //// RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true,
         },
       };
 #pragma warning restore CA1416 // Validate platform compatibility

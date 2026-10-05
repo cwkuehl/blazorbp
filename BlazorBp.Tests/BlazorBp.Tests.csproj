@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\csbp\CSBP.Services\CSBP.Services.csproj" />
+    <ProjectReference Include="..\BlazorBp.Core\BlazorBp.Core.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="4.0.0">

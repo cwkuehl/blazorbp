@@ -57,6 +57,7 @@ Folgende Funktionen sind implementiert:
 - Tabelle mit optionaler Summenzeilen (Essence).
 - Längenprüfung der Felder.
 - Modularisierung: Menüs, Services und Formulare können separat in Modulen hinzugefügt werden.
+- Für den internen HTTPS-Login wird `Security:LocalhostCertificateSha256` als SHA-256-Fingerabdruck des localhost-Zertifikats geprüft. Den Fingerabdruck in [appsettings.json](./BlazorBp/appsettings.json) nach jeder Zertifikatserneuerung aktualisieren. Für alle anderen Hosts bleibt die normale TLS-Zertifikatsprüfung aktiv.
 
 TODO Folgende Funktionen sind noch nicht implementiert:
 - dotnet new razorclasslib -o BlazorBp.Components, Vererbung der Component-Klasse,
