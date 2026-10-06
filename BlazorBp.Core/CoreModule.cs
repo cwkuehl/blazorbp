@@ -5,6 +5,8 @@ using BlazorBp.Core.Base;
 using BlazorBp.Core.Components.Pages;
 using BlazorBp.Core.Modules;
 using BlazorSpa.Base;
+using BlazorSpa.Base.Models;
+using BlazorSpa.Base.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -76,6 +78,18 @@ public class CoreModule : IFormModule
       // return Results.Ok();
       StartTask.Do(page, id, context, sp);
       return Results.NoContent();
+    });
+    app.MapGet("/statustask/{name}",
+      [EndpointSummary("Abrufen des Status asynchroner, länger laufender Aufgaben.")]
+    [EndpointDescription("Name der Aufgabe muss angegeben werden.")]
+    (string name, HttpContext context, IServiceProvider sp) =>
+    {
+      var s = context?.Session;
+      if (string.IsNullOrEmpty(name) || s?.GetUserDaten() == null)
+        return Results.BadRequest();
+      var daten = new ServiceDatenBase(s.GetUserDaten() ?? new UserDaten("0", 0, "Benutzer", []));
+      var status = StatusTask.GetStatus(daten.MandantNr, [name], true);
+      return Results.Text(status, "text/plain; charset=utf-8");
     });
   }
 

@@ -91,7 +91,7 @@
   {
     var daten = ServiceDaten;
     var l = Get(FactoryService.BudgetService.GetPeriodList(daten)) ?? new List<HhPeriode>();
-    Model.AuswahlPerioden = l.Select(a => new ListItem(Functions.ToString(a.Nr), $"{a.Nr:00000} | {Functions.CutOrPadRight(Functions.ToString(a.Period),14, '\u00A0')} | {Funktionen.ToString(a.Datum_Von)} | {Funktionen.ToString(a.Datum_Bis)} | {Funktionen.ToString(a.Geaendert_Am, true)} | {a.Geaendert_Von} | {Funktionen.ToString(a.Angelegt_Am, true)} | {a.Angelegt_Von}")).ToList();
+    Model.AuswahlPerioden = l.Select(a => new ListItem(Functions.ToString(a.Nr), $"{a.Nr:00000} | {Functions.CutOrPadRight(Funktionen.ToString(a.Period),14, '\u00A0')} | {Funktionen.ToString(a.Datum_Von)} | {Funktionen.ToString(a.Datum_Bis)} | {Funktionen.ToString(a.Geaendert_Am, true)} | {a.Geaendert_Von} | {Funktionen.ToString(a.Angelegt_Am, true)} | {a.Angelegt_Von}")).ToList();
     if (l.Count > 0)
     {
       Model.Anfang = Funktionen.ToString(l.Last().Datum_Von);

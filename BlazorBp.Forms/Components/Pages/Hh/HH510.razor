@@ -68,7 +68,7 @@
       Model.SetMhrf(DialogTypeEnum.New);
       // Parameter auslesen.
       var arr = HttpContext?.Session?.GetFormParameter() ?? [];
-      var kez = arr.Length > 0 ? Functions.ToString(arr[0]) : null;
+      var kez = arr.Length > 0 ? Funktionen.ToString(arr[0]) : null;
       var v = arr.Length > 1 ? Functions.ToDateTime(arr[1]) : null;
       var b = arr.Length > 2 ? Functions.ToDateTime(arr[2]) : null;
       if (!string.IsNullOrEmpty(kez) && v.HasValue && b.HasValue)

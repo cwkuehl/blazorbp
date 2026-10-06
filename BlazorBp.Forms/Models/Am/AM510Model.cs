@@ -9,6 +9,7 @@ using BlazorBp.Core.Base;
 using static BlazorBp.Core.Base.DialogTypeEnum;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
+using BlazorSpa.Base;
 
 /// <summary>
 /// Model-Klasse für das modale Formular AM500 Einstellungen.
@@ -53,7 +54,7 @@ public class AM510Model : PageModelBase
   /// <param name="m">Zu kopierendes Model.</param>
   public void From(AM500TableRowModel m) =>
    (Schluessel, Wert, Beschreibung, Standard, Angelegt, Geaendert)
-   = (Functions.ToString(m.Schluessel), m.Wert, m.Beschreibung, m.Standard, ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon), ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon));
+   = (Funktionen.ToString(m.Schluessel), m.Wert, m.Beschreibung, m.Standard, ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon), ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon));
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
   /// <returns>Das kopierte Model.</returns>
@@ -61,7 +62,7 @@ public class AM510Model : PageModelBase
   public MaParameter To(int mnr) => new()
   {
     Mandant_Nr = mnr,
-    Schluessel = Functions.ToString(Schluessel),
+    Schluessel = Funktionen.ToString(Schluessel),
     Wert = Wert,
     Comment = Beschreibung,
     Default = Standard,

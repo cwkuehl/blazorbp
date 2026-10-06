@@ -114,24 +114,12 @@ public class FormsModule : IFormModule
     r2.ThrowAllErrors("GetOptionList");
     var sharedpath = builder.Configuration["App:SharedPath"].TrimNull();
     var temppath = builder.Configuration["App:TempPath"].TrimNull();
-    CSBP.Services.Base.CsbpBase.SetValues(sharedpath, temppath);
-    CSBP.Services.Base.StatusTask.Aufraeumen();
+    BlazorSpa.Base.SpaBase.SetValues(sharedpath, temppath);
+    BlazorSpa.Base.Services.StatusTask.Aufraeumen();
   }
 
   public void ConfigureApp(WebApplication app)
   {
-    app.MapGet("/statustask/{name}",
-      [EndpointSummary("Abrufen des Status asynchroner, länger laufender Aufgaben.")]
-    [EndpointDescription("Name der Aufgabe muss angegeben werden.")]
-    (string name, HttpContext context, IServiceProvider sp) =>
-    {
-      var s = context?.Session;
-      if (string.IsNullOrEmpty(name) || s?.GetUserDaten() == null)
-        return Results.BadRequest();
-      var daten = new ServiceDaten(s.GetUserDaten());
-      var status = StatusTask.GetStatus(daten.MandantNr, [name], true);
-      return Results.Text(status, "text/plain; charset=utf-8");
-    });
   }
 
   /// <summary>Liefert eine Funktion zum Erzeugen von CSV-Dateien.</summary>

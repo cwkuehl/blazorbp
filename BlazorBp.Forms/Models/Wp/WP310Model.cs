@@ -7,6 +7,7 @@ namespace BlazorBp.Forms.Models.Wp;
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Core.Base;
 using BlazorBp.Core.Models;
+using BlazorSpa.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorBp.Core.Base.DialogTypeEnum;
@@ -134,9 +135,9 @@ public class WP310Model : PageModelBase
     m.Nummer,
     m.Bezeichnung,
     m.Box,
-    Functions.ToString(m.Skala),
+    Funktionen.ToString(m.Skala),
     m.Umkehr,
-    Functions.ToString(m.Methode),
+    Funktionen.ToString(m.Methode),
     m.Dauer,
     m.Relativ,
     m.Status,

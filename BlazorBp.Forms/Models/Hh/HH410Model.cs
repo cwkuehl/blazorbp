@@ -207,7 +207,7 @@ public class HH410Model : PageModelBase
   private string GetOperator()
   {
     var op = "";
-    var strBetrag = Functions.ToString(Betrag).Trim();
+    var strBetrag = Funktionen.ToString(Betrag).Trim();
     if (strBetrag.StartsWith("+", StringComparison.InvariantCulture))
     {
       strBetrag = strBetrag[1..];

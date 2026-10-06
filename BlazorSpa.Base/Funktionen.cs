@@ -90,6 +90,26 @@ public static partial class Funktionen
   }
 
   /// <summary>
+  /// Converts string to upper case.
+  /// </summary>
+  /// <param name="value">Affected string.</param>
+  /// <returns>Converted string.</returns>
+  public static string ToUpper(this string value)
+  {
+    return value == null ? string.Empty : value.ToUpper();
+  }
+
+  /// <summary>Returns a never null string.</summary>
+  /// <param name="s">Affected string.</param>
+  /// <returns>Not null string.</returns>
+  public static string ToString(string? s)
+  {
+    if (string.IsNullOrEmpty(s))
+      return "";
+    return s;
+  }
+
+  /// <summary>
   /// Converts string to decimal.
   /// </summary>
   /// <returns>Converted value.</returns>
