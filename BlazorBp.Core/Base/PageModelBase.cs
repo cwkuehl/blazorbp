@@ -22,6 +22,9 @@ public class PageModelBase
   ////[BindProperty(Name="submitcontrol")]
   public string? SubmitControl { get; set; } = default;
 
+  /// <summary>Holt oder setzt die zum Status abzufragende URI.</summary>
+  public string? UpdateState { get; set; } = default;
+
   /// <summary>Holt oder setzt den Namen der Submit-auslösenden Schaltfläche.
   /// Mit BindProperty-Attribut kann diese Klasse nicht in BlazorBp.Services.Base.
   /// Der Wert wird in Funktion GetSubmit manuell gesetzt.

@@ -129,11 +129,11 @@ public class FZ260Model : PageModelBase
     {
       Datum = DateTime.Today;
     }
-    SetMandatoryHiddenReadonly(nameof(Fahrrad), true, false, mode != New, mode == New);
+    SetMandatoryHiddenReadonly(nameof(Fahrrad), true, false, mode != New, false);
     SetMandatoryHiddenReadonly(nameof(Datum), true, false, mode != New, false);
     SetMandatoryHiddenReadonly(nameof(UnterNr), false, false, true, false);
     SetMandatoryHiddenReadonly(nameof(Zaehler), false, false, mode == Delete, false);
-    SetMandatoryHiddenReadonly(nameof(Km), true, false, mode == Delete, mode == Edit);
+    SetMandatoryHiddenReadonly(nameof(Km), true, false, mode == Delete, mode == New || mode == Edit);
     SetMandatoryHiddenReadonly(nameof(Schnitt), false, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Beschreibung), false, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);

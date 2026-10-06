@@ -62,6 +62,37 @@ function statec(ctrl) {
   });
 }
 
+/** Liest den Status für einen Task aus.
+ * @param task Auslösendes Control mit Attribut 'data-stateof'.
+ * @param statusctl Das Control, in das der Status geschrieben wird.
+ */
+function updatestate(task, dataid) {
+  // console.log('function updatestate(task)');
+  if (task == null || task.trim() === '') {
+    alert('UpdateState ohne Task.');
+    return;
+  }
+  let weiter = true; // Prüfen, ob das Control noch im DOM ist.
+  // console.log('Task: "' + task + '", data-id: "' + dataid + '".');
+  let statusctl = document.getElementById(dataid);
+  if (statusctl == null || !statusctl.isConnected) {
+    // console.log('Status-Control mit id "' + dataid + '" nicht mehr vorhanden.');
+    weiter = false;
+  }
+  if (weiter) {
+    $.get('/statustask/' + task, function(data) {
+      statusctl.value = data;
+      // alert('Status von ' + task + ': ' + data);
+    }).fail(function() {
+      weiter = false;
+      console.log('Fehler beim Abrufen des Status von ' + task + '.');
+    });
+  }
+  if (weiter) {
+    setTimeout(function() { updatestate(task, dataid); }, 1500);
+  }
+}
+
 /** Bestätigen einer Aktion.
  * @param aktion Betroffene Aktion.
  */

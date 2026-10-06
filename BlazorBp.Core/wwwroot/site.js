@@ -136,6 +136,20 @@ export function onUpdate() {
         setTimeout(function () { disableAllControls(); }, 1);
       });
     });
+    // Status von Tasks abfragen. Wert von input hidden UpdateState abfragen.
+    let updateStateInput = document.querySelector('input[name="Model.UpdateState"]');
+    if (updateStateInput) {
+      let task = updateStateInput.value;
+      if (task && task.trim() !== '') {
+        let buttonctl = document.querySelector('[data-stateof="' + task + '"]');
+        if (buttonctl) {
+          let dataid = buttonctl.getAttribute('data-id');
+          // console.log('Init Task: "' + task + '", data-id: "' + dataid + '".');
+          // setTimeout(function() { updatestate(task, dataid); }, 1500);
+          updatestate(task, dataid);
+        }
+      }
+    };
     // Screenshot erzeugen.
     // var node = document.getElementById('Seite');
     // if (node) {
