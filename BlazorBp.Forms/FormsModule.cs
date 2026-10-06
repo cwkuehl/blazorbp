@@ -120,20 +120,6 @@ public class FormsModule : IFormModule
 
   public void ConfigureApp(WebApplication app)
   {
-    app.MapGet("/starttask/{page}/{id}",
-      [Microsoft.AspNetCore.Authorization.Authorize]
-    [EndpointSummary("Starten von asynchronen, länger laufenden Aufgaben.")]
-    [EndpointDescription("Page und ID des Formulars müssen angegeben werden.")]
-    (string page, string id, HttpContext context, IServiceProvider sp) =>
-    {
-      System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} starttask {page} ...{id.Right(6)}");
-      if (string.IsNullOrEmpty(page) || string.IsNullOrEmpty(id))
-        return Results.BadRequest();
-      // Task.Run(() => StartTask.Do(page, id, context, sp));
-      // return Results.Ok();
-      StartTask.Do(page, id, context, sp);
-      return Results.NoContent();
-    });
     app.MapGet("/statustask/{name}",
       [EndpointSummary("Abrufen des Status asynchroner, länger laufender Aufgaben.")]
     [EndpointDescription("Name der Aufgabe muss angegeben werden.")]
@@ -160,5 +146,12 @@ public class FormsModule : IFormModule
   public Func<string, string, HttpContext, IServiceProvider, (byte[]?, string?)>? GetFuncHtml()
   {
     return DownloadData.GetHtml;
+  }
+
+  /// <summary>Liefert eine Funktion zum Starten von Aufgaben.</summary>
+  /// <returns>Funktion zum Starten von Aufgaben oder null.</returns>
+  public Func<string, string, HttpContext, IServiceProvider, (bool, string?)>? GetFuncStartTask()
+  {
+    return StartTask.Do;
   }
 }

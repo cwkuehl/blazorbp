@@ -124,6 +124,7 @@ foreach (var module in modules)
   BlazorComponentBaseStatic.AddFormulare(module.GetForms());
   DownloadData.RegisterFuncCsv(module.GetFuncCsv());
   DownloadData.RegisterFuncHtml(module.GetFuncHtml());
+  StartTask.RegisterFuncStartTask(module.GetFuncStartTask());
 }
 builder.Services.AddSingleton<IEnumerable<IFormModule>>(modules);
 var localhostCertificateSha256 = Convert.FromHexString(

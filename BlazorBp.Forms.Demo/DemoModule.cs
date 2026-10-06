@@ -67,4 +67,11 @@ public class DemoModule : IFormModule
   {
     return DownloadData.GetHtml;
   }
+
+  /// <summary>Liefert eine Funktion zum Starten von Aufgaben.</summary>
+  /// <returns>Funktion zum Starten von Aufgaben oder null.</returns>
+  public Func<string, string, HttpContext, IServiceProvider, (bool, string?)>? GetFuncStartTask()
+  {
+    return null;
+  }
 }

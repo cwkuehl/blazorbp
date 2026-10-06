@@ -38,4 +38,8 @@ public interface IFormModule
   /// <summary>Liefert eine Funktion zum Erzeugen von HTML-Dateien.</summary>
   /// <returns>Funktion zum Erzeugen von HTML-Dateien oder null.</returns>
   Func<string, string, HttpContext, IServiceProvider, (byte[]?, string?)>? GetFuncHtml();
+
+  /// <summary>Liefert eine Funktion zum Starten von Aufgaben.</summary>
+  /// <returns>Funktion zum Starten von Aufgaben oder null.</returns>
+  Func<string, string, HttpContext, IServiceProvider, (bool, string?)>? GetFuncStartTask();
 }

@@ -63,6 +63,20 @@ public class CoreModule : IFormModule
           return Results.File(s, "text/html");
         return Results.NotFound();
       });
+    app.MapGet("/starttask/{page}/{id}",
+      [Microsoft.AspNetCore.Authorization.Authorize]
+    [EndpointSummary("Starten von asynchronen, länger laufenden Aufgaben.")]
+    [EndpointDescription("Page und ID des Formulars müssen angegeben werden.")]
+    (string page, string id, HttpContext context, IServiceProvider sp) =>
+    {
+      System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} starttask {page} ...{id.Right(6)}");
+      if (string.IsNullOrEmpty(page) || string.IsNullOrEmpty(id))
+        return Results.BadRequest();
+      // Task.Run(() => StartTask.Do(page, id, context, sp));
+      // return Results.Ok();
+      StartTask.Do(page, id, context, sp);
+      return Results.NoContent();
+    });
   }
 
   /// <summary>Liefert eine Funktion zum Erzeugen von CSV-Dateien.</summary>
@@ -75,6 +89,13 @@ public class CoreModule : IFormModule
   /// <summary>Liefert eine Funktion zum Erzeugen von HTML-Dateien.</summary>
   /// <returns>Funktion zum Erzeugen von HTML-Dateien oder null.</returns>
   public Func<string, string, HttpContext, IServiceProvider, (byte[]?, string?)>? GetFuncHtml()
+  {
+    return null;
+  }
+
+  /// <summary>Liefert eine Funktion zum Starten von Aufgaben.</summary>
+  /// <returns>Funktion zum Starten von Aufgaben oder null.</returns>
+  public Func<string, string, HttpContext, IServiceProvider, (bool, string?)>? GetFuncStartTask()
   {
     return null;
   }
