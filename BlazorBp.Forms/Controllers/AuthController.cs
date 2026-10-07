@@ -2,12 +2,12 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace blazorbp.Controllers;
+namespace BlazorBp.Forms.Controllers;
 
 using System.Security.Claims;
 using System.Text.Json;
-using BlazorBp.Base;
 using BlazorBp.Core.Base;
+using BlazorSpa.Base;
 using BlazorSpa.Base.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;

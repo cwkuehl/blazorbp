@@ -9,10 +9,4 @@ public static class Konstanten
 {
   /// <summary>Blazor mit Interaktivität?</summary>
   public const bool Interactive = false;
-
-  /// <summary>Session Timeout in Sekunden.</summary>
-  public const int SESSION_TIMEOUT = 7205; // Countdown hat (x - 5) / 2 Sekunden, weil Cookie Expiration erst nach der Hälfte der Zeit verlängert wird.
-
-  /// <summary>Claim für Session ID.</summary>
-  public const string CLAIM_SID = "123xQp5ß";
 }

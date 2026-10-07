@@ -48,7 +48,7 @@ builder.Services.AddAuthentication(o => {
 })
   .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, o => {
     o.LoginPath = "/";
-    o.ExpireTimeSpan = TimeSpan.FromSeconds(BlazorBp.Base.Konstanten.SESSION_TIMEOUT);
+    o.ExpireTimeSpan = TimeSpan.FromSeconds(BlazorSpa.Base.Konstanten.SESSION_TIMEOUT);
     o.Cookie.MaxAge = o.ExpireTimeSpan;
     o.SlidingExpiration = true;
     o.LogoutPath = "/auth/logout";
@@ -69,7 +69,7 @@ builder.Services.AddAuthentication(o => {
           {
             var sid = claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid);
             var sidValue = sid?.Value;
-            if (sidValue != BlazorBp.Base.Konstanten.CLAIM_SID)
+            if (sidValue != BlazorSpa.Base.Konstanten.CLAIM_SID)
             {
               context.RejectPrincipal();
               return context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -93,7 +93,8 @@ builder.Services.AddSwaggerGen(c =>
   var fn = Assembly.GetExecutingAssembly().GetName().Name + ".xml";
   c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, fn));
 });
-builder.Services.AddControllers(); // Add MVC with controllers.
+builder.Services.AddControllers()
+  .AddApplicationPart(typeof(BlazorBp.Forms.FormsModule).Assembly); // Add MVC with controllers.
 var ismem = builder.Configuration["Caching:IsMemoryCache"] ?? "True";
 if (ismem == "True")
   builder.Services.AddDistributedMemoryCache();
@@ -114,7 +115,7 @@ else
 // });
 builder.Services.AddSession(options =>
 {
-  options.IdleTimeout = TimeSpan.FromSeconds(BlazorBp.Base.Konstanten.SESSION_TIMEOUT);
+  options.IdleTimeout = TimeSpan.FromSeconds(BlazorSpa.Base.Konstanten.SESSION_TIMEOUT);
   options.Cookie.HttpOnly = true;
   options.Cookie.IsEssential = true;
 });
