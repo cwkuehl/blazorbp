@@ -1,5 +1,6 @@
+@using BlazorSpa.Base.Auth
 <EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="Signin">
-  <DataAnnotationsValidator/>
+    <DataAnnotationsValidator/>
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Id"/>
   <div class="row mt-1">
@@ -19,6 +20,9 @@
 
   [Inject]
   IHttpClientFactory clientFactory { get; set; } = default!;
+
+  [Inject]
+  IAuthService authService { get; set; } = default!;
 
   /// <summary>Betroffener EditContext.</summary>
   private EditContext? EditContext;
@@ -104,14 +108,10 @@
           //if (!string.IsNullOrEmpty(username))
           //  Model.Username = username;
           //HttpContext.Response.Cookies.Append(CookieName, $"{Model.Client};{Model.Username}", o);
-          var daten = new CSBP.Services.Base.ServiceDaten(ud);
-          var r = CSBP.Services.Factory.FactoryService.LoginService.GetFormData(daten);
-          if (r.Ok)
-          {
-            var formdata = new FormData();
-            formdata.FromJsonString(r.Ergebnis ?? "");
-            HttpContext.Session?.SetFormData(formdata);
-          }
+          var fd = authService.GetFormData(ud);
+          var formdata = new FormData();
+          formdata.FromJsonString(fd ?? "");
+          HttpContext.Session?.SetFormData(formdata);
           var ru = HttpContext.Request.Query["returnurl"].ToString().TrimNull() ?? "/";
           if (!BlazorComponentBaseStatic.IsValidReturnUrl(ru))
             ru = "/";

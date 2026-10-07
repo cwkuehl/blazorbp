@@ -5,6 +5,7 @@
 namespace BlazorBp.Core.Modules;
 
 using BlazorBp.Core.Base;
+using BlazorSpa.Base.Auth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,4 +43,8 @@ public interface IFormModule
   /// <summary>Liefert eine Funktion zum Starten von Aufgaben.</summary>
   /// <returns>Funktion zum Starten von Aufgaben oder null.</returns>
   Func<string, string, HttpContext, IServiceProvider, (bool, string?)>? GetFuncStartTask();
+
+  /// <summary>Liefert einen Authentifizierungs-Service.</summary>
+  /// <returns>Authentifizierungs-Service oder null.</returns>
+  IAuthService? GetAuthService();
 }

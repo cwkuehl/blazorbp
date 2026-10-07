@@ -1,12 +1,12 @@
 namespace BlazorBp.Forms;
 
-using System.Text;
 using BlazorBp.Core.Base;
 using BlazorBp.Core.Modules;
+using BlazorBp.Forms.Auth;
 using BlazorBp.Forms.Components.Pages;
 using BlazorSpa.Base;
+using BlazorSpa.Base.Auth;
 using BlazorSpa.Base.Models;
-using CSBP.Services.Base;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -141,5 +141,12 @@ public class FormsModule : IFormModule
   public Func<string, string, HttpContext, IServiceProvider, (bool, string?)>? GetFuncStartTask()
   {
     return StartTask.Do;
+  }
+
+  /// <summary>Liefert einen Authentifizierungs-Service.</summary>
+  /// <returns>Authentifizierungs-Service oder null.</returns>
+  public IAuthService? GetAuthService()
+  {
+    return new BlazorBpAuthService();
   }
 }

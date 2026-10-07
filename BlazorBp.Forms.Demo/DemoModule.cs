@@ -1,11 +1,11 @@
 namespace BlazorBp.Forms.Demo;
 
-using System.Text;
 using BlazorBp.Core.Base;
 using BlazorBp.Core.Modules;
 using BlazorBp.Forms.Demo.Apis;
 using BlazorBp.Forms.Demo.Impl;
 using BlazorBp.Forms.Demo.Pages;
+using BlazorSpa.Base.Auth;
 using BlazorSpa.Base.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -71,6 +71,13 @@ public class DemoModule : IFormModule
   /// <summary>Liefert eine Funktion zum Starten von Aufgaben.</summary>
   /// <returns>Funktion zum Starten von Aufgaben oder null.</returns>
   public Func<string, string, HttpContext, IServiceProvider, (bool, string?)>? GetFuncStartTask()
+  {
+    return null;
+  }
+
+  /// <summary>Liefert einen Authentifizierungs-Service.</summary>
+  /// <returns>Authentifizierungs-Service oder null.</returns>
+  public IAuthService? GetAuthService()
   {
     return null;
   }

@@ -10,6 +10,7 @@ using BlazorBp.Core.Base;
 using BlazorBp.Core.Components.Pages;
 using BlazorBp.Core.Core;
 using BlazorBp.Core.Modules;
+using BlazorSpa.Base.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using NeoSmart.Caching.Sqlite;
@@ -119,6 +120,7 @@ builder.Services.AddSession(options =>
   options.Cookie.HttpOnly = true;
   options.Cookie.IsEssential = true;
 });
+IAuthService? authService = null;
 foreach (var module in modules)
 {
   module.ConfigureServices(builder.Services);
@@ -126,8 +128,13 @@ foreach (var module in modules)
   DownloadData.RegisterFuncCsv(module.GetFuncCsv());
   DownloadData.RegisterFuncHtml(module.GetFuncHtml());
   StartTask.RegisterFuncStartTask(module.GetFuncStartTask());
+  if (authService == null)
+    authService = module.GetAuthService();
 }
 builder.Services.AddSingleton<IEnumerable<IFormModule>>(modules);
+if (authService == null)
+  authService = new AuthService();
+builder.Services.AddSingleton<IAuthService>(authService);
 var localhostCertificateSha256 = Convert.FromHexString(
   builder.Configuration["Security:LocalhostCertificateSha256"]
     ?? throw new InvalidOperationException("Security:LocalhostCertificateSha256 must be configured."));

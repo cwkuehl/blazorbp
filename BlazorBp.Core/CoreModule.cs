@@ -5,6 +5,7 @@ using BlazorBp.Core.Base;
 using BlazorBp.Core.Components.Pages;
 using BlazorBp.Core.Modules;
 using BlazorSpa.Base;
+using BlazorSpa.Base.Auth;
 using BlazorSpa.Base.Models;
 using BlazorSpa.Base.Services;
 using Microsoft.AspNetCore.Builder;
@@ -110,6 +111,13 @@ public class CoreModule : IFormModule
   /// <summary>Liefert eine Funktion zum Starten von Aufgaben.</summary>
   /// <returns>Funktion zum Starten von Aufgaben oder null.</returns>
   public Func<string, string, HttpContext, IServiceProvider, (bool, string?)>? GetFuncStartTask()
+  {
+    return null;
+  }
+
+  /// <summary>Liefert einen Authentifizierungs-Service.</summary>
+  /// <returns>Authentifizierungs-Service oder null.</returns>
+  public IAuthService? GetAuthService()
   {
     return null;
   }
