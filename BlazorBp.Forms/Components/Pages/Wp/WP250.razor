@@ -159,7 +159,7 @@
   {
     var daten = ServiceDaten;
     Model.Status = StatusTask.GetStatus(daten.MandantNr, new[] { "CalculateInvestments" }, true);
-    if (Table != null && (submit == nameof(Model.Auchinaktiv) || submit == nameof(Model.Wertpapier)))
+    if (Table != null && (submit == nameof(Model.Refresh) || submit == nameof(Model.Auchinaktiv) || submit == nameof(Model.Wertpapier)))
     {
       Refresh();
     }
