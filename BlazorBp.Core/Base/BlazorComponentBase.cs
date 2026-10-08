@@ -499,12 +499,21 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   }
 
   /// <summary>
-  /// Aktualisierung der des nächsten Formulars, z.B. nach Schließen eines Formulars.
+  /// Aktualisierung des nächsten Formulars, z.B. nach Schließen eines Formulars.
   /// <paramref name="refresh"/>True, wenn das nächste Formular, z.B. die Tabelle, aktualisiert werden soll, sonst false.
   /// </summary>
   protected void SetFormRefresh(bool refresh = true)
   {
     HttpContext.Session?.SetFormRefresh(refresh);
+  }
+
+  /// <summary>
+  /// Aktualisierung der aktuellen Formulars zum Aktualisieren der Undo/Redo-Anzeige.
+  /// <paramref name="refresh"/>True, wenn das nächste Formular, z.B. die Tabelle, aktualisiert werden soll, sonst false.
+  /// </summary>
+  protected void ForceRefresh()
+  {
+    Navigation.NavigateTo(HttpContext.Request.Path, true);
   }
 
   /// <summary>
