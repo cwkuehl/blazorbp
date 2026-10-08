@@ -358,15 +358,16 @@ public class StatusTask
   /// <summary>Sets the name.</summary>
   /// <param name="s">Affected string.</param>
   /// <param name="trenner">If a separator is specified, the string will be appended. If a value exists, the separator is added in between.</param>
+  /// <param name="overwrite">If true, the existing value will be overwritten.</param>
   /// <returns>True if a value was present.</returns>
-  public bool SetName(string s, string? trenner = null)
+  public bool SetName(string? s, string? trenner = null, bool overwrite = false)
   {
     var da = false;
-    daten["Name"] = s.TrimNull();
-    if (trenner != null && daten.TryGetValue("Ergebnis", out var v) && !string.IsNullOrEmpty(v))
+    s = s.TrimNull();
+    if ((trenner != null || !overwrite) && daten.TryGetValue("Name", out var v) && !string.IsNullOrEmpty(v))
     {
       da = true;
-      if (s == null)
+      if (s == null || !overwrite)
         s = v;
       else
         s = $"{s}{trenner}{v}";
