@@ -7,12 +7,15 @@ using BlazorBp.Forms.Demo.Impl;
 using BlazorBp.Forms.Demo.Pages;
 using BlazorSpa.Base.Auth;
 using BlazorSpa.Base.Models;
+using BlazorSpa.Base.Undo;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 public class DemoModule : IFormModule
 {
+  /// <summary>Liefert die Hauptmenüs, die dieses Modul bereitstellt.</summary>
+  /// <returns>Liste der Hauptmenüs.</returns>
   public IEnumerable<MainMenu> GetMainMenues()
   {
     return new List<MainMenu>
@@ -25,11 +28,15 @@ public class DemoModule : IFormModule
     };
   }
 
+  /// <summary>DI-Registrierung modul-eigener Services.</summary>
+  /// <param name="services">Betroffene Service-Collection.</param>
   public void ConfigureServices(IServiceCollection services)
   {
     services.AddSingleton<IDemoService, DemoService>();
   }
 
+  /// <summary>Liefert die Formulare, die dieses Modul bereitstellt.</summary>
+  /// <returns>Dictionary mit den Formularen.</returns>
   public Dictionary<string, Formular> GetForms()
   {
     return new Dictionary<string, Formular>
@@ -78,6 +85,13 @@ public class DemoModule : IFormModule
   /// <summary>Liefert einen Authentifizierungs-Service.</summary>
   /// <returns>Authentifizierungs-Service oder null.</returns>
   public IAuthService? GetAuthService()
+  {
+    return null;
+  }
+
+  /// <summary>Liefert einen Undo-Service.</summary>
+  /// <returns>Undo-Service oder null.</returns>
+  public IUndoService? GetUndoService()
   {
     return null;
   }

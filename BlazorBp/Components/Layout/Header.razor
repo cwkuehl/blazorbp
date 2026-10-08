@@ -1,3 +1,4 @@
+@using BlazorSpa.Base.Undo
 @if (userDaten == null)
 {
   <span class="ms-1 fw-bold">Nicht angemeldet.</span>
@@ -11,14 +12,17 @@ else
       <tr><td>Rollen</td><td>@string.Join(", ", userDaten.Rollen)</td></tr>
     </tbody>
   </table>
-  <EditForm Enhance method="post" Model="Model" OnSubmit="Submit" FormName="formheader">
-    <button class="btn btn-outline-secondary btn-sm" type="submit" value="undo" name="Model" title="Rückgängig">
-      <i class="bi bi-arrow-left-nav-menu"></i> (@AnzahlUndo)
-    </button>
-    <button class="btn btn-outline-secondary btn-sm" type="submit" value="redo" name="Model" title="Wiederherstellen">
-      <i class="bi bi-arrow-right-nav-menu"></i> (@AnzahlRedo)
-    </button>
-  </EditForm>
+  @if (AnzahlUndo >= 0)
+  {
+    <EditForm Enhance method="post" Model="Model" OnSubmit="Submit" FormName="formheader">
+      <button class="btn btn-outline-secondary btn-sm" type="submit" value="undo" name="Model" title="Rückgängig">
+        <i class="bi bi-arrow-left-nav-menu"></i> (@AnzahlUndo)
+      </button>
+      <button class="btn btn-outline-secondary btn-sm" type="submit" value="redo" name="Model" title="Wiederherstellen">
+        <i class="bi bi-arrow-right-nav-menu"></i> (@AnzahlRedo)
+      </button>
+    </EditForm>
+  }
 }
 
 @code {
@@ -28,11 +32,14 @@ else
   [Inject]
   NavigationManager navigation { get; set; } = default!;
 
+  [Inject]
+  IUndoService undoService { get; set; } = default!;
+
   /// <summary>Betroffene Benutzerdaten.</summary>
   private UserDaten? userDaten;
 
   /// <summary>Betroffene Größe des Undo-Stacks.</summary>
-  private int AnzahlUndo = 0;
+  private int AnzahlUndo = -1;
 
   /// <summary>Betroffene Größe des Redo-Stacks.</summary>
   private int AnzahlRedo = 0;
@@ -68,9 +75,7 @@ else
     if (Model == "undo")
     {
       // Rückgängig machen
-      // TODO Session-spezifisches Undo.
-      var r = CSBP.Services.Factory.FactoryService.LoginService.Undo(daten);
-      if (r.Ok && r.Ergebnis)
+      if (undoService.Undo(userDaten))
       {
         // Aktualisieren der aktuellen Seite.
         HttpContext.Session?.SetFormRefresh();
@@ -80,8 +85,7 @@ else
     else if (Model == "redo")
     {
       // Wiederherstellen.
-      var r = CSBP.Services.Factory.FactoryService.LoginService.Redo(daten);
-      if (r.Ok && r.Ergebnis)
+      if (undoService.Redo(userDaten))
       {
         HttpContext.Session?.SetFormRefresh();
         navigation.NavigateTo(HttpContext.Request.Path, true);

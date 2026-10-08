@@ -8,6 +8,7 @@ using BlazorSpa.Base;
 using BlazorSpa.Base.Auth;
 using BlazorSpa.Base.Models;
 using BlazorSpa.Base.Services;
+using BlazorSpa.Base.Undo;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -118,6 +119,13 @@ public class CoreModule : IFormModule
   /// <summary>Liefert einen Authentifizierungs-Service.</summary>
   /// <returns>Authentifizierungs-Service oder null.</returns>
   public IAuthService? GetAuthService()
+  {
+    return null;
+  }
+
+  /// <summary>Liefert einen Undo-Service.</summary>
+  /// <returns>Undo-Service oder null.</returns>
+  public IUndoService? GetUndoService()
   {
     return null;
   }

@@ -83,18 +83,16 @@ public class AuthController(IAuthService singleton) : Controller
   {
     // TODO evtl. POST+CSRF-Schutz.
     var userdaten = HttpContext.Session?.GetUserDaten();
+    System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} LogoutUser {userdaten?.MandantNr} {userdaten?.BenutzerId}");
     if (userdaten != null)
     {
       var formdata = HttpContext.Session?.GetFormData()?.ToJsonString();
       authService.LogoutUser(userdaten, formdata);
     }
-    System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} LogoutUser {userdaten?.MandantNr} {userdaten?.BenutzerId}");
     HttpContext.Session?.SetFormState(null);
     HttpContext.Session?.SetUserDaten(null);
     HttpContext.Session?.SetFormData(null);
     HttpContext.Session?.RemoveAllModels();
-    if (userdaten != null)
-      CSBP.Services.Base.ServiceBase.RemoveUndoRedoStack(userdaten.SessionId);
     await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     return Redirect("/");
   }

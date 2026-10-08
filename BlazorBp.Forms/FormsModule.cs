@@ -4,15 +4,19 @@ using BlazorBp.Core.Base;
 using BlazorBp.Core.Modules;
 using BlazorBp.Forms.Auth;
 using BlazorBp.Forms.Components.Pages;
+using BlazorBp.Forms.Undo;
 using BlazorSpa.Base;
 using BlazorSpa.Base.Auth;
 using BlazorSpa.Base.Models;
+using BlazorSpa.Base.Undo;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 public class FormsModule : IFormModule
 {
+  /// <summary>Liefert die Hauptmenüs, die dieses Modul bereitstellt.</summary>
+  /// <returns>Liste der Hauptmenüs.</returns>
   public IEnumerable<MainMenu> GetMainMenues()
   {
     return new List<MainMenu>
@@ -60,6 +64,8 @@ public class FormsModule : IFormModule
     Funktionen.MachNichts();
   }
 
+  /// <summary>Liefert die Formulare, die dieses Modul bereitstellt.</summary>
+  /// <returns>Dictionary mit den Formularen.</returns>
   public Dictionary<string, Formular> GetForms()
   {
     return new Dictionary<string, Formular>
@@ -118,6 +124,8 @@ public class FormsModule : IFormModule
     BlazorSpa.Base.Services.StatusTask.Aufraeumen();
   }
 
+  /// <summary>App-Konfiguration ergänzen, z.B. mit MapGet.</summary>
+  /// <param name="app">Betroffene WebApplication.</param>
   public void ConfigureApp(WebApplication app)
   {
   }
@@ -148,5 +156,12 @@ public class FormsModule : IFormModule
   public IAuthService? GetAuthService()
   {
     return new BlazorBpAuthService();
+  }
+
+  /// <summary>Liefert einen Undo-Service.</summary>
+  /// <returns>Undo-Service oder null.</returns>
+  public IUndoService? GetUndoService()
+  {
+    return new BlazorBpUndoService();
   }
 }

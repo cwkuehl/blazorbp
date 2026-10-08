@@ -6,6 +6,7 @@ namespace BlazorBp.Core.Modules;
 
 using BlazorBp.Core.Base;
 using BlazorSpa.Base.Auth;
+using BlazorSpa.Base.Undo;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,4 +48,8 @@ public interface IFormModule
   /// <summary>Liefert einen Authentifizierungs-Service.</summary>
   /// <returns>Authentifizierungs-Service oder null.</returns>
   IAuthService? GetAuthService();
+
+  /// <summary>Liefert einen Undo-Service.</summary>
+  /// <returns>Undo-Service oder null.</returns>
+  IUndoService? GetUndoService();
 }

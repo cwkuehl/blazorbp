@@ -38,6 +38,7 @@ public class BlazorBpAuthService : IAuthService
     {
       var daten = new CSBP.Services.Base.ServiceDaten(ud);
       CSBP.Services.Factory.FactoryService.LoginService.Logout(daten, formdata);
+      CSBP.Services.Base.ServiceBase.RemoveUndoRedoStack(ud.SessionId);
     }
   }
 
