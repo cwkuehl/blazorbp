@@ -29,6 +29,7 @@ foreach (var module in modules)
 {
   module.ConfigureBuilder(builder);
 }
+var https = (builder.Configuration["Urls"] ?? "").Contains("https:");
 
 // Add services to the container.
 if (interactive || true)
@@ -37,7 +38,7 @@ if (interactive || true)
 else
   builder.Services.AddRazorComponents(options => options.DetailedErrors = builder.Environment.IsDevelopment());
 
-if (!builder.Environment.IsDevelopment())
+if (!builder.Environment.IsDevelopment() && https)
 {
   builder.Services.AddHsts(options => {
     options.Preload = true;
@@ -56,7 +57,7 @@ builder.Services.AddAuthentication(o => {
     o.LogoutPath = "/auth/logout";
     o.AccessDeniedPath = "/auth/login";
     o.Cookie.Name = "BlazorBpCookie";
-    o.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    o.Cookie.SecurePolicy = https ? CookieSecurePolicy.Always : CookieSecurePolicy.None;
     o.Cookie.SameSite = SameSiteMode.Strict;
     o.Events = new CookieAuthenticationEvents {
       OnValidatePrincipal = context => {
@@ -167,13 +168,15 @@ if (!app.Environment.IsDevelopment())
   app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+if (https)
+  app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseRouting();
 app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
 app.UseAuthentication();
 app.UseAuthorization();
+//// if (https)
 app.UseAntiforgery();
 app.MapControllers();
 
@@ -222,7 +225,7 @@ app.Use(async (context, next) =>
 });
 app.UseCookiePolicy(new CookiePolicyOptions
 {
-  Secure = CookieSecurePolicy.Always,
+  Secure = https ? CookieSecurePolicy.Always : CookieSecurePolicy.None,
   HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always
 });
 app.UseSession();
