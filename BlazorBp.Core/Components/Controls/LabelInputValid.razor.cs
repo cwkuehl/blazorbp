@@ -315,7 +315,7 @@ public partial class LabelInputValid<TItem> : ComponentBase
       else
         throw new Exception($"LabelInputValid: Keine Konvertierung für Typ {typeof(TItem)} bei {name}.");
       if ((radio || combobox || listbox) && (DataList == null || !DataList.Any()))
-        throw new Exception($"LabelInputValid: Parameter DataList darf nicht leer sein bei {name}.");
+        throw new Exception($"LabelInputValid: Parameter DataList darf nicht leer sein bei Steuerelement '{name}'.");
       var modelname = fld?.Name ?? "Model";
       NameAttributeValueSubmit = $"{modelname}.SubmitControl";
       NameAttributeValue = submit ? NameAttributeValueSubmit : $"{modelname}.{name}";

@@ -225,7 +225,7 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
     Model.Before3 = tb?.Eintrag;
     tb = r.Get(FactoryService.DiaryService.GetEntry(daten, d.Value, true));
     Model.Entry = tb?.Eintrag;
-    Model.PositionList = tb?.Positions;
+    Model.PositionList = tb?.Positions ?? [];
     Model.OldEntry.Positions.Clear();
     if (tb == null)
     {
@@ -260,16 +260,25 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
   /// <param name="list">New list.</param>
   private void InitPositions(List<TbEintragOrt>? list = null)
   {
-    if (Model == null || Model.PositionList == null)
-       return;
-    if (list != null)
+    if (Model == null)
+      return;
+    try
     {
-      Model.PositionList.Clear();
-      foreach (var p in list)
-        Model.PositionList.Add(ServiceBase.Clone(p));
+      if (Model.PositionList == null)
+        return;
+      if (list != null)
+      {
+        Model.PositionList.Clear();
+        foreach (var p in list)
+          Model.PositionList.Add(ServiceBase.Clone(p));
+      }
+      //// No.;Description;Latitude_r;Longitude_r;From;To;Changed at;Changed by;Created at;Created by
+      Model.AuswahlPositions = Model.PositionList.Select(a => new ListItem(a.Ort_Uid, $"{a.Description} ({a.Latitude:0.00000}, {a.Longitude:0.00000}) {a.Datum_Von:dd.MM.yyyy}-{a.Datum_Bis:dd.MM.yyyy}")).ToList();
     }
-    //// No.;Description;Latitude_r;Longitude_r;From;To;Changed at;Changed by;Created at;Created by
-    Model.AuswahlPositions = Model.PositionList.Select(a => new ListItem(a.Ort_Uid, $"{a.Description} ({a.Latitude:0.00000}, {a.Longitude:0.00000}) {a.Datum_Von:dd.MM.yyyy}-{a.Datum_Bis:dd.MM.yyyy}")).ToList();
+    finally
+    {
+      Model.AuswahlPositions = InsertEmptyIfEmpty(Model.AuswahlPositions ?? []);
+    }
   }
 
   /// <summary>
@@ -280,7 +289,8 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
   private void BearbeiteEintraege(bool speichern = true, bool laden = true)
   {
     if (Model == null || Model.OldEntry == null || Model.OldEntry.Positions == null || Model.PositionList == null)
-       return;
+      return;
+    var changed = false;
     var daten = ServiceDaten;
     var r = new ServiceErgebnis();
     //// Prohibits rekursion.
@@ -294,7 +304,7 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
       if (string.IsNullOrEmpty(oldentry) || Functions.CompString(oldentry, Model.Entry) != 0 || Functions.CompString(p0, p) != 0)
       {
         var pos = Model.PositionList.Select(a => new Tuple<string, DateTime, DateTime>(a.Ort_Uid, a.Datum_Von, a.Datum_Bis)).ToList();
-        r.Get(FactoryService.DiaryService.SaveEntry(daten, Model.OldEntry.Datum, Model.Entry, pos));
+        changed = r.Get(FactoryService.DiaryService.SaveEntry(daten, Model.OldEntry.Datum, Model.Entry, pos)) && r.Ok;
       }
     }
     if (laden)
@@ -305,6 +315,11 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
       Model.OldLoaded = true;
     }
     Get(r);
+    if (changed)
+    {
+      WriteFormularModel(Model.Nr ?? "0", Model);
+      ForceRefresh();
+    }
   }
 
   /// <summary>
