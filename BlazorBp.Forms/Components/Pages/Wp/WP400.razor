@@ -1,0 +1,212 @@
+@page "/wp/wp400/{id?}"
+@using CSBP.Services.Apis.Models
+@inherits BlazorComponent<WP400Model, WP400TableRowModel>
+@attribute [Authorize(Roles = "User, Admin, Superadmin")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<CascadingValue Value="this">
+<SortableTable Table="Table" NoData="" FormName="wp400" NoModal="true" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="WP400Model" TRTable="WP400TableRowModel">
+  <ChildContent>
+    <TableColumn Field="@nameof(WP400TableRowModel.Nummer)" SortField="@nameof(WP400TodoModel.Nummer)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Anlage)" SortField="@nameof(WP400TodoModel.Anlage)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Valuta)" SortField="@nameof(WP400TodoModel.Valuta)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Preis)" SortField="@nameof(WP400TodoModel.Preis)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Betrag)" SortField="@nameof(WP400TodoModel.Betrag)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Anteile)" SortField="@nameof(WP400TodoModel.Anteile)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Preis2)" SortField="@nameof(WP400TodoModel.Preis2)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Zinsen)" SortField="@nameof(WP400TodoModel.Zinsen)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.BText)" SortField="@nameof(WP400TodoModel.BText)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Buchung)" SortField="@nameof(WP400TodoModel.Buchung)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Rabatt)" SortField="@nameof(WP400TodoModel.Rabatt)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Hhbuchung)" SortField="@nameof(WP400TodoModel.Hhbuchung)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Hhaendern)" SortField="@nameof(WP400TodoModel.Hhaendern)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Hhstorno)" SortField="@nameof(WP400TodoModel.Hhstorno)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Hhvaluta)" SortField="@nameof(WP400TodoModel.Hhvaluta)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Hhbetrag)" SortField="@nameof(WP400TodoModel.Hhbetrag)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Hhereignis)" SortField="@nameof(WP400TodoModel.Hhereignis)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Fixtext)" SortField="@nameof(WP400TodoModel.Fixtext)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.AngelegtAm)" SortField="@nameof(WP400TodoModel.Angelegt_Am)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.AngelegtVon)" SortField="@nameof(WP400TodoModel.Angelegt_Von)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.GeaendertAm)" SortField="@nameof(WP400TodoModel.Geaendert_Am)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.GeaendertVon)" SortField="@nameof(WP400TodoModel.Geaendert_Von)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+  </ChildContent>
+</SortableTable>
+</CascadingValue>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="wp400">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <input type="hidden" name="SubmitControl"/>
+  <div class="row mt-1 g-0">
+  </div>
+  <div class="row mt-1 g-0">
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Refresh)"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Buchungen)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Alle)"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Bezeichnung)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Anlage)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Schliessen)"/>
+  </div>
+  <!-- TODO btn-primary festlegen -->
+</EditForm>
+
+@code {
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id">Betroffene Id.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id, WP400Model? model = null, TableModelBase<WP400TableRowModel>? table = null)
+  {
+    var daten = ServiceDaten;
+    if (model != null)
+      Model = model;
+    if (Model == null)
+    {
+      Model = new WP400Model
+      {
+        Nr = id,
+        // TODO Mandant = daten.MandantNr,
+      };
+      Model.SetMhrf(DialogTypeEnum.New);
+    }
+    Model.Nr = id;
+    if (table != null)
+      Table = table;
+    if (Table == null)
+      Table = new TableModelBase<WP400TableRowModel>
+      {
+        SelectedPage = 1,
+        RowsPerPage = 10,
+        SelectedRow = 1,
+        SortColumn = $"{nameof(WP400TodoModel.Nummer)}#+",
+      };
+    Table.Nr = id;
+    InitEditContext(Model);
+    // TODO Lesen der Listen für Auswahlfelder, z.B.:
+    // var lk = Get(FactoryService.StockService.GetConfigurationList(daten, null, "1"));
+    // Model.AuswahlKonfiguration = InsertEmpty(lk?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
+  }
+
+  /// <summary>
+  /// Aktualisierung nach Undo/Redo.
+  /// </summary>
+  protected override void Refresh()
+  {
+    // TODO TableData(Table, Messages);
+  }
+
+  /// <summary>
+  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
+  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
+  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    if (OnInitializedFormular("WP400", "WP-Buchungen - WP400", Id, true))
+      return;
+
+    // TODO Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
+    // var handler = HttpContext.Request.Query["handler"];
+    // if (handler == "Table_All")
+    // {
+    //   Model.SetMhrf(DialogTypeEnum.Copy, ServiceDaten);
+    //   WriteFormularModel(Model.Nr ?? "0", Model);
+    // }
+    // var submit = Model.Submit ?? "";
+    // if (submit == nameof(Model.Import))
+    // {
+    //   var l = SaveUploadFiles("WP400", "filehochladen");
+    // }
+  }
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines nicht modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  public override void HandleNoModal(string? form, string? handler, string? id)
+  {
+    HandleNoModal1(form, handler, id, "WP410");
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// </summary>
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
+  {
+    if (valid && submit == "OK")
+    {
+      var daten = ServiceDaten;
+      var r = new ServiceErgebnis(); // TODO FactoryService.xxxService.yyy(daten, Model.abc);
+      if (r != null)
+      {
+        Get(r);
+        if (r.Ok)
+          return true;
+      }
+    }
+    if (submit == nameof(Model.Schliessen))
+      return true;
+    return false;
+  }
+
+  /// <summary>
+  /// Bereitstellen der Tabellen-Daten mit Berücksichtigung der Filterung, Sortierung und Paginierung.
+  /// </summary>
+  /// <param name="m">Betroffenes TableRowModel.</param>
+  /// <param name="messages">Betroffene Fehlermeldungen.</param>
+  /// <returns>Tabellen-Daten als Liste.</returns>
+  protected override List<WP400TableRowModel> TableData(TableModelBase<WP400TableRowModel>? m, ValidationMessageStore? messages)
+  {
+    var rm = m?.ReadModel;
+    var daten = ServiceDaten;
+    var r = new ServiceErgebnis<List<WP400TodoModel>>(new List<WP400TodoModel>());
+    r.Ergebnis.Add(new WP400TodoModel()
+    {
+      Nummer = "1",
+      Anlage = "Anlage1",
+      Valuta = "Valuta1",
+      Preis = "Preis1",
+      Betrag = "Betrag1",
+      Anteile = "Anteile1",
+      Preis2 = "Preis21",
+      Zinsen = "Zinsen1",
+      BText = "BText1",
+      Buchung = "Buchung1",
+      Rabatt = "Rabatt1",
+      Hhbuchung = "Hhbuchung1",
+      Hhvaluta = "Hhvaluta1",
+      Hhbetrag = "Hhbetrag1",
+      Fixtext = "Fixtext1",
+    });
+    if (rm != null)
+      rm.PageCount = 0;
+    // TODO var l0 = Get(FactoryService.PrivateService.GetClientList(daten, rm), messages);
+    var l = r.Ergebnis?.Select(a => WP400TableRowModel.From(a)).ToList() ?? new List<WP400TableRowModel>();
+    return UpdateTable(m, rm, l);
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData(WP400Model model, WP400Model model0)
+  {
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+  }
+}

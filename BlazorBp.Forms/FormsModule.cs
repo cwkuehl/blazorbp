@@ -51,6 +51,7 @@ public class FormsModule : IFormModule
         new("Konfigurationen", "Konfigurationen bearbeiten", "/wp/wp300", "bi bi-dot-nav-menu"),
         new("Wertpapier-Chart", "Wertpapier-Chart", "/wp/wp100", "bi bi-dot-nav-menu"),
         new("Anlagen", "Anlagen bearbeiten", "/wp/wp250", "bi bi-dot-nav-menu"),
+        new("WP-Buchungen", "WP-Buchungen bearbeiten", "/wp/wp400", "bi bi-dot-nav-menu"),
         new("Stände", "Stände bearbeiten", "/wp/wp500", "bi bi-dot-nav-menu"),
       ]),
       new MainMenu("Energie", 150, "submenuenergy", "bi bi-person-nav-menu", true, [], [
@@ -102,6 +103,8 @@ public class FormsModule : IFormModule
       { "WP250", new Formular { Action = "wp250", Area = "wp", Name = "Anlagen" } },
       { "WP260", new Formular { Action = "wp260", Area = "wp", Name = "Anlage" } },
       { "WP300", new Formular { Action = "wp300", Area = "wp", Name = "Konfigurationen" } },
+      { "WP400", new Formular { Action = "wp400", Area = "wp", Name = "WP-Buchungen" } },
+      { "WP410", new Formular { Action = "wp410", Area = "wp", Name = "WP-Buchung" } },
       { "WP500", new Formular { Action = "wp500", Area = "wp", Name = "Stände" } },
       { "WP510", new Formular { Action = "wp510", Area = "wp", Name = "Stand" } },
     };
