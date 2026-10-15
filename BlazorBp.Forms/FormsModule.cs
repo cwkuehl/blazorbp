@@ -9,7 +9,9 @@ using BlazorSpa.Base;
 using BlazorSpa.Base.Auth;
 using BlazorSpa.Base.Models;
 using BlazorSpa.Base.Undo;
+using CSBP.Services.Base;
 using CSBP.Services.Factory;
+using CSBP.Services.Resources;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -96,12 +98,9 @@ public class FormsModule : IFormModule
       { "HH310", new Formular { Action = "hh310", Area = "hh", Name = "Ereignis" } },
       { "HH400", new Formular { Action = "hh400", Area = "hh", Name = "Buchungen" } },
       { "HH410", new Formular { Action = "hh410", Area = "hh", Name = "Buchung" } },
-      // { "HH500" + Constants.KZBI_SCHLUSS, new Formular { Action = "hh500", Area = "hh", Name = HH500_title_SB, Id = Constants.KZBI_SCHLUSS } },
-      // { "HH500" + Constants.KZBI_GV, new Formular { Action = "hh500", Area = "hh", Name = HH500_title_GV, Id = Constants.KZBI_GV } },
-      // { "HH500" + Constants.KZBI_EROEFFNUNG, new Formular { Action = "hh500", Area = "hh", Name = HH500_title_EB, Id = Constants.KZBI_EROEFFNUNG } },
-      { "HH500SB", new Formular { Action = "hh500", Area = "hh", Name = "Schlussbilanz", Id = "SB" } },
-      { "HH500GV", new Formular { Action = "hh500", Area = "hh", Name = "G+V-Rechnung", Id = "GV" } },
-      { "HH500EB", new Formular { Action = "hh500", Area = "hh", Name = "Eröffnungsbilanz", Id = "EB" } },
+      { "HH500" + Constants.KZBI_SCHLUSS, new Formular { Action = "hh500", Area = "hh", Name = M.HH500_title_SB, Id = Constants.KZBI_SCHLUSS } },
+      { "HH500" + Constants.KZBI_GV, new Formular { Action = "hh500", Area = "hh", Name = M.HH500_title_GV, Id = Constants.KZBI_GV } },
+      { "HH500" + Constants.KZBI_EROEFFNUNG, new Formular { Action = "hh500", Area = "hh", Name = M.HH500_title_EB, Id = Constants.KZBI_EROEFFNUNG } },
       { "HH510", new Formular { Action = "hh510", Area = "hh", Name = "Drucken" } },
       { "TB100", new Formular { Action = "tb100", Area = "tb", Name = "Tagebuch" } },
       { "TB200", new Formular { Action = "tb200", Area = "tb", Name = "Positionen" } },
