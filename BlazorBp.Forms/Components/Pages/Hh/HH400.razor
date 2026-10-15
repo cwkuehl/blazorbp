@@ -47,6 +47,9 @@
 </EditForm>
 
 @code {
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IBudgetService BudgetService { get; set; } = default!;
 
   /// <summary>
   /// Initialisierung des Models.
@@ -97,7 +100,7 @@
       new ListItem("1", "Valuta"),
       new ListItem("0", "Revision"),
     };
-    var l0 = Get(FactoryService.BudgetService.GetAccountList(daten, null, null));
+    var l0 = Get(BudgetService.GetAccountList(daten, null, null));
     Model.AuswahlKonto = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Name)).ToList());
   }
 
@@ -167,7 +170,7 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var l0 = Get(FactoryService.BudgetService.GetBookingList(daten, rm, Model.Kennzeichen == "1", Model.Von, Model.Bis, null, Model.Konto, Model.Betrag), messages);
+    var l0 = Get(BudgetService.GetBookingList(daten, rm, Model.Kennzeichen == "1", Model.Von, Model.Bis, null, Model.Konto, Model.Betrag), messages);
     var l = l0?.Select(a => HH400TableRowModel.From(a)).ToList() ?? new List<HH400TableRowModel>();
     return UpdateTable(m, rm, l);
   }

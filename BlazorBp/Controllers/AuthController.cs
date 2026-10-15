@@ -31,6 +31,7 @@ public class AuthController(IAuthService singleton) : Controller
     public string? Password { get; set; }
   }
 
+  /// <summary>Initialisiert eine neue Instanz der <see cref="AuthController"/> Klasse.</summary>
   private readonly IAuthService authService = singleton;
 
   /// <summary>Anmeldung für einen Benutzer.</summary>

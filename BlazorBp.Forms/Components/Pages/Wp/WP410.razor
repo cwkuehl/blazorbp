@@ -46,6 +46,10 @@
 </EditForm>
 
 @code {
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IStockService StockService { get; set; } = default!;
+
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -68,7 +72,7 @@
       if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
       {
         // TODO Lesen des Models aus der Datenbank, z.B.:
-        // var r = FactoryService.StockService.GetStock(daten, id ?? "");
+        // var r = StockService.GetStock(daten, id ?? "");
         // if (r.Ok && r.Ergebnis != null)
         //   Model.From(r.Ergebnis);
       }
@@ -77,7 +81,7 @@
     Model.Nr = id;
     InitEditContext(Model);
     // TODO Lesen der Listen für Auswahlfelder, z.B.:
-    // var l0 = Get(FactoryService.StockService.GetStateList(daten));
+    // var l0 = Get(StockService.GetStateList(daten));
     // Model.AuswahlStatus = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
   }
 
@@ -100,8 +104,8 @@
     {
       // var o = Model.To(daten);
       // var r = Model.DialogType == DialogTypeEnum.Delete
-      //   ? FactoryService.StockService.DeleteStock(daten, o)
-      //   : FactoryService.StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, Model.Anlage);
+      //   ? StockService.DeleteStock(daten, o)
+      //   : StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, Model.Anlage);
       // if (r.Ok)
       // {
       //   SetFormRefresh();

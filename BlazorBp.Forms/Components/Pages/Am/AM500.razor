@@ -40,6 +40,10 @@
   [SupplyParameterFromForm]
   protected AM510Model AM510Model { get; set; } = default!;
 
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IClientService ClientService { get; set; } = default!;
+
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -130,7 +134,7 @@
         var daten = ServiceDaten;
         var o = AM510Model.To(daten.MandantNr);
         var p = Parameter.Params.TryGetValue(o.Schluessel, out var v) ? v : null;
-        var r = FactoryService.ClientService.SaveOption(daten, daten.MandantNr, p, o.Wert);
+        var r = ClientService.SaveOption(daten, daten.MandantNr, p, o.Wert);
         if (r.Ok)
         {
           Model.ModalArt = null;
@@ -166,7 +170,7 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var r = FactoryService.ClientService.GetOptionList(daten, daten.MandantNr, Parameter.Params, rm);
+    var r = ClientService.GetOptionList(daten, daten.MandantNr, Parameter.Params, rm);
     var l = r.Ergebnis?.Select(a => AM500TableRowModel.From(a)).ToList() ?? new List<AM500TableRowModel>();
     if (!r.Ok)
       messages?.Add(() => Model, r.GetErrors() ?? "");

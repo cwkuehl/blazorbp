@@ -46,6 +46,9 @@
 </EditForm>
 
 @code {
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IBudgetService BudgetService { get; set; } = default!;
 
   /// <summary>
   /// Initialisierung des Models.
@@ -121,7 +124,7 @@
         {
           var cr = new CsvReader(fn);
           var lines = cr.GetLines();
-          var message = Get(FactoryService.BudgetService.ImportBookingList(ServiceDaten, lines, Model.Loeschen));
+          var message = Get(BudgetService.ImportBookingList(ServiceDaten, lines, Model.Loeschen));
           if (!string.IsNullOrEmpty(message))
             SetError(message);
         }

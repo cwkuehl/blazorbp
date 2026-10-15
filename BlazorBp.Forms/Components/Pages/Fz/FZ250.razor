@@ -44,6 +44,10 @@
   [SupplyParameterFromForm]
   protected FZ260Model FZ260Model { get; set; } = default!;
 
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IPrivateService PrivateService { get; set; } = default!;
+
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -64,7 +68,7 @@
       Model.SetMhrf(DialogTypeEnum.New);
     }
     Model.Nr = id;
-    var l0 = Get(FactoryService.PrivateService.GetBikeList(daten));
+    var l0 = Get(PrivateService.GetBikeList(daten));
     Model.AuswahlFahrrad = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
     if (table != null)
       Table = table;
@@ -127,7 +131,7 @@
       if (l != null && i >= 1 && l.Count() >= i)
       {
         var ds = l.Skip(i - 1).FirstOrDefault();
-        var r = FactoryService.PrivateService.GetMileage(daten, ds?.Nummer ?? "", ds?.Datum ?? daten.Heute, ds?.UnterNr ?? 0);
+        var r = PrivateService.GetMileage(daten, ds?.Nummer ?? "", ds?.Datum ?? daten.Heute, ds?.UnterNr ?? 0);
         if (r.Ok && ds != null && r.Ergebnis != null)
         {
           FZ260Model.From(r.Ergebnis);
@@ -144,8 +148,8 @@
         var dt1 = Formular.GetTableDialogType(Model.ModalArt);
         var o = FZ260Model.To(daten);
         var r = dt1 == DialogTypeEnum.Delete
-          ? FactoryService.PrivateService.DeleteMileage(daten, o)
-          : FactoryService.PrivateService.SaveMileage(daten, o.Fahrrad_Uid, o.Datum, o.Nr, o.Zaehler_km, o.Periode_km, o.Periode_Schnitt, o.Beschreibung);
+          ? PrivateService.DeleteMileage(daten, o)
+          : PrivateService.SaveMileage(daten, o.Fahrrad_Uid, o.Datum, o.Nr, o.Zaehler_km, o.Periode_km, o.Periode_Schnitt, o.Beschreibung);
         Get(r, ModalMessages);
         if (r.Ok)
         {
@@ -189,7 +193,7 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var l0 = Get(FactoryService.PrivateService.GetMileageList(daten, rm, Model.Fahrrad), messages);
+    var l0 = Get(PrivateService.GetMileageList(daten, rm, Model.Fahrrad), messages);
     var l = l0?.Select(a => FZ250TableRowModel.From(a)).ToList() ?? new List<FZ250TableRowModel>();
     return UpdateTable(m, rm, l);
   }

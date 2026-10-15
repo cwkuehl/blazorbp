@@ -36,6 +36,9 @@
 </EditForm>
 
 @code {
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IBudgetService BudgetService { get; set; } = default!;
 
   /// <summary>
   /// Initialisierung des Models.
@@ -123,7 +126,7 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var l0 = Get(FactoryService.BudgetService.GetAccountList(daten, rm), messages);
+    var l0 = Get(BudgetService.GetAccountList(daten, rm), messages);
     var l = l0?.Select(a => HH200TableRowModel.From(a)).ToList() ?? new List<HH200TableRowModel>();
     return UpdateTable(m, rm, l);
   }

@@ -34,6 +34,10 @@
 </EditForm>
 
 @code {
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IStockService StockService { get; set; } = default!;
+
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -63,7 +67,7 @@
           dt = DialogTypeEnum.New;
         else
         {
-          var r = FactoryService.StockService.GetPrice(daten, uid, date.Value);
+          var r = StockService.GetPrice(daten, uid, date.Value);
           if (r.Ok && r.Ergebnis != null)
             Model.From( r.Ergebnis);
           else
@@ -75,7 +79,7 @@
     Model.Nr = id;
     InitEditContext(Model);
     // Lesen der Listen für Auswahlfelder.
-    var l0 = Get(FactoryService.StockService.GetStockList(daten));
+    var l0 = Get(StockService.GetStockList(daten));
     Model.AuswahlWertpapier = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
   }
 
@@ -106,8 +110,8 @@
     {
       var o = Model.To(daten);
       var r = Model.DialogType == DialogTypeEnum.Delete
-        ? FactoryService.StockService.DeletePrice(daten, o)
-        : FactoryService.StockService.SavePrice(daten, o.Wertpapier_Uid, o.Datum, o.Stueckpreis);
+        ? StockService.DeletePrice(daten, o)
+        : StockService.SavePrice(daten, o.Wertpapier_Uid, o.Datum, o.Stueckpreis);
       if (r.Ok)
       {
         SetFormRefresh();

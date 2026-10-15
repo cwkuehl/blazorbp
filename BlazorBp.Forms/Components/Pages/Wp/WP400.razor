@@ -60,6 +60,10 @@
 </EditForm>
 
 @code {
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IStockService StockService { get; set; } = default!;
+
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -94,7 +98,7 @@
     Table.Nr = id;
     InitEditContext(Model);
     // TODO Lesen der Listen für Auswahlfelder, z.B.:
-    // var lk = Get(FactoryService.StockService.GetConfigurationList(daten, null, "1"));
+    // var lk = Get(StockService.GetConfigurationList(daten, null, "1"));
     // Model.AuswahlKonfiguration = InsertEmpty(lk?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
   }
 
@@ -151,7 +155,7 @@
     if (valid && submit == "OK")
     {
       var daten = ServiceDaten;
-      var r = new ServiceErgebnis(); // TODO FactoryService.xxxService.yyy(daten, Model.abc);
+      var r = new ServiceErgebnis(); // TODO xxxService.yyy(daten, Model.abc);
       if (r != null)
       {
         Get(r);
@@ -175,28 +179,29 @@
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
     var r = new ServiceErgebnis<List<WP400TodoModel>>(new List<WP400TodoModel>());
-    r.Ergebnis.Add(new WP400TodoModel()
-    {
-      Nummer = "1",
-      Anlage = "Anlage1",
-      Valuta = "Valuta1",
-      Preis = "Preis1",
-      Betrag = "Betrag1",
-      Anteile = "Anteile1",
-      Preis2 = "Preis21",
-      Zinsen = "Zinsen1",
-      BText = "BText1",
-      Buchung = "Buchung1",
-      Rabatt = "Rabatt1",
-      Hhbuchung = "Hhbuchung1",
-      Hhvaluta = "Hhvaluta1",
-      Hhbetrag = "Hhbetrag1",
-      Fixtext = "Fixtext1",
-    });
+    if (r?.Ergebnis != null)
+      r.Ergebnis.Add(new WP400TodoModel()
+      {
+        Nummer = "1",
+        Anlage = "Anlage1",
+        Valuta = "Valuta1",
+        Preis = "Preis1",
+        Betrag = "Betrag1",
+        Anteile = "Anteile1",
+        Preis2 = "Preis21",
+        Zinsen = "Zinsen1",
+        BText = "BText1",
+        Buchung = "Buchung1",
+        Rabatt = "Rabatt1",
+        Hhbuchung = "Hhbuchung1",
+        Hhvaluta = "Hhvaluta1",
+        Hhbetrag = "Hhbetrag1",
+        Fixtext = "Fixtext1",
+      });
     if (rm != null)
       rm.PageCount = 0;
-    // TODO var l0 = Get(FactoryService.PrivateService.GetClientList(daten, rm), messages);
-    var l = r.Ergebnis?.Select(a => WP400TableRowModel.From(a)).ToList() ?? new List<WP400TableRowModel>();
+    // TODO var l0 = Get(PrivateService.GetClientList(daten, rm), messages);
+    var l = r?.Ergebnis?.Select(a => WP400TableRowModel.From(a)).ToList() ?? new List<WP400TableRowModel>();
     return UpdateTable(m, rm, l);
   }
 

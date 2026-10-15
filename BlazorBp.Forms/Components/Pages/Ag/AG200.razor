@@ -35,6 +35,10 @@
   [SupplyParameterFromForm]
   protected AG210Model AG210Model { get; set; } = default!;
 
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IClientService ClientService { get; set; } = default!;
+
   /// <summary>Ist der Benutzer Superadmin?</summary>
   private bool superadmin = false;
 
@@ -134,8 +138,8 @@
         var daten = ServiceDaten;
         var o = AG210Model.To(daten.MandantNr);
         var r = dt1 == DialogTypeEnum.Delete
-          ? FactoryService.ClientService.DeleteUser(daten, o)
-          : FactoryService.ClientService.SaveUser(daten, o.Person_Nr, o.Benutzer_ID, o.Passwort, o.Berechtigung, o.Geburt);
+          ? ClientService.DeleteUser(daten, o)
+          : ClientService.SaveUser(daten, o.Person_Nr, o.Benutzer_ID, o.Passwort, o.Berechtigung, o.Geburt);
         if (r.Ok)
         {
           Model.ModalArt = null;
@@ -175,7 +179,7 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var r = FactoryService.ClientService.GetUserList(daten, rm);
+    var r = ClientService.GetUserList(daten, rm);
     var l = r.Ergebnis?.Select(a => AG200TableRowModel.From(a)).ToList() ?? new List<AG200TableRowModel>();
     if (!r.Ok)
       messages?.Add(() => Model, r.GetErrors() ?? "");

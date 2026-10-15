@@ -56,6 +56,10 @@
 </EditForm>
 
 @code {
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IStockService StockService { get; set; } = default!;
+
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -89,7 +93,7 @@
       };
     Table.Nr = id;
     InitEditContext(Model);
-    var lk = Get(FactoryService.StockService.GetConfigurationList(daten, null, "1"));
+    var lk = Get(StockService.GetConfigurationList(daten, null, "1"));
     Model.AuswahlKonfiguration = InsertEmpty(lk?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
     if (string.IsNullOrEmpty(Model.Konfiguration))
     {
@@ -185,7 +189,7 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var l0 = Get(FactoryService.StockService.GetStockList(daten, rm, Model.Auchinaktiv, null, Model.Muster), messages);
+    var l0 = Get(StockService.GetStockList(daten, rm, Model.Auchinaktiv, null, Model.Muster), messages);
     var l = l0?.Select(a => WP200TableRowModel.From(a)).ToList() ?? new List<WP200TableRowModel>();
     return UpdateTable(m, rm, l);
   }

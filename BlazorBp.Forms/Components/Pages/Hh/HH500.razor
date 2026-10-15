@@ -53,6 +53,9 @@
 </EditForm>
 
 @code {
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IBudgetService BudgetService { get; set; } = default!;
 
   /// <summary>
   /// Initialisierung des Models.
@@ -91,7 +94,7 @@
     InitEditContext(Model);
     if (Model.Von == null)
     {
-      var max = Get(FactoryService.BudgetService.GetMinMaxPeriod(daten));
+      var max = Get(BudgetService.GetMinMaxPeriod(daten));
       var dB = daten.Heute;
       dB = new DateTime(dB.Year, dB.Month, DateTime.DaysInMonth(dB.Year, dB.Month));
       if (max != null && max.Datum_Bis < dB)
@@ -129,7 +132,7 @@
     var daten = ServiceDaten;
     var v = Model.Von ?? daten.Heute;
     var b = (kz == Constants.KZBI_GV ? Model.Bis : Model.Von) ?? daten.Heute;
-    var l = Get(FactoryService.BudgetService.GetBalanceList(daten, kz, v, b)) ?? new List<HhBilanz>();
+    var l = Get(BudgetService.GetBalanceList(daten, kz, v, b)) ?? new List<HhBilanz>();
     var sollListe = l.Where(a => a.AccountType > 0).ToList();
     var habenListe = l.Where(a => a.AccountType <= 0).ToList();
     //// No.;Description;Value_r;Changed at;Changed by;Created at;Created by
@@ -260,7 +263,7 @@
     if (i >= 0 && i < l.Count && i + d >= 0 && i + d < l.Count)
     {
       var uid2 = l[i + d].Key;
-      var r = FactoryService.BudgetService.SwapAccountSort(ServiceDaten, uid, uid2);
+      var r = BudgetService.SwapAccountSort(ServiceDaten, uid, uid2);
       Get(r);
       if (r.Ok)
       {
@@ -294,7 +297,7 @@
       }
       while (weiter >= 2 && (r == null || r.Ok))
       {
-        r = FactoryService.BudgetService.CalculateBalances(daten, state, cancel, true, v);
+        r = BudgetService.CalculateBalances(daten, state, cancel, true, v);
         v = null;
         if (r.Ok)
         {

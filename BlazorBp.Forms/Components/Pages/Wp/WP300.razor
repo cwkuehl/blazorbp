@@ -44,6 +44,10 @@
   [SupplyParameterFromForm]
   protected WP310Model WP310Model { get; set; } = default!;
 
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IStockService StockService { get; set; } = default!;
+
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -76,11 +80,11 @@
       WP310Model = new WP310Model();
     WP310Model.Nr = id;
     InitEditContext(Model, WP310Model);
-    var l0 = Get(FactoryService.StockService.GetScaleList(daten));
+    var l0 = Get(StockService.GetScaleList(daten));
     WP310Model.AuswahlSkala = l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
-    l0 = Get(FactoryService.StockService.GetMethodList(daten));
+    l0 = Get(StockService.GetMethodList(daten));
     WP310Model.AuswahlMethode = l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
-    l0 = Get(FactoryService.StockService.GetStateList(daten));
+    l0 = Get(StockService.GetStateList(daten));
     WP310Model.AuswahlStatus = l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
   }
 
@@ -135,8 +139,8 @@
         var daten = ServiceDaten;
         var o = WP310Model.To(daten);
         var r = dt1 == DialogTypeEnum.Delete
-          ? FactoryService.StockService.DeleteConfiguration(daten, o)
-          : FactoryService.StockService.SaveConfiguration(daten, o.Uid, o.Bezeichnung, o.Box ?? 0m, o.Reversal, o.Method, o.Duration, o.Relative, o.Scale, o.Status, o.Notiz);
+          ? StockService.DeleteConfiguration(daten, o)
+          : StockService.SaveConfiguration(daten, o.Uid, o.Bezeichnung, o.Box ?? 0m, o.Reversal, o.Method, o.Duration, o.Relative, o.Scale, o.Status, o.Notiz);
         if (r.Ok)
         {
           Model.ModalArt = null;
@@ -172,7 +176,7 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var l0 = Get(FactoryService.StockService.GetConfigurationList(daten, rm, null), messages);
+    var l0 = Get(StockService.GetConfigurationList(daten, rm, null), messages);
     var l = l0?.Select(a => WP300TableRowModel.From(a)).ToList() ?? new List<WP300TableRowModel>();
     return UpdateTable(m, rm, l);
   }

@@ -49,6 +49,10 @@
 </EditForm>
 
 @code {
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IBudgetService BudgetService { get; set; } = default!;
+
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -76,7 +80,7 @@
       else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
       {
         // Lesen des Models aus der Datenbank.
-        var r = FactoryService.BudgetService.GetBooking(daten, id ?? "");
+        var r = BudgetService.GetBooking(daten, id ?? "");
         if (r.Ok && r.Ergebnis != null)
           Model.From(r.Ergebnis);
       }
@@ -85,9 +89,9 @@
     Model.Nr = id;
     InitEditContext(Model);
     // Lesen der Listen für Auswahlfelder
-    var le = Get(FactoryService.BudgetService.GetEventList(daten, null, null));
+    var le = Get(BudgetService.GetEventList(daten, null, null));
     Model.AuswahlEreignis = le?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList();
-    var l0 = Get(FactoryService.BudgetService.GetAccountList(daten, null, null));
+    var l0 = Get(BudgetService.GetAccountList(daten, null, null));
     Model.AuswahlSollkonto = l0?.Select(a => new ListItem(a.Uid, a.Name)).ToList();
     Model.AuswahlHabenkonto = l0?.Select(a => new ListItem(a.Uid, a.Name)).ToList();
   }
@@ -120,7 +124,7 @@
       var s = Model.Ereignis;
       if (!string.IsNullOrEmpty(s))
       {
-        var r = FactoryService.BudgetService.GetEvent(daten, s);
+        var r = BudgetService.GetEvent(daten, s);
         if (r.Ok && r.Ergebnis != null)
         {
           Model.Sollkonto = r.Ergebnis.Soll_Konto_Uid;
@@ -139,8 +143,8 @@
       // TODO Stornierung mit DialogTypeEnum.Reverse.
       var o = Model.To(daten);
       var r = Model.DialogType == DialogTypeEnum.Delete
-        ? FactoryService.BudgetService.DeleteBooking(daten, o)
-        : FactoryService.BudgetService.SaveBooking(daten, o.Uid, o.Soll_Valuta, o.Betrag, o.EBetrag, o.Soll_Konto_Uid, o.Haben_Konto_Uid, o.BText, o.Beleg_Nr, o.Beleg_Datum);
+        ? BudgetService.DeleteBooking(daten, o)
+        : BudgetService.SaveBooking(daten, o.Uid, o.Soll_Valuta, o.Betrag, o.EBetrag, o.Soll_Konto_Uid, o.Haben_Konto_Uid, o.BText, o.Beleg_Nr, o.Beleg_Datum);
       if (r.Ok)
       {
         SetStringData("HH410Valuta", Funktionen.ToString(Model.Valuta));
@@ -148,8 +152,8 @@
         if (Model.DialogType == DialogTypeEnum.New)
         {
           var sb = new StringBuilder();
-          var sollkonto = Get(FactoryService.BudgetService.GetAccount(daten, o.Soll_Konto_Uid));
-          var habenkonto = Get(FactoryService.BudgetService.GetAccount(daten, o.Haben_Konto_Uid));
+          var sollkonto = Get(BudgetService.GetAccount(daten, o.Soll_Konto_Uid));
+          var habenkonto = Get(BudgetService.GetAccount(daten, o.Haben_Konto_Uid));
           sb.Append(M.HH057(o.Soll_Valuta, o.EBetrag,
             sollkonto?.Name ?? o.Soll_Konto_Uid, habenkonto?.Name ?? o.Haben_Konto_Uid, o.BText));
           if (!string.IsNullOrEmpty(o.Beleg_Nr))
@@ -174,7 +178,7 @@
     }
     if (submit == nameof(Model.NeueNr) && Model.DialogType != DialogTypeEnum.Delete)
     {
-      var no = Get(FactoryService.BudgetService.GetNewReceipt(daten, Model.BelegDatum ?? daten.Heute));
+      var no = Get(BudgetService.GetNewReceipt(daten, Model.BelegDatum ?? daten.Heute));
       Model.BelegNr = no;
     }
     if (submit == nameof(Model.Kontentausch) && Model.DialogType != DialogTypeEnum.Delete)

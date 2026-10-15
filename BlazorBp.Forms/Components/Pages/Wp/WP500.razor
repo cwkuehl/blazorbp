@@ -40,6 +40,9 @@
 </EditForm>
 
 @code {
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IStockService StockService { get; set; } = default!;
 
   /// <summary>
   /// Initialisierung des Models.
@@ -75,7 +78,7 @@
     InitEditContext(Model);
 
     // Lesen der Listen für Auswahlfelder.
-    var l0 = Get(FactoryService.StockService.GetStockList(daten));
+    var l0 = Get(StockService.GetStockList(daten));
     Model.AuswahlWertpapier = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
     if (string.IsNullOrEmpty(Model.Wertpapier))
       Model.Wertpapier = GetStringData("WP500Wertpapier");
@@ -122,7 +125,7 @@
     if (submit == nameof(Model.Thin))
     {
       var daten = ServiceDaten;
-      var r = FactoryService.StockService.ThinPrices(daten, Model.Von ?? daten.Heute, Model.Wertpapier);
+      var r = StockService.ThinPrices(daten, Model.Von ?? daten.Heute, Model.Wertpapier);
       if (Get(r))
       {
         Model.Focus = nameof(Model.Wertpapier);
@@ -167,7 +170,7 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var l0 = Get(FactoryService.StockService.GetPriceList(daten, rm, Model.Wertpapier, Model.Von, Model.Bis), messages);
+    var l0 = Get(StockService.GetPriceList(daten, rm, Model.Wertpapier, Model.Von, Model.Bis), messages);
     var l = l0?.Select(a => WP500TableRowModel.From(a)).ToList() ?? new List<WP500TableRowModel>();
     return UpdateTable(m, rm, l);
   }

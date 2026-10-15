@@ -16,13 +16,6 @@ public static class FactoryServiceExtensions
   /// <returns>Same service collection.</returns>
   public static IServiceCollection AddFactoryService(this IServiceCollection services)
   {
-    // services.AddSingleton<IBudgetService, BudgetService>();
-    // services.AddSingleton<IBudgetService>(sp => FactoryService.BudgetService);
-    // services.AddSingleton<IClientService>(sp => FactoryService.ClientService);
-    // foreach (var s in services)
-    // {
-    //   Console.WriteLine(s.ServiceType);
-    // }
     return services;
   }
 

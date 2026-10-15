@@ -42,6 +42,14 @@
 </script>
 
 @code {
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IBudgetService BudgetService { get; set; } = default!;
+
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IPrivateService PrivateService { get; set; } = default!;
+
   /// <summary>Holt oder setzt die Canvas-Daten.</summary>
   private string CanvasDaten = "";
 
@@ -82,17 +90,17 @@
   {
     var daten = ServiceDaten;
     var datum = Model.Datum ?? daten.Heute;
-    var str = Get(FactoryService.PrivateService.GetStatistics(daten, 1, datum));
+    var str = Get(PrivateService.GetStatistics(daten, 1, datum));
     Model.Bilanz = str;
-    str = Get(FactoryService.PrivateService.GetStatistics(daten, 2, datum));
+    str = Get(PrivateService.GetStatistics(daten, 2, datum));
     Model.Buecher = str;
-    str = Get(FactoryService.PrivateService.GetStatistics(daten, 3, datum));
+    str = Get(PrivateService.GetStatistics(daten, 3, datum));
     Model.Fahrrad = str;
 
-    var l = Get(FactoryService.BudgetService.GetProprietaryPlList(daten, datum));
+    var l = Get(BudgetService.GetProprietaryPlList(daten, datum));
     l?.Reverse();
     var pplList = l?.Select(a => new KeyValuePair<string, decimal>(Funktionen.ToString(a.Geaendert_Am), a.EBetrag)).ToList();
-    var l2 = Get(FactoryService.PrivateService.GetMileages(daten, datum));
+    var l2 = Get(PrivateService.GetMileages(daten, datum));
     var mileageList = l2?.Select(a => new KeyValuePair<string, decimal>(Funktionen.ToString(a.Datum), a.Periode_km)).ToList();
     if (pplList != null && mileageList != null)
     {

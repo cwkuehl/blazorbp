@@ -56,6 +56,10 @@
 </EditForm>
 
 @code {
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IStockService StockService { get; set; } = default!;
+
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -78,7 +82,7 @@
       if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
       {
         // Model.SetMhrf(dt);
-        var r = FactoryService.StockService.GetStock(daten, id ?? "");
+        var r = StockService.GetStock(daten, id ?? "");
         if (r.Ok && r.Ergebnis != null)
           Model.From(r.Ergebnis);
       }
@@ -86,11 +90,11 @@
     }
     Model.Nr = id;
     InitEditContext(Model);
-    var l0 = Get(FactoryService.StockService.GetStateList(daten));
+    var l0 = Get(StockService.GetStateList(daten));
     Model.AuswahlStatus = l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
-    var l1 = Get(FactoryService.StockService.GetProviderList(daten));
+    var l1 = Get(StockService.GetProviderList(daten));
     Model.AuswahlProvider = l1?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
-    var l2 = Get(FactoryService.StockService.GetStockList(daten));
+    var l2 = Get(StockService.GetStockList(daten));
     Model.AuswahlRelation = InsertEmpty(l2?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
   }
 
@@ -113,8 +117,8 @@
     {
       var o = Model.To(daten);
       var r = Model.DialogType == DialogTypeEnum.Delete
-        ? FactoryService.StockService.DeleteStock(daten, o)
-        : FactoryService.StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, Model.Anlage);
+        ? StockService.DeleteStock(daten, o)
+        : StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, Model.Anlage);
       if (r.Ok)
       {
         Model.ModalArt = null;

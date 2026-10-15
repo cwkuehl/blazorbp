@@ -4,7 +4,6 @@
 
 namespace BlazorBp.Forms.Demo.Pages;
 
-using System.Text;
 using BlazorBp.Core.Base;
 using BlazorBp.Forms.Demo.Apis;
 using BlazorBp.Forms.Demo.Models.Demo;
@@ -76,7 +75,8 @@ public static class DownloadData
         //   var pm = BlazorComponentBaseStatic.ReadFormularFormModel<HH510Model>(s, "HH510", id);
         //   if (pm != null)
         //   {
-        //     r = FactoryService.BudgetService.GetAnnualReport(daten, pm.Von ?? daten.Heute, pm.Bis ?? daten.Heute, pm.Titel, pm.Eb, pm.Gv, pm.Sb);
+        //     var sv = sp.GetService(typeof(IBudgetService)) as IBudgetService;
+        //     r = sv?.GetAnnualReport(daten, pm.Von ?? daten.Heute, pm.Bis ?? daten.Heute, pm.Titel, pm.Eb, pm.Gv, pm.Sb);
         //   }
         //   break;
         // }

@@ -52,6 +52,10 @@
 </script>
 
 @code {
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IStockService StockService { get; set; } = default!;
+
   /// <summary>Holt oder setzt die Canvas-Daten.</summary>
   private string CanvasDaten = "";
 
@@ -88,7 +92,7 @@
         Model.Bis = date;
       if (!string.IsNullOrEmpty(wpuid))
         Model.Wertpapier = wpuid;
-      var r = FactoryService.StockService.GetConfiguration(daten, kuid ?? "");
+      var r = StockService.GetConfiguration(daten, kuid ?? "");
       if (r.Ok && !string.IsNullOrEmpty(kuid) && r.Ergebnis != null)
       {
         if (Model.Bis.HasValue)
@@ -103,15 +107,15 @@
     InitEditContext(Model);
 
     // Lesen der Listen für Auswahlfelder.
-    var l0 = Get(FactoryService.StockService.GetStockList(daten));
+    var l0 = Get(StockService.GetStockList(daten));
     Model.AuswahlWertpapier = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList() ?? new List<ListItem> { new ListItem("", "Keine Wertpapiere") });
     if (string.IsNullOrEmpty(Model.Wertpapier))
       Model.Wertpapier = GetStringData("WP100Wertpapier");
-    var l1 = Get(FactoryService.StockService.GetScaleList(daten));
+    var l1 = Get(StockService.GetScaleList(daten));
     Model.AuswahlSkala = l1?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
-    var l2 = Get(FactoryService.StockService.GetMethodList(daten));
+    var l2 = Get(StockService.GetMethodList(daten));
     Model.AuswahlMethode = l2?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
-    var ld = Get(FactoryService.StockService.GetPriceList(daten, Model.Von ?? daten.Heute, Model.Bis ?? daten.Heute, Model.Wertpapier, Model.Relativ));
+    var ld = Get(StockService.GetPriceList(daten, Model.Von ?? daten.Heute, Model.Bis ?? daten.Heute, Model.Wertpapier, Model.Relativ));
     ld?.Reverse(); // Sortierung: Datum absteigend
     //// Date;Date;Open_r;High_r;Low_r;Close_r
     Model.AuswahlData = ld?.Select(a => new ListItem(Funktionen.ToString(a.Datum), $"{Funktionen.ToString(a.Datum)} | {Funktionen.ToString(a.Open, 4)} | {Funktionen.ToString(a.High, 4)} | {Funktionen.ToString(a.Low, 4)} | {Funktionen.ToString(a.Close, 4)}")).ToList() ?? new List<ListItem>{ new ListItem("", "Keine Daten") };

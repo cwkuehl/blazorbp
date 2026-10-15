@@ -9,7 +9,6 @@ using BlazorSpa.Base;
 using BlazorSpa.Base.Services;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
-using CSBP.Services.Factory;
 using Microsoft.AspNetCore.Components;
 
 /// <summary>
@@ -24,6 +23,10 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
   /// <summary>Holt oder setzt das Modal2-Model.</summary>
   [SupplyParameterFromForm]
   protected TB210Model TB210Model { get; set; } = default!;
+
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IDiaryService DiaryService { get; set; } = default!;
 
   /// <summary>Holt oder setzt die Canvas-Daten.</summary>
   private string CanvasDaten = "";
@@ -70,7 +73,7 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
       TB210Model = new TB210Model();
     TB210Model.Nr = id;
     InitEditContext(Model, TB110Model, TB210Model);
-    var l0 = Get(FactoryService.DiaryService.GetTimezoneList(daten));
+    var l0 = Get(DiaryService.GetTimezoneList(daten));
     TB210Model.AuswahlZeitzone = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
   }
 
@@ -152,8 +155,8 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
           var daten = ServiceDaten;
           var o = TB210Model.To(daten);
           var r = dtp == DialogTypeEnum.Delete
-            ? FactoryService.DiaryService.DeletePosition(daten, o)
-            : FactoryService.DiaryService.SavePosition(daten, o.Uid, o.Bezeichnung,
+            ? DiaryService.DeletePosition(daten, o)
+            : DiaryService.SavePosition(daten, o.Uid, o.Bezeichnung,
                 Funktionen.ToString(o.Breite, 5), Funktionen.ToString(o.Laenge, 5),
                 Funktionen.ToString(o.Hoehe, 2), o.Zeitzone, o.Notiz);
           if (r.Ok)
@@ -200,9 +203,9 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
   private void InitLists()
   {
     var daten = ServiceDaten;
-    var rl = Get(FactoryService.DiaryService.GetPositionList(daten));
+    var rl = Get(DiaryService.GetPositionList(daten));
     Model.AuswahlPosition = InsertEmpty(rl?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
-    var rl2 = Get(FactoryService.DiaryService.GetPositionList(daten, ext: true));
+    var rl2 = Get(DiaryService.GetPositionList(daten, ext: true));
     Model.AuswahlPosition2 = InsertEmpty(rl2?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
   }
 
@@ -217,13 +220,13 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
     var r = new ServiceErgebnis();
     if (!d.HasValue || Model == null || Model.OldEntry == null || Model.OldEntry.Positions == null || Model.PositionList == null)
       return r;
-    var tb = r.Get(FactoryService.DiaryService.GetEntry(daten, d.Value.AddDays(-1)));
+    var tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddDays(-1)));
     Model.Before1 = tb?.Eintrag;
-    tb = r.Get(FactoryService.DiaryService.GetEntry(daten, d.Value.AddMonths(-1)));
+    tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddMonths(-1)));
     Model.Before2 = tb?.Eintrag;
-    tb = r.Get(FactoryService.DiaryService.GetEntry(daten, d.Value.AddYears(-1)));
+    tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddYears(-1)));
     Model.Before3 = tb?.Eintrag;
-    tb = r.Get(FactoryService.DiaryService.GetEntry(daten, d.Value, true));
+    tb = r.Get(DiaryService.GetEntry(daten, d.Value, true));
     Model.Entry = tb?.Eintrag;
     Model.PositionList = tb?.Positions ?? [];
     Model.OldEntry.Positions.Clear();
@@ -242,11 +245,11 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
     }
     Model.OldEntry.Datum = d.Value;
     Model.Entry = Model.OldEntry.Eintrag;
-    tb = r.Get(FactoryService.DiaryService.GetEntry(daten, d.Value.AddDays(1)));
+    tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddDays(1)));
     Model.After1 = tb?.Eintrag;
-    tb = r.Get(FactoryService.DiaryService.GetEntry(daten, d.Value.AddMonths(1)));
+    tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddMonths(1)));
     Model.After2 = tb?.Eintrag;
-    tb = r.Get(FactoryService.DiaryService.GetEntry(daten, d.Value.AddYears(1)));
+    tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddYears(1)));
     Model.After3 = tb?.Eintrag;
     InitPositions(Model.OldEntry.Positions);
     if (Model.Weathervisible)
@@ -304,7 +307,7 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
       if (string.IsNullOrEmpty(oldentry) || Functions.CompString(oldentry, Model.Entry) != 0 || Functions.CompString(p0, p) != 0)
       {
         var pos = Model.PositionList.Select(a => new Tuple<string, DateTime, DateTime>(a.Ort_Uid, a.Datum_Von, a.Datum_Bis)).ToList();
-        changed = r.Get(FactoryService.DiaryService.SaveEntry(daten, Model.OldEntry.Datum, Model.Entry, pos)) && r.Ok;
+        changed = r.Get(DiaryService.SaveEntry(daten, Model.OldEntry.Datum, Model.Entry, pos)) && r.Ok;
       }
     }
     if (laden)
@@ -332,7 +335,7 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
       return;
     BearbeiteEintraege(true, false);
     var daten = ServiceDaten;
-    var d = Get(FactoryService.DiaryService.SearchDate(daten, stelle, Model.Date ?? daten.Heute, Model.GetSearchArray(),
+    var d = Get(DiaryService.SearchDate(daten, stelle, Model.Date ?? daten.Heute, Model.GetSearchArray(),
       Model.Position2, Model.From ?? daten.Heute, Model.To ?? daten.Heute));
     if (d.HasValue)
     {
@@ -364,7 +367,7 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
       }
       return;
     }
-    var r = Get(FactoryService.DiaryService.GetWeatherList(daten, date, puid));
+    var r = Get(DiaryService.GetWeatherList(daten, date, puid));
     foreach (var w in r ?? [])
     {
       templist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Temp));
@@ -437,7 +440,7 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
       // Importieren der Rabp-Daten ins Tagebuch.
       // Das ist nun nicht mehr notwendig, weil die Erfassung direkt in BlazorBp erfolgt.
       // var d = date.ValueNn;
-      // var t = Get(FactoryService.DiaryService.GetApiDiaryList(ServiceDaten, d));
+      // var t = Get(DiaryService.GetApiDiaryList(ServiceDaten, d));
       // if (t == null)
       //   return;
       // if (t.Item2.Count() <= 0)
@@ -456,13 +459,13 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
       // if (ShowYesNoQuestion(sb.ToString()))
       // {
       //   BearbeiteEintraege(); // Save
-      //   if (!Get(FactoryService.DiaryService.ReplicateDiaryList(ServiceDaten, t.Item2)))
+      //   if (!Get(DiaryService.ReplicateDiaryList(ServiceDaten, t.Item2)))
       //     return;
       //   BearbeiteEintraege(false); // Reload
       // }
       // var s = @$"Löschen der Rabp-Daten?";
       // if (ShowYesNoQuestion(s))
-      //   Get(FactoryService.DiaryService.GetApiDiaryList(ServiceDaten, d, true));
+      //   Get(DiaryService.GetApiDiaryList(ServiceDaten, d, true));
     }
     else if (submit == nameof(Model.Save))
     {
@@ -472,7 +475,7 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
       // var pfad = ParameterGui.TempPath;
       // var datei = Functions.GetDateiname(M0(TB005), true, true, "txt");
       // var daten = ServiceDaten;
-      // UiTools.SaveFile(daten, Get(FactoryService.DiaryService.GetDiaryReport(daten, GetSearchArray(),
+      // UiTools.SaveFile(daten, Get(DiaryService.GetDiaryReport(daten, GetSearchArray(),
       //   puid, from.Value, to.Value)), pfad, datei);
       // var statusMessage = "";
       // var client = CSBP.Services.NonService.HttpClientFactory.CreateClient();
@@ -520,7 +523,7 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
     {
       // Positionen vom Vortag übernehmen
       var yd = Model.Date.Value.AddDays(-1);
-      var r = FactoryService.DiaryService.GetEntry(ServiceDaten, yd, true);
+      var r = DiaryService.GetEntry(ServiceDaten, yd, true);
       if (r.Ok && r.Ergebnis != null)
       {
         foreach (var p in r.Ergebnis.Positions ?? new List<TbEintragOrt>())
@@ -553,7 +556,7 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
         }
         else
         {
-          var k = Get(FactoryService.DiaryService.GetPosition(ServiceDaten, uid));
+          var k = Get(DiaryService.GetPosition(ServiceDaten, uid));
           if (k != null)
           {
             var p = new TbEintragOrt

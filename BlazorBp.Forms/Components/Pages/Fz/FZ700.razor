@@ -37,6 +37,10 @@
   [SupplyParameterFromForm]
   protected FZ710Model FZ710Model { get; set; } = default!;
 
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IPrivateService PrivateService { get; set; } = default!;
+
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -108,7 +112,7 @@
       {
         var ds = l.Skip(i - 1).FirstOrDefault();
         var daten = ServiceDaten;
-        var r = FactoryService.PrivateService.GetMemo(daten, ds?.Nummer ?? "");
+        var r = PrivateService.GetMemo(daten, ds?.Nummer ?? "");
         if (r.Ok && ds != null && r.Ergebnis != null)
         {
           FZ710Model.From(r.Ergebnis);
@@ -128,8 +132,8 @@
         var xml = Functions.Base64Decode(FZ710Model.Xml);
         xml = FZ710Model.SetMemo(xml, o.Notiz);
         var r = dt1 == DialogTypeEnum.Delete
-          ? FactoryService.PrivateService.DeleteMemo(daten, o)
-          : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
+          ? PrivateService.DeleteMemo(daten, o)
+          : PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
         if (r.Ok)
         {
           Model.ModalArt = null;
@@ -165,7 +169,7 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var l0 = Get(FactoryService.PrivateService.GetMemoList(daten, rm), messages);
+    var l0 = Get(PrivateService.GetMemoList(daten, rm), messages);
     var l = l0?.Select(a => FZ700TableRowModel.From(a)).ToList() ?? new List<FZ700TableRowModel>();
     return UpdateTable(m, rm, l);
   }

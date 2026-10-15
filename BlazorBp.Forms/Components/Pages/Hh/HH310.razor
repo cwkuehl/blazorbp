@@ -37,6 +37,10 @@
 </EditForm>
 
 @code {
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IBudgetService BudgetService { get; set; } = default!;
+
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -59,7 +63,7 @@
       if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
       {
         // Lesen des Models aus der Datenbank.
-        var r = FactoryService.BudgetService.GetEvent(daten, id ?? "");
+        var r = BudgetService.GetEvent(daten, id ?? "");
         if (r.Ok && r.Ergebnis != null)
           Model.From(r.Ergebnis);
       }
@@ -68,7 +72,7 @@
     Model.Nr = id;
     InitEditContext(Model);
     // Lesen der Listen für Auswahlfelder
-    var l0 = Get(FactoryService.BudgetService.GetAccountList(daten, null, null));
+    var l0 = Get(BudgetService.GetAccountList(daten, null, null));
     Model.AuswahlSollkonto = l0?.Select(a => new ListItem(a.Uid, a.Name)).ToList();
     Model.AuswahlHabenkonto = l0?.Select(a => new ListItem(a.Uid, a.Name)).ToList();
   }
@@ -92,8 +96,8 @@
     {
       var o = Model.To(daten);
       var r = Model.DialogType == DialogTypeEnum.Delete
-        ? FactoryService.BudgetService.DeleteEvent(daten, o)
-       : FactoryService.BudgetService.SaveEvent(daten, o.Uid, o.Kz, o.Soll_Konto_Uid, o.Haben_Konto_Uid, o.Bezeichnung, o.EText);
+        ? BudgetService.DeleteEvent(daten, o)
+       : BudgetService.SaveEvent(daten, o.Uid, o.Kz, o.Soll_Konto_Uid, o.Haben_Konto_Uid, o.Bezeichnung, o.EText);
       if (r.Ok)
       {
         SetFormRefresh();

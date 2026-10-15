@@ -44,6 +44,10 @@
 </EditForm>
 
 @code {
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IBudgetService BudgetService { get; set; } = default!;
+
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -66,7 +70,7 @@
       if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
       {
         // Lesen des Models aus der Datenbank, z.B.:
-        var r = FactoryService.BudgetService.GetAccount(daten, id ?? "");
+        var r = BudgetService.GetAccount(daten, id ?? "");
         if (r.Ok && r.Ergebnis != null)
           Model.From(r.Ergebnis);
       }
@@ -75,7 +79,7 @@
     Model.Nr = id;
     InitEditContext(Model);
     // Lesen der Listen für Auswahlfelder.
-    Model.Buchung = Get(FactoryService.BudgetService.GetBookingSpan(daten, Model.Nr ?? ""));
+    Model.Buchung = Get(BudgetService.GetBookingSpan(daten, Model.Nr ?? ""));
     Model.AuswahlKennzeichen = new List<ListItem>
     {
       new ListItem("", "Ohne Kennzeichen"),
@@ -111,8 +115,8 @@
     {
       var o = Model.To(daten);
       var r = Model.DialogType == DialogTypeEnum.Delete
-        ? FactoryService.BudgetService.DeleteAccount(daten, o)
-        : FactoryService.BudgetService.SaveAccount(daten, o.Uid, o.Art, o.Kz, o.Name, o.Gueltig_Von, o.Gueltig_Bis, o.EBetrag);
+        ? BudgetService.DeleteAccount(daten, o)
+        : BudgetService.SaveAccount(daten, o.Uid, o.Art, o.Kz, o.Name, o.Gueltig_Von, o.Gueltig_Bis, o.EBetrag);
       if (r.Ok)
       {
         Model.ModalArt = null;

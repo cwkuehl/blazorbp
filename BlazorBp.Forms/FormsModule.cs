@@ -9,6 +9,7 @@ using BlazorSpa.Base;
 using BlazorSpa.Base.Auth;
 using BlazorSpa.Base.Models;
 using BlazorSpa.Base.Undo;
+using CSBP.Services.Factory;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -61,8 +62,15 @@ public class FormsModule : IFormModule
   }
   public void ConfigureServices(IServiceCollection services)
   {
-    // services.AddSingleton<IDemoService, DemoService>();
-    Funktionen.MachNichts();
+    services.AddSingleton(FactoryService.AddressService);
+    services.AddSingleton(FactoryService.BudgetService);
+    services.AddSingleton(FactoryService.ClientService);
+    services.AddSingleton(FactoryService.DiaryService);
+    services.AddSingleton(FactoryService.EnergyService);
+    services.AddSingleton(FactoryService.LoginService);
+    services.AddSingleton(FactoryService.PedigreeService);
+    services.AddSingleton(FactoryService.PrivateService);
+    services.AddSingleton(FactoryService.StockService);
   }
 
   /// <summary>Liefert die Formulare, die dieses Modul bereitstellt.</summary>

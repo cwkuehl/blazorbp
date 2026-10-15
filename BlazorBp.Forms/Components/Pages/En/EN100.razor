@@ -48,6 +48,10 @@
   [SupplyParameterFromForm]
   protected EN110Model EN110Model { get; set; } = default!;
 
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IEnergyService EnergyService { get; set; } = default!;
+
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -87,11 +91,11 @@
       };
     EN110Model.Nr = id;
     InitEditContext(Model, EN110Model);
-    var l0 = Get(FactoryService.EnergyService.GetStateList(daten));
+    var l0 = Get(EnergyService.GetStateList(daten));
     EN110Model.AuswahlStatus = l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
-    var l1 = Get(FactoryService.EnergyService.GetKindList(daten));
+    var l1 = Get(EnergyService.GetKindList(daten));
     EN110Model.AuswahlArt = l1?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList();
-    var l2 = Get(FactoryService.EnergyService.GetDatatypeList(daten));
+    var l2 = Get(EnergyService.GetDatatypeList(daten));
     EN110Model.AuswahlDatentyp = InsertEmpty(l2?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
   }
 
@@ -138,7 +142,7 @@
       if (l != null && i >= 1 && l.Count() >= i)
       {
         var ds = l.Skip(i - 1).FirstOrDefault();
-        var r = FactoryService.EnergyService.GetQuery(daten, ds?.Nummer ?? "");
+        var r = EnergyService.GetQuery(daten, ds?.Nummer ?? "");
         if (r.Ok && ds != null && r.Ergebnis != null)
         {
           EN110Model.From(r.Ergebnis);
@@ -162,7 +166,7 @@
       else if (msubmit == nameof(EN110Model.Lesen))
       {
         var o = EN110Model.To(daten);
-        var r = FactoryService.EnergyService.QueryQuery(daten, o);
+        var r = EnergyService.QueryQuery(daten, o);
         if (r.Ok && r.Ergebnis != null)
           EN110Model.Wert = r.Ergebnis;
         else
@@ -171,7 +175,7 @@
       else if (msubmit == nameof(EN110Model.Schreiben))
       {
         var o = EN110Model.To(daten);
-        var r = FactoryService.EnergyService.WriteQuery(daten, o, EN110Model.Wert);
+        var r = EnergyService.WriteQuery(daten, o, EN110Model.Wert);
         if (!r.Ok)
           Get(r, ModalMessages);
       }
@@ -180,8 +184,8 @@
         var dt1 = Formular.GetTableDialogType(Model.ModalArt);
         var o = EN110Model.To(daten);
         var r = dt1 == DialogTypeEnum.Delete
-          ? FactoryService.EnergyService.DeleteQuery(daten, o)
-          : FactoryService.EnergyService.SaveQuery(daten, o.Uid, o.Sortierung, o.Art, o.Bezeichnung, o.Host_Url, o.Datentyp, o.Schreibbarkeit, o.Einheit, o.Param1, o.Param2, o.Param3, o.Param4, o.Param5, o.Status, o.Notiz);
+          ? EnergyService.DeleteQuery(daten, o)
+          : EnergyService.SaveQuery(daten, o.Uid, o.Sortierung, o.Art, o.Bezeichnung, o.Host_Url, o.Datentyp, o.Schreibbarkeit, o.Einheit, o.Param1, o.Param2, o.Param3, o.Param4, o.Param5, o.Status, o.Notiz);
         if (r.Ok)
         {
           Model.ModalArt = null;
@@ -229,7 +233,7 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var l0 = Get(FactoryService.EnergyService.GetQueryList(daten, rm, Model.Auchinaktiv, null), messages);
+    var l0 = Get(EnergyService.GetQueryList(daten, rm, Model.Auchinaktiv, null), messages);
     var l = l0?.Select(a => EN100TableRowModel.From(a)).ToList() ?? new List<EN100TableRowModel>();
     return UpdateTable(m, rm, l);
   }

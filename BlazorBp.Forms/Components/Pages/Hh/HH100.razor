@@ -39,6 +39,9 @@
 </EditForm>
 
 @code {
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IBudgetService BudgetService { get; set; } = default!;
 
   /// <summary>
   /// Initialisierung des Models.
@@ -90,7 +93,7 @@
   protected override void Refresh()
   {
     var daten = ServiceDaten;
-    var l = Get(FactoryService.BudgetService.GetPeriodList(daten)) ?? new List<HhPeriode>();
+    var l = Get(BudgetService.GetPeriodList(daten)) ?? new List<HhPeriode>();
     Model.AuswahlPerioden = l.Select(a => new ListItem(Functions.ToString(a.Nr), $"{a.Nr:00000} | {Functions.CutOrPadRight(Funktionen.ToString(a.Period),14, '\u00A0')} | {Funktionen.ToString(a.Datum_Von)} | {Funktionen.ToString(a.Datum_Bis)} | {Funktionen.ToString(a.Geaendert_Am, true)} | {a.Geaendert_Von} | {Funktionen.ToString(a.Angelegt_Am, true)} | {a.Angelegt_Von}")).ToList();
     if (l.Count > 0)
     {
@@ -122,7 +125,7 @@
     if (valid && submit == "New")
     {
       var daten = ServiceDaten;
-      if (Get(FactoryService.BudgetService.SavePeriod(daten, Functions.ToInt32(Model.Laenge), Functions.ToInt32(Model.Art) != 0)))
+      if (Get(BudgetService.SavePeriod(daten, Functions.ToInt32(Model.Laenge), Functions.ToInt32(Model.Art) != 0)))
       {
         Refresh();
         DoPostbackReload();
@@ -131,7 +134,7 @@
     if (valid && submit == "Delete")
     {
       var daten = ServiceDaten;
-      if (Get(FactoryService.BudgetService.DeletePeriod(daten, Functions.ToInt32(Model.Art) != 0)))
+      if (Get(BudgetService.DeletePeriod(daten, Functions.ToInt32(Model.Art) != 0)))
       {
         Refresh();
         DoPostbackReload();

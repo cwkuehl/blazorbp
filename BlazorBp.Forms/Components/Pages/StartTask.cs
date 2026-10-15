@@ -7,8 +7,8 @@ namespace BlazorBp.Forms.Components.Pages;
 using BlazorBp.Core.Base;
 using BlazorBp.Forms.Models.Wp;
 using BlazorSpa.Base.Services;
+using CSBP.Services.Apis.Services;
 using CSBP.Services.Base;
-using CSBP.Services.Factory;
 using Microsoft.AspNetCore.Http;
 
 /// <summary>
@@ -41,7 +41,8 @@ public static class StartTask
             var Model = BlazorComponentBaseStatic.ReadFormularFormModel<WP200Model>(s, page, id);
             if (rm != null && Model != null)
             {
-              var r = FactoryService.EnergyService.QueryQueries(daten, Model.Auchinaktiv, rm?.Search, state);
+              var sv = sp.GetService(typeof(IEnergyService)) as IEnergyService;
+              var r = sv?.QueryQueries(daten, Model.Auchinaktiv, rm?.Search, state);
               state.Beenden(r: r);
             }
             else
@@ -58,7 +59,8 @@ public static class StartTask
             var Model = BlazorComponentBaseStatic.ReadFormularFormModel<WP200Model>(s, page, id);
             if (rm != null && Model != null)
             {
-              var r = FactoryService.StockService.CalculateStocks(daten, null, Model.Muster, null,
+              var sv = sp.GetService(typeof(IStockService)) as IStockService;
+              var r = sv?.CalculateStocks(daten, null, Model.Muster, null,
                 Model.Bis ?? daten.Heute, Model.Auchinaktiv, rm?.Search, Model.Konfiguration, state);
               state.Beenden(r: r);
             }
@@ -76,7 +78,8 @@ public static class StartTask
             var Model = BlazorComponentBaseStatic.ReadFormularFormModel<WP250Model>(s, page, id);
             if (rm != null && Model != null)
             {
-              var r = FactoryService.StockService.CalculateInvestments(daten, null, null, Model.Wertpapier,
+              var sv = sp.GetService(typeof(IStockService)) as IStockService;
+              var r = sv?.CalculateInvestments(daten, null, null, Model.Wertpapier,
                 Model.Bis ?? daten.Heute, Model.Auchinaktiv, rm?.Search, state);
               state.Beenden(r: r);
             }

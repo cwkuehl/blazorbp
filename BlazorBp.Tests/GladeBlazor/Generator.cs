@@ -658,7 +658,7 @@ else
       if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
       {
         // TODO Lesen des Models aus der Datenbank, z.B.:
-        // var r = FactoryService.StockService.GetStock(daten, id ?? "");
+        // var r = StockService.GetStock(daten, id ?? "");
         // if (r.Ok && r.Ergebnis != null)
         //   Model.From(r.Ergebnis);
       }
@@ -667,7 +667,7 @@ else
     Model.Nr = id;
     InitEditContext(Model);
     // TODO Lesen der Listen für Auswahlfelder, z.B.:
-    // var l0 = Get(FactoryService.StockService.GetStateList(daten));
+    // var l0 = Get(StockService.GetStateList(daten));
     // Model.AuswahlStatus = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
   }
 
@@ -690,8 +690,8 @@ else
     {
       // var o = Model.To(daten);
       // var r = Model.DialogType == DialogTypeEnum.Delete
-      //   ? FactoryService.StockService.DeleteStock(daten, o)
-      //   : FactoryService.StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, Model.Anlage);
+      //   ? StockService.DeleteStock(daten, o)
+      //   : StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, Model.Anlage);
       // if (r.Ok)
       // {
       //   SetFormRefresh();
@@ -734,6 +734,10 @@ else
 """);
     }
     sbr.Append($$"""
+
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IStockService StockService { get; set; } = default!;
 
   /// <summary>
   /// Initialisierung des Models.
@@ -804,7 +808,7 @@ else
     Table.Nr = id;
     InitEditContext(Model);
     // TODO Lesen der Listen für Auswahlfelder, z.B.:
-    // var lk = Get(FactoryService.StockService.GetConfigurationList(daten, null, "1"));
+    // var lk = Get(StockService.GetConfigurationList(daten, null, "1"));
     // Model.AuswahlKonfiguration = InsertEmpty(lk?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
 
 """);
@@ -890,8 +894,8 @@ else
         var o = {{form2}}Model.To(daten);
         var r = new ServiceErgebnis();
         // TODO var r = dt1 == DialogTypeEnum.Delete
-        //   ? FactoryService.PrivateService.DeleteMemo(daten, o)
-        //   : FactoryService.PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
+        //   ? PrivateService.DeleteMemo(daten, o)
+        //   : PrivateService.SaveMemo(daten, o.Uid, o.Thema, xml);
         if (r.Ok)
         {
           Model.ModalArt = null;
@@ -936,7 +940,7 @@ else
     if (valid && submit == "OK")
     {
       var daten = ServiceDaten;
-      var r = new ServiceErgebnis(); // TODO FactoryService.xxxService.yyy(daten, Model.abc);
+      var r = new ServiceErgebnis(); // TODO xxxService.yyy(daten, Model.abc);
       if (r != null)
       {
         Get(r);
@@ -972,7 +976,7 @@ else
 {{sbm}}    });
     if (rm != null)
       rm.PageCount = 0;
-    // TODO var l0 = Get(FactoryService.PrivateService.GetClientList(daten, rm), messages);
+    // TODO var l0 = Get(PrivateService.GetClientList(daten, rm), messages);
     var l = r.Ergebnis?.Select(a => {{form}}TableRowModel.From(a)).ToList() ?? new List<{{form}}TableRowModel>();
     return UpdateTable(m, rm, l);
   }

@@ -32,11 +32,16 @@
 <AG110 AG110Model="AG110Model" ModalId="@Model.ModalId" ModalArt="@Model.ModalArt" ModalEditContext="@ModalEditContext" ModalMessages="@ModalMessages"/>
 
 @code {
+  /// <summary>Holt oder setzt das betroffene Model.</summary>
   [SupplyParameterFromForm]
   protected AG110Model AG110Model { get; set; } = default!;
 
   /// <summary>Ist der Benutzer Superadmin?</summary>
   private bool superadmin = false;
+
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IClientService ClientService { get; set; } = default!;
 
   /// <summary>
   /// Initialisierung des Models.
@@ -132,8 +137,8 @@
         var o = AG110Model.To();
         var daten = ServiceDaten;
         var r = dt1 == DialogTypeEnum.Delete
-          ? FactoryService.ClientService.DeleteClient(daten, o)
-          : FactoryService.ClientService.SaveClient(daten, o.Nr, o.Beschreibung);
+          ? ClientService.DeleteClient(daten, o)
+          : ClientService.SaveClient(daten, o.Nr, o.Beschreibung);
         if (r.Ok)
         {
           Model.ModalArt = null;
@@ -169,7 +174,7 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var r = FactoryService.ClientService.GetClientList(daten, rm);
+    var r = ClientService.GetClientList(daten, rm);
     var l = r.Ergebnis?.Select(a => AG100TableRowModel.From(a)).ToList() ?? new List<AG100TableRowModel>();
     if (!r.Ok)
       messages?.Add(() => Model, r.GetErrors() ?? "");

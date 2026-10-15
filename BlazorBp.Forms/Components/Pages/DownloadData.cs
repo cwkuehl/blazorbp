@@ -3,7 +3,6 @@
 // </copyright>
 
 
-using System.Text;
 using BlazorBp.Core.Base;
 using BlazorBp.Forms.Models.Ag;
 using BlazorBp.Forms.Models.Am;
@@ -12,8 +11,8 @@ using BlazorBp.Forms.Models.Hh;
 using BlazorBp.Forms.Models.Tb;
 using BlazorBp.Forms.Models.Wp;
 using BlazorSpa.Base.Services;
+using CSBP.Services.Apis.Services;
 using CSBP.Services.Base;
-using CSBP.Services.Factory;
 using Microsoft.AspNetCore.Http;
 
 namespace BlazorBp.Forms.Components.Pages;
@@ -42,62 +41,72 @@ public static class DownloadData
         case "AG100":
           {
             var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<AG100TableRowModel>>(s, page, id)?.ReadModel;
-            r = FactoryService.ClientService.GetCsvString(daten, page, rm);
+            var sv = sp.GetService(typeof(IClientService)) as IClientService;
+            r = sv?.GetCsvString(daten, page, rm);
             break;
           }
         case "AG200":
           {
             var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<AG200TableRowModel>>(s, page, id)?.ReadModel;
-            r = FactoryService.ClientService.GetCsvString(daten, page, rm);
+            var sv = sp.GetService(typeof(IClientService)) as IClientService;
+            r = sv?.GetCsvString(daten, page, rm);
             break;
           }
         case "AM500":
           {
             var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<AM500TableRowModel>>(s, page, id)?.ReadModel;
-            r = FactoryService.ClientService.GetCsvString(daten, page, rm);
+            var sv = sp.GetService(typeof(IClientService)) as IClientService;
+            r = sv?.GetCsvString(daten, page, rm);
             break;
           }
         case "FZ200":
           {
             var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ200TableRowModel>>(s, page, id)?.ReadModel;
-            r = FactoryService.PrivateService.GetCsvString(daten, page, rm);
+            var sv = sp.GetService(typeof(IPrivateService)) as IPrivateService;
+            r = sv?.GetCsvString(daten, page, rm);
             break;
           }
         case "FZ250":
           {
             var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ250TableRowModel>>(s, page, id)?.ReadModel;
-            r = FactoryService.PrivateService.GetCsvString(daten, page, rm);
+            var sv = sp.GetService(typeof(IPrivateService)) as IPrivateService;
+            r = sv?.GetCsvString(daten, page, rm);
             break;
           }
         case "FZ700":
           {
             var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<FZ700TableRowModel>>(s, page, id)?.ReadModel;
-            r = FactoryService.PrivateService.GetCsvString(daten, page, rm);
+            var sv = sp.GetService(typeof(IPrivateService)) as IPrivateService;
+            r = sv?.GetCsvString(daten, page, rm);
             break;
           }
         case "HH200":
           {
             var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<HH200TableRowModel>>(s, page, id)?.ReadModel;
-            r = FactoryService.BudgetService.GetCsvString(daten, page, rm);
+            var sv = sp.GetService(typeof(IBudgetService)) as IBudgetService;
+            r = sv?.GetCsvString(daten, page, rm);
             break;
           }
         case "HH300":
           {
             var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<HH300TableRowModel>>(s, page, id)?.ReadModel;
-            r = FactoryService.BudgetService.GetCsvString(daten, page, rm);
+            var sv = sp.GetService(typeof(IBudgetService)) as IBudgetService;
+            r = sv?.GetCsvString(daten, page, rm);
             break;
           }
         case "HH400":
           {
             var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<HH400TableRowModel>>(s, page, id)?.ReadModel;
             var pm = BlazorComponentBaseStatic.ReadFormularFormModel<HH400Model>(s, page, id);
-            r = FactoryService.BudgetService.GetCsvString(daten, page, rm, pm?.Kennzeichen != "0", pm?.Von, pm?.Bis, pm?.Konto, pm?.Betrag);
+            var sv = sp.GetService(typeof(IBudgetService)) as IBudgetService;
+            r = sv?.GetCsvString(daten, page, rm, pm?.Kennzeichen != "0", pm?.Von, pm?.Bis, pm?.Konto, pm?.Betrag);
             break;
           }
         case "TB100":
           {
             var pm = BlazorComponentBaseStatic.ReadFormularFormModel<TB100Model>(s, page, id);
-            var r2 = pm == null ? null : FactoryService.DiaryService.GetDiaryReport(daten, pm.GetSearchArray(), pm.Position2, pm.From, pm.To);
+            var sv = sp.GetService(typeof(IDiaryService)) as IDiaryService;
+            var r2 = pm == null ? null : sv?.GetDiaryReport(daten, pm.GetSearchArray(), pm.Position2, pm.From, pm.To);
             if (r2 != null && r2.Ok && r2.Ergebnis != null)
             {
               var csv2 = string.Join(Environment.NewLine, r2.Ergebnis);
@@ -108,19 +117,22 @@ public static class DownloadData
         case "TB200":
           {
             var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<TB200TableRowModel>>(s, page, id)?.ReadModel;
-            r = FactoryService.DiaryService.GetCsvString(daten, page, rm);
+            var sv = sp.GetService(typeof(IDiaryService)) as IDiaryService;
+            r = sv?.GetCsvString(daten, page, rm);
             break;
           }
         case "WP200":
           {
             var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<WP200TableRowModel>>(s, page, id)?.ReadModel;
-            r = FactoryService.StockService.GetCsvString(daten, page, rm);
+            var sv = sp.GetService(typeof(IStockService)) as IStockService;
+            r = sv?.GetCsvString(daten, page, rm);
             break;
           }
         case "WP300":
           {
             var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<WP300TableRowModel>>(s, page, id)?.ReadModel;
-            r = FactoryService.StockService.GetCsvString(daten, page, rm);
+            var sv = sp.GetService(typeof(IStockService)) as IStockService;
+            r = sv?.GetCsvString(daten, page, rm);
             break;
           }
         default:
@@ -159,7 +171,8 @@ public static class DownloadData
           var pm = BlazorComponentBaseStatic.ReadFormularFormModel<HH510Model>(s, "HH510", id);
           if (pm != null)
           {
-            r = FactoryService.BudgetService.GetAnnualReport(daten, pm.Von ?? daten.Heute, pm.Bis ?? daten.Heute, pm.Titel, pm.Eb, pm.Gv, pm.Sb);
+            var sv = sp.GetService(typeof(IBudgetService)) as IBudgetService;
+            r = sv?.GetAnnualReport(daten, pm.Von ?? daten.Heute, pm.Bis ?? daten.Heute, pm.Titel, pm.Eb, pm.Gv, pm.Sb);
           }
           break;
         }
@@ -168,7 +181,8 @@ public static class DownloadData
           var pm = BlazorComponentBaseStatic.ReadFormularFormModel<HH510Model>(s, "HH510", id);
           if (pm != null)
           {
-            r = FactoryService.BudgetService.GetCashReport(daten, pm.Von ?? daten.Heute, pm.Bis ?? daten.Heute, pm.Titel);
+            var sv = sp.GetService(typeof(IBudgetService)) as IBudgetService;
+            r = sv?.GetCashReport(daten, pm.Von ?? daten.Heute, pm.Bis ?? daten.Heute, pm.Titel);
           }
           break;
         }
