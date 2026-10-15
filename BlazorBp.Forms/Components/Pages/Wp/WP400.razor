@@ -41,22 +41,12 @@
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
   <input type="hidden" name="SubmitControl"/>
   <div class="row mt-1 g-0">
+    <LabelInputValid type="combobox" AutoPostback="x" For="@(() => Model!.Anlage)" DataList="@Model!.AuswahlAnlage" VerticalColClass="form-group col-md-4"/>
   </div>
-  <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Refresh)"/>
+  <div class="modal-footer mt-2">
+    <SubmitButton class="btn btn-primary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise-button" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" imageclass="bi bi-x-lg-button" For="@(() => Model!.Schliessen)"/>
   </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Buchungen)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Alle)"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Bezeichnung)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Anlage)" maxlength="255" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Schliessen)"/>
-  </div>
-  <!-- TODO btn-primary festlegen -->
 </EditForm>
 
 @code {
@@ -80,7 +70,6 @@
       Model = new WP400Model
       {
         Nr = id,
-        // TODO Mandant = daten.MandantNr,
       };
       Model.SetMhrf(DialogTypeEnum.New);
     }
@@ -97,17 +86,13 @@
       };
     Table.Nr = id;
     InitEditContext(Model);
-    // TODO Lesen der Listen für Auswahlfelder, z.B.:
-    // var lk = Get(StockService.GetConfigurationList(daten, null, "1"));
-    // Model.AuswahlKonfiguration = InsertEmpty(lk?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
-  }
 
-  /// <summary>
-  /// Aktualisierung nach Undo/Redo.
-  /// </summary>
-  protected override void Refresh()
-  {
-    // TODO TableData(Table, Messages);
+    // Lesen der Listen für Auswahlfelder.
+    if (Model.AuswahlAnlage == null)
+    {
+      var l0 = Get(StockService.GetInvestmentList(daten, null, false));
+      Model.AuswahlAnlage = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList() ?? []);
+    }
   }
 
   /// <summary>
@@ -163,6 +148,8 @@
           return true;
       }
     }
+    if (submit == nameof(Model.Refresh))
+        Refresh();
     if (submit == nameof(Model.Schliessen))
       return true;
     return false;
@@ -213,5 +200,6 @@
   protected override void CopyNotPostbackData(WP400Model model, WP400Model model0)
   {
     model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+    model.AuswahlAnlage = model0.AuswahlAnlage;
   }
 }

@@ -34,10 +34,6 @@ public class WP300Model : PageModelBase
     {
       // Nummer = "";
     }
-    if (mode == New)
-    {
-      // Thema = null;
-    }
     // SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
   }
 }
