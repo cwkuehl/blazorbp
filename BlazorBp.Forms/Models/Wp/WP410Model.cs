@@ -156,10 +156,6 @@ public class WP410Model : PageModelBase
     {
       // TODO Nummer = "";
     }
-    if (mode == New)
-    {
-      // TODO Thema = null;
-    }
     // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
     // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
     // SetMandatoryHiddenReadonly(nameof(Nummer), false, false, mode == Delete, false);

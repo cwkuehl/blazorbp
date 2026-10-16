@@ -9,28 +9,19 @@
 <CascadingValue Value="this">
 <SortableTable Table="Table" NoData="" FormName="wp400" NoModal="true" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="WP400Model" TRTable="WP400TableRowModel">
   <ChildContent>
-    <TableColumn Field="@nameof(WP400TableRowModel.Nummer)" SortField="@nameof(WP400TodoModel.Nummer)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.Anlage)" SortField="@nameof(WP400TodoModel.Anlage)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.Valuta)" SortField="@nameof(WP400TodoModel.Valuta)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.Preis)" SortField="@nameof(WP400TodoModel.Preis)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.Betrag)" SortField="@nameof(WP400TodoModel.Betrag)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.Anteile)" SortField="@nameof(WP400TodoModel.Anteile)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.Preis2)" SortField="@nameof(WP400TodoModel.Preis2)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.Zinsen)" SortField="@nameof(WP400TodoModel.Zinsen)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.BText)" SortField="@nameof(WP400TodoModel.BText)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.Buchung)" SortField="@nameof(WP400TodoModel.Buchung)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.Rabatt)" SortField="@nameof(WP400TodoModel.Rabatt)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.Hhbuchung)" SortField="@nameof(WP400TodoModel.Hhbuchung)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.Hhaendern)" SortField="@nameof(WP400TodoModel.Hhaendern)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.Hhstorno)" SortField="@nameof(WP400TodoModel.Hhstorno)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.Hhvaluta)" SortField="@nameof(WP400TodoModel.Hhvaluta)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.Hhbetrag)" SortField="@nameof(WP400TodoModel.Hhbetrag)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.Hhereignis)" SortField="@nameof(WP400TodoModel.Hhereignis)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.Fixtext)" SortField="@nameof(WP400TodoModel.Fixtext)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.AngelegtAm)" SortField="@nameof(WP400TodoModel.Angelegt_Am)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.AngelegtVon)" SortField="@nameof(WP400TodoModel.Angelegt_Von)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.GeaendertAm)" SortField="@nameof(WP400TodoModel.Geaendert_Am)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
-    <TableColumn Field="@nameof(WP400TableRowModel.GeaendertVon)" SortField="@nameof(WP400TodoModel.Geaendert_Von)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Nummer)" SortField="@nameof(WpBuchung.Uid)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Wertpapier)" SortField="@nameof(WpBuchung.StockDescription)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Anlage)" SortField="@nameof(WpBuchung.InvestmentDescription)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Valuta)" SortField="@nameof(WpBuchung.Datum)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.BText)" SortField="@nameof(WpBuchung.BText)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Betrag)" SortField="@nameof(WpBuchung.Zahlungsbetrag)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Rabatt)" SortField="@nameof(WpBuchung.Rabattbetrag)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Anteile)" SortField="@nameof(WpBuchung.Anteile)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.Zinsen)" SortField="@nameof(WpBuchung.Zinsen)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.AngelegtAm)" SortField="@nameof(WpBuchung.Angelegt_Am)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.AngelegtVon)" SortField="@nameof(WpBuchung.Angelegt_Von)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.GeaendertAm)" SortField="@nameof(WpBuchung.Geaendert_Am)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
+    <TableColumn Field="@nameof(WP400TableRowModel.GeaendertVon)" SortField="@nameof(WpBuchung.Geaendert_Von)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
   </ChildContent>
 </SortableTable>
 </CascadingValue>
@@ -82,7 +73,7 @@
         SelectedPage = 1,
         RowsPerPage = 10,
         SelectedRow = 1,
-        SortColumn = $"{nameof(WP400TodoModel.Nummer)}#+",
+        SortColumn = $"{nameof(WpBuchung.Datum)}#+",
       };
     Table.Nr = id;
     InitEditContext(Model);
@@ -165,30 +156,8 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var r = new ServiceErgebnis<List<WP400TodoModel>>(new List<WP400TodoModel>());
-    if (r?.Ergebnis != null)
-      r.Ergebnis.Add(new WP400TodoModel()
-      {
-        Nummer = "1",
-        Anlage = "Anlage1",
-        Valuta = "Valuta1",
-        Preis = "Preis1",
-        Betrag = "Betrag1",
-        Anteile = "Anteile1",
-        Preis2 = "Preis21",
-        Zinsen = "Zinsen1",
-        BText = "BText1",
-        Buchung = "Buchung1",
-        Rabatt = "Rabatt1",
-        Hhbuchung = "Hhbuchung1",
-        Hhvaluta = "Hhvaluta1",
-        Hhbetrag = "Hhbetrag1",
-        Fixtext = "Fixtext1",
-      });
-    if (rm != null)
-      rm.PageCount = 0;
-    // TODO var l0 = Get(PrivateService.GetClientList(daten, rm), messages);
-    var l = r?.Ergebnis?.Select(a => WP400TableRowModel.From(a)).ToList() ?? new List<WP400TableRowModel>();
+    var l0 = Get(StockService.GetBookingList(daten, rm?.Search, inuid: Model.Anlage), messages);
+    var l = l0?.Select(a => WP400TableRowModel.From(a)).ToList() ?? new List<WP400TableRowModel>();
     return UpdateTable(m, rm, l);
   }
 
