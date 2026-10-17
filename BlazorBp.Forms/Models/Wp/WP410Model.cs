@@ -6,6 +6,7 @@ namespace BlazorBp.Forms.Models.Wp;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorBp.Core.Base;
+using BlazorBp.Core.Models;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorBp.Core.Base.DialogTypeEnum;
@@ -22,86 +23,72 @@ public class WP410Model : PageModelBase
   //// [MaxLength(255, ErrorMessage = "Nr. darf maximal {1} Zeichen lang sein.")]
   public string? Nummer { get; set; }
 
+  /// <summary>Holt oder setzt die Auswahlliste von Anlagen.</summary>
+  public List<ListItem>? AuswahlAnlage { get; set; } = default!;
+
   /// <summary>Holt oder setzt Anlage.</summary>
-  [Display(Name = "_Anlage", Description = "")]
-  //// [Required(ErrorMessage = "Anlage muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Anlage darf maximal {1} Zeichen lang sein.")]
+  [Display(Name = "_Anlage", Description = "Betroffene Anlage.")]
+  [Required(ErrorMessage = "Anlage muss angegeben werden.")]
   public string? Anlage { get; set; }
 
   /// <summary>Holt oder setzt Datum.</summary>
-  [Display(Name = "_Datum", Description = "")]
-  //// [Required(ErrorMessage = "Datum muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Datum darf maximal {1} Zeichen lang sein.")]
+  [Display(Name = "_Datum", Description = "Buchungsdatum.")]
+  [Required(ErrorMessage = "Datum muss angegeben werden.")]
   public string? Valuta { get; set; }
 
   /// <summary>Holt oder setzt Preis.</summary>
-  [Display(Name = "Preis", Description = "")]
-  //// [Required(ErrorMessage = "Preis muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Preis darf maximal {1} Zeichen lang sein.")]
+  [Display(Name = "Preis", Description = "Kurs des Wertpapiers am Datum.")]
   public string? Preis { get; set; }
 
   /// <summary>Holt oder setzt Betrag.</summary>
-  [Display(Name = "_Betrag", Description = "")]
-  //// [Required(ErrorMessage = "Betrag muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Betrag darf maximal {1} Zeichen lang sein.")]
+  [Display(Name = "_Betrag", Description = "Zahlungsbetrag der Buchung.")]
+  [Required(ErrorMessage = "Betrag muss angegeben werden.")]
   public string? Betrag { get; set; }
 
   /// <summary>Holt oder setzt Anteile.</summary>
-  [Display(Name = "_Anteile", Description = "")]
+  [Display(Name = "_Anteile", Description = "Anzahl der Anteile.")]
   //// [Required(ErrorMessage = "Anteile muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Anteile darf maximal {1} Zeichen lang sein.")]
   public string? Anteile { get; set; }
 
   /// <summary>Holt oder setzt Preis.</summary>
-  [Display(Name = "Preis", Description = "")]
+  [Display(Name = "Preis", Description = "Berechneter Kurs des Wertpapiers am Datum.")]
   //// [Required(ErrorMessage = "Preis muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Preis darf maximal {1} Zeichen lang sein.")]
   public string? Preis2 { get; set; }
 
   /// <summary>Holt oder setzt Zinsen.</summary>
-  [Display(Name = "_Zinsen", Description = "")]
+  [Display(Name = "_Zinsen", Description = "Zinsen für die Buchung.")]
   //// [Required(ErrorMessage = "Zinsen muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Zinsen darf maximal {1} Zeichen lang sein.")]
   public string? Zinsen { get; set; }
 
   /// <summary>Holt oder setzt Buchungstext.</summary>
-  [Display(Name = "Buchungste_xt", Description = "")]
+  [Display(Name = "Buchungste_xt", Description = "Beschreibung der Buchung.")]
   //// [Required(ErrorMessage = "Buchungstext muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Buchungstext darf maximal {1} Zeichen lang sein.")]
   public string? BText { get; set; }
 
   /// <summary>Holt oder setzt Angelegt.</summary>
-  [Display(Name = "Angelegt", Description = "")]
+  [Display(Name = "Angelegt", Description = "Datum der Erstellung.")]
   //// [Required(ErrorMessage = "Angelegt muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Angelegt darf maximal {1} Zeichen lang sein.")]
   public string? Angelegt { get; set; }
 
   /// <summary>Holt oder setzt Geändert.</summary>
-  [Display(Name = "Geändert", Description = "")]
+  [Display(Name = "Geändert", Description = "Datum der letzten Änderung.")]
   //// [Required(ErrorMessage = "Geändert muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Geändert darf maximal {1} Zeichen lang sein.")]
   public string? Geaendert { get; set; }
 
   /// <summary>Holt oder setzt Letzte Buchung.</summary>
-  [Display(Name = "Letzte Buchung", Description = "")]
+  [Display(Name = "Letzte Buchung", Description = "Letzte Buchung")]
   //// [Required(ErrorMessage = "Letzte Buchung muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Letzte Buchung darf maximal {1} Zeichen lang sein.")]
   public string? Buchung { get; set; }
 
-  /// <summary>Holt oder setzt OK.</summary>
-  [Display(Name = "_OK", Description = "")]
-  //// [Required(ErrorMessage = "OK muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "OK darf maximal {1} Zeichen lang sein.")]
-  public string? Ok { get; set; }
-
-  /// <summary>Holt oder setzt Abbrechen.</summary>
-  [Display(Name = "Abbre_chen", Description = "")]
-  //// [Required(ErrorMessage = "Abbrechen muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Abbrechen darf maximal {1} Zeichen lang sein.")]
-  public string? Abbrechen { get; set; }
-
   /// <summary>Holt oder setzt Rabatt.</summary>
-  [Display(Name = "_Rabatt", Description = "")]
+  [Display(Name = "_Rabatt", Description = "Rabatt auf die Buchung. Positiv für Rabatt, negativ für Gebühren.")]
   //// [Required(ErrorMessage = "Rabatt muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Rabatt darf maximal {1} Zeichen lang sein.")]
   public string? Rabatt { get; set; }
@@ -146,7 +133,15 @@ public class WP410Model : PageModelBase
   [Display(Name = "fixieren", Description = "Soll der Buchungstext fixiert und nicht durch das Ereignis überschrieben werden?")]
   //// [Required(ErrorMessage = "fixieren muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "fixieren darf maximal {1} Zeichen lang sein.")]
-  public string? Fixtext { get; set; }
+  public bool? Fixtext { get; set; }
+
+  /// <summary>Holt oder setzt OK.</summary>
+  [Display(Name = "_OK", Description = "Dialog speichern und schließen")]
+  public string? Ok { get; set; }
+
+  /// <summary>Holt oder setzt Abbrechen.</summary>
+  [Display(Name = "Abbre_chen", Description = "Dialog abbrechen und schließen")]
+  public string? Abbrechen { get; set; }
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>

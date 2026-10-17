@@ -53,8 +53,8 @@ public class HH400Model : PageModelBase
   public string? Schliessen { get; set; }
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
-  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
   /// <param name="mode">Betroffener Modus.</param>
+  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
   public void SetMhrf(DialogTypeEnum mode, ServiceDaten daten)
   {
     if (mode == New || mode == Copy)

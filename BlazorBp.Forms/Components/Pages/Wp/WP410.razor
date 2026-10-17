@@ -80,9 +80,13 @@
     }
     Model.Nr = id;
     InitEditContext(Model);
-    // TODO Lesen der Listen für Auswahlfelder, z.B.:
-    // var l0 = Get(StockService.GetStateList(daten));
-    // Model.AuswahlStatus = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
+
+    // Lesen der Listen für Auswahlfelder.
+    if (Model.AuswahlAnlage == null)
+    {
+      var l0 = Get(StockService.GetInvestmentList(daten, null, false));
+      Model.AuswahlAnlage = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList() ?? []);
+    }
   }
 
   /// <summary>Initialisierung der Komponente.</summary>
@@ -128,5 +132,6 @@
   {
     model.DialogType = model0.DialogType;
     model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+    model.AuswahlAnlage = model0.AuswahlAnlage;
   }
 }

@@ -33,6 +33,7 @@
   <input type="hidden" name="SubmitControl"/>
   <div class="row mt-1 g-0">
     <LabelInputValid type="combobox" AutoPostback="x" For="@(() => Model!.Anlage)" DataList="@Model!.AuswahlAnlage" VerticalColClass="form-group col-md-4"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Von)" VerticalColClass="form-group col-md-4 ms-1"/>
   </div>
   <div class="modal-footer mt-2">
     <SubmitButton class="btn btn-primary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise-button" For="@(() => Model!.Refresh)"/>
@@ -62,7 +63,7 @@
       {
         Nr = id,
       };
-      Model.SetMhrf(DialogTypeEnum.New);
+      Model.SetMhrf(DialogTypeEnum.New, daten);
     }
     Model.Nr = id;
     if (table != null)
@@ -96,18 +97,13 @@
     if (OnInitializedFormular("WP400", "WP-Buchungen - WP400", Id, true))
       return;
 
-    // TODO Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
-    // var handler = HttpContext.Request.Query["handler"];
-    // if (handler == "Table_All")
-    // {
-    //   Model.SetMhrf(DialogTypeEnum.Copy, ServiceDaten);
-    //   WriteFormularModel(Model.Nr ?? "0", Model);
-    // }
-    // var submit = Model.Submit ?? "";
-    // if (submit == nameof(Model.Import))
-    // {
-    //   var l = SaveUploadFiles("WP400", "filehochladen");
-    // }
+    // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
+    var handler = HttpContext.Request.Query["handler"];
+    if (handler == "Table_All")
+    {
+      Model.SetMhrf(DialogTypeEnum.Copy, ServiceDaten);
+      WriteFormularModel(Model.Nr ?? "0", Model);
+    }
   }
 
   /// <summary>
@@ -128,18 +124,12 @@
   /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
   protected override bool Submit(string? submit)
   {
-    if (valid && submit == "OK")
+    if (IsDateMhp(submit, nameof(Model.Von), Model.Von, out var d))
     {
-      var daten = ServiceDaten;
-      var r = new ServiceErgebnis(); // TODO xxxService.yyy(daten, Model.abc);
-      if (r != null)
-      {
-        Get(r);
-        if (r.Ok)
-          return true;
-      }
+      if (d.HasValue)
+        Model.Von = d;
     }
-    if (submit == nameof(Model.Refresh))
+    if (submit == nameof(Model.Anlage) || (submit?.StartsWith(nameof(Model.Von)) ?? false) || submit == nameof(Model.Refresh))
         Refresh();
     if (submit == nameof(Model.Schliessen))
       return true;
@@ -156,7 +146,7 @@
   {
     var rm = m?.ReadModel;
     var daten = ServiceDaten;
-    var l0 = Get(StockService.GetBookingList(daten, rm?.Search, inuid: Model.Anlage), messages);
+    var l0 = Get(StockService.GetBookingList(daten, rm, inuid: Model.Anlage, from: Model.Von), messages);
     var l = l0?.Select(a => WP400TableRowModel.From(a)).ToList() ?? new List<WP400TableRowModel>();
     return UpdateTable(m, rm, l);
   }
