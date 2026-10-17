@@ -64,6 +64,14 @@
         Nr = id,
       };
       Model.SetMhrf(DialogTypeEnum.New, daten);
+      var arr = HttpContext?.Session?.GetFormParameter() ?? [];
+      var inuid = arr.Length > 0 ? arr[0] : "";
+      if (!string.IsNullOrEmpty(inuid))
+      {
+        Model.Anlage = inuid;
+        SetStringData("WP400Anlage", inuid);
+        Model.Von = null;
+      }
     }
     Model.Nr = id;
     if (table != null)
@@ -102,6 +110,8 @@
     if (handler == "Table_All")
     {
       Model.SetMhrf(DialogTypeEnum.Copy, ServiceDaten);
+      if (string.IsNullOrEmpty(Model.Anlage))
+        Model.Anlage = GetStringData("WP400Anlage");
       WriteFormularModel(Model.Nr ?? "0", Model);
     }
   }

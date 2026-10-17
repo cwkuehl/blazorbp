@@ -182,7 +182,16 @@
     }
     if (submit == nameof(Model.Details))
     {
-      SetError("TODO Formular WP400 WP-Buchungen aufrufen.");
+      // Formular WP400 WP-Buchungen aufrufen.
+      var inuid = GetTableRowId();
+      if (!string.IsNullOrEmpty(inuid))
+      {
+        var nr = Guid.NewGuid().ToString();
+        HttpContext?.Session?.SetFormParameter(null, [inuid]);
+        var f = OpenFormular("WP400", $"P{nr}");
+        if (f != null)
+          OpenFormular(f);
+      }
     }
     if (submit == nameof(Model.Chart))
     {
