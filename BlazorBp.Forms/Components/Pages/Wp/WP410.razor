@@ -13,35 +13,53 @@
   <DataAnnotationsValidator/>
   <ValidationSummary class="text-danger"/>
   <InputText type="hidden" @bind-Value="Model!.Nr"/>
-  @* <InputText type="hidden" @bind-Value="Model!.ReadonlyHiddenError"/> *@
   <input type="hidden" name="SubmitControl"/>
   <div class="row mt-1 g-0">
-  </div>
-  <div class="row mt-1 g-0">
-    <SubmitButton class="btn btn-primary col-md-2 ms-1" For="@(() => Model!.Ok)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Abbrechen)"/>
-    @* TODO <button type="button" class="btn btn-secondary col-md-2 ms-1" data-bs-dismiss="modal">Abbrechen</button> *@
-  </div>
-  <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="" For="@(() => Model!.Nummer)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Anlage)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid type="combobox" AutoPostback="x" For="@(() => Model!.Anlage)" DataList="@Model!.AuswahlAnlage" VerticalColClass="form-group col-md-4 ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="" For="@(() => Model!.Valuta)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Preis)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Preis)" VerticalColClass="form-group col-md-2 ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="" For="@(() => Model!.Betrag)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Rabatt)" VerticalColClass="form-group col-md-2 ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="" For="@(() => Model!.Anteile)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Preis2)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Preis2)" VerticalColClass="form-group col-md-2 ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="" For="@(() => Model!.Zinsen)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.BText)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Angelegt)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Geaendert)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Buchung)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Rabatt)" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.BText)" VerticalColClass="form-group col-md-6"/>
+    <LabelInputValid type="checkbox" class="form-control" NoLabel="false" TrailingLabel="false" AutoPostback="" For="@(() => Model!.Fixtext)" VerticalColClass="form-group col-md-2 ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Angelegt)" VerticalColClass="form-group col-md-6"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Geaendert)" VerticalColClass="form-group col ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Buchung)" VerticalColClass="form-group col"/>
+  </div>
+  <hr/>
+  <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="" For="@(() => Model!.Hhbuchung)" VerticalColClass="form-group col-md-2"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Hhaendern)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Hhstorno)"/>
+  </div>
+  <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="" For="@(() => Model!.Hhvaluta)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Hhbetrag)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Fixtext)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Hhbetrag)" VerticalColClass="form-group col-md-2 ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid type="listbox" size="8" DataList="Model!.AuswahlHhEreignis" AutoPostback="x" For="@(() => Model!.Hhereignis)" VerticalColClass="form-group col-md-4"/>
+  </div>
+  <div class="modal-footer mt-2">
+    <SubmitButton class="btn btn-primary col-md-2 ms-1" For="@(() => Model!.Ok)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Abbrechen)"/>
   </div>
 </EditForm>
 
@@ -71,10 +89,10 @@
       };
       if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
       {
-        // TODO Lesen des Models aus der Datenbank, z.B.:
-        // var r = StockService.GetStock(daten, id ?? "");
-        // if (r.Ok && r.Ergebnis != null)
-        //   Model.From(r.Ergebnis);
+        // Lesen des Models aus der Datenbank.
+        var r = StockService.GetBooking(daten, id ?? "");
+        if (r.Ok && r.Ergebnis != null)
+          Model.From(r.Ergebnis);
       }
       Model.SetMhrf(dt);
     }
@@ -87,12 +105,18 @@
       var l0 = Get(StockService.GetInvestmentList(daten, null, false));
       Model.AuswahlAnlage = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList() ?? []);
     }
+    if (Model.AuswahlHhEreignis == null || Model.AnlageEreignis != Model.Anlage)
+    {
+      var le = Get(FactoryService.StockService.GetEventList(ServiceDaten, Model.Anlage)) ?? new List<HhEreignis>();
+      Model.AuswahlHhEreignis = InsertEmpty(le?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList() ?? []);
+      Model.AnlageEreignis = Model.Anlage;
+    }
   }
 
   /// <summary>Initialisierung der Komponente.</summary>
   protected override void OnInitialized()
   {
-    if (OnInitializedFormular("WP410", "TODO Titel - WP410", Id, false))
+    if (OnInitializedFormular("WP410", "WP-Buchung - WP410", Id, false))
       return;
   }
  
@@ -133,5 +157,7 @@
     model.DialogType = model0.DialogType;
     model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
     model.AuswahlAnlage = model0.AuswahlAnlage;
+    model.AuswahlHhEreignis = model0.AuswahlHhEreignis;
+    model.AnlageEreignis = model0.AnlageEreignis;
   }
 }
