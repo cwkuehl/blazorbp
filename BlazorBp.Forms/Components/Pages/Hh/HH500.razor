@@ -202,9 +202,8 @@
           b = v;
           v = b.AddDays(1 - b.DayOfYear);
         }
-        var nr = Guid.NewGuid().ToString();
         HttpContext?.Session?.SetFormParameter(null, [Funktionen.ToString(v), Funktionen.ToString(b), uid]);
-        var f = OpenFormular("HH400", $"P{nr}");
+        var f = OpenFormular("HH400", $"P{Guid.NewGuid().ToString()}");
         if (f != null)
           OpenFormular(f);
       }
@@ -214,9 +213,8 @@
       // Formular HH510 Drucken aufrufen.
       var v = Model.Von ?? daten.Heute;
       var b = Model.Bis ?? daten.Heute;
-      var nr = Guid.NewGuid().ToString();
       HttpContext?.Session?.SetFormParameter(null, [Model.Nr, Funktionen.ToString(v), Funktionen.ToString(b)]);
-      var f = OpenFormular("HH510", $"P{nr}");
+      var f = OpenFormular("HH510", $"P{Guid.NewGuid().ToString()}");
       if (f != null)
         OpenFormular(f);
     }
