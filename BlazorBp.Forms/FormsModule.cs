@@ -1,9 +1,9 @@
 namespace BlazorBp.Forms;
 
 using BlazorBp.Core.Base;
+using BlazorBp.Forms.Components.Pages;
 using BlazorBp.Core.Modules;
 using BlazorBp.Forms.Auth;
-using BlazorBp.Forms.Components.Pages;
 using BlazorBp.Forms.Undo;
 using BlazorSpa.Base;
 using BlazorSpa.Base.Auth;
@@ -85,7 +85,7 @@ public class FormsModule : IFormModule
       // { "AG110", new Formular { Action = "ag110", Area = "ag", Name = "Mandant" } },
       { "AG200", new Formular { Action = "ag200", Area = "ag", Name = "Benutzer" } },
       { "AM100", new Formular { Action = "am100", Area = "am", Name = "Kennwort ändern" } },
-      { "AM500", new Formular { Action = "am500", Area = "am", Name = "Einstellungen" } },
+      { "AM500", new Formular { Action = "am500", Area = "am", Name = "Einstellungen"  } },
       { "EN100", new Formular { Action = "en100", Area = "en", Name = "Abfrage-Parameter" } },
       { "FZ100", new Formular { Action = "fz100", Area = "fz", Name = "Statistik" } },
       { "FZ200", new Formular { Action = "fz200", Area = "fz", Name = "Fahrräder" } },

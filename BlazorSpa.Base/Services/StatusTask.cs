@@ -8,7 +8,6 @@ namespace BlazorSpa.Base.Services;
 
 using System.Text;
 using BlazorSpa.Base;
-using BlazorSpa.Base.Services;
 
 /// <summary>
 /// This class manages the status of a running task.

@@ -2,7 +2,7 @@ namespace BlazorBp.Core;
 
 using System.Text;
 using BlazorBp.Core.Base;
-using BlazorBp.Core.Components.Pages;
+using BlazorBp.Core.Components;
 using BlazorBp.Core.Modules;
 using BlazorSpa.Base;
 using BlazorSpa.Base.Auth;

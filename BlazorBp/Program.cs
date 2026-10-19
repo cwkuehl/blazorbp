@@ -2,12 +2,14 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
+// namespace GatewayR3;
+
 using System.Reflection;
 using System.Security.Authentication;
 using System.Security.Claims;
 using BlazorBp.Components; // für App
 using BlazorBp.Core.Base;
-using BlazorBp.Core.Components.Pages;
+using BlazorBp.Core.Components;
 using BlazorBp.Core.Core;
 using BlazorBp.Core.Modules;
 using BlazorSpa.Base.Auth;
