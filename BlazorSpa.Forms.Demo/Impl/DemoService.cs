@@ -2,10 +2,10 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Forms.Demo.Impl;
+namespace BlazorSpa.Forms.Demo.Impl;
 
-using BlazorBp.Forms.Demo.Apis;
-using BlazorBp.Forms.Demo.Models.Demo;
+using BlazorSpa.Forms.Demo.Apis;
+using BlazorSpa.Forms.Demo.Models.Demo;
 using BlazorSpa.Base.Services;
 using BlazorSpa.Base.Models;
 using BlazorSpa.Base;

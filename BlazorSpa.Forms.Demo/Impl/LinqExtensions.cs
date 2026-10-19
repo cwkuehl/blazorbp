@@ -2,7 +2,7 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Forms.Demo.Impl;
+namespace BlazorSpa.Forms.Demo.Impl;
 
 using System;
 using System.Linq;

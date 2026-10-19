@@ -24,7 +24,7 @@ var modules = new IFormModule[]
   // Formular-Module explizit eintragen (Alternative: Assembly-Scan)
   new BlazorSpa.Core.CoreModule(),
   new BlazorBp.Forms.FormsModule(),
-  new BlazorBp.Forms.Demo.DemoModule(),
+  new BlazorSpa.Forms.Demo.DemoModule(),
 };
 var builder = WebApplication.CreateBuilder(args);
 foreach (var module in modules)
@@ -188,7 +188,7 @@ else
   app.MapRazorComponents<App>().AddAdditionalAssemblies(
     typeof(BlazorSpa.Core.Modules.IFormModule).Assembly,
     typeof(BlazorBp.Forms.FormsModule).Assembly,
-    typeof(BlazorBp.Forms.Demo.DemoModule).Assembly
+    typeof(BlazorSpa.Forms.Demo.DemoModule).Assembly
     );
 
 app.Use(async (context, next) =>
@@ -286,16 +286,16 @@ Redesign BlazorBp mit Razor Class Libraries:
 dotnet new razorclasslib -o BlazorSpa.Core
 dotnet sln blazorbp.sln add ./BlazorSpa.Core/BlazorSpa.Core.csproj
 dotnet add ./BlazorBp/BlazorBp.csproj reference ./BlazorSpa.Core/BlazorSpa.Core.csproj
-dotnet new razorclasslib -o BlazorBp.Forms.Demo
-dotnet sln blazorbp.sln add ./BlazorBp.Forms.Demo/BlazorBp.Forms.Demo.csproj
-dotnet add ./BlazorBp/BlazorBp.csproj reference ./BlazorBp.Forms.Demo/BlazorBp.Forms.Demo.csproj
-BlazorBp.Services entfernt, da die Funktionen in BlazorBp.Forms.Demo eingebaut sind.
+dotnet new razorclasslib -o BlazorSpa.Forms.Demo
+dotnet sln blazorbp.sln add ./BlazorSpa.Forms.Demo/BlazorSpa.Forms.Demo.csproj
+dotnet add ./BlazorBp/BlazorBp.csproj reference ./BlazorSpa.Forms.Demo/BlazorSpa.Forms.Demo.csproj
+BlazorBp.Services entfernt, da die Funktionen in BlazorSpa.Forms.Demo eingebaut sind.
 
 Neues Projekt BlazorSpa.Base für TableReadModel erstellt.
 dotnet new classlib -o BlazorSpa.Base
 dotnet sln blazorbp.sln add ./BlazorSpa.Base/BlazorSpa.Base.csproj
 dotnet add ./BlazorBp/BlazorBp.csproj reference ./BlazorSpa.Base/BlazorSpa.Base.csproj
-dotnet add ./BlazorBp.Forms.Demo/BlazorBp.Forms.Demo.csproj reference ./BlazorSpa.Base/BlazorSpa.Base.csproj
+dotnet add ./BlazorSpa.Forms.Demo/BlazorSpa.Forms.Demo.csproj reference ./BlazorSpa.Base/BlazorSpa.Base.csproj
 
 Neues Projekt BlazorBp.Forms als Razor Class Library für alle Formulare außer Demo:
 dotnet new razorclasslib -o BlazorBp.Forms

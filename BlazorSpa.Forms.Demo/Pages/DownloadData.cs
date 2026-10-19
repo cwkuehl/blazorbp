@@ -2,11 +2,11 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Forms.Demo.Pages;
+namespace BlazorSpa.Forms.Demo.Pages;
 
 using BlazorSpa.Core.Base;
-using BlazorBp.Forms.Demo.Apis;
-using BlazorBp.Forms.Demo.Models.Demo;
+using BlazorSpa.Forms.Demo.Apis;
+using BlazorSpa.Forms.Demo.Models.Demo;
 using BlazorSpa.Base.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;

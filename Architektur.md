@@ -9,7 +9,7 @@ Die wesentlichen Teilbereiche sind:
 - BlazorBp: Host-Webanwendung und Einstiegspunkt
 - BlazorSpa.Core: Shared-Framework mit Blazor-Basis-Komponenten, Formular-Mechanik und Menü-/Session-Logik
 - BlazorBp.Forms: Produktive Fachmodule (Administrierung, Haushalt, Wertpapiere, Energie etc.)
-- BlazorBp.Forms.Demo: Demo- und Beispielmodule
+- BlazorSpa.Forms.Demo: Demo- und Beispielmodule
 - BlazorBp.Tests: Prüfungen für Parser, Code-Regeln und Modbus-Logik
 - BlazorSpa.Base: gemeinsame Hilfs- und Basismodelle für CSV, Tabellen und Datenstrukturen
 
@@ -96,7 +96,7 @@ Die bisherige Modulstruktur umfasst die Bereiche:
 - Wertpapiere: Wertpapiere, Konfigurationen, Chart, Anlagen, Stände
 - Energie: Abfrage-Parameter
 
-### 4. BlazorBp.Forms.Demo
+### 4. BlazorSpa.Forms.Demo
 Demosystem für UI- und Formularbeispiele.
 
 Wichtige Teile:

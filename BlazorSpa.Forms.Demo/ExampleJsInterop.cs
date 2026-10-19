@@ -1,6 +1,6 @@
 using Microsoft.JSInterop;
 
-namespace BlazorBp.Forms.Demo;
+namespace BlazorSpa.Forms.Demo;
 
 // This class provides an example of how JavaScript functionality can be wrapped
 // in a .NET class for easy consumption. The associated JavaScript module is
@@ -12,7 +12,7 @@ namespace BlazorBp.Forms.Demo;
 public class ExampleJsInterop(IJSRuntime jsRuntime) : IAsyncDisposable
 {
     private readonly Lazy<Task<IJSObjectReference>> moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
-            "import", "./_content/BlazorBp.Forms.Demo/exampleJsInterop.js").AsTask());
+            "import", "./_content/BlazorSpa.Forms.Demo/exampleJsInterop.js").AsTask());
 
     public async ValueTask<string> Prompt(string message)
     {

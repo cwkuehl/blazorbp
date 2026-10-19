@@ -1,10 +1,10 @@
-namespace BlazorBp.Forms.Demo;
+namespace BlazorSpa.Forms.Demo;
 
 using BlazorSpa.Core.Base;
 using BlazorSpa.Core.Modules;
-using BlazorBp.Forms.Demo.Apis;
-using BlazorBp.Forms.Demo.Impl;
-using BlazorBp.Forms.Demo.Pages;
+using BlazorSpa.Forms.Demo.Apis;
+using BlazorSpa.Forms.Demo.Impl;
+using BlazorSpa.Forms.Demo.Pages;
 using BlazorSpa.Base.Auth;
 using BlazorSpa.Base.Models;
 using BlazorSpa.Base.Undo;

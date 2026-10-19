@@ -2,7 +2,7 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Forms.Demo.Models.Demo;
+namespace BlazorSpa.Forms.Demo.Models.Demo;
 
 /// <summary>Model-Klasse für Bücher.</summary>
 public class Book
