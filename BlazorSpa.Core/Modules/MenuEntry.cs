@@ -2,6 +2,6 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Core.Modules;
+namespace BlazorSpa.Core.Modules;
 
 public record MenuEntry(string Text, string Description, string Route, string? Icon = null, string? RequiredRole = null);

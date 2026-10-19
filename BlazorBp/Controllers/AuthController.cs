@@ -6,7 +6,7 @@ namespace BlazorBp.Controllers;
 
 using System.Security.Claims;
 using System.Text.Json;
-using BlazorBp.Core.Base;
+using BlazorSpa.Core.Base;
 using BlazorSpa.Base;
 using BlazorSpa.Base.Auth;
 using BlazorSpa.Base.Models;

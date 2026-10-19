@@ -4,7 +4,7 @@
 
 namespace BlazorBp.Forms.Components.Base;
 
-using BlazorBp.Core.Base;
+using BlazorSpa.Core.Base;
 using CSBP.Services.Base;
 
 /// <summary>

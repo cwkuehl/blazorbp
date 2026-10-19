@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSBP.Services", "..\csbp\CS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorBp.Forms.Demo", "BlazorBp.Forms.Demo\BlazorBp.Forms.Demo.csproj", "{1380F6CA-70C5-495A-876C-84A05438D755}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorBp.Core", "BlazorBp.Core\BlazorBp.Core.csproj", "{DD571F62-CA84-4319-AFC5-279396ECC286}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorSpa.Core", "BlazorSpa.Core\BlazorSpa.Core.csproj", "{DD571F62-CA84-4319-AFC5-279396ECC286}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorSpa.Base", "BlazorSpa.Base\BlazorSpa.Base.csproj", "{461B9134-3CCA-4954-8C33-F961841BC370}"
 EndProject

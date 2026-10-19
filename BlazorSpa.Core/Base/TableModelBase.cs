@@ -2,11 +2,11 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Core.Base;
+namespace BlazorSpa.Core.Base;
 
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using BlazorBp.Core.Models;
+using BlazorSpa.Core.Models;
 using BlazorSpa.Base;
 using BlazorSpa.Base.Models;
 using Microsoft.AspNetCore.Http;

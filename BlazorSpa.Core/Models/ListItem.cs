@@ -2,7 +2,7 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Core.Models;
+namespace BlazorSpa.Core.Models;
 
 /// <summary>Ein Eintrag in einer Liste.</summary>
 /// <param name="Key">Betroffener Schlüssel.</param>

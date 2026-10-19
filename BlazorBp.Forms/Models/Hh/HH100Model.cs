@@ -5,8 +5,8 @@
 namespace BlazorBp.Forms.Models.Hh;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Core.Base;
-using BlazorBp.Core.Models;
+using BlazorSpa.Core.Base;
+using BlazorSpa.Core.Models;
 using BlazorSpa.Base;
 
 /// <summary>

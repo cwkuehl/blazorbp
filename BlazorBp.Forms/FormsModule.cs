@@ -1,8 +1,8 @@
 namespace BlazorBp.Forms;
 
-using BlazorBp.Core.Base;
+using BlazorSpa.Core.Base;
 using BlazorBp.Forms.Components.Pages;
-using BlazorBp.Core.Modules;
+using BlazorSpa.Core.Modules;
 using BlazorBp.Forms.Auth;
 using BlazorBp.Forms.Undo;
 using BlazorSpa.Base;

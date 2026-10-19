@@ -2,9 +2,9 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Core.Modules;
+namespace BlazorSpa.Core.Modules;
 
-using BlazorBp.Core.Base;
+using BlazorSpa.Core.Base;
 using BlazorSpa.Base.Auth;
 using BlazorSpa.Base.Undo;
 using Microsoft.AspNetCore.Builder;

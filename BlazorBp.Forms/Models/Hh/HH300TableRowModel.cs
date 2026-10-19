@@ -5,10 +5,10 @@
 namespace BlazorBp.Forms.Models.Hh;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Core.Base;
+using BlazorSpa.Core.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
-using static BlazorBp.Core.Base.DialogTypeEnum;
+using static BlazorSpa.Core.Base.DialogTypeEnum;
 
 /// <summary>
 /// Model-Klasse für eine Zeile in der Tabelle von Formular HH300 Ereignisse.

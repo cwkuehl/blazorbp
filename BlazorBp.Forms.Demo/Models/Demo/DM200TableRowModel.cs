@@ -5,7 +5,7 @@
 namespace BlazorBp.Forms.Demo.Models.Demo;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Core.Base;
+using BlazorSpa.Core.Base;
 
 /// <summary>
 /// Model-Klasse für eine Zeile in der Tabelle.

@@ -5,12 +5,12 @@
 namespace BlazorBp.Forms.Models.Wp;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Core.Base;
-using BlazorBp.Core.Models;
+using BlazorSpa.Core.Base;
+using BlazorSpa.Core.Models;
 using BlazorSpa.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
-using static BlazorBp.Core.Base.DialogTypeEnum;
+using static BlazorSpa.Core.Base.DialogTypeEnum;
 
 /// <summary>
 /// Model-Klasse für das nicht modale Formular WP410 WP-Buchungen.

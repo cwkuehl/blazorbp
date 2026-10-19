@@ -1,7 +1,7 @@
 using System.Net.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using BlazorBp.Core.Core;
+using BlazorSpa.Core.Core;
 
 namespace BlazorBp.Tests;
 

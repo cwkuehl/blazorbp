@@ -1,6 +1,6 @@
-namespace BlazorBp.Core.Components.Controls;
+namespace BlazorSpa.Core.Components.Controls;
 
-using BlazorBp.Core.Models;
+using BlazorSpa.Core.Models;
 using BlazorSpa.Base;
 using Microsoft.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations;

@@ -186,10 +186,10 @@ public class Generator
 namespace BlazorBp.Forms.Models.{{area}};
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Core.Base;
+using BlazorSpa.Core.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
-using static BlazorBp.Core.Base.DialogTypeEnum;
+using static BlazorSpa.Core.Base.DialogTypeEnum;
 
 """;
     if (table)

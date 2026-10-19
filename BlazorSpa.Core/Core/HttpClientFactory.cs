@@ -2,7 +2,7 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Core.Core;
+namespace BlazorSpa.Core.Core;
 
 using System.Net.Http;
 using System.Net.Security;

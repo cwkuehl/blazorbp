@@ -4,7 +4,7 @@
 
 namespace BlazorBp.Forms.Components.Pages;
 
-using BlazorBp.Core.Base;
+using BlazorSpa.Core.Base;
 using BlazorBp.Forms.Models.Wp;
 using BlazorSpa.Base.Services;
 using CSBP.Services.Apis.Services;

@@ -5,7 +5,7 @@
 namespace BlazorBp.Forms.Models.Ag;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Core.Base;
+using BlazorSpa.Core.Base;
 
 /// <summary>
 /// Model-Klasse für das Formular AG200 Benutzer.

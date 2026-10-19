@@ -2,7 +2,7 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Core.Base;
+namespace BlazorSpa.Core.Base;
 
 using System.Text.Json;
 using System.Text.Json.Serialization;

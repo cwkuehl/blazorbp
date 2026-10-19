@@ -2,7 +2,7 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Core.Components;
+namespace BlazorSpa.Core.Components;
 
 using Microsoft.AspNetCore.Http;
 

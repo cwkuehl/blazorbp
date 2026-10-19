@@ -7,7 +7,7 @@ BlazorBp ist eine modulare ASP.NET Core-Anwendung für die Verwaltung von Formul
 Die wesentlichen Teilbereiche sind:
 
 - BlazorBp: Host-Webanwendung und Einstiegspunkt
-- BlazorBp.Core: Shared-Framework mit Blazor-Basis-Komponenten, Formular-Mechanik und Menü-/Session-Logik
+- BlazorSpa.Core: Shared-Framework mit Blazor-Basis-Komponenten, Formular-Mechanik und Menü-/Session-Logik
 - BlazorBp.Forms: Produktive Fachmodule (Administrierung, Haushalt, Wertpapiere, Energie etc.)
 - BlazorBp.Forms.Demo: Demo- und Beispielmodule
 - BlazorBp.Tests: Prüfungen für Parser, Code-Regeln und Modbus-Logik
@@ -48,7 +48,7 @@ Schlüsselbestandteile:
 
 Die Host-Anwendung ist der Zusammenschnitt aller Module und stellt die Basis für Routing, Authentifizierung, Sicherheit und API-Endpunkte bereit.
 
-### 2. BlazorBp.Core
+### 2. BlazorSpa.Core
 Das Kern-Framework der Anwendung.
 
 Wichtige Bereiche:

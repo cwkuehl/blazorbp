@@ -5,8 +5,8 @@
 namespace BlazorBp.Forms.Demo.Models.Demo;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Core.Base;
-using BlazorBp.Core.Models;
+using BlazorSpa.Core.Base;
+using BlazorSpa.Core.Models;
 
 /// <summary>
 /// Model-Klasse für das Formular DM100 Steuerelemente.

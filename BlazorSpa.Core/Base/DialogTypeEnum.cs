@@ -2,7 +2,7 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Core.Base;
+namespace BlazorSpa.Core.Base;
 
 /// <summary>Calling mode of dialog.</summary>
 public enum DialogTypeEnum

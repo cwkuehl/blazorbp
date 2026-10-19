@@ -5,10 +5,10 @@
 namespace BlazorBp.Forms.Models.Fz;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Core.Base;
-using BlazorBp.Core.Models;
+using BlazorSpa.Core.Base;
+using BlazorSpa.Core.Models;
 using CSBP.Services.Base;
-using static BlazorBp.Core.Base.DialogTypeEnum;
+using static BlazorSpa.Core.Base.DialogTypeEnum;
 
 /// <summary>
 /// Model-Klasse für das Formular FZ250 Fahrradstände.

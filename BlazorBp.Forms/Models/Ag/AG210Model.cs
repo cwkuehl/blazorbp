@@ -5,9 +5,9 @@
 namespace BlazorBp.Forms.Models.Ag;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Core.Base;
-using BlazorBp.Core.Models;
-using static BlazorBp.Core.Base.DialogTypeEnum;
+using BlazorSpa.Core.Base;
+using BlazorSpa.Core.Models;
+using static BlazorSpa.Core.Base.DialogTypeEnum;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 

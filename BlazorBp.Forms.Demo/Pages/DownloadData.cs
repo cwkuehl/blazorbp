@@ -4,7 +4,7 @@
 
 namespace BlazorBp.Forms.Demo.Pages;
 
-using BlazorBp.Core.Base;
+using BlazorSpa.Core.Base;
 using BlazorBp.Forms.Demo.Apis;
 using BlazorBp.Forms.Demo.Models.Demo;
 using BlazorSpa.Base.Services;

@@ -8,9 +8,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using BlazorBp.Core.Base;
+using BlazorSpa.Core.Base;
 using BlazorSpa.Base;
-using static BlazorBp.Core.Base.DialogTypeEnum;
+using static BlazorSpa.Core.Base.DialogTypeEnum;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 

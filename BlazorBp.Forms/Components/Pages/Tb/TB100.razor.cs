@@ -1,8 +1,8 @@
 namespace BlazorBp.Forms.Components.Pages.Tb;
 
 using BlazorBp.Forms.Components.Controls;
-using BlazorBp.Core.Base;
-using BlazorBp.Core.Models;
+using BlazorSpa.Core.Base;
+using BlazorSpa.Core.Models;
 using BlazorBp.Forms.Components.Base;
 using BlazorBp.Forms.Models.Tb;
 using BlazorSpa.Base;

@@ -1,9 +1,9 @@
-namespace BlazorBp.Core;
+namespace BlazorSpa.Core;
 
 using System.Text;
-using BlazorBp.Core.Base;
-using BlazorBp.Core.Components;
-using BlazorBp.Core.Modules;
+using BlazorSpa.Core.Base;
+using BlazorSpa.Core.Components;
+using BlazorSpa.Core.Modules;
 using BlazorSpa.Base;
 using BlazorSpa.Base.Auth;
 using BlazorSpa.Base.Models;

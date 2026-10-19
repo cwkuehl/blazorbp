@@ -8,10 +8,10 @@ using System.Reflection;
 using System.Security.Authentication;
 using System.Security.Claims;
 using BlazorBp.Components; // für App
-using BlazorBp.Core.Base;
-using BlazorBp.Core.Components;
-using BlazorBp.Core.Core;
-using BlazorBp.Core.Modules;
+using BlazorSpa.Core.Base;
+using BlazorSpa.Core.Components;
+using BlazorSpa.Core.Core;
+using BlazorSpa.Core.Modules;
 using BlazorSpa.Base.Auth;
 using BlazorSpa.Base.Undo;
 using Microsoft.AspNetCore.Authentication;
@@ -22,7 +22,7 @@ var interactive = BlazorBp.Base.Konstanten.Interactive;
 var modules = new IFormModule[]
 {
   // Formular-Module explizit eintragen (Alternative: Assembly-Scan)
-  new BlazorBp.Core.CoreModule(),
+  new BlazorSpa.Core.CoreModule(),
   new BlazorBp.Forms.FormsModule(),
   new BlazorBp.Forms.Demo.DemoModule(),
 };
@@ -186,7 +186,7 @@ if (interactive)
   app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 else
   app.MapRazorComponents<App>().AddAdditionalAssemblies(
-    typeof(BlazorBp.Core.Modules.IFormModule).Assembly,
+    typeof(BlazorSpa.Core.Modules.IFormModule).Assembly,
     typeof(BlazorBp.Forms.FormsModule).Assembly,
     typeof(BlazorBp.Forms.Demo.DemoModule).Assembly
     );
@@ -283,9 +283,9 @@ Swagger für Endpoints:
 dotnet add package Swashbuckle.AspNetCore
 
 Redesign BlazorBp mit Razor Class Libraries:
-dotnet new razorclasslib -o BlazorBp.Core
-dotnet sln blazorbp.sln add ./BlazorBp.Core/BlazorBp.Core.csproj
-dotnet add ./BlazorBp/BlazorBp.csproj reference ./BlazorBp.Core/BlazorBp.Core.csproj
+dotnet new razorclasslib -o BlazorSpa.Core
+dotnet sln blazorbp.sln add ./BlazorSpa.Core/BlazorSpa.Core.csproj
+dotnet add ./BlazorBp/BlazorBp.csproj reference ./BlazorSpa.Core/BlazorSpa.Core.csproj
 dotnet new razorclasslib -o BlazorBp.Forms.Demo
 dotnet sln blazorbp.sln add ./BlazorBp.Forms.Demo/BlazorBp.Forms.Demo.csproj
 dotnet add ./BlazorBp/BlazorBp.csproj reference ./BlazorBp.Forms.Demo/BlazorBp.Forms.Demo.csproj

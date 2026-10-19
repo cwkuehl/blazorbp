@@ -5,9 +5,9 @@
 namespace BlazorBp.Forms.Models.Hh;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorBp.Core.Base;
+using BlazorSpa.Core.Base;
 using BlazorSpa.Base;
-using static BlazorBp.Core.Base.DialogTypeEnum;
+using static BlazorSpa.Core.Base.DialogTypeEnum;
 
 /// <summary>
 /// Model-Klasse für das Formular HH300 Ereignisse.

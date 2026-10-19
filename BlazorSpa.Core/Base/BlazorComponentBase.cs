@@ -2,9 +2,9 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-namespace BlazorBp.Core.Base;
+namespace BlazorSpa.Core.Base;
 
-using BlazorBp.Core.Models;
+using BlazorSpa.Core.Models;
 using BlazorSpa.Base;
 using BlazorSpa.Base.Csv;
 using BlazorSpa.Base.Models;
