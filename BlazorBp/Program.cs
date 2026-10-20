@@ -2,8 +2,6 @@
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
-// namespace GatewayR3;
-
 using System.Reflection;
 using System.Security.Authentication;
 using System.Security.Claims;
@@ -157,10 +155,8 @@ builder.Services.AddHttpClient("HttpClientWithLocalhostCertificatePinning").Conf
     LocalhostCertificateValidator.IsValid(certificate, request.RequestUri?.Host, policyErrors,  localhostCertificateSha256),
   SslProtocols = SslProtocols.Tls13,
 });
-builder.Services.AddFactoryService();
 
 var app = builder.Build();
-app.UseFactoryService();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
