@@ -6,7 +6,7 @@
     <InvariantGlobalization>false</InvariantGlobalization><!-- Culture de-DE en-GB gehen bei true nicht! -->
     <PublishTrimmed>false</PublishTrimmed>
     <PublishAot>false</PublishAot>
-    <BlazorDisableThrowNavigation>true</BlazorDisableThrowNavigation>
+    <BlazorDisableThrowNavigationException>false</BlazorDisableThrowNavigationException>
     <GenerateDocumentationFile>true</GenerateDocumentationFile><!-- Generate a xml file containing API documentation. -->
   </PropertyGroup>
 
