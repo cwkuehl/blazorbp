@@ -19,7 +19,7 @@ public class AuthService : IAuthService
   /// <returns>Ergebnis der Anmeldung.</returns>
   public UserDaten LoginUser(UserDaten ud, string password)
   {
-    var d = new UserDaten(ud.SessionId, ud.MandantNr, ud.BenutzerId, [ UserDaten.RoleUser]);
+    var d = new UserDaten(ud.SessionId, ud.MandantNr, ud.BenutzerId, [UserDaten.RoleUser]);
     return d;
   }
 

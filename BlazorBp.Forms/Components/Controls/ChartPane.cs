@@ -49,7 +49,7 @@ public class ChartPane
 
     // Schriftgrößen
     var fontx = $"normal {(int)(ygroesse / 1.0m)}px Times Roman";
-    // var fontx2 = $"normal {(int)(ygroesse * 2)}px Times Roman";
+    //// var fontx2 = $"normal {(int)(ygroesse * 2)}px Times Roman";
     var fontplain = $"normal {(int)(ygroesse / 1.5m)}px Times Roman";
     var fontbold = $"bold {(int)(ygroesse / 1.3m)}px Times Roman";
     var font = fontplain;

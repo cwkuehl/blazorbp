@@ -24,22 +24,12 @@ public class DM200TableRowModel : TableRowModelBase
 
   /// <summary>Holt oder setzt die Beschreibung.</summary>
   [Display(Name = "Be_schreibung", Description = "Die Beschreibung des Objekts kann angegeben werden.")]
-  // [Required(ErrorMessage = "Die Beschreibung muss angegeben werden.")]
+  //// [Required(ErrorMessage = "Die Beschreibung muss angegeben werden.")]
   public string? Beschreibung { get; set; } = default!;
-
-  /// <summary>Kopiert die Werte in ein Model.</summary>
-  public Objekt ToObjekt()
-  {
-    return new Objekt
-    {
-      Id = Nummer ?? 0,
-      Name = Bezeichnung ?? "",
-      Description = Beschreibung ?? "",
-    };
-  }
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="b">Zu kopierendes Model.</param>
+  /// <returns>Zeilen-Model mit den Werten.</returns>
   public static DM200TableRowModel FromObjekt(Objekt b)
   {
     return new DM200TableRowModel
@@ -47,6 +37,18 @@ public class DM200TableRowModel : TableRowModelBase
       Nummer = b.Id,
       Bezeichnung = b.Name,
       Beschreibung = b.Description,
+    };
+  }
+
+  /// <summary>Kopiert die Werte in ein Model.</summary>
+  /// <returns>Objekt mit den Werten.</returns>
+  public Objekt ToObjekt()
+  {
+    return new Objekt
+    {
+      Id = Nummer ?? 0,
+      Name = Bezeichnung ?? "",
+      Description = Beschreibung ?? "",
     };
   }
 }

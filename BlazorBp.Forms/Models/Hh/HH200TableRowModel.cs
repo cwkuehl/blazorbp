@@ -16,7 +16,11 @@ public class HH200TableRowModel : TableRowModelBase
 {
   /// <summary>Holt oder setzt Nr.</summary>
   [Display(Name = "Nr.", Description = "Konto-Nr.")]
-  public string? Nummer { get { return Id; } set { Id = value; } }
+  public string? Nummer
+  {
+    get { return Id; }
+    set { Id = value; }
+  }
 
   /// <summary>Holt oder setzt Bezeichnung.</summary>
   [Display(Name = "_Bezeichnung", Description = "Bezeichnung")]
@@ -60,6 +64,7 @@ public class HH200TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
+  /// <returns>Das kopierte Model.</returns>
   public static HH200TableRowModel From(HhKonto m)
   {
     return new HH200TableRowModel

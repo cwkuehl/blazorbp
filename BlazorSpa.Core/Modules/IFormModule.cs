@@ -4,13 +4,16 @@
 
 namespace BlazorSpa.Core.Modules;
 
-using BlazorSpa.Core.Base;
 using BlazorSpa.Base.Auth;
 using BlazorSpa.Base.Undo;
+using BlazorSpa.Core.Base;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
+/// <summary>
+/// Schnittstelle für ein Formular-Modul.
+/// </summary>
 public interface IFormModule
 {
   /// <summary>Liefert die Hauptmenüs, die dieses Modul bereitstellt.</summary>

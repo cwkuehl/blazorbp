@@ -122,7 +122,7 @@
   /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
   protected override bool Submit(string? submit)
   {
-    if (valid && submit == "New")
+    if (Valid && submit == "New")
     {
       var daten = ServiceDaten;
       if (Get(BudgetService.SavePeriod(daten, Functions.ToInt32(Model.Laenge), Functions.ToInt32(Model.Art) != 0)))
@@ -131,7 +131,7 @@
         DoPostbackReload();
       }
     }
-    if (valid && submit == "Delete")
+    if (Valid && submit == "Delete")
     {
       var daten = ServiceDaten;
       if (Get(BudgetService.DeletePeriod(daten, Functions.ToInt32(Model.Art) != 0)))

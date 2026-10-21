@@ -1,12 +1,12 @@
-// <copyright file="DownloadData.cs" company="cwkuehl.de">
+// <copyright file="StartTask.cs" company="cwkuehl.de">
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
 namespace BlazorBp.Forms.Components.Pages;
 
-using BlazorSpa.Core.Base;
 using BlazorBp.Forms.Models.Wp;
 using BlazorSpa.Base.Services;
+using BlazorSpa.Core.Base;
 using CSBP.Services.Apis.Services;
 using CSBP.Services.Base;
 using Microsoft.AspNetCore.Http;
@@ -22,7 +22,7 @@ public static class StartTask
   /// <param name="context">Betroffener HttpContext.</param>
   /// <param name="sp">Betroffener IServiceProvider.</param>
   /// <returns>true, wenn die Aufgabe gestartet wurde sowie Fehlermeldung.</returns>
-  public static (bool, string?) Do(string page, string id, HttpContext context, IServiceProvider sp)
+  public static (bool Wert, string? Fehler) Do(string page, string id, HttpContext context, IServiceProvider sp)
   {
     var s = context?.Session;
     if (!string.IsNullOrEmpty(page) && !string.IsNullOrEmpty(id) && s != null)
@@ -38,11 +38,11 @@ public static class StartTask
               return (true, rs.GetErrors() ?? "Fehler beim Starten der Aufgabe.");
             var state = rs.Ergebnis;
             var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<WP200TableRowModel>>(s, page, id)?.ReadModel;
-            var Model = BlazorComponentBaseStatic.ReadFormularFormModel<WP200Model>(s, page, id);
-            if (rm != null && Model != null)
+            var model = BlazorComponentBaseStatic.ReadFormularFormModel<WP200Model>(s, page, id);
+            if (rm != null && model != null)
             {
               var sv = sp.GetService(typeof(IEnergyService)) as IEnergyService;
-              var r = sv?.QueryQueries(daten, Model.Auchinaktiv, rm?.Search, state);
+              var r = sv?.QueryQueries(daten, model.Auchinaktiv, rm?.Search, state);
               state.Beenden(r: r);
             }
             else
@@ -56,12 +56,12 @@ public static class StartTask
               return (true, rs.GetErrors() ?? "Fehler beim Starten der Aufgabe.");
             var state = rs.Ergebnis;
             var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<WP200TableRowModel>>(s, page, id)?.ReadModel;
-            var Model = BlazorComponentBaseStatic.ReadFormularFormModel<WP200Model>(s, page, id);
-            if (rm != null && Model != null)
+            var model = BlazorComponentBaseStatic.ReadFormularFormModel<WP200Model>(s, page, id);
+            if (rm != null && model != null)
             {
               var sv = sp.GetService(typeof(IStockService)) as IStockService;
-              var r = sv?.CalculateStocks(daten, null, Model.Muster, null,
-                Model.Bis ?? daten.Heute, Model.Auchinaktiv, rm?.Search, Model.Konfiguration, state);
+              var r = sv?.CalculateStocks(daten, null, model.Muster, null,
+                model.Bis ?? daten.Heute, model.Auchinaktiv, rm?.Search, model.Konfiguration, state);
               state.Beenden(r: r);
             }
             else
@@ -75,12 +75,12 @@ public static class StartTask
               return (true, rs.GetErrors() ?? "Fehler beim Starten der Aufgabe.");
             var state = rs.Ergebnis;
             var rm = BlazorComponentBaseStatic.ReadFormularTableModel<TableModelBase<WP250TableRowModel>>(s, page, id)?.ReadModel;
-            var Model = BlazorComponentBaseStatic.ReadFormularFormModel<WP250Model>(s, page, id);
-            if (rm != null && Model != null)
+            var model = BlazorComponentBaseStatic.ReadFormularFormModel<WP250Model>(s, page, id);
+            if (rm != null && model != null)
             {
               var sv = sp.GetService(typeof(IStockService)) as IStockService;
-              var r = sv?.CalculateInvestments(daten, null, null, Model.Wertpapier,
-                Model.Bis ?? daten.Heute, Model.Auchinaktiv, rm?.Search, state);
+              var r = sv?.CalculateInvestments(daten, null, null, model.Wertpapier,
+                model.Bis ?? daten.Heute, model.Auchinaktiv, rm?.Search, state);
               state.Beenden(r: r);
             }
             else

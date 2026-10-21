@@ -5,9 +5,9 @@
 namespace BlazorBp.Forms.Models.Hh;
 
 using System.ComponentModel.DataAnnotations;
+using BlazorSpa.Base;
 using BlazorSpa.Core.Base;
 using BlazorSpa.Core.Models;
-using BlazorSpa.Base;
 using CSBP.Services.Base;
 using static BlazorSpa.Core.Base.DialogTypeEnum;
 
@@ -32,7 +32,7 @@ public class HH500Model : PageModelBase
   [Display(Name = "Summe", Description = "")]
   public string? SollSumme0 { get; set; }
 
-  /// <summary>Holt oder setzt </summary>
+  /// <summary>Holt oder setzt den Label für den Soll-Betrag.</summary>
   [Display(Name = "", Description = "")]
   public string? SollBetrag0 { get; set; }
 

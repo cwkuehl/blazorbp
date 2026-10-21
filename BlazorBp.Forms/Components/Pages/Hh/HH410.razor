@@ -138,7 +138,7 @@
       if (db.HasValue)
         Model.BelegDatum = db;
     }
-    if (valid && submit == nameof(Model.Ok))
+    if (Valid && submit == nameof(Model.Ok))
     {
       // TODO Stornierung mit DialogTypeEnum.Reverse.
       var o = Model.To(daten);

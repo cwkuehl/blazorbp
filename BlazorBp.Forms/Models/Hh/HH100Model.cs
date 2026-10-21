@@ -5,9 +5,9 @@
 namespace BlazorBp.Forms.Models.Hh;
 
 using System.ComponentModel.DataAnnotations;
+using BlazorSpa.Base;
 using BlazorSpa.Core.Base;
 using BlazorSpa.Core.Models;
-using BlazorSpa.Base;
 
 /// <summary>
 /// Model-Klasse für das Formular HH100 Perioden.

@@ -33,10 +33,6 @@ public class FZ200Model : PageModelBase
     {
       // Nummer = "";
     }
-    if (mode == New)
-    {
-      // Thema = null;
-    }
-    // SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
+    //// TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
   }
 }

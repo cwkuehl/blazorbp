@@ -24,7 +24,7 @@ public class DM200ModalModel : PageModelBase
 
   /// <summary>Holt oder setzt die Beschreibung.</summary>
   [Display(Name = "Be_schreibung", Description = "Die Beschreibung des Objekts kann angegeben werden.")]
-  // [Required(ErrorMessage = "Die Beschreibung muss angegeben werden.")]
+  //// [Required(ErrorMessage = "Die Beschreibung muss angegeben werden.")]
   public string? Beschreibung { get; set; } = default!;
 
   /// <summary>Holt oder setzt den OK-Button.</summary>
@@ -40,5 +40,6 @@ public class DM200ModalModel : PageModelBase
   public void From(DM200TableRowModel m) => (Nummer, Bezeichnung, Beschreibung) = (m.Nummer, m.Bezeichnung, m.Beschreibung);
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
+  /// <returns>Objekt mit den Werten.</returns>
   public Objekt ToObjekt() => new() { Id = Nummer ?? 0, Name = Bezeichnung ?? "", Description = Beschreibung ?? "" };
 }

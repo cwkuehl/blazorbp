@@ -1,12 +1,16 @@
+// <copyright file="TB100.razor.cs" company="cwkuehl.de">
+// Copyright (c) cwkuehl.de. All rights reserved.
+// </copyright>
+
 namespace BlazorBp.Forms.Components.Pages.Tb;
 
-using BlazorBp.Forms.Components.Controls;
-using BlazorSpa.Core.Base;
-using BlazorSpa.Core.Models;
 using BlazorBp.Forms.Components.Base;
+using BlazorBp.Forms.Components.Controls;
 using BlazorBp.Forms.Models.Tb;
 using BlazorSpa.Base;
 using BlazorSpa.Base.Services;
+using BlazorSpa.Core.Base;
+using BlazorSpa.Core.Models;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using Microsoft.AspNetCore.Components;
@@ -16,6 +20,9 @@ using Microsoft.AspNetCore.Components;
 /// </summary>
 public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
 {
+  /// <summary>Holt oder setzt die Canvas-Daten.</summary>
+  private string canvasDaten = "";
+
   /// <summary>Holt oder setzt das Modal-Model.</summary>
   [SupplyParameterFromForm]
   protected TB110Model TB110Model { get; set; } = default!;
@@ -27,9 +34,6 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
   /// <summary>Holt oder setzt den betroffenen Service.</summary>
   [Inject]
   private CSBP.Services.Apis.Services.IDiaryService DiaryService { get; set; } = default!;
-
-  /// <summary>Holt oder setzt die Canvas-Daten.</summary>
-  private string CanvasDaten = "";
 
   /// <summary>
   /// Initialisierung des Models.
@@ -50,7 +54,7 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
         Date = daten.Heute,
         OldEntry = new TbEintrag { Positions = [] },
         PositionList = [],
-        //Focus = nameof(TB100Model.Entry),
+        //// Focus = nameof(TB100Model.Entry),
       };
       Model.SetMhrf(DialogTypeEnum.New);
       Model.ClearSearch();
@@ -84,7 +88,7 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
   /// <param name="handler">Handler aus Tabellen-Aktion.</param>
   /// <param name="id">Id aus Tabellen-Aktion.</param>
   /// <param name="id2">Id aus 2. modalen Dialog.</param>
-  public override void HandleModal(string? form, string? handler, string? id, string? id2)
+  protected override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
     if (form == "tb110modal")
     {
@@ -197,219 +201,6 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
   {
     if (OnInitializedFormular("TB100", "Tagebuch - TB100", Id, true))
       return;
-  }
-
-  /// <summary>Initialises the lists.</summary>
-  private void InitLists()
-  {
-    var daten = ServiceDaten;
-    var rl = Get(DiaryService.GetPositionList(daten));
-    Model.AuswahlPosition = InsertEmpty(rl?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
-    var rl2 = Get(DiaryService.GetPositionList(daten, ext: true));
-    Model.AuswahlPosition2 = InsertEmpty(rl2?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
-  }
-
-  /// <summary>
-  /// Loads the diary entries from date.
-  /// </summary>
-  /// <param name="d">Affected date.</param>
-  /// <returns>Service result and possibly errors.</returns>
-  private ServiceErgebnis LadeEintraege(DateTime? d)
-  {
-    var daten = ServiceDaten;
-    var r = new ServiceErgebnis();
-    if (!d.HasValue || Model == null || Model.OldEntry == null || Model.OldEntry.Positions == null || Model.PositionList == null)
-      return r;
-    var tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddDays(-1)));
-    Model.Before1 = tb?.Eintrag;
-    tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddMonths(-1)));
-    Model.Before2 = tb?.Eintrag;
-    tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddYears(-1)));
-    Model.Before3 = tb?.Eintrag;
-    tb = r.Get(DiaryService.GetEntry(daten, d.Value, true));
-    Model.Entry = tb?.Eintrag;
-    Model.PositionList = tb?.Positions ?? [];
-    Model.OldEntry.Positions.Clear();
-    if (tb == null)
-    {
-      Model.OldEntry.Eintrag = "";
-      Model.Angelegt = "";
-      Model.Geaendert = "";
-    }
-    else
-    {
-      Model.OldEntry.Eintrag = tb.Eintrag;
-      Model.OldEntry.Positions.AddRange(tb.Positions);
-      Model.Angelegt = ModelBase.FormatDateOf(tb.Angelegt_Am, tb.Angelegt_Von);
-      Model.Geaendert = ModelBase.FormatDateOf(tb.Geaendert_Am, tb.Geaendert_Von);
-    }
-    Model.OldEntry.Datum = d.Value;
-    Model.Entry = Model.OldEntry.Eintrag;
-    tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddDays(1)));
-    Model.After1 = tb?.Eintrag;
-    tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddMonths(1)));
-    Model.After2 = tb?.Eintrag;
-    tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddYears(1)));
-    Model.After3 = tb?.Eintrag;
-    InitPositions(Model.OldEntry.Positions);
-    if (Model.Weathervisible)
-       ShowWeather();
-    return r;
-  }
-
-  /// <summary>
-  /// Initialises the position list.
-  /// </summary>
-  /// <param name="list">New list.</param>
-  private void InitPositions(List<TbEintragOrt>? list = null)
-  {
-    if (Model == null)
-      return;
-    try
-    {
-      if (Model.PositionList == null)
-        return;
-      if (list != null)
-      {
-        Model.PositionList.Clear();
-        foreach (var p in list)
-          Model.PositionList.Add(ServiceBase.Clone(p));
-      }
-      //// No.;Description;Latitude_r;Longitude_r;From;To;Changed at;Changed by;Created at;Created by
-      Model.AuswahlPositions = Model.PositionList.Select(a => new ListItem(a.Ort_Uid, $"{a.Description} ({a.Latitude:0.00000}, {a.Longitude:0.00000}) {a.Datum_Von:dd.MM.yyyy}-{a.Datum_Bis:dd.MM.yyyy}")).ToList();
-    }
-    finally
-    {
-      Model.AuswahlPositions = InsertEmptyIfEmpty(Model.AuswahlPositions ?? []);
-    }
-  }
-
-  /// <summary>
-  /// Loads the diary entry from date. Optionally the current entry is saved before.
-  /// </summary>
-  /// <param name="speichern">Saves before or not.</param>
-  /// <param name="laden">Loads the entry or not.</param>
-  private void BearbeiteEintraege(bool speichern = true, bool laden = true)
-  {
-    if (Model == null || Model.OldEntry == null || Model.OldEntry.Positions == null || Model.PositionList == null)
-      return;
-    var changed = false;
-    var daten = ServiceDaten;
-    var r = new ServiceErgebnis();
-    //// Prohibits rekursion.
-    if (speichern && Model.OldLoaded)
-    {
-      // Alten Eintrag von vorher merken.
-      var oldentry = Model.OldEntry.Eintrag;
-      var p0 = Model.OldEntry.Positions.OrderBy(a => a.Ort_Uid).Select(a => a.Hash()).Aggregate("", (c, n) => c + n);
-      var p = Model.PositionList.OrderBy(a => a.Ort_Uid).Select(a => a.Hash()).Aggregate("", (c, n) => c + n);
-      //// Nur speichern, wenn etwas geändert ist.
-      if (string.IsNullOrEmpty(oldentry) || Functions.CompString(oldentry, Model.Entry) != 0 || Functions.CompString(p0, p) != 0)
-      {
-        var pos = Model.PositionList.Select(a => new Tuple<string, DateTime, DateTime>(a.Ort_Uid, a.Datum_Von, a.Datum_Bis)).ToList();
-        changed = r.Get(DiaryService.SaveEntry(daten, Model.OldEntry.Datum, Model.Entry, pos)) && r.Ok;
-      }
-    }
-    if (laden)
-    {
-      var d = Model.Date;
-      r.Get(LadeEintraege(d));
-      //// LoadMonth(d);
-      Model.OldLoaded = true;
-    }
-    Get(r);
-    if (changed)
-    {
-      WriteFormularModel(Model.Nr ?? "0", Model);
-      ForceRefresh();
-    }
-  }
-
-  /// <summary>
-  /// Searches for next fitting entry in search direction.
-  /// </summary>
-  /// <param name="stelle">Affected search direction.</param>
-  private void SearchEntry(CSBP.Services.Apis.Enums.SearchDirectionEnum stelle)
-  {
-    if (Model == null)
-      return;
-    BearbeiteEintraege(true, false);
-    var daten = ServiceDaten;
-    var d = Get(DiaryService.SearchDate(daten, stelle, Model.Date ?? daten.Heute, Model.GetSearchArray(),
-      Model.Position2, Model.From ?? daten.Heute, Model.To ?? daten.Heute));
-    if (d.HasValue)
-    {
-      Model.Date = d;
-      BearbeiteEintraege(false);
-    }
-  }
-
-  /// <summary>Show weather data.</summary>
-  /// <param name="init">Initial call or not.</param>
-  private void ShowWeather(bool init = false)
-  {
-    var daten = ServiceDaten;
-    var puid = Model.Positions ?? Model.PositionList?.FirstOrDefault()?.Ort_Uid;
-    var date = Model.Date ?? daten.Heute;
-    List<KeyValuePair<string, decimal>> templist = [];
-    List<KeyValuePair<string, decimal>> preslist = [];
-    List<KeyValuePair<string, decimal>> rhumlist = [];
-    List<KeyValuePair<string, decimal>> prcplist = [];
-    List<KeyValuePair<string, decimal>> wspdlist = [];
-    List<KeyValuePair<string, decimal>> wdirlist = [];
-    if (string.IsNullOrEmpty(puid))
-    {
-      if (init)
-      {
-        #pragma warning disable CS8603
-        Messages?.Add(() => Model.Positions, $"Für Wetterdaten muss eine Position zugeordnet werden.");
-        #pragma warning restore CS8603
-      }
-      return;
-    }
-    var r = Get(DiaryService.GetWeatherList(daten, date, puid));
-    foreach (var w in r ?? [])
-    {
-      templist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Temp));
-      preslist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Pres));
-      rhumlist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Rhum));
-      prcplist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Prcp));
-      wspdlist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Wspd));
-      wdirlist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Wdir));
-    }
-    var ctx = new CanvasCompiler();
-    {
-      ctx.AddControl(nameof(Model.Diagramb1));
-      var list = templist;
-      var avg = list == null || !list.Any() ? 0m : list.Average(a => a.Value);
-      var tf = 6;
-      var tt = 22;
-      var list2 = templist?.Where(a => Functions.ToInt32(a.Key) >= tf && Functions.ToInt32(a.Key) <= tt).ToList();
-      var avg2 = list2 == null || !list2.Any() ? 0m : list2.Average(a => a.Value);
-      Diagram.OnDiagramDraw(ctx, "Temperatur °C", templist, $"Ø {avg:0.000} °C", $"Ø {avg2:0.000} °C ({tf}-{tt} Uhr)");
-    }
-    {
-      ctx.AddControl(nameof(Model.Diagramb2));
-      Diagram.OnDiagramDraw(ctx, "Luftdruck hPa", preslist);
-    }
-    {
-      ctx.AddControl(nameof(Model.Diagramb3));
-      Diagram.OnDiagramDraw(ctx, "Rel. Luftfeucht. %", rhumlist);
-    }
-    {
-      ctx.AddControl(nameof(Model.Diagrama1));
-      Diagram.OnDiagramDraw(ctx, "Niederschlag mm", prcplist);
-    }
-    {
-      ctx.AddControl(nameof(Model.Diagrama2));
-      Diagram.OnDiagramDraw(ctx, "Windgeschwindigkeit km/h", wspdlist);
-    }
-    {
-      ctx.AddControl(nameof(Model.Diagrama3));
-      Diagram.OnDiagramDraw(ctx, "Windrichtung °", wdirlist);
-    }
-    CanvasDaten = ctx.Compile();
-    //// diagramb1.Window.InvalidateRect(new Gdk.Rectangle(0, 0, diagramb1.Window.Width, diagramb1.Window.Height), true);
   }
 
   /// <summary>
@@ -633,5 +424,218 @@ public partial class TB100 : BlazorComponent<TB100Model, TableRowModelBase>
     model.OldEntry = model0.OldEntry;
     model.PositionList = model0.PositionList;
     model.AuswahlPositions = model0.AuswahlPositions;
+  }
+
+  /// <summary>Initialises the lists.</summary>
+  private void InitLists()
+  {
+    var daten = ServiceDaten;
+    var rl = Get(DiaryService.GetPositionList(daten));
+    Model.AuswahlPosition = InsertEmpty(rl?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
+    var rl2 = Get(DiaryService.GetPositionList(daten, ext: true));
+    Model.AuswahlPosition2 = InsertEmpty(rl2?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList());
+  }
+
+  /// <summary>
+  /// Loads the diary entries from date.
+  /// </summary>
+  /// <param name="d">Affected date.</param>
+  /// <returns>Service result and possibly errors.</returns>
+  private ServiceErgebnis LadeEintraege(DateTime? d)
+  {
+    var daten = ServiceDaten;
+    var r = new ServiceErgebnis();
+    if (!d.HasValue || Model == null || Model.OldEntry == null || Model.OldEntry.Positions == null || Model.PositionList == null)
+      return r;
+    var tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddDays(-1)));
+    Model.Before1 = tb?.Eintrag;
+    tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddMonths(-1)));
+    Model.Before2 = tb?.Eintrag;
+    tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddYears(-1)));
+    Model.Before3 = tb?.Eintrag;
+    tb = r.Get(DiaryService.GetEntry(daten, d.Value, true));
+    Model.Entry = tb?.Eintrag;
+    Model.PositionList = tb?.Positions ?? [];
+    Model.OldEntry.Positions.Clear();
+    if (tb == null)
+    {
+      Model.OldEntry.Eintrag = "";
+      Model.Angelegt = "";
+      Model.Geaendert = "";
+    }
+    else
+    {
+      Model.OldEntry.Eintrag = tb.Eintrag;
+      Model.OldEntry.Positions.AddRange(tb.Positions);
+      Model.Angelegt = ModelBase.FormatDateOf(tb.Angelegt_Am, tb.Angelegt_Von);
+      Model.Geaendert = ModelBase.FormatDateOf(tb.Geaendert_Am, tb.Geaendert_Von);
+    }
+    Model.OldEntry.Datum = d.Value;
+    Model.Entry = Model.OldEntry.Eintrag;
+    tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddDays(1)));
+    Model.After1 = tb?.Eintrag;
+    tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddMonths(1)));
+    Model.After2 = tb?.Eintrag;
+    tb = r.Get(DiaryService.GetEntry(daten, d.Value.AddYears(1)));
+    Model.After3 = tb?.Eintrag;
+    InitPositions(Model.OldEntry.Positions);
+    if (Model.Weathervisible)
+       ShowWeather();
+    return r;
+  }
+
+  /// <summary>
+  /// Initialises the position list.
+  /// </summary>
+  /// <param name="list">New list.</param>
+  private void InitPositions(List<TbEintragOrt>? list = null)
+  {
+    if (Model == null)
+      return;
+    try
+    {
+      if (Model.PositionList == null)
+        return;
+      if (list != null)
+      {
+        Model.PositionList.Clear();
+        foreach (var p in list)
+          Model.PositionList.Add(ServiceBase.Clone(p));
+      }
+      //// No.;Description;Latitude_r;Longitude_r;From;To;Changed at;Changed by;Created at;Created by
+      Model.AuswahlPositions = Model.PositionList.Select(a => new ListItem(a.Ort_Uid, $"{a.Description} ({a.Latitude:0.00000}, {a.Longitude:0.00000}) {a.Datum_Von:dd.MM.yyyy}-{a.Datum_Bis:dd.MM.yyyy}")).ToList();
+    }
+    finally
+    {
+      Model.AuswahlPositions = InsertEmptyIfEmpty(Model.AuswahlPositions ?? []);
+    }
+  }
+
+  /// <summary>
+  /// Loads the diary entry from date. Optionally the current entry is saved before.
+  /// </summary>
+  /// <param name="speichern">Saves before or not.</param>
+  /// <param name="laden">Loads the entry or not.</param>
+  private void BearbeiteEintraege(bool speichern = true, bool laden = true)
+  {
+    if (Model == null || Model.OldEntry == null || Model.OldEntry.Positions == null || Model.PositionList == null)
+      return;
+    var changed = false;
+    var daten = ServiceDaten;
+    var r = new ServiceErgebnis();
+    //// Prohibits rekursion.
+    if (speichern && Model.OldLoaded)
+    {
+      // Alten Eintrag von vorher merken.
+      var oldentry = Model.OldEntry.Eintrag;
+      var p0 = Model.OldEntry.Positions.OrderBy(a => a.Ort_Uid).Select(a => a.Hash()).Aggregate("", (c, n) => c + n);
+      var p = Model.PositionList.OrderBy(a => a.Ort_Uid).Select(a => a.Hash()).Aggregate("", (c, n) => c + n);
+      //// Nur speichern, wenn etwas geändert ist.
+      if (string.IsNullOrEmpty(oldentry) || Functions.CompString(oldentry, Model.Entry) != 0 || Functions.CompString(p0, p) != 0)
+      {
+        var pos = Model.PositionList.Select(a => new Tuple<string, DateTime, DateTime>(a.Ort_Uid, a.Datum_Von, a.Datum_Bis)).ToList();
+        changed = r.Get(DiaryService.SaveEntry(daten, Model.OldEntry.Datum, Model.Entry, pos)) && r.Ok;
+      }
+    }
+    if (laden)
+    {
+      var d = Model.Date;
+      r.Get(LadeEintraege(d));
+      //// LoadMonth(d);
+      Model.OldLoaded = true;
+    }
+    Get(r);
+    if (changed)
+    {
+      WriteFormularModel(Model.Nr ?? "0", Model);
+      ForceRefresh();
+    }
+  }
+
+  /// <summary>
+  /// Searches for next fitting entry in search direction.
+  /// </summary>
+  /// <param name="stelle">Affected search direction.</param>
+  private void SearchEntry(CSBP.Services.Apis.Enums.SearchDirectionEnum stelle)
+  {
+    if (Model == null)
+      return;
+    BearbeiteEintraege(true, false);
+    var daten = ServiceDaten;
+    var d = Get(DiaryService.SearchDate(daten, stelle, Model.Date ?? daten.Heute, Model.GetSearchArray(),
+      Model.Position2, Model.From ?? daten.Heute, Model.To ?? daten.Heute));
+    if (d.HasValue)
+    {
+      Model.Date = d;
+      BearbeiteEintraege(false);
+    }
+  }
+
+  /// <summary>Show weather data.</summary>
+  /// <param name="init">Initial call or not.</param>
+  private void ShowWeather(bool init = false)
+  {
+    var daten = ServiceDaten;
+    var puid = Model.Positions ?? Model.PositionList?.FirstOrDefault()?.Ort_Uid;
+    var date = Model.Date ?? daten.Heute;
+    List<KeyValuePair<string, decimal>> templist = [];
+    List<KeyValuePair<string, decimal>> preslist = [];
+    List<KeyValuePair<string, decimal>> rhumlist = [];
+    List<KeyValuePair<string, decimal>> prcplist = [];
+    List<KeyValuePair<string, decimal>> wspdlist = [];
+    List<KeyValuePair<string, decimal>> wdirlist = [];
+    if (string.IsNullOrEmpty(puid))
+    {
+      if (init)
+      {
+        #pragma warning disable CS8603
+        Messages?.Add(() => Model.Positions, $"Für Wetterdaten muss eine Position zugeordnet werden.");
+        #pragma warning restore CS8603
+      }
+      return;
+    }
+    var r = Get(DiaryService.GetWeatherList(daten, date, puid));
+    foreach (var w in r ?? [])
+    {
+      templist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Temp));
+      preslist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Pres));
+      rhumlist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Rhum));
+      prcplist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Prcp));
+      wspdlist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Wspd));
+      wdirlist.Add(new KeyValuePair<string, decimal>(w.Time.ToString("HH"), w.Wdir));
+    }
+    var ctx = new CanvasCompiler();
+    {
+      ctx.AddControl(nameof(Model.Diagramb1));
+      var list = templist;
+      var avg = list == null || !list.Any() ? 0m : list.Average(a => a.Value);
+      var tf = 6;
+      var tt = 22;
+      var list2 = templist?.Where(a => Functions.ToInt32(a.Key) >= tf && Functions.ToInt32(a.Key) <= tt).ToList();
+      var avg2 = list2 == null || !list2.Any() ? 0m : list2.Average(a => a.Value);
+      Diagram.OnDiagramDraw(ctx, "Temperatur °C", templist, $"Ø {avg:0.000} °C", $"Ø {avg2:0.000} °C ({tf}-{tt} Uhr)");
+    }
+    {
+      ctx.AddControl(nameof(Model.Diagramb2));
+      Diagram.OnDiagramDraw(ctx, "Luftdruck hPa", preslist);
+    }
+    {
+      ctx.AddControl(nameof(Model.Diagramb3));
+      Diagram.OnDiagramDraw(ctx, "Rel. Luftfeucht. %", rhumlist);
+    }
+    {
+      ctx.AddControl(nameof(Model.Diagrama1));
+      Diagram.OnDiagramDraw(ctx, "Niederschlag mm", prcplist);
+    }
+    {
+      ctx.AddControl(nameof(Model.Diagrama2));
+      Diagram.OnDiagramDraw(ctx, "Windgeschwindigkeit km/h", wspdlist);
+    }
+    {
+      ctx.AddControl(nameof(Model.Diagrama3));
+      Diagram.OnDiagramDraw(ctx, "Windrichtung °", wdirlist);
+    }
+    canvasDaten = ctx.Compile();
+    //// diagramb1.Window.InvalidateRect(new Gdk.Rectangle(0, 0, diagramb1.Window.Width, diagramb1.Window.Height), true);
   }
 }

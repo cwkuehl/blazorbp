@@ -28,19 +28,6 @@ public class Formular
   public bool Init { get; set; }
 
   /// <summary>
-  /// Liefert die URL für das Formular.
-  /// </summary>
-  /// <param name="id">Gibt an, ob die ID mit übergeben werden soll.</param>
-  /// <param name="close">Gibt an, ob die Action mit ID geschlossen werden soll.</param>
-  /// <returns>URL für das Formular.</returns>
-  public string GetHref(bool id = false, bool close = false)
-  {
-    if (close)
-      return $"/close/{Action}/{Id}";
-    return $"{Funktionen.Iif(string.IsNullOrEmpty(Area), "", $"/{Area}")}/{Action}{Funktionen.Iif(string.IsNullOrEmpty(Id) || !id, "", $"/{Id}")}";
-  }
-
-  /// <summary>
   /// Liefert zum Table-Handler passenden DialogType.
   /// </summary>
   /// <param name="handler">Betroffener Table-Handler.</param>
@@ -94,7 +81,7 @@ public class Formular
   /// </summary>
   /// <param name="id0">Betroffene Id mit vorangestelltem Dialogtyp.</param>
   /// <returns>Passender DialogType und Id.</returns>
-  public static (DialogTypeEnum dt, string id) GetDtId(string? id0)
+  public static (DialogTypeEnum Dt, string Id) GetDtId(string? id0)
   {
     var parts = (id0 ?? "").Split('_');
     if (parts.Length <= 0)
@@ -127,5 +114,17 @@ public class Formular
         return $"{title} erfassen";
     }
   }
-}
 
+  /// <summary>
+  /// Liefert die URL für das Formular.
+  /// </summary>
+  /// <param name="id">Gibt an, ob die ID mit übergeben werden soll.</param>
+  /// <param name="close">Gibt an, ob die Action mit ID geschlossen werden soll.</param>
+  /// <returns>URL für das Formular.</returns>
+  public string GetHref(bool id = false, bool close = false)
+  {
+    if (close)
+      return $"/close/{Action}/{Id}";
+    return $"{Funktionen.Iif(string.IsNullOrEmpty(Area), "", $"/{Area}")}/{Action}{Funktionen.Iif(string.IsNullOrEmpty(Id) || !id, "", $"/{Id}")}";
+  }
+}

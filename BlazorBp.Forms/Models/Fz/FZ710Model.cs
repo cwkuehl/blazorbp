@@ -8,11 +8,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using BlazorSpa.Core.Base;
 using BlazorSpa.Base;
-using static BlazorSpa.Core.Base.DialogTypeEnum;
+using BlazorSpa.Core.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
+using static BlazorSpa.Core.Base.DialogTypeEnum;
 
 /// <summary>
 /// Model-Klasse für das modale Formular FZ710 Notiz.
@@ -57,6 +57,29 @@ public class FZ710Model : PageModelBase
   /// <summary>Holt oder setzt Abbrechen.</summary>
   [Display(Name = "Abbre_chen", Description = "Dialog ohne Speichern schließen")]
   public string? Abbrechen { get; set; }
+
+  /// <summary>
+  /// Sets memo into xml string.
+  /// </summary>
+  /// <param name="xml">Affected xml string.</param>
+  /// <param name="memo">Affected memo as string.</param>
+  /// <returns>Xml string from memo.</returns>
+  public static string SetMemo(string? xml, string? memo)
+  {
+    if (string.IsNullOrWhiteSpace(xml))
+      xml = InitMemo();
+    var doc = new XmlDocument();
+    doc.Load(new StringReader(xml));
+    var root = doc.DocumentElement;
+    var node = root?.SelectSingleNode("//tabelle//notiz");
+    if (node != null)
+      node.InnerText = memo.TrimNull() ?? "";
+    using var sw = new StringWriter();
+    using var tw = XmlWriter.Create(sw);
+    doc.WriteTo(tw);
+    tw.Flush();
+    return sw.GetStringBuilder().ToString();
+  }
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
   /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
@@ -114,68 +137,46 @@ public class FZ710Model : PageModelBase
   }
 
   /// <summary>
-  /// Initialize Memo.
-  /// </summary>
-  /// <returns>Memo as XML string.</returns>
-  private static string InitMemo()
-  {
-    var zeilen = 1;
-    var spalten = 2;
-    var teiler = 0;
-    var doc = new XDocument(new XDeclaration("1.0", "UTF-8", null));
-    var table = new XElement("tabelle", new XAttribute("spalten", $"{spalten - 2}"),
-      new XAttribute("zeilen", $"{zeilen}"), new XAttribute("teiler", $"{teiler}"),
-      new XAttribute("breite0", "50"), new XAttribute("hoehe0", "30")
-    );
-    doc.Add(table);
-    using var sw = new StringWriter();
-    using var tw = XmlWriter.Create(sw);
-    doc.WriteTo(tw);
-    tw.Flush();
-    return sw.GetStringBuilder().ToString();
-  }
-
-  /// <summary>
   /// Gets memo from xml.
   /// </summary>
   /// <param name="xml">Affected xml.</param>
   /// <returns>Memo from xml.</returns>
-  public static string? GetMemo(string? xml)
+  private static string? GetMemo(string? xml)
   {
     if (string.IsNullOrWhiteSpace(xml))
       xml = InitMemo();
     var doc = new XmlDocument();
     doc.Load(new StringReader(xml));
     var root = doc.DocumentElement;
-    // var table = root.SelectSingleNode("/tabelle");
-    // if (table != null)
-    // {
-    //   var teiler = Functions.ToInt32(table.Attributes["teiler"]?.Value);
-    //   if (teiler > 0)
-    //     splitpane.Position = teiler;
-    //   var spalten = Math.Max(Functions.ToInt32(table.Attributes["spalten"]?.Value), 1);
-    //   var zeilen = Math.Max(Functions.ToInt32(table.Attributes["zeilen"]?.Value), 1);
-    //   var list = new List<string[]>();
-    //   var flist = new Formulas();
-    //   for (var i = 0; i < zeilen; i++)
-    //   {
-    //     var arr = new string[spalten + 2];
-    //     arr[0] = Functions.ToString(i + 1);
-    //     arr[1] = $"{i + 1:000}";
-    //     var zellen = table.SelectNodes($"zelle[@y='{i}']");
-    //     foreach (XmlElement z in zellen)
-    //     {
-    //       var x = Functions.ToInt32(z.Attributes["x"]?.Value);
-    //       var formel = z.FirstChild?.InnerText;
-    //       arr[x + 2] = formel;
-    //       var f = Formula.Instance(formel, x, i); // Read formula.
-    //       if (f != null)
-    //         flist.List.Add(f);
-    //     }
-    //     list.Add(arr);
-    //   }
-    //   AddStringColumns(tabelle, spalten, DialogType != DialogTypeEnum.Delete, list, flist);
-    // }
+    //// var table = root.SelectSingleNode("/tabelle");
+    //// if (table != null)
+    //// {
+    ////   var teiler = Functions.ToInt32(table.Attributes["teiler"]?.Value);
+    ////   if (teiler > 0)
+    ////     splitpane.Position = teiler;
+    ////   var spalten = Math.Max(Functions.ToInt32(table.Attributes["spalten"]?.Value), 1);
+    ////   var zeilen = Math.Max(Functions.ToInt32(table.Attributes["zeilen"]?.Value), 1);
+    ////   var list = new List<string[]>();
+    ////   var flist = new Formulas();
+    ////   for (var i = 0; i < zeilen; i++)
+    ////   {
+    ////     var arr = new string[spalten + 2];
+    ////     arr[0] = Functions.ToString(i + 1);
+    ////     arr[1] = $"{i + 1:000}";
+    ////     var zellen = table.SelectNodes($"zelle[@y='{i}']");
+    ////     foreach (XmlElement z in zellen)
+    ////     {
+    ////       var x = Functions.ToInt32(z.Attributes["x"]?.Value);
+    ////       var formel = z.FirstChild?.InnerText;
+    ////       arr[x + 2] = formel;
+    ////       var f = Formula.Instance(formel, x, i); // Read formula.
+    ////       if (f != null)
+    ////         flist.List.Add(f);
+    ////     }
+    ////     list.Add(arr);
+    ////   }
+    ////   AddStringColumns(tabelle, spalten, DialogType != DialogTypeEnum.Delete, list, flist);
+    //// }
     var node = root?.SelectSingleNode("//tabelle//notiz");
     if (node != null)
       return node.InnerText;
@@ -187,7 +188,7 @@ public class FZ710Model : PageModelBase
   /// </summary>
   /// <param name="xml">Affected xml string.</param>
   /// <returns>Table from xml.</returns>
-  public static string? GetTable(string? xml)
+  private static string? GetTable(string? xml)
   {
     if (string.IsNullOrWhiteSpace(xml))
       xml = InitMemo();
@@ -228,29 +229,6 @@ public class FZ710Model : PageModelBase
       return sb.ToString();
     }
     return null;
-  }
-
-  /// <summary>
-  /// Sets memo into xml string.
-  /// </summary>
-  /// <param name="xml">Affected xml string.</param>
-  /// <param name="memo">Affected memo as string.</param>
-  /// <returns>Xml string from memo.</returns>
-  public static string SetMemo(string? xml, string? memo)
-  {
-    if (string.IsNullOrWhiteSpace(xml))
-      xml = InitMemo();
-    var doc = new XmlDocument();
-    doc.Load(new StringReader(xml));
-    var root = doc.DocumentElement;
-    var node = root?.SelectSingleNode("//tabelle//notiz");
-    if (node != null)
-      node.InnerText = memo.TrimNull() ?? "";
-    using var sw = new StringWriter();
-    using var tw = XmlWriter.Create(sw);
-    doc.WriteTo(tw);
-    tw.Flush();
-    return sw.GetStringBuilder().ToString();
   }
 
   // / <summary>
@@ -321,4 +299,26 @@ public class FZ710Model : PageModelBase
   //   xmlTextWriter.Flush();
   //   return stringWriter.GetStringBuilder().ToString();
   // }
+
+  /// <summary>
+  /// Initialize Memo.
+  /// </summary>
+  /// <returns>Memo as XML string.</returns>
+  private static string InitMemo()
+  {
+    var zeilen = 1;
+    var spalten = 2;
+    var teiler = 0;
+    var doc = new XDocument(new XDeclaration("1.0", "UTF-8", null));
+    var table = new XElement("tabelle", new XAttribute("spalten", $"{spalten - 2}"),
+      new XAttribute("zeilen", $"{zeilen}"), new XAttribute("teiler", $"{teiler}"),
+      new XAttribute("breite0", "50"), new XAttribute("hoehe0", "30")
+    );
+    doc.Add(table);
+    using var sw = new StringWriter();
+    using var tw = XmlWriter.Create(sw);
+    doc.WriteTo(tw);
+    tw.Flush();
+    return sw.GetStringBuilder().ToString();
+  }
 }

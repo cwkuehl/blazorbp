@@ -29,14 +29,14 @@ public static class LocalhostCertificateValidator
     //   //// throw new Exception($"Expected SHA-256 fingerprint: {Convert.ToHexString(expectedSha256)}");
     // }
 
-    // if (!(string.Equals(host, "localhost", StringComparison.OrdinalIgnoreCase) || string.Equals(host, "127.0.0.1") || string.Equals(host, "::1")))
-    //   return policyErrors == SslPolicyErrors.None;
+    //// if (!(string.Equals(host, "localhost", StringComparison.OrdinalIgnoreCase) || string.Equals(host, "127.0.0.1") || string.Equals(host, "::1")))
+    ////   return policyErrors == SslPolicyErrors.None;
 
     if (expectedSha256.Length != 32)
       return false;
 
-    // if (policyErrors != SslPolicyErrors.None && policyErrors != SslPolicyErrors.RemoteCertificateChainErrors)
-    //   return false;
+    //// if (policyErrors != SslPolicyErrors.None && policyErrors != SslPolicyErrors.RemoteCertificateChainErrors)
+    ////   return false;
 
     if (certificate is X509Certificate2 certificate2)
       return IsPinnedAndCurrent(certificate2, expectedSha256);

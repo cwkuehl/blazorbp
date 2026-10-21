@@ -6,12 +6,12 @@ using System.Reflection;
 using System.Security.Authentication;
 using System.Security.Claims;
 using BlazorBp.Components; // für App
+using BlazorSpa.Base.Auth;
+using BlazorSpa.Base.Undo;
 using BlazorSpa.Core.Base;
 using BlazorSpa.Core.Components;
 using BlazorSpa.Core.Core;
 using BlazorSpa.Core.Modules;
-using BlazorSpa.Base.Auth;
-using BlazorSpa.Base.Undo;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using NeoSmart.Caching.Sqlite;
@@ -33,23 +33,26 @@ var https = (builder.Configuration["Urls"] ?? "").Contains("https:");
 
 // Add services to the container.
 if (interactive || true)
-  // true wegen InvalidOperationException: Cannot provide a value for property 'AuthenticationStateProvider' on type 'Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState'. There is no registered service of type 'Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider'.
+  //// true wegen InvalidOperationException: Cannot provide a value for property 'AuthenticationStateProvider' on type 'Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState'. There is no registered service of type 'Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider'.
   builder.Services.AddRazorComponents(options => options.DetailedErrors = builder.Environment.IsDevelopment()).AddInteractiveServerComponents();
 else
   builder.Services.AddRazorComponents(options => options.DetailedErrors = builder.Environment.IsDevelopment());
 
 if (!builder.Environment.IsDevelopment() && https)
 {
-  builder.Services.AddHsts(options => {
-    options.Preload = true;
-    options.MaxAge = TimeSpan.FromDays(365);
-    options.IncludeSubDomains = true;
+  builder.Services.AddHsts(options =>
+  {
+     options.Preload = true;
+     options.MaxAge = TimeSpan.FromDays(365);
+     options.IncludeSubDomains = true;
   });
 }
-builder.Services.AddAuthentication(o => {
-  o.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+builder.Services.AddAuthentication(o =>
+{
+   o.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 })
-  .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, o => {
+  .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, o =>
+  {
     o.LoginPath = "/";
     o.ExpireTimeSpan = TimeSpan.FromSeconds(BlazorSpa.Base.Konstanten.SESSION_TIMEOUT);
     o.Cookie.MaxAge = o.ExpireTimeSpan;
@@ -59,9 +62,12 @@ builder.Services.AddAuthentication(o => {
     o.Cookie.Name = "BlazorBpCookie";
     o.Cookie.SecurePolicy = https ? CookieSecurePolicy.Always : CookieSecurePolicy.None;
     o.Cookie.SameSite = SameSiteMode.Strict;
-    o.Events = new CookieAuthenticationEvents {
-      OnValidatePrincipal = context => {
-        if (context.Principal?.Identity is ClaimsIdentity identity && identity.IsAuthenticated) {
+    o.Events = new CookieAuthenticationEvents
+    {
+      OnValidatePrincipal = context =>
+      {
+        if (context.Principal?.Identity is ClaimsIdentity identity && identity.IsAuthenticated)
+        {
           var claims = context.Principal?.Claims;
           if (claims == null)
           {
@@ -81,7 +87,7 @@ builder.Services.AddAuthentication(o => {
           identity.AddClaim(new Claim("foo", "bar"));
         }
         return Task.CompletedTask;
-      }
+      },
     };
   });
 builder.Services.AddAuthorization(options =>
@@ -104,18 +110,19 @@ if (ismem == "True")
 else
 {
   var cachefile = builder.Configuration["Caching:Sqlite:ConnectionString"] ?? "cache.db";
-  builder.Services.AddSqliteCache(options => {
+  builder.Services.AddSqliteCache(options =>
+  {
     options.CachePath = cachefile;
   });
 }
-// Alternativ mit SQL Server: Package Microsoft.Extensions.Caching.SqlServer v8.0.8
-// builder.Services.AddDistributedSqlServerCache(options =>
-// {
-//     options.ConnectionString = builder.Configuration.GetConnectionString(
-//         "DistCache_ConnectionString");
-//     options.SchemaName = "dbo";
-//     options.TableName = "TestCache";
-// });
+//// Alternativ mit SQL Server: Package Microsoft.Extensions.Caching.SqlServer v8.0.8
+//// builder.Services.AddDistributedSqlServerCache(options =>
+//// {
+////     options.ConnectionString = builder.Configuration.GetConnectionString(
+////         "DistCache_ConnectionString");
+////     options.SchemaName = "dbo";
+////     options.TableName = "TestCache";
+//// });
 builder.Services.AddSession(options =>
 {
   options.IdleTimeout = TimeSpan.FromSeconds(BlazorSpa.Base.Konstanten.SESSION_TIMEOUT);
@@ -162,7 +169,7 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
   app.UseExceptionHandler("/Error", createScopeForErrors: true);
-  // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+  //// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
   app.UseHsts();
 }
 
@@ -196,27 +203,27 @@ app.Use(async (context, next) =>
   if (0 == 0)
   {
     const string POLICY = "default-src 'self'; script-src 'self' 'unsafe-hashes' 'sha256-CUqQNXXMRfh20wSHsbWzap8G4U55uWVlFrnrwSqnd10=' 'sha256-UlYTlM874RdFSS67t+aMjiuwzawEsxJkZV0OrhmqESo=' 'sha256-E3Jin0zoOcW167+rqzMm4duzknSmqrDJ7LJs+P1wAdI='; img-src 'self' data:; form-action 'self'; frame-ancestors 'none';"; // To prevent all framing of your content
-    // const string POLICY = "default-src 'self'; script-src 'self' 'unsafe-hashes' 'sha256-fa0BfrkfoHWYWTFJg9cIEoVa6Mn3OUorfpaz+NXuHCI=' 'sha256-RFWPLDbv2BY+rCkDzsE+0fr8ylGr2R2faWMhq4lfEQc='; connect-src 'self'; img-src 'self' data:; style-src 'self'; form-action 'self'; frame-ancestors 'none';"; // To prevent all framing of your content
-    // const string POLICY = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; img-src 'self'; style-src 'self'; form-action 'self'; frame-ancestors 'none';";
-    // script-src 'unsafe-inline' 'unsafe-eval' for ajax
-    // img-src 'self' data: for bootstrap images
-    // script-src 'self' 'unsafe-hashes' 'sha256-fa0BfrkfoHWYWTFJg9cIEoVa6Mn3OUorfpaz+NXuHCI=' for hallo();
-    // echo -e -n "submitc(\x24(this));" | openssl sha256 -binary | openssl base64
-    // echo -e -n "return confimp();" | openssl sha256 -binary | openssl base64
-    // Bringt andere Hashes: openssl dgst -sha3-256 -binary file.js | openssl base64 -A
-    // 'sha256-ePniVEkSivX/c7XWBGafqh8tSpiRrKiqYeqbG7N1TOE=' document.forms[0].submit()
-    // 'sha256-gn6SvwkOt5ByZ8z2lZtOcIQopPyjkBUNz7EbU50dwb8=' submitControl($(this).attr('id'),'form1');
-    // 'sha256-JINyXuiE90RdGlUFK8DM5WNxzknp65BaeVE4VuderpY=' submitControl($(this).attr('id'),'formt');
-    // 'sha256-CUqQNXXMRfh20wSHsbWzap8G4U55uWVlFrnrwSqnd10=' submitc($(this));
-    // 'sha256-UlYTlM874RdFSS67t+aMjiuwzawEsxJkZV0OrhmqESo=' statec($(this));
-    // 'sha256-E3Jin0zoOcW167+rqzMm4duzknSmqrDJ7LJs+P1wAdI=' return confimp();
-    // 'sha256-aV5tqRL+qWGkuS9LFLVv5WMI1ldktz5yzpz7ftN2I5k=' alert('Hallo'); <script>alert('Hallo');</script>
+    //// const string POLICY = "default-src 'self'; script-src 'self' 'unsafe-hashes' 'sha256-fa0BfrkfoHWYWTFJg9cIEoVa6Mn3OUorfpaz+NXuHCI=' 'sha256-RFWPLDbv2BY+rCkDzsE+0fr8ylGr2R2faWMhq4lfEQc='; connect-src 'self'; img-src 'self' data:; style-src 'self'; form-action 'self'; frame-ancestors 'none';"; // To prevent all framing of your content
+    //// const string POLICY = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; img-src 'self'; style-src 'self'; form-action 'self'; frame-ancestors 'none';";
+    //// script-src 'unsafe-inline' 'unsafe-eval' for ajax
+    //// img-src 'self' data: for bootstrap images
+    //// script-src 'self' 'unsafe-hashes' 'sha256-fa0BfrkfoHWYWTFJg9cIEoVa6Mn3OUorfpaz+NXuHCI=' for hallo();
+    //// echo -e -n "submitc(\x24(this));" | openssl sha256 -binary | openssl base64
+    //// echo -e -n "return confimp();" | openssl sha256 -binary | openssl base64
+    //// Bringt andere Hashes: openssl dgst -sha3-256 -binary file.js | openssl base64 -A
+    //// 'sha256-ePniVEkSivX/c7XWBGafqh8tSpiRrKiqYeqbG7N1TOE=' document.forms[0].submit()
+    //// 'sha256-gn6SvwkOt5ByZ8z2lZtOcIQopPyjkBUNz7EbU50dwb8=' submitControl($(this).attr('id'),'form1');
+    //// 'sha256-JINyXuiE90RdGlUFK8DM5WNxzknp65BaeVE4VuderpY=' submitControl($(this).attr('id'),'formt');
+    //// 'sha256-CUqQNXXMRfh20wSHsbWzap8G4U55uWVlFrnrwSqnd10=' submitc($(this));
+    //// 'sha256-UlYTlM874RdFSS67t+aMjiuwzawEsxJkZV0OrhmqESo=' statec($(this));
+    //// 'sha256-E3Jin0zoOcW167+rqzMm4duzknSmqrDJ7LJs+P1wAdI=' return confimp();
+    //// 'sha256-aV5tqRL+qWGkuS9LFLVv5WMI1ldktz5yzpz7ftN2I5k=' alert('Hallo'); <script>alert('Hallo');</script>
     context.Response.Headers.Append("Content-Security-Policy", $"{POLICY}");
-    // Verhindern von MIME-Typ-Sniffing.
+    //// Verhindern von MIME-Typ-Sniffing.
     context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
-    // Verhindern von Clickjacking.
+    //// Verhindern von Clickjacking.
     context.Response.Headers.Append("X-Frame-Options", "DENY");
-    // Aktivieren von XSS-Schutz.
+    //// Aktivieren von XSS-Schutz.
     context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
   }
   await next();
@@ -224,7 +231,7 @@ app.Use(async (context, next) =>
 app.UseCookiePolicy(new CookiePolicyOptions
 {
   Secure = https ? CookieSecurePolicy.Always : CookieSecurePolicy.None,
-  HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always
+  HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always,
 });
 app.UseSession();
 
@@ -234,18 +241,18 @@ foreach (var module in modules)
   module.ConfigureApp(app);
 }
 
-// app.UseStaticFiles(new StaticFileOptions()
-// {
-//   // Add the other folder, using the Content Root as the base
-//   FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "wwwroot/help"))
-// });
+//// app.UseStaticFiles(new StaticFileOptions()
+//// {
+////   // Add the other folder, using the Content Root as the base
+////   FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "wwwroot/help"))
+//// });
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
   // Aufruf mit /swagger und /swagger/v1/swagger.json
   c.SwaggerEndpoint("v1/swagger.json", "BlazorBp API V1");
-  // Bei app.UseSwaggerUI funktioniert automatische Abmeldung mit /auth/logout nicht, wenn RoutePrefix nicht gesetzt ist.
+  //// Bei app.UseSwaggerUI funktioniert automatische Abmeldung mit /auth/logout nicht, wenn RoutePrefix nicht gesetzt ist.
   c.RoutePrefix = "swagger";
 });
 

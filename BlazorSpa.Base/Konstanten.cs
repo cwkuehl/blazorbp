@@ -16,8 +16,10 @@ public static class Konstanten
   public const int HttpTimeout = 10000;
 
   /// <summary>Session Timeout in Sekunden.</summary>
+#pragma warning disable SA1310 // Field names should not contain underscore
   public const int SESSION_TIMEOUT = 7205; // Countdown hat (x - 5) / 2 Sekunden, weil Cookie Expiration erst nach der Hälfte der Zeit verlängert wird.
 
   /// <summary>Claim für Session ID.</summary>
   public const string CLAIM_SID = "123xQp5ß";
+#pragma warning restore SA1310
 }

@@ -1,4 +1,4 @@
-// <copyright file="ENN100TableRowModel.cs" company="cwkuehl.de">
+// <copyright file="EN100TableRowModel.cs" company="cwkuehl.de">
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
@@ -54,6 +54,7 @@ public class EN100TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
+  /// <returns>Das kopierte Model.</returns>
   public static EN100TableRowModel From(EnAbfrage m)
   {
     return new EN100TableRowModel

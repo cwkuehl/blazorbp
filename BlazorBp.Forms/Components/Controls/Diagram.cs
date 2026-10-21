@@ -171,6 +171,21 @@ public class Diagram
     pc.Stroke();
   }
 
+  /// <summary>Handles Diagram.</summary>
+  /// <param name="pc">Affected context.</param>
+  /// <param name="label">Affected label.</param>
+  /// <param name="list">Affected list.</param>
+  /// <param name="label2">Affected second label.</param>
+  /// <param name="label3">Affected third label.</param>
+  public static void OnDiagramDraw(CanvasCompiler pc, string label, List<KeyValuePair<string, decimal>>? list, string? label2 = null, string? label3 = null)
+  {
+    if (list == null)
+      return;
+    var w = 400; // da.Window.Width;
+    var h = 200; // da.Window.Height;
+    Diagram.Draw(label, list, pc, 0, 0, w, h, label2, label3);
+  }
+
   /// <summary>
   /// Draws a circle.
   /// </summary>
@@ -187,20 +202,5 @@ public class Diagram
     pc.MoveTo((int)x, (int)y);
     pc.Arc((int)x, (int)y, radius, 0, (decimal)(2 * Math.PI));
     pc.Stroke();
-  }
-
-  /// <summary>Handles Diagram.</summary>
-  /// <param name="pc">Affected context.</param>
-  /// <param name="label">Affected label.</param>
-  /// <param name="list">Affected list.</param>
-  /// <param name="label2">Affected second label.</param>
-  /// <param name="label3">Affected third label.</param>
-  public static void OnDiagramDraw(CanvasCompiler pc, string label, List<KeyValuePair<string, decimal>>? list, string? label2 = null, string? label3 = null)
-  {
-    if (list == null)
-      return;
-    var w = 400; // da.Window.Width;
-    var h = 200; // da.Window.Height;
-    Diagram.Draw(label, list, pc, 0, 0, w, h, label2, label3);
   }
 }

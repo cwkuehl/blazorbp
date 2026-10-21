@@ -8,7 +8,6 @@ using System.ComponentModel.DataAnnotations;
 using BlazorSpa.Core.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
-using static BlazorSpa.Core.Base.DialogTypeEnum;
 
 /// <summary>
 /// Model-Klasse für eine Zeile in der Tabelle von Formular HH300 Ereignisse.
@@ -16,10 +15,13 @@ using static BlazorSpa.Core.Base.DialogTypeEnum;
 [Serializable]
 public class HH300TableRowModel : TableRowModelBase
 {
-
   /// <summary>Holt oder setzt Nr.</summary>
   [Display(Name = "Nr.", Description = "Ereignis-Nr.")]
-  public string? Nummer { get { return Id; } set { Id = value; } }
+  public string? Nummer
+  {
+    get { return Id; }
+    set { Id = value; }
+  }
 
   /// <summary>Holt oder setzt Bezeichnung.</summary>
   [Display(Name = "_Bezeichnung", Description = "Bezeichnung")]
@@ -59,6 +61,7 @@ public class HH300TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
+  /// <returns>Das kopierte Model.</returns>
   public static HH300TableRowModel From(HhEreignis m)
   {
     // No.;Description;Posting text;Debit account;Credit account;Changed at;Changed by;Created at;Created by

@@ -1,32 +1,46 @@
+// <copyright file="CoreModule.cs" company="cwkuehl.de">
+// Copyright (c) cwkuehl.de. All rights reserved.
+// </copyright>
+
 namespace BlazorSpa.Core;
 
 using System.Text;
-using BlazorSpa.Core.Base;
-using BlazorSpa.Core.Components;
-using BlazorSpa.Core.Modules;
 using BlazorSpa.Base;
 using BlazorSpa.Base.Auth;
 using BlazorSpa.Base.Models;
 using BlazorSpa.Base.Services;
 using BlazorSpa.Base.Undo;
+using BlazorSpa.Core.Base;
+using BlazorSpa.Core.Components;
+using BlazorSpa.Core.Modules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+/// <summary>
+/// Initialisierung für die Core-Anwendung.
+/// </summary>
 public class CoreModule : IFormModule
 {
+  /// <summary>Liefert die Hauptmenüs, die dieses Modul bereitstellt.</summary>
+  /// <returns>Liste der Hauptmenüs.</returns>
   public IEnumerable<MainMenu> GetMainMenues()
   {
     return new List<MainMenu>
     {
     };
   }
+
+  /// <summary>DI-Registrierung modul-eigener Services.</summary>
+  /// <param name="services">Betroffene Service-Collection.</param>
   public void ConfigureServices(IServiceCollection services)
   {
     Funktionen.MachNichts();
   }
 
+  /// <summary>Liefert die Formulare, die dieses Modul bereitstellt.</summary>
+  /// <returns>Dictionary mit den Formularen.</returns>
   public Dictionary<string, Formular> GetForms()
   {
     return new Dictionary<string, Formular>
@@ -42,6 +56,8 @@ public class CoreModule : IFormModule
     builder.Logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
   }
 
+  /// <summary>App-Konfiguration ergänzen.</summary>
+  /// <param name="app">Betroffene WebApplication.</param>
   public void ConfigureApp(WebApplication app)
   {
     app.MapGet("/downloadcsv/{page}/{id}",
@@ -76,8 +92,8 @@ public class CoreModule : IFormModule
       System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} starttask {page} ...{id.Right(6)}");
       if (string.IsNullOrEmpty(page) || string.IsNullOrEmpty(id))
         return Results.BadRequest();
-      // Task.Run(() => StartTask.Do(page, id, context, sp));
-      // return Results.Ok();
+      //// Task.Run(() => StartTask.Do(page, id, context, sp));
+      //// return Results.Ok();
       StartTask.Do(page, id, context, sp);
       return Results.NoContent();
     });

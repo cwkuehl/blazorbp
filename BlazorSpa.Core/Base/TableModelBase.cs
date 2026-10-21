@@ -6,17 +6,27 @@ namespace BlazorSpa.Core.Base;
 
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using BlazorSpa.Core.Models;
 using BlazorSpa.Base;
 using BlazorSpa.Base.Models;
+using BlazorSpa.Core.Models;
 using Microsoft.AspNetCore.Http;
 
 /// <summary>
 /// Basis-Klasse für alle Table-Models zur Behandlung von Postbacks in Tabellen.
 /// </summary>
+/// <typeparam name="T">Typ der Zeilen-Models.</typeparam>
 [Serializable]
 public class TableModelBase<T>
 {
+  /// <summary>Holt oder setzt die Liste für die Anzahl der Zeilen pro Seite.</summary>
+  private static List<ListItem>? standardAuswahlRowsPerPage = new List<ListItem>
+  {
+    new("5", "5"),
+    new("10", "10"),
+    new("15", "15"),
+    new("20", "20"),
+  };
+
   /// <summary>Holt oder setzt die eindeutige Nummer des Models.</summary>
   public string? Nr { get; set; } = default;
 
@@ -35,17 +45,8 @@ public class TableModelBase<T>
   /// <summary>Holt oder setzt die Liste für die Anzahl der Zeilen pro Seite.</summary>
   public List<ListItem>? AuswahlRowsPerPage
   {
-    get { return StandardAuswahlRowsPerPage; }
+    get { return standardAuswahlRowsPerPage; }
   }
-
-  /// <summary>Holt oder setzt die Liste für die Anzahl der Zeilen pro Seite.</summary>
-  private static List<ListItem>? StandardAuswahlRowsPerPage = new List<ListItem>
-  {
-    new("5","5"),
-    new("10","10"),
-    new("15","15"),
-    new("20","20"),
-  };
 
   /// <summary>Holt oder setzt die Spalte, die zum Sortieren der Daten verwendet wird.</summary>
   [Display(Name = "Sortierung", Description = "Spalte zum Sortieren")]
@@ -96,34 +97,34 @@ public class TableModelBase<T>
   }
 
   /// <summary>Lesen der Submit-auslösenden Schaltfläche und des Submit-Controls aus dem Request.</summary>
-  /// <param name="Request">Betroffener Request.</param>
+  /// <param name="request">Betroffener Request.</param>
   /// <param name="handler">Betroffener Handler bzw. Formname.</param>
   /// <param name="columns">Liste der Spalten.</param>///
   /// <returns>True, wenn ein Zeilenwechsel erkannt wurde, sonst false.</returns>
-  public bool GetSubmit(HttpRequest? Request, string? handler = null, List<Column>? columns = null)
+  public bool GetSubmit(HttpRequest? request, string? handler = null, List<Column>? columns = null)
   {
-    if (Request == null)
+    if (request == null)
       return false;
-    Handler = Request.Query["handler"];
-    if (Request.Method == "POST")
+    Handler = request.Query["handler"];
+    if (request.Method == "POST")
     {
-      if (handler != null && handler != Request.Form["_handler"])
+      if (handler != null && handler != request.Form["_handler"])
         return false;
-      if (Request.Form["SubmitControl"] == nameof(Search))
+      if (request.Form["SubmitControl"] == nameof(Search))
         Handler = null;
       if (columns != null)
       {
         VisibleColumns = "";
         for (int i = 0; i < columns.Count; i++)
         {
-          columns[i].Visible = Funktionen.ToBool(Request.Form[$"Table.Column{i}"]) ?? false;
+          columns[i].Visible = Funktionen.ToBool(request.Form[$"Table.Column{i}"]) ?? false;
           VisibleColumns += Funktionen.Iif(columns[i].Visible, "1", "0");
         }
       }
-      SortColumn = GetLastValue(Request.Form["Table.SortColumn"]);
+      SortColumn = GetLastValue(request.Form["Table.SortColumn"]);
       var sr0 = SelectedRow;
-      SelectedRow = Funktionen.ToNullableInt32(GetLastValue(Request.Form["Table.SelectedRow"])) ?? -1;
-      ModalId = GetLastValue(Request.Form["Table.ModalId"]);
+      SelectedRow = Funktionen.ToNullableInt32(GetLastValue(request.Form["Table.SelectedRow"])) ?? -1;
+      ModalId = GetLastValue(request.Form["Table.ModalId"]);
       if (SelectedRow != sr0)
         return true;
     }
@@ -145,58 +146,3 @@ public class TableModelBase<T>
     return null;
   }
 }
-
-  /// <summary>
-  /// Record für Spalten-Eigenschaften.
-  /// </summary>
-  //// public record Column(string Name, string SortName, string Label, string Title, string SortTitle, PropertyInfo Pi, bool Visible);
-  public record Column
-  {
-    /// <summary>
-    /// Record für Spalten-Eigenschaften.
-    /// </summary>
-    /// <param name="name">Name der Model-Spalte.</param>
-    /// <param name="sortName">Name der Datenbank-Spalte zur Sortierung.</param>
-    /// <param name="label">Angezeigte Bezeichnung der Spalte.</param>
-    /// <param name="title">Tooltip des Wertes wird nicht verwendet.</param>
-    /// <param name="sortTitle">Tooltip auf Sortier-Schaltfläche.</param>
-    /// <param name="pi">Betroffene PropertyInfo im Model.</param>
-    /// <param name="visible">Sichbarkeit der Spalte.</param>
-    /// <param name="right">Rechte Ausrichtung der Spalte.</param>
-    /// <returns></returns>
-    public Column(string name, string sortName, string label, string title, string sortTitle, PropertyInfo pi, bool visible, bool right)
-    {
-      Name = name;
-      SortName = sortName;
-      Label = label;
-      Title = title;
-      SortTitle = sortTitle;
-      Pi = pi;
-      Visible = visible;
-      Right = right;
-    }
-
-    /// <summary>Holt oder setzt den Namen der Model-Spalte.</summary>
-    public string Name { get; init; }
-
-    /// <summary>Holt oder setzt den Namen der Datenbank-Spalte zur Sortierung.</summary>
-    public string SortName { get; init; }
-
-    /// <summary>Holt oder setzt die angezeigte Bezeichnung der Spalte.</summary>
-    public string Label { get; init; }
-
-    /// <summary>Holt oder setzt den Tooltip des Wertes (wird nicht verwendet).</summary>
-    public string Title { get; init; }
-
-    /// <summary>Holt oder setzt den Namen der Model-Spalte.</summary>
-    public string SortTitle { get; init; }
-
-    /// <summary>Holt oder setzt die PropertyInfo im Model.</summary>
-    public PropertyInfo Pi { get; init; }
-
-    /// <summary>Holt oder setzt die Sichtbarkeit der Spalte.</summary>
-    public bool Visible { get; set; }
-
-    /// <summary>Holt oder setzt die rechte Ausrichtung der Spalte.</summary>
-    public bool Right { get; set; }
-  };

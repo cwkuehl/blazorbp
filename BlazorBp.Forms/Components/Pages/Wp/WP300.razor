@@ -49,6 +49,61 @@
   private CSBP.Services.Apis.Services.IStockService StockService { get; set; } = default!;
 
   /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  /// <param name="id2">Id aus 2. modalen Dialog.</param>
+  protected override void HandleModal(string? form, string? handler, string? id, string? id2)
+  {
+    var (dt, msubmit, mvalid) = HandleModal1(form, "wp300t", "wp310modal", WP310Model.GetSubmit(HttpContext.Request), nameof(WP310Model.Abbrechen), handler, id);
+    if (dt == DialogTypeEnum.New)
+    {
+      WP310Model.SetMhrf(dt);
+      Model.ModalArt = handler;
+      Model.ModalId = id;
+    }
+    else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
+    {
+      var i = Functions.ToInt32(id);
+      var l = Table?.Liste ?? TableData(Table, ModalMessages);
+      if (l != null && i >= 1 && l.Count() >= i)
+      {
+        var ds = l.Skip(i - 1).FirstOrDefault();
+        if (ds != null)
+        {
+          WP310Model.From(ds);
+          WP310Model.SetMhrf(dt);
+          Model.ModalArt = handler;
+          Model.ModalId = id;
+        }
+      }
+    }
+    else if (dt == DialogTypeEnum.Postback)
+    {
+      if (mvalid && msubmit == nameof(WP310Model.Ok))
+      {
+        var dt1 = Formular.GetTableDialogType(Model.ModalArt);
+        var daten = ServiceDaten;
+        var o = WP310Model.To(daten);
+        var r = dt1 == DialogTypeEnum.Delete
+          ? StockService.DeleteConfiguration(daten, o)
+          : StockService.SaveConfiguration(daten, o.Uid, o.Bezeichnung, o.Box ?? 0m, o.Reversal, o.Method, o.Duration, o.Relative, o.Scale, o.Status, o.Notiz);
+        if (r.Ok)
+        {
+          Model.ModalArt = null;
+          Model.ModalId = null;
+          Refresh();
+        }
+        else
+          ModalMessages?.Add(() => WP310Model, r.GetErrors() ?? "");
+      }
+    }
+    WriteFormularModel(Model.Nr ?? "0", Model);
+  }
+
+  /// <summary>
   /// Initialisierung des Models.
   /// </summary>
   /// <param name="id">Betroffene Id.</param>
@@ -97,61 +152,6 @@
   {
     if (OnInitializedFormular("WP300", "Konfigurationen - WP300", Id, true))
       return;
-  }
-
-  /// <summary>
-  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
-  /// </summary>
-  /// <param name="form">Betroffenes Postback-Formular.</param>
-  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
-  /// <param name="id">Id aus Tabellen-Aktion.</param>
-  /// <param name="id2">Id aus 2. modalen Dialog.</param>
-  public override void HandleModal(string? form, string? handler, string? id, string? id2)
-  {
-    var (dt, msubmit, mvalid) = HandleModal1(form, "wp300t", "wp310modal", WP310Model.GetSubmit(HttpContext.Request), nameof(WP310Model.Abbrechen), handler, id);
-    if (dt == DialogTypeEnum.New)
-    {
-      WP310Model.SetMhrf(dt);
-      Model.ModalArt = handler;
-      Model.ModalId = id;
-    }
-    else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
-    {
-      var i = Functions.ToInt32(id);
-      var l = Table?.Liste ?? TableData(Table, ModalMessages);
-      if (l != null && i >= 1 && l.Count() >= i)
-      {
-        var ds = l.Skip(i - 1).FirstOrDefault();
-        if (ds != null)
-        {
-          WP310Model.From(ds);
-          WP310Model.SetMhrf(dt);
-          Model.ModalArt = handler;
-          Model.ModalId = id;
-        }
-      }
-    }
-    else if (dt == DialogTypeEnum.Postback)
-    {
-      if (mvalid && msubmit == nameof(WP310Model.Ok))
-      {
-        var dt1 = Formular.GetTableDialogType(Model.ModalArt);
-        var daten = ServiceDaten;
-        var o = WP310Model.To(daten);
-        var r = dt1 == DialogTypeEnum.Delete
-          ? StockService.DeleteConfiguration(daten, o)
-          : StockService.SaveConfiguration(daten, o.Uid, o.Bezeichnung, o.Box ?? 0m, o.Reversal, o.Method, o.Duration, o.Relative, o.Scale, o.Status, o.Notiz);
-        if (r.Ok)
-        {
-          Model.ModalArt = null;
-          Model.ModalId = null;
-          Refresh();
-        }
-        else
-          ModalMessages?.Add(() => WP310Model, r.GetErrors() ?? "");
-      }
-    }
-    WriteFormularModel(Model.Nr ?? "0", Model);
   }
 
   /// <summary>

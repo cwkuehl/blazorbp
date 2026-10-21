@@ -5,8 +5,8 @@
 namespace BlazorBp.Forms.Models.Wp;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorSpa.Core.Base;
 using BlazorSpa.Base;
+using BlazorSpa.Core.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 
@@ -18,7 +18,11 @@ public class WP500TableRowModel : TableRowModelBase
 {
   /// <summary>Holt oder setzt Nr.</summary>
   [Display(Name = "Nr.", Description = "Nummer")]
-  public string? Nummer { get { return Id; } set { Id = value; } }
+  public string? Nummer
+  {
+    get { return Id; }
+    set { Id = value; }
+  }
 
   /// <summary>Holt oder setzt Wertpapier.</summary>
   [Display(Name = "_Wertpapier", Description = "Bezug zum Wertpapier")]
@@ -48,8 +52,27 @@ public class WP500TableRowModel : TableRowModelBase
   [Display(Name = "Geändert von", Description = "Die Benutzer-ID der letzten Änderung")]
   public string? GeaendertVon { get; set; }
 
+  /// <summary>Kopiert die Werte aus einem Model.</summary>
+  /// <param name="m">Zu kopierendes Model.</param>
+  /// <returns>Das kopierte Model.</returns>
+  public static WP500TableRowModel From(WpStand m)
+  {
+    return new WP500TableRowModel
+    {
+      Nummer = SessionExtensions.JoinFormParameter([m.Wertpapier_Uid, Funktionen.ToString(m.Datum)]), // Parameter in Session speichern, damit die Daten nicht in der URL stehen.
+      Wertpapier = Functions.Left2(m.StockDescription),
+      Valuta = Funktionen.ToString(m.Datum),
+      Betrag = Funktionen.ToString(m.Stueckpreis),
+      AngelegtAm = m.Angelegt_Am,
+      AngelegtVon = m.Angelegt_Von,
+      GeaendertAm = m.Geaendert_Am,
+      GeaendertVon = m.Geaendert_Von,
+    };
+  }
+
   /// <summary>Kopiert die Werte in ein Model.</summary>
   /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
+  /// <returns>Das kopierte Model.</returns>
   public WpStand To(ServiceDaten daten)
   {
     return new WpStand
@@ -61,23 +84,6 @@ public class WP500TableRowModel : TableRowModelBase
       Angelegt_Von = AngelegtVon,
       Geaendert_Am = GeaendertAm,
       Geaendert_Von = GeaendertVon,
-    };
-  }
-
-  /// <summary>Kopiert die Werte aus einem Model.</summary>
-  /// <param name="m">Zu kopierendes Model.</param>
-  public static WP500TableRowModel From(WpStand m)
-  {
-    return new WP500TableRowModel
-    {
-      Nummer = SessionExtensions.JoinFormParameter([ m.Wertpapier_Uid, Funktionen.ToString(m.Datum) ]), // Parameter in Session speichern, damit die Daten nicht in der URL stehen.
-      Wertpapier = Functions.Left2(m.StockDescription),
-      Valuta = Funktionen.ToString(m.Datum),
-      Betrag = Funktionen.ToString(m.Stueckpreis),
-      AngelegtAm = m.Angelegt_Am,
-      AngelegtVon = m.Angelegt_Von,
-      GeaendertAm = m.Geaendert_Am,
-      GeaendertVon = m.Geaendert_Von,
     };
   }
 }

@@ -5,9 +5,9 @@
 namespace BlazorBp.Forms.Models.Wp;
 
 using System.ComponentModel.DataAnnotations;
+using BlazorSpa.Base;
 using BlazorSpa.Core.Base;
 using BlazorSpa.Core.Models;
-using BlazorSpa.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorSpa.Core.Base.DialogTypeEnum;
@@ -179,26 +179,26 @@ public class WP410Model : PageModelBase
     {
       // Nummer = "";
     }
-    // TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
-    // SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
-    // SetMandatoryHiddenReadonly(nameof(Nummer), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Anlage), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Valuta), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Preis), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Betrag), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Anteile), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Preis2), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Zinsen), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(BText), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Buchung), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Rabatt), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Hhbuchung), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Hhaendern), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Hhstorno), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Hhvaluta), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Hhbetrag), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Hhereignis), false, false, mode == Delete, false);
-    // SetMandatoryHiddenReadonly(nameof(Fixtext), false, false, mode == Delete, false);
+    //// TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
+    //// SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
+    //// SetMandatoryHiddenReadonly(nameof(Nummer), false, false, mode == Delete, false);
+    //// SetMandatoryHiddenReadonly(nameof(Anlage), false, false, mode == Delete, false);
+    //// SetMandatoryHiddenReadonly(nameof(Valuta), false, false, mode == Delete, false);
+    //// SetMandatoryHiddenReadonly(nameof(Preis), false, false, mode == Delete, false);
+    //// SetMandatoryHiddenReadonly(nameof(Betrag), false, false, mode == Delete, false);
+    //// SetMandatoryHiddenReadonly(nameof(Anteile), false, false, mode == Delete, false);
+    //// SetMandatoryHiddenReadonly(nameof(Preis2), false, false, mode == Delete, false);
+    //// SetMandatoryHiddenReadonly(nameof(Zinsen), false, false, mode == Delete, false);
+    //// SetMandatoryHiddenReadonly(nameof(BText), false, false, mode == Delete, false);
+    //// SetMandatoryHiddenReadonly(nameof(Buchung), false, false, mode == Delete, false);
+    //// SetMandatoryHiddenReadonly(nameof(Rabatt), false, false, mode == Delete, false);
+    //// SetMandatoryHiddenReadonly(nameof(Hhbuchung), false, false, mode == Delete, false);
+    //// SetMandatoryHiddenReadonly(nameof(Hhaendern), false, false, mode == Delete, false);
+    //// SetMandatoryHiddenReadonly(nameof(Hhstorno), false, false, mode == Delete, false);
+    //// SetMandatoryHiddenReadonly(nameof(Hhvaluta), false, false, mode == Delete, false);
+    //// SetMandatoryHiddenReadonly(nameof(Hhbetrag), false, false, mode == Delete, false);
+    //// SetMandatoryHiddenReadonly(nameof(Hhereignis), false, false, mode == Delete, false);
+    //// SetMandatoryHiddenReadonly(nameof(Fixtext), false, false, mode == Delete, false);
 
     SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true, false);
     SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true, false);

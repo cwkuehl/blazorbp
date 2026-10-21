@@ -73,14 +73,14 @@
   /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
   protected override bool Submit(string? submit)
   {
-    if (valid && Model.KennwortNeu != Model.KennwortNeu2)
+    if (Valid && Model.KennwortNeu != Model.KennwortNeu2)
     {
       #pragma warning disable CS8602, CS8603
       Messages.Add(() => Model.KennwortNeu2, $"Die neuen Kennwörter stimmen nicht überein.");
       #pragma warning restore CS8602, CS8603
-      valid = false;
+      Valid = false;
     }
-    if (valid && submit == "OK")
+    if (Valid && submit == "OK")
     {
       var daten = ServiceDaten;
       var r = LoginService.ChangePassword(daten, daten.MandantNr, daten.BenutzerId,

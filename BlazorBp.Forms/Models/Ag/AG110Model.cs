@@ -6,9 +6,9 @@ namespace BlazorBp.Forms.Models.Ag;
 
 using System.ComponentModel.DataAnnotations;
 using BlazorSpa.Core.Base;
-using static BlazorSpa.Core.Base.DialogTypeEnum;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
+using static BlazorSpa.Core.Base.DialogTypeEnum;
 
 /// <summary>
 /// Model-Klasse für das modale Formular AG110 Mandant.

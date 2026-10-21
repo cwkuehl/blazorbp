@@ -1,11 +1,15 @@
+// <copyright file="LabelInputValid.razor.cs" company="cwkuehl.de">
+// Copyright (c) cwkuehl.de. All rights reserved.
+// </copyright>
+
 namespace BlazorSpa.Core.Components.Controls;
 
-using BlazorSpa.Core.Models;
-using BlazorSpa.Base;
-using Microsoft.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using System.Reflection;
+using BlazorSpa.Base;
+using BlazorSpa.Core.Models;
+using Microsoft.AspNetCore.Components;
 
 /// <summary>
 /// LabelInputValid: Label und Input mit Validierung, Readonly, Hidden, Error, Mandatory, Fokus, Accesskey, Tooltip.
@@ -13,100 +17,6 @@ using System.Reflection;
 /// <typeparam name="TItem">Betroffener Datentyp.</typeparam>
 public partial class LabelInputValid<TItem> : ComponentBase
 {
-  /// <summary>Holt oder setzt die Expression für das gebundene Property.</summary>
-  [Parameter, EditorRequired]
-  public Expression<Func<TItem>> For { get; set; } = default!;
-
-  /// <summary>Holt oder setzt die CSS-Class für die vertikale Anordnung.</summary>
-  [Parameter]
-  public string? VerticalColClass { get; set; }
-
-  /// <summary>Holt oder setzt einen Wert, der angibt, ob das Label ausgeblendet wird.</summary>
-  [Parameter]
-  public bool NoLabel { get; set; } = false;
-
-  /// <summary>Holt oder setzt einen Wert, der angibt, ob das Label hinter dem Input angezeigt wird.</summary>
-  [Parameter]
-  public bool TrailingLabel { get; set; } = false;
-
-  /// <summary>Holt oder setzt einen Wert, der angibt, ob die Validierung ausgeblendet wird.</summary>
-  [Parameter]
-  public bool NoValidation { get; set; } = false;
-
-  /// <summary>Holt oder setzt einen Wert, der angibt, ob ein Postback bei Änderung des Inputs erfolgt.</summary>
-  [Parameter]
-  public string? AutoPostback { get; set; }
-
-  /// <summary>Holt oder setzt die Liste für RadioButton, ComboBox und ListBox.</summary>
-  [Parameter]
-  public IEnumerable<ListItem>? DataList { get; set; }
-
-  /// <summary>Holt oder setzt die übergebenen Attribute.</summary>
-  [Parameter(CaptureUnmatchedValues = true)]
-  public IDictionary<string, object>? AdditionalAttributes { get; set; }
-
-  /// <summary>Holt oder setzt die zu generierenden Attribute.</summary>
-  private IDictionary<string, object>? Attributes2 { get; set; }
-
-  /// <summary>Holt oder setzt die ID des Steuerelements für die Fehlermeldung der Validierung.</summary>
-  private string? Id { get; set; }
-
-  /// <summary>Holt oder setzt den Accesskey.</summary>
-  private string? Accesskey { get; set; }
-
-  /// <summary>Holt oder setzt den Tooltip.</summary>
-  private string? Title { get; set; }
-
-  /// <summary>Holt oder setzt das Label mit Accesskey.</summary>
-  private MarkupString LabelMu { get; set; } = new();
-
-  /// <summary>CSS-Class für Label.</summary>
-  private string CssClassLabel { get; set; } = "";
-
-  /// <summary>CSS-Class für Input (Eine Kombination von modified, valid, invalid).</summary>
-  private string CssClass { get; set; } = "";
-
-  /// <summary>CSS-Class für Buttons bei DateTime-Input.</summary>
-  private string CssClassButtons { get; set; } = "";
-
-  /// <summary>Step für Input mit Dezimalwerten.</summary>
-  private string Step { get; set; } = "";
-
-  /// <summary>Aktueller Wert (public für Reflection).</summary>
-  public TItem CurrentValue { get; set; } = default!;
-
-  /// <summary>Aktueller Wert als Datum.</summary>
-  private DateTime? CurrentValueAsDateTime
-  {
-    get
-    {
-      var v = CurrentValue == null ? null : Convert.ToDateTime(CurrentValue) as DateTime?;
-      return v;
-    }
-  }
-
-  /// <summary>Aktueller Wert als Decimal.</summary>
-  private decimal? CurrentValueAsDecimal
-  {
-    get
-    {
-      var v = CurrentValue == null ? null : Convert.ToDecimal(CurrentValue) as decimal?;
-      return v;
-    }
-  }
-
-  /// <summary>Wert für Attribut name beim Postback.</summary>
-  private string? NameAttributeValue { get; set; }
-
-  /// <summary>Wert für Attribut name beim Postback für submit.</summary>
-  private string? NameAttributeValueSubmit { get; set; }
-
-  /// <summary>Wert für Attribut value beim Postback für submit.</summary>
-  private string? ValueSubmit { get; set; }
-
-  /// <summary>Type für Input.</summary>
-  private string InputType { get; set; } = "text";
-
   private bool submit = false;
 
   private bool disabled = false;
@@ -143,6 +53,101 @@ public partial class LabelInputValid<TItem> : ComponentBase
 
   /// <summary>Anzahl der Renderns.</summary>
   private int rendern = 0;
+
+  /// <summary>Holt oder setzt die Expression für das gebundene Property.</summary>
+  [Parameter]
+  [EditorRequired]
+  public Expression<Func<TItem>> For { get; set; } = default!;
+
+  /// <summary>Holt oder setzt die CSS-Class für die vertikale Anordnung.</summary>
+  [Parameter]
+  public string? VerticalColClass { get; set; }
+
+  /// <summary>Holt oder setzt einen Wert, der angibt, ob das Label ausgeblendet wird.</summary>
+  [Parameter]
+  public bool NoLabel { get; set; } = false;
+
+  /// <summary>Holt oder setzt einen Wert, der angibt, ob das Label hinter dem Input angezeigt wird.</summary>
+  [Parameter]
+  public bool TrailingLabel { get; set; } = false;
+
+  /// <summary>Holt oder setzt einen Wert, der angibt, ob die Validierung ausgeblendet wird.</summary>
+  [Parameter]
+  public bool NoValidation { get; set; } = false;
+
+  /// <summary>Holt oder setzt einen Wert, der angibt, ob ein Postback bei Änderung des Inputs erfolgt.</summary>
+  [Parameter]
+  public string? AutoPostback { get; set; }
+
+  /// <summary>Holt oder setzt die Liste für RadioButton, ComboBox und ListBox.</summary>
+  [Parameter]
+  public IEnumerable<ListItem>? DataList { get; set; }
+
+  /// <summary>Holt oder setzt die übergebenen Attribute.</summary>
+  [Parameter(CaptureUnmatchedValues = true)]
+  public IDictionary<string, object>? AdditionalAttributes { get; set; }
+
+  /// <summary>Aktueller Wert (public für Reflection).</summary>
+  public TItem CurrentValue { get; set; } = default!;
+
+  /// <summary>Holt oder setzt die zu generierenden Attribute.</summary>
+  private IDictionary<string, object>? Attributes2 { get; set; }
+
+  /// <summary>Holt oder setzt die ID des Steuerelements für die Fehlermeldung der Validierung.</summary>
+  private string? Id { get; set; }
+
+  /// <summary>Holt oder setzt den Accesskey.</summary>
+  private string? Accesskey { get; set; }
+
+  /// <summary>Holt oder setzt den Tooltip.</summary>
+  private string? Title { get; set; }
+
+  /// <summary>Holt oder setzt das Label mit Accesskey.</summary>
+  private MarkupString LabelMu { get; set; } = default(MarkupString);
+
+  /// <summary>CSS-Class für Label.</summary>
+  private string CssClassLabel { get; set; } = "";
+
+  /// <summary>CSS-Class für Input (Eine Kombination von modified, valid, invalid).</summary>
+  private string CssClass { get; set; } = "";
+
+  /// <summary>CSS-Class für Buttons bei DateTime-Input.</summary>
+  private string CssClassButtons { get; set; } = "";
+
+  /// <summary>Step für Input mit Dezimalwerten.</summary>
+  private string Step { get; set; } = "";
+
+  /// <summary>Aktueller Wert als Datum.</summary>
+  private DateTime? CurrentValueAsDateTime
+  {
+    get
+    {
+      var v = CurrentValue == null ? null : Convert.ToDateTime(CurrentValue) as DateTime?;
+      return v;
+    }
+  }
+
+  /// <summary>Aktueller Wert als Decimal.</summary>
+  private decimal? CurrentValueAsDecimal
+  {
+    get
+    {
+      var v = CurrentValue == null ? null : Convert.ToDecimal(CurrentValue) as decimal?;
+      return v;
+    }
+  }
+
+  /// <summary>Wert für Attribut name beim Postback.</summary>
+  private string? NameAttributeValue { get; set; }
+
+  /// <summary>Wert für Attribut name beim Postback für submit.</summary>
+  private string? NameAttributeValueSubmit { get; set; }
+
+  /// <summary>Wert für Attribut value beim Postback für submit.</summary>
+  private string? ValueSubmit { get; set; }
+
+  /// <summary>Type für Input.</summary>
+  private string InputType { get; set; } = "text";
 
   /// <summary>Holt der leere Ergebnis des Renderns.</summary>
   private string? OnRendering
@@ -238,7 +243,7 @@ public partial class LabelInputValid<TItem> : ComponentBase
 
     if (string.IsNullOrEmpty(InputType))
     {
-      if(typeof(TItem) == typeof(DateTime?) || typeof(TItem) == typeof(DateTime))
+      if (typeof(TItem) == typeof(DateTime?) || typeof(TItem) == typeof(DateTime))
         InputType = "date";
       else if (typeof(TItem) == typeof(int?) || typeof(TItem) == typeof(int) || typeof(TItem) == typeof(long?) || typeof(TItem) == typeof(long) || typeof(TItem) == typeof(decimal?) || typeof(TItem) == typeof(decimal))
         InputType = "number";
@@ -301,7 +306,7 @@ public partial class LabelInputValid<TItem> : ComponentBase
       else if (typeof(TItem) == typeof(decimal?))
       {
         cvprop?.SetValue(this, v == null ? null : Convert.ToDecimal(v));
-        // cvprop?.SetValue(this, v == null ? null : Functions.ToDecimal(v.ToString(), 2, true));
+        //// cvprop?.SetValue(this, v == null ? null : Functions.ToDecimal(v.ToString(), 2, true));
       }
       else if (typeof(TItem) == typeof(DateTime))
       {
@@ -327,7 +332,7 @@ public partial class LabelInputValid<TItem> : ComponentBase
         if (rhe.Contains($"#{name}#H"))
         {
           hidden = true;
-          // SetAttribute(AdditionalAttributes, "hidden", "");
+          //// SetAttribute(AdditionalAttributes, "hidden", "");
         }
         else
         {
@@ -359,7 +364,7 @@ public partial class LabelInputValid<TItem> : ComponentBase
             CssClass += Funktionen.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "text-bg-danger"; // rot
           }
         }
-        // Fokus
+        //// Fokus
         var focusprop = modeltype?.GetProperty("Focus");
         var focus = focusprop?.GetValue(model) as string ?? "";
         if (!string.IsNullOrEmpty(focus) && name.EndsWith(focus))
@@ -400,7 +405,7 @@ public partial class LabelInputValid<TItem> : ComponentBase
       {
         var i = lbl.ToLower().IndexOf(Accesskey.ToLower());
         if (i >= 0)
-          LabelMu = new MarkupString($"{lbl.Substring(0, i)}<u>{lbl.Substring(i, 1)}</u>{lbl.Substring(i+1)}");
+          LabelMu = new MarkupString($"{lbl.Substring(0, i)}<u>{lbl.Substring(i, 1)}</u>{lbl.Substring(i + 1)}");
         else
           LabelMu = new MarkupString($"{lbl} (<u>{Accesskey}</u>)");
       }
@@ -442,11 +447,11 @@ public partial class LabelInputValid<TItem> : ComponentBase
       SetAttribute(Attributes2, "multiple", multiple);
       SetAttribute(Attributes2, "onchange", onchange);
       SetAttribute(Attributes2, "autofocus", autofocus);
-      //if (!string.IsNullOrEmpty(stateof))
-      //{
-      //  SetAttribute(Attributes2, "stateof", null);
-      //  SetAttribute(Attributes2, "data-stateof", stateof);
-      //}
+      //// if (!string.IsNullOrEmpty(stateof))
+      //// {
+      ////   SetAttribute(Attributes2, "stateof", null);
+      ////   SetAttribute(Attributes2, "data-stateof", stateof);
+      //// }
     }
     if (InputType == "date")
       SetAttribute(Attributes2, "value", Funktionen.ToString(CurrentValueAsDateTime));
@@ -456,7 +461,7 @@ public partial class LabelInputValid<TItem> : ComponentBase
     {
       SetAttribute(Attributes2, "value", true.ToString());
       disabledCheckboxTrue = false;
-      if (CurrentValue is Boolean cv && cv)
+      if (CurrentValue is bool cv && cv)
       {
         SetAttribute(Attributes2, "checked", "");
         disabledCheckboxTrue = disabled;
@@ -477,25 +482,25 @@ public partial class LabelInputValid<TItem> : ComponentBase
     }
   }
 
+  private static void SetAttribute(IDictionary<string, object>? additionalAttributes, string key, string? value)
+  {
+    if (additionalAttributes == null)
+      return;
+    if (additionalAttributes.TryGetValue(key, out var attr))
+    {
+      if (value == null)
+        additionalAttributes.Remove(key);
+      else
+        additionalAttributes[key] = value;
+    }
+    else if (value != null)
+      additionalAttributes.Add(key, value);
+  }
+
   private bool TryParseValueFromString(string? value, out string result, out string validationErrorMessage)
   {
     result = value ?? "";
     validationErrorMessage = "";
     return true;
-  }
-
-  private static void SetAttribute(IDictionary<string, object>? AdditionalAttributes, string key, string? value)
-  {
-    if (AdditionalAttributes == null)
-      return;
-    if (AdditionalAttributes.TryGetValue(key, out var attr))
-    {
-      if (value == null)
-        AdditionalAttributes.Remove(key);
-      else
-        AdditionalAttributes[key] = value;
-    }
-    else if (value != null)
-      AdditionalAttributes.Add(key, value);
   }
 }

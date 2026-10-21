@@ -1,4 +1,4 @@
-// <copyright file="TB200ModalModel.cs" company="cwkuehl.de">
+// <copyright file="TB210Model.cs" company="cwkuehl.de">
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 

@@ -4,11 +4,11 @@
 
 namespace BlazorSpa.Core.Base;
 
-using BlazorSpa.Core.Models;
 using BlazorSpa.Base;
 using BlazorSpa.Base.Csv;
 using BlazorSpa.Base.Models;
 using BlazorSpa.Base.Services;
+using BlazorSpa.Core.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
@@ -16,45 +16,53 @@ using Microsoft.AspNetCore.Http;
 /// <summary>
 /// Basis-Klasse für alle Blazor-Formulare.
 /// </summary>
-public class BlazorComponentBase<T, V> : LayoutComponentBase
-  where T : PageModelBase where V : TableRowModelBase
+/// <typeparam name="T">Betroffenes Model für das Formular.</typeparam>
+/// <typeparam name="TV">Betroffenes Model für die Tabelle.</typeparam>
+public class BlazorComponentBase<T, TV> : LayoutComponentBase
+  where T : PageModelBase
+  where TV : TableRowModelBase
 {
-  /// <summary>
-  /// Standard-Model für Steuerelemente.
-  /// </summary>
-  [SupplyParameterFromForm]
-  protected T Model { get; set; } = default!;
-
   /// <summary>Standard-Model für Tabelle.</summary>
   [SupplyParameterFromForm]
-  public TableModelBase<V>? Table { get; set; } = default!;
+  public TableModelBase<TV>? Table { get; set; } = default!;
+
+  /// <summary>Id des Formulars muss immer im @page Attribut vorhanden sein, z.B. @page("demo/dm100/{Id?}").</summary>
+  [Parameter]
+  public string? Id { get; set; }
 
   /// <summary>Betroffener Formular-Titel.</summary>
-  protected string Title = "";
+  protected string Title { get; set; } = "";
 
   /// <summary>Betroffener EditContext.</summary>
-  protected EditContext? EditContext;
+  protected EditContext? EditContext { get; set; }
 
   /// <summary>Betroffener ValidationMessageStore.</summary>
-  protected ValidationMessageStore? Messages;
+  protected ValidationMessageStore? Messages { get; set; }
 
   /// <summary>True, wenn EditContext ohne Fehler.</summary>
-  protected bool valid;
+  protected bool Valid { get; set; }
 
   /// <summary>Race condition verhindern.</summary>
-  protected bool issubmitting;
+  protected bool Issubmitting { get; set; }
 
   /// <summary>Betroffener modaler EditContext.</summary>
-  protected EditContext? ModalEditContext;
+  protected EditContext? ModalEditContext { get; set; }
 
   /// <summary>Betroffener modaler ValidationMessageStore.</summary>
-  protected ValidationMessageStore? ModalMessages;
+  protected ValidationMessageStore? ModalMessages { get; set; }
 
   /// <summary>Betroffener 2. modaler EditContext.</summary>
-  protected EditContext? Modal2EditContext;
+  protected EditContext? Modal2EditContext { get; set; }
 
   /// <summary>Betroffener 2. modaler ValidationMessageStore.</summary>
-  protected ValidationMessageStore? Modal2Messages;
+  protected ValidationMessageStore? Modal2Messages { get; set; }
+
+  /// <summary>Postback-Zustand: 0=kein Postback, 1=Postback vom Model, 2=Postback vom Table.</summary>
+  protected int Postback { get; set; } = 0;
+
+  /// <summary>Standard-Model für Steuerelemente.</summary>
+  [SupplyParameterFromForm]
+  protected T Model { get; set; } = default!;
 
   /// <summary>Navigation-Manager zum Navigieren.</summary>
   [Inject]
@@ -64,12 +72,229 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   [CascadingParameter]
   protected HttpContext HttpContext { get; set; } = default!;
 
-  /// <summary>Id des Formulars muss immer im @page Attribut vorhanden sein, z.B. @page("demo/dm100/{Id?}").</summary>
-  [Parameter]
-  public string? Id { get; set; }
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines nicht modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  public virtual void HandleNoModal(string? form, string? handler, string? id)
+  {
+  }
 
-  /// <summary>Postback-Zustand: 0=kein Postback, 1=Postback vom Model, 2=Postback vom Table.</summary>
-  protected int Postback = 0;
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines nicht modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  /// <param name="detailform">Betroffenes Detail-Formular aus Tabelle öffnen.</param>
+  public void HandleNoModal1(string? form, string? handler, string? id, string detailform)
+  {
+    // Basis-Funktion mit Formularkennung und Id, die ein Formular öffnet.
+    var i = Funktionen.ToInt32(id);
+    if (i < 0 && handler == "Table_New")
+    {
+      var dt = Formular.ToShortString(Formular.GetTableDialogType(handler));
+      var id2 = $"{dt}_{id}";
+      var f = OpenFormular(detailform, id2);
+      if (f != null)
+        OpenFormular(f);
+      return;
+    }
+    var l = Table?.Liste ?? TableData(Table, Messages);
+    if (l != null && i >= 1 && l.Count() >= i)
+    {
+      var ds = l.Skip(i - 1).FirstOrDefault();
+      var nr = ds?.Id ?? "";
+      if (nr.StartsWith("P"))
+      {
+        var v = nr.Substring(1);
+        HttpContext?.Session?.SetFormParameter(v);
+        nr = Guid.NewGuid().ToString();
+      }
+      if (!string.IsNullOrEmpty(nr))
+      {
+        var dt = Formular.ToShortString(Formular.GetTableDialogType(handler));
+        var id2 = $"{dt}_{nr}";
+        var f = OpenFormular(detailform, id2);
+        if (f != null)
+          OpenFormular(f);
+      }
+    }
+  }
+
+  /// <summary>
+  /// Liefert die Id des aktuell ausgewählten Datensatzes.
+  /// </summary>
+  /// <returns>Id des aktuell ausgewählten Datensatzes.</returns>
+  public string? GetTableRowId()
+  {
+    var i = Table?.SelectedRow ?? 0;
+    var l = Table?.Liste ?? TableData(Table, Messages);
+    if (l != null && i >= 1 && l.Count() >= i)
+    {
+      var ds = l.Skip(i - 1).FirstOrDefault();
+      var nr = ds?.Id ?? "";
+      return nr;
+    }
+    return null;
+  }
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="formt">Betroffenes Tabellen-Postback-Formular.</param>
+  /// <param name="formmodal">Betroffenes modales Formular.</param>
+  /// <param name="msubmit">Betroffener Submit-Parameter aus dem modalem Model.</param>
+  /// <param name="abbrechen">Betroffener Submit für Abbrechen.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion oder 2. modalen Dialog.</param>
+  /// <returns>DialogTypeEnum für den Aufruf eines modalen Dialogs.</returns>
+  public virtual (DialogTypeEnum Dt, string Msubmit, bool Mvalid) HandleModal1(string? form, string? formt, string? formmodal, string msubmit, string abbrechen, string? handler, string? id)
+  {
+    var dt = DialogTypeEnum.Without;
+    var mvalid = false;
+    if (form == formt || form == formmodal)
+    {
+      if (form == formt && !string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
+      {
+        dt = Formular.GetTableDialogType(handler);
+        if (dt != DialogTypeEnum.Edit && dt != DialogTypeEnum.Delete && dt != DialogTypeEnum.Copy)
+          dt = DialogTypeEnum.New;
+      }
+      else
+      {
+        if (!string.IsNullOrEmpty(msubmit))
+        {
+          mvalid = ModalEditContext?.Validate() ?? false;
+          //// if (!mvalid)
+          //// {
+          ////   // Doppelte Meldungen verhindern.
+          ////   InitEditContext(null, WP210Model);
+          //// }
+        }
+        dt = DialogTypeEnum.Postback;
+        if (msubmit == abbrechen || form != formmodal)
+        {
+          Model.ModalArt = null;
+          Model.ModalId = null;
+        }
+      }
+    }
+    else
+    {
+      Model.ModalArt = null;
+      Model.ModalId = null;
+      Model.Modal2Id = null;
+    }
+    //// WriteFormularModel(Model.Nr ?? "0", Model);
+    return (dt, msubmit, mvalid);
+  }
+
+  /// <summary>
+  /// Verarbeitung der Tabellen-Aktionen.
+  /// </summary>
+  /// <param name="table">Betroffene Tabellen-Daten.</param>
+  /// <param name="messages">Betroffene Fehlermeldungen.</param>
+  /// <param name="rowchange">True, wenn die Zeile geändert wurde, sonst false.</param>
+  public void OnTable(TableModelBase<TV> table, ValidationMessageStore? messages, bool rowchange = true)
+  {
+    // if (table == null)
+    // {
+    //   SetRhe();
+    //   return;
+    // }
+    var handler = table.Handler;
+    var selpage = table.SelectedPage;
+    var selrow = table.SelectedRow;
+    System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} OnTable {handler} {selpage} {selrow}");
+    if (handler == "Table_First")
+    {
+      table.SelectedPage = 1;
+      table.SelectedRow = 1;
+    }
+    if (handler == "Table_Prev" && table.SelectedPage > 1)
+    {
+      table.SelectedPage--;
+    }
+    if (handler == "Table_Next")
+    {
+      table.SelectedPage++;
+    }
+    var last = handler == "Table_Last";
+    if (last)
+    {
+      last = true;
+      table.SelectedPage = table.PageCount;
+    }
+    if (handler == "Table_All")
+      table.Search = "%%";
+    //// if (!string.IsNullOrEmpty(handler))
+    //// {
+    ////   WriteFormularModel(table.Nr ?? "", null, table);
+    ////   Navigation.NavigateTo(HttpContext.Request.Path, true, true); // Query-Parameter handler entfernen.
+    //// }
+    table.Liste = TableData(table, messages);
+    if (table.SelectedPage > table.PageCount)
+    {
+      table.SelectedPage = table.PageCount;
+      if (string.IsNullOrEmpty(handler) || handler == "Table_Next" || handler == "Table_Last")
+        table.Liste = TableData(table, messages);
+    }
+    if (last || table.SelectedRow > (table.Liste?.Count ?? 0))
+      table.SelectedRow = table.Liste?.Count ?? 0;
+    if (table.SelectedRow < 1 && (table.Liste?.Count ?? 0) > 0)
+      table.SelectedRow = 1;
+    if (rowchange || selpage != table.SelectedPage || selrow != table.SelectedRow)
+    {
+      var sr = table.SelectedRow ?? 0;
+      var row = sr > 0 && table.Liste != null && table.Liste.Count >= sr ? table.Liste[sr - 1] : null;
+      if (OnRowChanged(row, sr, messages))
+        WriteFormularModel(Model?.Nr ?? "0", Model, null);
+    }
+    if (handler == "Table_Export")
+    {
+      var csv = new CsvWriter();
+      csv.AddCsvLine(["1", "2", "3"]);
+      csv.AddCsvLine(["4", "5", "6"]);
+      //// csv.WriteFile();
+    }
+    WriteFormularModel(table.Nr ?? "", null, table);
+    SetRhe();
+    if (!string.IsNullOrEmpty(handler) && handler != "Table_New" && handler != "Table_Edit" && handler != "Table_Delete" && handler != "Table_Copy")
+      Navigation.NavigateTo(HttpContext.Request.Path, true, true); // Query-Parameter handler entfernen.
+  }
+
+  /// <summary>
+  /// Verarbeitung der Tabellen-Aktionen.
+  /// </summary>
+  /// <param name="table">Betroffene Tabellen-Daten.</param>
+  /// <param name="rm">Betroffenes Readmodel.</param>
+  /// <param name="l">Betroffene neue Liste.</param>
+  /// <returns>Neue Liste.</returns>
+  public List<TV> UpdateTable(TableModelBase<TV>? table, TableReadModel? rm, List<TV> l)
+  {
+    if (table != null && rm != null)
+    {
+      table.PageCount = rm.PageCount;
+      table.Essence = rm.Essence;
+      table.Liste = l;
+    }
+    return l;
+  }
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  /// <param name="id2">Id aus 2. modalen Dialog.</param>
+  protected virtual void HandleModal(string? form, string? handler, string? id, string? id2)
+  {
+  }
 
   /// <summary>Initialisierung nach dem Setzen der Parameter.</summary>
   /// <param name="model">Betroffenes Model für den EditContext und Messages.</param>
@@ -80,9 +305,9 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     if (model != null)
     {
       EditContext = new(model);
-      // #pragma warning disable CS0618
-      // EditContext.EnableDataAnnotationsValidation();
-      // #pragma warning disable CS0618
+      //// #pragma warning disable CS0618
+      //// EditContext.EnableDataAnnotationsValidation();
+      //// #pragma warning disable CS0618
       Messages = new(EditContext);
     }
     if (modalmodel != null)
@@ -133,7 +358,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// </summary>
   /// <param name="action">Name der Action, Formularname oder "" für aktuelles Formular.</param>
   /// <param name="id">ID bzw. Parameter des Formulars.</param>
-  /// <param name="usecase">Soll ein neuer Use case erstellt werden, falls noch nicht offen?</param>
+  /// <param name="usecase">True, wenn ein neuer Use case erstellt werden soll, falls noch nicht offen.</param>
   /// <returns>ActionResult für Redirect.</returns>
   protected Formular OpenFormular(string action, string? id = null, bool usecase = false)
   {
@@ -291,6 +516,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// Lesen des Models eine Formular-Instanz.
   /// </summary>
   /// <param name="id">Betroffene ID.</param>
+  /// <returns>Model oder null.</returns>
   protected T? ReadFormularModel(string id)
   {
     var form = GetType().Name;
@@ -302,10 +528,11 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// Lesen des Table-Models eine Formular-Instanz.
   /// </summary>
   /// <param name="id">Betroffene ID.</param>
-  protected TableModelBase<V>? ReadFormularTableModel(string id)
+  /// <returns>Table-Model oder null.</returns>
+  protected TableModelBase<TV>? ReadFormularTableModel(string id)
   {
     var form = GetType().Name;
-    var model = HttpContext.Session?.GetObjectFromJson<TableModelBase<V>>($"{form}.Table.{id}");
+    var model = HttpContext.Session?.GetObjectFromJson<TableModelBase<TV>>($"{form}.Table.{id}");
     return model;
   }
 
@@ -315,7 +542,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// <param name="id">Betroffene ID.</param>
   /// <param name="model">Betroffenes Model.</param>
   /// <param name="tmodel">Betroffenes Table-Model.</param>
-  protected void WriteFormularModel(string id, T? model, TableModelBase<V>? tmodel = null)
+  protected void WriteFormularModel(string id, T? model, TableModelBase<TV>? tmodel = null)
   {
     var form = GetType().Name;
     if (model != null)
@@ -330,7 +557,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// <param name="id">Betroffene ID.</param>
   /// <param name="model">Betroffenes Model.</param>
   /// <param name="tmodel">Betroffenes Table-Model.</param>
-  protected void RemoveFormularModel(string id, T? model, TableModelBase<V>? tmodel = null)
+  protected void RemoveFormularModel(string id, T? model, TableModelBase<TV>? tmodel = null)
   {
     var form = GetType().Name;
     if (model != null)
@@ -346,9 +573,9 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// -Verarbeitung des Postbacks, weil danach gerendert wird.
   /// </summary>
   /// <param name="action">Name der Action, Formularname oder "" für aktuelles Formular.</param>
-  /// <param name="id0">Betroffene ID.</param>
   /// <param name="title">Betroffene Formular-Titel.</param>
-  /// <param name="usecase">Soll ein neuer Use case erstellt werden, falls noch nicht offen?</param>
+  /// <param name="id0">Betroffene ID.</param>
+  /// <param name="usecase">True, wenn ein neuer Use case erstellt werden soll, falls noch nicht offen.</param>
   /// <returns>Muss die Funktion OnInitialized wegen Redirect verlassen werden.</returns>
   protected bool OnInitializedFormular(string action, string title, string? id0, bool usecase = false)
   {
@@ -364,7 +591,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     Title = Formular.ToTitle(title, dt);
     Postback = Model != null ? 1 : Table != null ? 2 : 0;
     T? model = null;
-    TableModelBase<V>? table = null;
+    TableModelBase<TV>? table = null;
     if (Model == null)
     {
       model = ReadFormularModel(id); // Bei Model-Postback ist kein Read notwendig.
@@ -417,15 +644,15 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
       Refresh();
     }
 
-    //     #pragma warning disable CS8604
-    //     EditContext = new(Model);
-    //     #pragma warning restore CS8604
-    //     // #pragma warning disable CS0618
-    //     // EditContext.EnableDataAnnotationsValidation();
-    //     // #pragma warning disable CS0618
-    //     Messages = new(EditContext);
+    //// #pragma warning disable CS8604
+    //// EditContext = new(Model);
+    //// #pragma warning restore CS8604
+    //// // #pragma warning disable CS0618
+    //// // EditContext.EnableDataAnnotationsValidation();
+    //// // #pragma warning disable CS0618
+    //// Messages = new(EditContext);
 
-    if (Model != null) // && Table != null)
+    if (Model != null) //// && Table != null)
     {
       // Öffnen und schließen eines modalen Dialogs.
       if (HttpContext.Request.Method == "POST")
@@ -443,7 +670,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     }
     if (Postback == 0)
     {
-      if (Table != null) // && !(Table.Liste?.Any() ?? false))
+      if (Table != null) //// && !(Table.Liste?.Any() ?? false))
       {
         if (Table.Liste == null)
         {
@@ -483,7 +710,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// <param name="id">Betroffene Id.</param>
   /// <param name="model">Evtl. gelesenes Model.</param>
   /// <param name="table">Evtl. gelesenes Table-Model.</param>
-  protected virtual void Init(string? id, T? model = null, TableModelBase<V>? table = null)
+  protected virtual void Init(string? id, T? model = null, TableModelBase<TV>? table = null)
   {
   }
 
@@ -500,8 +727,8 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
 
   /// <summary>
   /// Aktualisierung des nächsten Formulars, z.B. nach Schließen eines Formulars.
-  /// <paramref name="refresh"/>True, wenn das nächste Formular, z.B. die Tabelle, aktualisiert werden soll, sonst false.
   /// </summary>
+  /// <param name="refresh">True, wenn das nächste Formular, z.B. die Tabelle, aktualisiert werden soll, sonst false.</param>
   protected void SetFormRefresh(bool refresh = true)
   {
     HttpContext.Session?.SetFormRefresh(refresh);
@@ -525,22 +752,22 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   protected virtual void Submit()
   {
     // Alle Submit-Aktionen, die nach dem Rendern der Komponenten ausgeführt werden können.
-    if (Model == null || Messages == null || issubmitting)
+    if (Model == null || Messages == null || Issubmitting)
       return;
-    issubmitting = true;
+    Issubmitting = true;
     try
     {
       var submit = Model.Submit ?? "";
       if (!string.IsNullOrEmpty(submit))
       {
-        valid = EditContext?.Validate() ?? false;
-        // if (!valid)
-        // {
-        //   Doppelte Meldungen verhindern.
-        //   InitEditContext(Model);
-        // }
+        Valid = EditContext?.Validate() ?? false;
+        //// if (!valid)
+        //// {
+        ////   Doppelte Meldungen verhindern.
+        ////   InitEditContext(Model);
+        //// }
       }
-      System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} Submit {submit} valid {valid}");
+      System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} Submit {submit} valid {Valid}");
       var close = Submit(submit);
       if (close)
       {
@@ -552,7 +779,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
     }
     finally
     {
-      issubmitting = false;
+      Issubmitting = false;
     }
   }
 
@@ -572,12 +799,12 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// Bereitstellen der Tabellen-Daten mit Berücksichtigung der Filterung, Sortierung und Paginierung.
   /// Diese Funktion sollte in Formularen mit Tabellen überschrieben werden.
   /// </summary>
-  /// <param name="m"></param>
+  /// <param name="m">Betroffenes Tabellen-Model.</param>
   /// <returns>Tabellen-Daten als Liste.</returns>
-  /// <param name="Messages">Betroffene Fehlermeldungen.</param>
-  protected virtual List<V> TableData(TableModelBase<V>? m, ValidationMessageStore? Messages)
+  /// <param name="messages">Betroffene Fehlermeldungen.</param>
+  protected virtual List<TV> TableData(TableModelBase<TV>? m, ValidationMessageStore? messages)
   {
-    return new List<V>();
+    return new List<TV>();
   }
 
   /// <summary>
@@ -587,233 +814,9 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   /// <param name="selrow">Betroffene Tabellen-Zeile-Nummer.</param>
   /// <param name="messages">Betroffene Fehlermeldungen.</param>
   /// <returns>True, wenn am Model etwas geändert wurde, sonst false.</returns>
-  protected virtual bool OnRowChanged(V? row, int selrow, ValidationMessageStore? messages)
+  protected virtual bool OnRowChanged(TV? row, int selrow, ValidationMessageStore? messages)
   {
     return false;
-  }
-
-  /// <summary>
-  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
-  /// </summary>
-  /// <param name="form">Betroffenes Postback-Formular.</param>
-  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
-  /// <param name="id">Id aus Tabellen-Aktion.</param>
-  /// <param name="id2">Id aus 2. modalen Dialog.</param>
-  public virtual void HandleModal(string? form, string? handler, string? id, string? id2)
-  {
-  }
-
-  /// <summary>
-  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines nicht modalen Dialogs benutzt werden.
-  /// </summary>
-  /// <param name="form">Betroffenes Postback-Formular.</param>
-  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
-  /// <param name="id">Id aus Tabellen-Aktion.</param>
-  public virtual void HandleNoModal(string? form, string? handler, string? id)
-  {
-  }
-
-  /// <summary>
-  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines nicht modalen Dialogs benutzt werden.
-  /// </summary>
-  /// <param name="form">Betroffenes Postback-Formular.</param>
-  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
-  /// <param name="id">Id aus Tabellen-Aktion.</param>
-  /// <param name="detailform">Betroffenes Detail-Formular aus Tabelle öffnen.</param>
-  public void HandleNoModal1(string? form, string? handler, string? id, string detailform)
-  {
-    // Basis-Funktion mit Formularkennung und Id, die ein Formular öffnet.
-    var i = Funktionen.ToInt32(id);
-    if (i < 0 && handler == "Table_New")
-    {
-      var dt = Formular.ToShortString(Formular.GetTableDialogType(handler));
-      var id2 = $"{dt}_{id}";
-      var f = OpenFormular(detailform, id2);
-      if (f != null)
-        OpenFormular(f);
-      return;
-    }
-    var l = Table?.Liste ?? TableData(Table, Messages);
-    if (l != null && i >= 1 && l.Count() >= i)
-    {
-      var ds = l.Skip(i - 1).FirstOrDefault();
-      var nr = ds?.Id ?? "";
-      if (nr.StartsWith("P"))
-      {
-        var v = nr.Substring(1);
-        HttpContext?.Session?.SetFormParameter(v);
-        nr = Guid.NewGuid().ToString();
-      }
-      if (!string.IsNullOrEmpty(nr))
-      {
-        var dt = Formular.ToShortString(Formular.GetTableDialogType(handler));
-        var id2 = $"{dt}_{nr}";
-        var f = OpenFormular(detailform, id2);
-        if (f != null)
-          OpenFormular(f);
-      }
-    }
-  }
-
-  /// <summary>
-  /// Liefert die Id des aktuell ausgewählten Datensatzes.
-  /// </summary>
-  /// <returns>Id des aktuell ausgewählten Datensatzes.</returns>
-  public string? GetTableRowId()
-  {
-    var i = Table?.SelectedRow ?? 0;
-    var l = Table?.Liste ?? TableData(Table, Messages);
-    if (l != null && i >= 1 && l.Count() >= i)
-    {
-      var ds = l.Skip(i - 1).FirstOrDefault();
-      var nr = ds?.Id ?? "";
-      return nr;
-    }
-    return null;
-  }
-
-  /// <summary>
-  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
-  /// </summary>
-  /// <param name="form">Betroffenes Postback-Formular.</param>
-  /// <param name="formt">Betroffenes Tabellen-Postback-Formular.</param>
-  /// <param name="formmodal">Betroffenes modales Formular.</param>
-  /// <param name="msubmit">Betroffener Submit-Parameter aus dem modalem Model.</param>
-  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
-  /// <param name="id">Id aus Tabellen-Aktion oder 2. modalen Dialog.</param>
-  /// <param name="abbrechen">Betroffener Submit für Abbrechen.</param>
-  /// <returns>DialogTypeEnum für den Aufruf eines modalen Dialogs.</returns>
-  public virtual (DialogTypeEnum dt, string msubmit, bool mvalid) HandleModal1(string? form, string? formt, string? formmodal, string msubmit, string abbrechen, string? handler, string? id)
-  {
-    var dt = DialogTypeEnum.Without;
-    var mvalid = false;
-    if (form == formt || form == formmodal)
-    {
-      if (form == formt && !string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
-      {
-        dt = Formular.GetTableDialogType(handler);
-        if (dt != DialogTypeEnum.Edit && dt != DialogTypeEnum.Delete && dt != DialogTypeEnum.Copy)
-          dt = DialogTypeEnum.New;
-      }
-      else
-      {
-        if (!string.IsNullOrEmpty(msubmit))
-        {
-          mvalid = ModalEditContext?.Validate() ?? false;
-          // if (!mvalid)
-          // {
-          //   // Doppelte Meldungen verhindern.
-          //   InitEditContext(null, WP210Model);
-          // }
-        }
-        dt = DialogTypeEnum.Postback;
-        if (msubmit == abbrechen || form != formmodal)
-        {
-          Model.ModalArt = null;
-          Model.ModalId = null;
-        }
-      }
-    }
-    else
-    {
-      Model.ModalArt = null;
-      Model.ModalId = null;
-      Model.Modal2Id = null;
-    }
-    //// WriteFormularModel(Model.Nr ?? "0", Model);
-    return (dt, msubmit, mvalid);
-  }
-
-  /// <summary>
-  /// Verarbeitung der Tabellen-Aktionen.
-  /// </summary>
-  /// <param name="table">Betroffene Tabellen-Daten.</param>
-  /// <param name="messages">Betroffene Fehlermeldungen.</param>
-  /// <param name="rowchange">True, wenn die Zeile geändert wurde, sonst false.</param>
-  public void OnTable(TableModelBase<V> table, ValidationMessageStore? messages, bool rowchange = true)
-  {
-    // if (table == null)
-    // {
-    //   SetRhe();
-    //   return;
-    // }
-    var handler = table.Handler;
-    var selpage = table.SelectedPage;
-    var selrow = table.SelectedRow;
-    System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} OnTable {handler} {selpage} {selrow}");
-    if (handler == "Table_First")
-    {
-      table.SelectedPage = 1;
-      table.SelectedRow = 1;
-    }
-    if (handler == "Table_Prev" && table.SelectedPage > 1)
-    {
-      table.SelectedPage--;
-    }
-    if (handler == "Table_Next")
-    {
-      table.SelectedPage++;
-    }
-    var last = handler == "Table_Last";
-    if (last)
-    {
-      last = true;
-      table.SelectedPage = table.PageCount;
-    }
-    if (handler == "Table_All")
-      table.Search = "%%";
-    // if (!string.IsNullOrEmpty(handler))
-    // {
-    //   WriteFormularModel(table.Nr ?? "", null, table);
-    //   Navigation.NavigateTo(HttpContext.Request.Path, true, true); // Query-Parameter handler entfernen.
-    // }
-    table.Liste = TableData(table, messages);
-    if (table.SelectedPage > table.PageCount)
-    {
-      table.SelectedPage = table.PageCount;
-      if (string.IsNullOrEmpty(handler) || handler == "Table_Next" || handler == "Table_Last")
-        table.Liste = TableData(table, messages);
-    }
-    if (last || table.SelectedRow > (table.Liste?.Count ?? 0))
-      table.SelectedRow = table.Liste?.Count ?? 0;
-    if (table.SelectedRow < 1 && (table.Liste?.Count ?? 0) > 0)
-      table.SelectedRow = 1;
-    if (rowchange || selpage != table.SelectedPage || selrow != table.SelectedRow)
-    {
-      var sr = table.SelectedRow ?? 0;
-      var row = sr > 0 && table.Liste != null && table.Liste.Count >= sr ? table.Liste[sr - 1] : null;
-      if (OnRowChanged(row, sr, messages))
-        WriteFormularModel(Model?.Nr ?? "0", Model, null);
-    }
-    if (handler == "Table_Export")
-    {
-      var csv = new CsvWriter();
-      csv.AddCsvLine(["1", "2", "3"]);
-      csv.AddCsvLine(["4", "5", "6"]);
-      //csv.WriteFile();
-    }
-    WriteFormularModel(table.Nr ?? "", null, table);
-    SetRhe();
-    if (!string.IsNullOrEmpty(handler) && handler != "Table_New" && handler != "Table_Edit" && handler != "Table_Delete" && handler != "Table_Copy")
-      Navigation.NavigateTo(HttpContext.Request.Path, true, true); // Query-Parameter handler entfernen.
-  }
-
-  /// <summary>
-  /// Verarbeitung der Tabellen-Aktionen.
-  /// </summary>
-  /// <param name="table">Betroffene Tabellen-Daten.</param>
-  /// <param name="rm">Betroffenes Readmodel.</param>
-  /// <param name="l">Betroffene neue Liste.</param>
-  /// <returns>Neue Liste.</returns>
-  public List<V> UpdateTable(TableModelBase<V>? table, TableReadModel? rm, List<V> l)
-  {
-    if (table != null && rm != null)
-    {
-      table.PageCount = rm.PageCount;
-      table.Essence = rm.Essence;
-      table.Liste = l;
-    }
-    return l;
   }
 
   /// <summary>
@@ -938,7 +941,7 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   }
 
   /// <summary>
-  /// Gehört der Submit zu einem Datum oder m, h, p?
+  /// Prüft, ob der Submit zu einem Datum oder m, h, p gehört.
   /// </summary>
   /// <param name="submit">Betroffener Submit.</param>
   /// <param name="valueSubmit">Submit-Value für Datum.</param>
@@ -990,84 +993,5 @@ public class BlazorComponentBase<T, V> : LayoutComponentBase
   {
     var data = HttpContext.Session?.GetFormData() ?? new FormData();
     return data[key];
-  }
-}
-
-/// <summary>
-/// Statische Hilfsfunktionen.
-/// </summary>
-public static class BlazorComponentBaseStatic
-{
-  /// <summary>
-  /// Alle möglichen Formulare als Kopiervorlage für Use cases.
-  /// </summary>
-  private static readonly Dictionary<string, Formular> Formulare = new()
-  {
-    { "Index", new Formular { Action = "index", Area = "", Name = "Startseite" } },
-  };
-
-  /// <summary>
-  /// Hinzufügen von Formularen, die in der statischen Formulare-Liste nicht enthalten sind.
-  /// </summary>
-  /// <param name="forms">Neue Formulare.</param>
-  public static void AddFormulare(Dictionary<string, Formular> forms)
-  {
-    foreach (var kv in forms)
-    {
-      Formulare[kv.Key] = kv.Value;
-    }
-  }
-
-  /// <summary>
-  /// Versuch, ein Formular aus der statischen Formulare-Liste zu lesen.
-  /// </summary>
-  /// <param name="name">Name des zu lesenden Formulars.</param>
-  /// <param name="formular">Das gelesene Formular oder null.</param>
-  /// <returns>True, wenn das Formular gefunden wurde.</returns>
-  internal static bool TryGetFormular(string name, out Formular? formular)
-  {
-    return Formulare.TryGetValue(name, out formular);
-  }
-
-  /// <summary>
-  /// Lesen des Table-Model einer Formular-Instanz.
-  /// </summary>
-  /// <param name="session">Betroffene Session.</param>
-  /// <param name="form">Betroffener Formularname.</param>
-  /// <param name="id">Betroffene ID.</param>
-  public static U? ReadFormularTableModel<U>(ISession session, string form, string id)
-  {
-    var model = session.GetObjectFromJson<U>($"{form}.Table.{id}");
-    return model;
-  }
-
-  /// <summary>
-  /// Lesen des Form-Model einer Formular-Instanz.
-  /// </summary>
-  /// <param name="session">Betroffene Session.</param>
-  /// <param name="form">Betroffener Formularname.</param>
-  /// <param name="id">Betroffene ID.</param>
-  public static U? ReadFormularFormModel<U>(ISession session, string form, string id)
-  {
-    var model = session.GetObjectFromJson<U>($"{form}.Form.{id}");
-    return model;
-  }
-
-  /// <summary>
-  /// Prüfen, ob die ReturnUrl gültig ist, d.h. ein relativer Pfad ohne externe Protokolle oder doppelte Slashes.
-  /// </summary>
-  /// <param name="returnUrl">Zu prüfende ReturnUrl.</param>
-  /// <returns>True, wenn die ReturnUrl gültig ist.</returns>
-  public static bool IsValidReturnUrl(string returnUrl)
-  {
-    if (string.IsNullOrWhiteSpace(returnUrl))
-      return false;
-
-    // Prüfen, ob es sich um einen relativen Pfad handelt (beginnt mit '/')
-    // und ob keine externen Protokolle oder doppelte Slashes (//) verwendet werden.
-    return returnUrl.StartsWith("/") 
-      && !returnUrl.StartsWith("//") 
-      && !returnUrl.StartsWith("/\\")
-      && Uri.IsWellFormedUriString(returnUrl, UriKind.Relative);
   }
 }

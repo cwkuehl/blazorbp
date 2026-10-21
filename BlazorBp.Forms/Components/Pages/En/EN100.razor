@@ -125,7 +125,7 @@
   /// <param name="handler">Handler aus Tabellen-Aktion.</param>
   /// <param name="id">Id aus Tabellen-Aktion.</param>
   /// <param name="id2">Id aus 2. modalen Dialog.</param>
-  public override void HandleModal(string? form, string? handler, string? id, string? id2)
+  protected override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
     var daten = ServiceDaten;
     var (dt, msubmit, mvalid) = HandleModal1(form, "en100t", "en110modal", EN110Model.GetSubmit(HttpContext.Request), nameof(EN110Model.Abbrechen), handler, id);
@@ -212,7 +212,7 @@
     {
       Refresh();
     }
-    if (valid && submit == nameof(Model.Berechnen))
+    if (Valid && submit == nameof(Model.Berechnen))
     {
       // Siehe StartTask
     }

@@ -4,7 +4,6 @@
 
 namespace BlazorBp.Forms.Components.Pages;
 
-using BlazorSpa.Core.Base;
 using BlazorBp.Forms.Models.Ag;
 using BlazorBp.Forms.Models.Am;
 using BlazorBp.Forms.Models.Fz;
@@ -12,6 +11,7 @@ using BlazorBp.Forms.Models.Hh;
 using BlazorBp.Forms.Models.Tb;
 using BlazorBp.Forms.Models.Wp;
 using BlazorSpa.Base.Services;
+using BlazorSpa.Core.Base;
 using CSBP.Services.Apis.Services;
 using CSBP.Services.Base;
 using Microsoft.AspNetCore.Http;
@@ -27,7 +27,7 @@ public static class DownloadData
   /// <param name="context">Betroffener HttpContext.</param>
   /// <param name="sp">Betroffener IServiceProvider.</param>
   /// <returns>CSV-String oder null sowie Fehlermeldung.</returns>
-  public static (string?, string?) GetCsv(string page, string id, HttpContext context, IServiceProvider sp)
+  public static (string? Wert, string? Fehler) GetCsv(string page, string id, HttpContext context, IServiceProvider sp)
   {
     var s = context?.Session;
     string? fehler = null;
@@ -155,7 +155,7 @@ public static class DownloadData
   /// <param name="context">Betroffener HttpContext.</param>
   /// <param name="sp">Betroffener IServiceProvider.</param>
   /// <returns>Byte-Array oder null sowie Fehlermeldung.</returns>
-  public static (byte[]?, string?) GetHtml(string page, string id, HttpContext context, IServiceProvider sp)
+  public static (byte[]? Wert, string? Fehler) GetHtml(string page, string id, HttpContext context, IServiceProvider sp)
   {
     var s = context?.Session;
     string? fehler = null;
@@ -196,6 +196,6 @@ public static class DownloadData
         fehler = r.GetErrors();
       }
     }
-    return (null, fehler);    
+    return (null, fehler);
   }
 }

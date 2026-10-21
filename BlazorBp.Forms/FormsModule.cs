@@ -1,14 +1,18 @@
+// <copyright file="FormsModule.cs" company="cwkuehl.de">
+// Copyright (c) cwkuehl.de. All rights reserved.
+// </copyright>
+
 namespace BlazorBp.Forms;
 
-using BlazorSpa.Core.Base;
-using BlazorBp.Forms.Components.Pages;
-using BlazorSpa.Core.Modules;
 using BlazorBp.Forms.Auth;
+using BlazorBp.Forms.Components.Pages;
 using BlazorBp.Forms.Undo;
 using BlazorSpa.Base;
 using BlazorSpa.Base.Auth;
 using BlazorSpa.Base.Models;
 using BlazorSpa.Base.Undo;
+using BlazorSpa.Core.Base;
+using BlazorSpa.Core.Modules;
 using CSBP.Services.Base;
 using CSBP.Services.Factory;
 using CSBP.Services.Resources;
@@ -16,6 +20,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
+/// <summary>
+/// Implementierung des IFormModule für die BlazorBp.Forms.
+/// </summary>
 public class FormsModule : IFormModule
 {
   /// <summary>Liefert die Hauptmenüs, die dieses Modul bereitstellt.</summary>
@@ -62,6 +69,9 @@ public class FormsModule : IFormModule
       ]),
     };
   }
+
+  /// <summary>Konfiguriert die Services, die dieses Modul bereitstellt.</summary>
+  /// <param name="services">Betroffene Services.</param>
   public void ConfigureServices(IServiceCollection services)
   {
     services.AddSingleton(FactoryService.AddressService);
@@ -82,10 +92,10 @@ public class FormsModule : IFormModule
     return new Dictionary<string, Formular>
     {
       { "AG100", new Formular { Action = "ag100", Area = "ag", Name = "Mandanten" } },
-      // { "AG110", new Formular { Action = "ag110", Area = "ag", Name = "Mandant" } },
+      //// { "AG110", new Formular { Action = "ag110", Area = "ag", Name = "Mandant" } },
       { "AG200", new Formular { Action = "ag200", Area = "ag", Name = "Benutzer" } },
       { "AM100", new Formular { Action = "am100", Area = "am", Name = "Kennwort ändern" } },
-      { "AM500", new Formular { Action = "am500", Area = "am", Name = "Einstellungen"  } },
+      { "AM500", new Formular { Action = "am500", Area = "am", Name = "Einstellungen" } },
       { "EN100", new Formular { Action = "en100", Area = "en", Name = "Abfrage-Parameter" } },
       { "FZ100", new Formular { Action = "fz100", Area = "fz", Name = "Statistik" } },
       { "FZ200", new Formular { Action = "fz200", Area = "fz", Name = "Fahrräder" } },

@@ -34,6 +34,6 @@ public class WP300Model : PageModelBase
     {
       // Nummer = "";
     }
-    // SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
+    //// TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
   }
 }

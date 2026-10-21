@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Http;
 /// <summary>Zugriffe auf die Session-Daten.</summary>
 public static class SessionExtensions
 {
+  /// <summary>Trenner für Formular-Parameter in der Session.</summary>
+  private const char FormParameterTrenner = '+';
+
   /// <summary>Lesen eines JSON-Objekts aus der Session.</summary>
   /// <param name="session">Betroffene Session.</param>
   /// <param name="key">Betroffener Schlüssel.</param>
@@ -148,9 +151,6 @@ public static class SessionExtensions
         session.Remove(key);
     }
   }
-
-  /// <summary>Trenner für Formular-Parameter in der Session.</summary>
-  private const char FormParameterTrenner = '+';
 
   /// <summary>
   /// Erzeugt einen String aus einem Array von Formular-Parametern, die in der Session gespeichert werden sollen.

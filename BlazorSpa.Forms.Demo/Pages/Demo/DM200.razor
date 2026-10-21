@@ -76,81 +76,13 @@ else
   protected DM200ModalModel ModalModel { get; set; } = default!;
 
   /// <summary>
-  /// Initialisierung des Models.
-  /// </summary>
-  /// <param name="id">Betroffene Id.</param>
-  /// <param name="model">Evtl. gelesenes Model.</param>
-  /// <param name="table">Betroffene Tabelle.</param>
-  protected override void Init(string? id, DM200Model? model = null, TableModelBase<DM200TableRowModel>? table = null)
-  {
-    if (model != null)
-      Model = model;
-    if (Model == null)
-      Model = new DM200Model
-      {
-        Nr = id,
-        TextBox = "text",
-        Schliessen = "",
-        Focus = nameof(DM200Model.Schliessen),
-      };
-    if (table != null)
-      Table = table;
-    if (Table == null)
-      Table = new TableModelBase<DM200TableRowModel>
-      {
-        SelectedPage = 1,
-        // PageCount = 5,
-        RowsPerPage = 10,
-        SortColumn = $"{nameof(Objekt.Id)}#+",
-        SelectedRow = 1,
-      };
-    Model.Nr = id;
-    Table.Nr = id;
-
-    if (ModalModel == null)
-      ModalModel = new DM200ModalModel
-      {
-        Nummer = 0,
-        Bezeichnung = null,
-        Beschreibung = null,
-      };
-    ModalModel.Nr = id;
-    InitEditContext(Model, ModalModel);
-  }
-
-  /// <summary>
-  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
-  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
-  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
-  /// -Verarbeitung des Postbacks, weil danach gerendert wird.
-  /// </summary>
-  protected override void OnInitialized()
-  {
-    if (OnInitializedFormular("DM200", "Tabelle - DM200", Id, true))
-      return;
-
-    // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
-    var submit = Model.Submit ?? "";
-    if (submit == nameof(Model.Import))
-    {
-      var l = SaveUploadFiles("DM200", "filehochladen");
-      var fn = l.FirstOrDefault();
-      if (!string.IsNullOrEmpty(fn))
-      {
-        if (Get(DemoService.SaveObjektList(fn)))
-          Funktionen.MachNichts(); // OK
-      }
-    }
-  }
-
-  /// <summary>
   /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
   /// </summary>
   /// <param name="form">Betroffenes Postback-Formular.</param>
   /// <param name="handler">Handler aus Tabellen-Aktion.</param>
   /// <param name="id">Id aus Tabellen-Aktion.</param>
   /// <param name="id2">Id aus 2. modalen Dialog.</param>
-  public override void HandleModal(string? form, string? handler, string? id, string? id2)
+  protected override void HandleModal(string? form, string? handler, string? id, string? id2)
   {
     if (!string.IsNullOrEmpty(handler) && !string.IsNullOrEmpty(id))
     {
@@ -216,6 +148,74 @@ else
       }
     }
     WriteFormularModel(Model.Nr ?? "0", Model);
+  }
+
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id">Betroffene Id.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Betroffene Tabelle.</param>
+  protected override void Init(string? id, DM200Model? model = null, TableModelBase<DM200TableRowModel>? table = null)
+  {
+    if (model != null)
+      Model = model;
+    if (Model == null)
+      Model = new DM200Model
+      {
+        Nr = id,
+        TextBox = "text",
+        Schliessen = "",
+        Focus = nameof(DM200Model.Schliessen),
+      };
+    if (table != null)
+      Table = table;
+    if (Table == null)
+      Table = new TableModelBase<DM200TableRowModel>
+      {
+        SelectedPage = 1,
+        // PageCount = 5,
+        RowsPerPage = 10,
+        SortColumn = $"{nameof(Objekt.Id)}#+",
+        SelectedRow = 1,
+      };
+    Model.Nr = id;
+    Table.Nr = id;
+
+    if (ModalModel == null)
+      ModalModel = new DM200ModalModel
+      {
+        Nummer = 0,
+        Bezeichnung = null,
+        Beschreibung = null,
+      };
+    ModalModel.Nr = id;
+    InitEditContext(Model, ModalModel);
+  }
+
+  /// <summary>
+  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
+  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
+  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
+  /// -Verarbeitung des Postbacks, weil danach gerendert wird.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    if (OnInitializedFormular("DM200", "Tabelle - DM200", Id, true))
+      return;
+
+    // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
+    var submit = Model.Submit ?? "";
+    if (submit == nameof(Model.Import))
+    {
+      var l = SaveUploadFiles("DM200", "filehochladen");
+      var fn = l.FirstOrDefault();
+      if (!string.IsNullOrEmpty(fn))
+      {
+        if (Get(DemoService.SaveObjektList(fn)))
+          Funktionen.MachNichts(); // OK
+      }
+    }
   }
 
   /// <summary>

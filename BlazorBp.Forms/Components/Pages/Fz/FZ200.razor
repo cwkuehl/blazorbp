@@ -43,6 +43,62 @@
   private CSBP.Services.Apis.Services.IPrivateService PrivateService { get; set; } = default!;
 
   /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  /// <param name="id2">Id aus 2. modalen Dialog.</param>
+  protected override void HandleModal(string? form, string? handler, string? id, string? id2)
+  {
+    var daten = ServiceDaten;
+    var (dt, msubmit, mvalid) = HandleModal1(form, "fz200t", "fz210modal", FZ210Model.GetSubmit(HttpContext.Request), nameof(FZ210Model.Abbrechen), handler, id);
+    if (dt == DialogTypeEnum.New)
+    {
+      FZ210Model.SetMhrf(dt);
+      Model.ModalArt = handler;
+      Model.ModalId = id;
+    }
+    else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
+    {
+      var i = Functions.ToInt32(id);
+      var l = Table?.Liste ?? TableData(Table, ModalMessages);
+      if (l != null && i >= 1 && l.Count() >= i)
+      {
+        var ds = l.Skip(i - 1).FirstOrDefault();
+        var r = PrivateService.GetBike(daten, ds?.Nummer ?? "");
+        if (r.Ok && ds != null && r.Ergebnis != null)
+        {
+          FZ210Model.From(r.Ergebnis);
+          FZ210Model.SetMhrf(dt);
+          Model.ModalArt = handler;
+          Model.ModalId = id;
+        }
+      }
+    }
+    else if (dt == DialogTypeEnum.Postback)
+    {
+      if (mvalid && msubmit == nameof(FZ210Model.Ok))
+      {
+        var dt1 = Formular.GetTableDialogType(Model.ModalArt);
+        var o = FZ210Model.To(daten);
+        var r = dt1 == DialogTypeEnum.Delete
+          ? PrivateService.DeleteBike(daten, o)
+          : PrivateService.SaveBike(daten, o.Uid, o.Bezeichnung, o.Typ);
+        if (r.Ok)
+        {
+          Model.ModalArt = null;
+          Model.ModalId = null;
+          Refresh();
+        }
+        else
+          ModalMessages?.Add(() => FZ210Model, r.GetErrors() ?? "");
+      }
+    }
+    WriteFormularModel(Model.Nr ?? "0", Model);
+  }
+
+  /// <summary>
   /// Initialisierung des Models.
   /// </summary>
   /// <param name="id">Betroffene Id.</param>
@@ -96,69 +152,13 @@
   }
 
   /// <summary>
-  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
-  /// </summary>
-  /// <param name="form">Betroffenes Postback-Formular.</param>
-  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
-  /// <param name="id">Id aus Tabellen-Aktion.</param>
-  /// <param name="id2">Id aus 2. modalen Dialog.</param>
-  public override void HandleModal(string? form, string? handler, string? id, string? id2)
-  {
-    var daten = ServiceDaten;
-    var (dt, msubmit, mvalid) = HandleModal1(form, "fz200t", "fz210modal", FZ210Model.GetSubmit(HttpContext.Request), nameof(FZ210Model.Abbrechen), handler, id);
-    if (dt == DialogTypeEnum.New)
-    {
-      FZ210Model.SetMhrf(dt);
-      Model.ModalArt = handler;
-      Model.ModalId = id;
-    }
-    else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
-    {
-      var i = Functions.ToInt32(id);
-      var l = Table?.Liste ?? TableData(Table, ModalMessages);
-      if (l != null && i >= 1 && l.Count() >= i)
-      {
-        var ds = l.Skip(i - 1).FirstOrDefault();
-        var r = PrivateService.GetBike(daten, ds?.Nummer ?? "");
-        if (r.Ok && ds != null && r.Ergebnis != null)
-        {
-          FZ210Model.From(r.Ergebnis);
-          FZ210Model.SetMhrf(dt);
-          Model.ModalArt = handler;
-          Model.ModalId = id;
-        }
-      }
-    }
-    else if (dt == DialogTypeEnum.Postback)
-    {
-      if (mvalid && msubmit == nameof(FZ210Model.Ok))
-      {
-        var dt1 = Formular.GetTableDialogType(Model.ModalArt);
-        var o = FZ210Model.To(daten);
-        var r = dt1 == DialogTypeEnum.Delete
-          ? PrivateService.DeleteBike(daten, o)
-          : PrivateService.SaveBike(daten, o.Uid, o.Bezeichnung, o.Typ);
-        if (r.Ok)
-        {
-          Model.ModalArt = null;
-          Model.ModalId = null;
-          Refresh();
-        }
-        else
-          ModalMessages?.Add(() => FZ210Model, r.GetErrors() ?? "");
-      }
-    }
-    WriteFormularModel(Model.Nr ?? "0", Model);
-  }
-
-  /// <summary>
   /// Verarbeitung des Postbacks.
   /// </summary>
   /// <param name="submit">Betroffener Submit-Parameter.</param>
   /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
   protected override bool Submit(string? submit)
   {
-    if (valid && submit == "OK")
+    if (Valid && submit == "OK")
     {
       @* var daten = ServiceDaten;
       var r = new ServiceErgebnis();

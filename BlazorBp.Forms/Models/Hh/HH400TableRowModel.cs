@@ -5,8 +5,8 @@
 namespace BlazorBp.Forms.Models.Hh;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorSpa.Core.Base;
 using BlazorSpa.Base;
+using BlazorSpa.Core.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorSpa.Core.Base.DialogTypeEnum;
@@ -17,10 +17,13 @@ using static BlazorSpa.Core.Base.DialogTypeEnum;
 [Serializable]
 public class HH400TableRowModel : TableRowModelBase
 {
-
   /// <summary>Holt oder setzt Nr.</summary>
   [Display(Name = "Nr.", Description = "Nummer")]
-  public string? Nummer { get { return Id; } set { Id = value; } }
+  public string? Nummer
+  {
+    get { return Id; }
+    set { Id = value; }
+  }
 
   /// <summary>Holt oder setzt Kennzeichen.</summary>
   [Display(Name = "K.", Description = "Kennzeichen")]
@@ -73,6 +76,7 @@ public class HH400TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
+  /// <returns>Das kopierte Model.</returns>
   public static HH400TableRowModel From(HhBuchung m)
   {
     return new HH400TableRowModel

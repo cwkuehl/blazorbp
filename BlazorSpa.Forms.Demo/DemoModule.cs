@@ -1,17 +1,24 @@
+// <copyright file="DemoModule.cs" company="cwkuehl.de">
+// Copyright (c) cwkuehl.de. All rights reserved.
+// </copyright>
+
 namespace BlazorSpa.Forms.Demo;
 
+using BlazorSpa.Base.Auth;
+using BlazorSpa.Base.Models;
+using BlazorSpa.Base.Undo;
 using BlazorSpa.Core.Base;
 using BlazorSpa.Core.Modules;
 using BlazorSpa.Forms.Demo.Apis;
 using BlazorSpa.Forms.Demo.Impl;
 using BlazorSpa.Forms.Demo.Pages;
-using BlazorSpa.Base.Auth;
-using BlazorSpa.Base.Models;
-using BlazorSpa.Base.Undo;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
+/// <summary>
+/// Initialisierung für das Modul Demo.
+/// </summary>
 public class DemoModule : IFormModule
 {
   /// <summary>Liefert die Hauptmenüs, die dieses Modul bereitstellt.</summary>
@@ -52,13 +59,15 @@ public class DemoModule : IFormModule
   {
   }
 
+  /// <summary>App-Konfiguration ergänzen.</summary>
+  /// <param name="app">Betroffene WebApplication.</param>
   public void ConfigureApp(WebApplication app)
   {
     app.MapGet("/hello",
-      // [Microsoft.AspNetCore.Authorization.Authorize]
+      //// [Microsoft.AspNetCore.Authorization.Authorize]
       [EndpointSummary("Test API.")]
-    [EndpointDescription("Liefert immer 'Hello World'.")]
-    () => "Hello World");
+      [EndpointDescription("Liefert immer 'Hello World'.")]
+      () => "Hello World");
   }
 
   /// <summary>Liefert eine Funktion zum Erzeugen von CSV-Dateien.</summary>

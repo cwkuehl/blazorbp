@@ -41,7 +41,7 @@ public class PageModelBase
   /// <summary>Holt oder setzt die Id im 2. modalen Dialogs.</summary>
   public string? Modal2Id { get; set; } = default;
 
-  /// <summary>Holt oder setzt das Control mit dem Fokus. (Bezeichnung aus Model)</summary>
+  /// <summary>Holt oder setzt das Control mit dem Fokus (Bezeichnung aus Model).</summary>
   public string? Focus { get; set; } = default;
 
   /// <summary>Holt oder setzt die gesperrten, versteckten oder fehlerhaften Controls.</summary>
@@ -54,24 +54,24 @@ public class PageModelBase
   }
 
   /// <summary>Lesen der Submit-auslösenden Schaltfläche und des Submit-Controls aus dem Request.</summary>
-  /// <param name="Request">Betroffener Request.</param>
+  /// <param name="request">Betroffener Request.</param>
   /// <returns>Name der Submit-auslösenden Komponente.</returns>
-  public string GetSubmit(HttpRequest Request)
+  public string GetSubmit(HttpRequest request)
   {
     if (Handler != null)
       System.Diagnostics.Debug.Print($"{DateTime.Now.ToString("HH:mm:ss.fff")} GetSubmit Handler {Handler}");
-    Handler ??= Request.Query["handler"];
-    if (Request.Method == "POST")
+    Handler ??= request.Query["handler"];
+    if (request.Method == "POST")
     {
-      SubmitControl ??= Request.Form["SubmitControl"]; // input hidden name="SubmitControl"
-      SubmitControl ??= Request.Form["Model.SubmitControl"]; // SubmitButton
+      SubmitControl ??= request.Form["SubmitControl"]; // input hidden name="SubmitControl"
+      SubmitControl ??= request.Form["Model.SubmitControl"]; // SubmitButton
     }
     return Submit ?? "";
   }
 
-  /// <summary>Ist Steuerelement gesperrt?</summary>
+  /// <summary>Prüft, ob Steuerelement gesperrt ist.</summary>
   /// <param name="control">Betroffenes Steuerelement.</param>
-  /// <returns>Ist das Steuerelement gesperrt?</returns>
+  /// <returns>True, wenn das Steuerelement gesperrt ist; sonst false.</returns>
   public bool IsReadonly(string control)
   {
     var ro = $"#{control}#R";
@@ -80,7 +80,7 @@ public class PageModelBase
 
   /// <summary>Ein Steuerelement wird gesperrt oder entsperrt, aber nicht versteckt.</summary>
   /// <param name="control">Betroffenes Steuerelement.</param>
-  /// <param name="readwrite">Soll das Steuerelement geändert werden?</param>
+  /// <param name="readwrite">True, wenn das Steuerelement geändert werden soll; sonst false.</param>
   public void SetReadonly(string control, bool readwrite = false)
   {
     ReadonlyHiddenError ??= "";
@@ -160,7 +160,7 @@ public class PageModelBase
 
   /// <summary>Ein Steuerelement wird als fehlerhaft gekennzeichnet.</summary>
   /// <param name="control">Betroffenes Steuerelement.</param>
-  /// <param name="noerror">Soll der Fehler zurückgesetzt werden?</param>
+  /// <param name="noerror">True, wenn der Fehler zurückgesetzt werden soll.</param>
   public void SetError(string control, bool noerror = false)
   {
     ReadonlyHiddenError ??= "";
@@ -176,7 +176,7 @@ public class PageModelBase
 
   /// <summary>Ein Steuerelement wird als verpflichtend gekennzeichnet.</summary>
   /// <param name="control">Betroffenes Steuerelement.</param>
-  /// <param name="notmandatory">Soll die Verpflichtung zurückgesetzt werden?</param>
+  /// <param name="notmandatory">True, wenn die Verpflichtung zurückgesetzt werden soll.</param>
   public void SetMandatory(string control, bool notmandatory = false)
   {
     ReadonlyHiddenError ??= "";

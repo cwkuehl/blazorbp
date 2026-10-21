@@ -4,10 +4,10 @@
 
 namespace BlazorSpa.Forms.Demo.Pages;
 
+using BlazorSpa.Base.Services;
 using BlazorSpa.Core.Base;
 using BlazorSpa.Forms.Demo.Apis;
 using BlazorSpa.Forms.Demo.Models.Demo;
-using BlazorSpa.Base.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,7 +22,7 @@ public static class DownloadData
   /// <param name="context">Betroffener HttpContext.</param>
   /// <param name="sp">Betroffener IServiceProvider.</param>
   /// <returns>CSV-String oder null sowie Fehlermeldung.</returns>
-  public static (string?, string?) GetCsv(string page, string id, HttpContext context, IServiceProvider sp)
+  public static (string? Wert, string? Fehler) GetCsv(string page, string id, HttpContext context, IServiceProvider sp)
   {
     var ds = sp.GetService<IDemoService>();
     var s = context?.Session;
@@ -60,7 +60,7 @@ public static class DownloadData
   /// <param name="context">Betroffener HttpContext.</param>
   /// <param name="sp">Betroffener IServiceProvider.</param>
   /// <returns>Byte-Array oder null sowie Fehlermeldung.</returns>
-  public static (byte[]?, string?) GetHtml(string page, string id, HttpContext context, IServiceProvider sp)
+  public static (byte[]? Wert, string? Fehler) GetHtml(string page, string id, HttpContext context, IServiceProvider sp)
   {
     var s = context?.Session;
     string? fehler = null;

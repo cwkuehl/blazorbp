@@ -43,6 +43,65 @@
   private bool superadmin = false;
 
   /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  /// <param name="id2">Id aus 2. modalen Dialog.</param>
+  protected override void HandleModal(string? form, string? handler, string? id, string? id2)
+  {
+    var (dt, msubmit, mvalid) = HandleModal1(form, "ag200t", "ag210modal", AG210Model.GetSubmit(HttpContext.Request), nameof(AG210Model.Schliessen), handler, id);
+    if (dt == DialogTypeEnum.New)
+    {
+      AG210Model.SetMhrf(dt);
+      Model.ModalArt = handler;
+      Model.ModalId = id;
+    }
+    else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete)
+    {
+      var i = Functions.ToInt32(id);
+      var l = Table?.Liste ?? TableData(Table, ModalMessages);
+      if (l != null && i >= 1 && l.Count() >= i)
+      {
+        var ds = l.Skip(i - 1).FirstOrDefault();
+        if (ds != null)
+        {
+          AG210Model.From(ds);
+          AG210Model.SetMhrf(dt);
+          Model.ModalArt = handler;
+          Model.ModalId = id;
+        }
+      }
+    }
+    else if (dt == DialogTypeEnum.Postback)
+    {
+      if (mvalid && msubmit == nameof(AG210Model.Ok))
+      {
+        var dt1 = Formular.GetTableDialogType(Model.ModalArt);
+        var daten = ServiceDaten;
+        var o = AG210Model.To(daten.MandantNr);
+        var r = dt1 == DialogTypeEnum.Delete
+          ? ClientService.DeleteUser(daten, o)
+          : ClientService.SaveUser(daten, o.Person_Nr, o.Benutzer_ID, o.Passwort, o.Berechtigung, o.Geburt);
+        if (r.Ok)
+        {
+          Model.ModalArt = null;
+          Model.ModalId = null;
+          Refresh();
+        }
+        else
+          ModalMessages?.Add(() => AG210Model, r.GetErrors() ?? "");
+      }
+      else if (IsDateMhp(msubmit, nameof(AG210Model.Geburt), AG210Model.Geburt, out var d))
+      {
+        AG210Model.Geburt = d;
+      }
+    }
+    WriteFormularModel(Model.Nr ?? "0", Model);
+  }
+
+  /// <summary>
   /// Initialisierung des Models.
   /// </summary>
   /// <param name="id">Betroffene Id.</param>
@@ -96,65 +155,6 @@
   {
     if (OnInitializedFormular("AG200", "Benutzer - AG200", Id, true))
       return;
-  }
-
-  /// <summary>
-  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
-  /// </summary>
-  /// <param name="form">Betroffenes Postback-Formular.</param>
-  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
-  /// <param name="id">Id aus Tabellen-Aktion.</param>
-  /// <param name="id2">Id aus 2. modalen Dialog.</param>
-  public override void HandleModal(string? form, string? handler, string? id, string? id2)
-  {
-    var (dt, msubmit, mvalid) = HandleModal1(form, "ag200t", "ag210modal", AG210Model.GetSubmit(HttpContext.Request), nameof(AG210Model.Schliessen), handler, id);
-    if (dt == DialogTypeEnum.New)
-    {
-      AG210Model.SetMhrf(dt);
-      Model.ModalArt = handler;
-      Model.ModalId = id;
-    }
-    else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete)
-    {
-      var i = Functions.ToInt32(id);
-      var l = Table?.Liste ?? TableData(Table, ModalMessages);
-      if (l != null && i >= 1 && l.Count() >= i)
-      {
-        var ds = l.Skip(i - 1).FirstOrDefault();
-        if (ds != null)
-        {
-          AG210Model.From(ds);
-          AG210Model.SetMhrf(dt);
-          Model.ModalArt = handler;
-          Model.ModalId = id;
-        }
-      }
-    }
-    else if (dt == DialogTypeEnum.Postback)
-    {
-      if (mvalid && msubmit == nameof(AG210Model.Ok))
-      {
-        var dt1 = Formular.GetTableDialogType(Model.ModalArt);
-        var daten = ServiceDaten;
-        var o = AG210Model.To(daten.MandantNr);
-        var r = dt1 == DialogTypeEnum.Delete
-          ? ClientService.DeleteUser(daten, o)
-          : ClientService.SaveUser(daten, o.Person_Nr, o.Benutzer_ID, o.Passwort, o.Berechtigung, o.Geburt);
-        if (r.Ok)
-        {
-          Model.ModalArt = null;
-          Model.ModalId = null;
-          Refresh();
-        }
-        else
-          ModalMessages?.Add(() => AG210Model, r.GetErrors() ?? "");
-      }
-      else if (IsDateMhp(msubmit, nameof(AG210Model.Geburt), AG210Model.Geburt, out var d))
-      {
-        AG210Model.Geburt = d;
-      }
-    }
-    WriteFormularModel(Model.Nr ?? "0", Model);
   }
 
   /// <summary>

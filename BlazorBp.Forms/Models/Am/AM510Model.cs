@@ -5,11 +5,11 @@
 namespace BlazorBp.Forms.Models.Am;
 
 using System.ComponentModel.DataAnnotations;
+using BlazorSpa.Base;
 using BlazorSpa.Core.Base;
-using static BlazorSpa.Core.Base.DialogTypeEnum;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
-using BlazorSpa.Base;
+using static BlazorSpa.Core.Base.DialogTypeEnum;
 
 /// <summary>
 /// Model-Klasse für das modale Formular AM500 Einstellungen.

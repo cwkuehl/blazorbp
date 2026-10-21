@@ -18,20 +18,15 @@ public class StatusTask
   private const string CrLf = Konstanten.CrLf;
 
   /// <summary>
-  /// Interne Daten.
-  /// </summary>
-  private static readonly List<StatusTask> Daten = new();
-
-  /// <summary>
-  /// Betroffener Server-Name.
-  /// </summary>
-  private static string Servername => SpaBase.Servername;
-
-  /// <summary>
   /// Pfad für Dateien.
   /// TODO Verzeichnis anlegen, das für alle Server-Instanzen gleich ist, damit die Statusseite auch von anderen Servern gelesen werden kann.
   /// </summary>
   private static readonly string Pfad = SpaBase.SharedPath;
+
+  /// <summary>
+  /// Interne Daten.
+  /// </summary>
+  private static readonly List<StatusTask> Daten = new();
 
   /// <summary>
   /// Internal data.
@@ -111,6 +106,11 @@ public class StatusTask
   /// Gets a value indicating whether the message should be short.
   /// </summary>
   public bool Kurz { get; private set; }
+
+  /// <summary>
+  /// Betroffener Server-Name.
+  /// </summary>
+  private static string Servername => SpaBase.Servername;
 
   /// <summary>
   /// Liefert des Status aller gewünschten laufenden Funktionen auf allen Application Servern.

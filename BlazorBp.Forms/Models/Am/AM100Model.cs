@@ -1,4 +1,4 @@
-// <copyright file="AG100Model.cs" company="cwkuehl.de">
+// <copyright file="AM100Model.cs" company="cwkuehl.de">
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
@@ -46,7 +46,6 @@ public class AM100Model : PageModelBase
   /// <summary>Holt oder setzt den Schließen-Button.</summary>
   [Display(Name = "S_chließen", Description = "Formular schließen ohne Speichern.")]
   public string? Schliessen { get; set; } = default!;
-
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>

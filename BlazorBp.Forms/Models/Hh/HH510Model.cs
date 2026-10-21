@@ -5,8 +5,8 @@
 namespace BlazorBp.Forms.Models.Hh;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorSpa.Core.Base;
 using BlazorSpa.Base;
+using BlazorSpa.Core.Base;
 using static BlazorSpa.Core.Base.DialogTypeEnum;
 
 /// <summary>

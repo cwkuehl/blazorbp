@@ -4,9 +4,9 @@
 
 namespace BlazorSpa.Forms.Demo.Apis;
 
-using BlazorSpa.Forms.Demo.Models.Demo;
 using BlazorSpa.Base.Models;
 using BlazorSpa.Base.Services;
+using BlazorSpa.Forms.Demo.Models.Demo;
 
 /// <summary>
 /// Interface für DemoService.
@@ -17,7 +17,7 @@ public interface IDemoService
   /// Liefert ein Buch.
   /// </summary>
   /// <param name="id">Betroffene ID.</param>
-  /// <returns></returns> <summary>
+  /// <returns>Buch oder null.</returns>
   Book? GetBook(int id);
 
   /// <summary>
@@ -67,5 +67,5 @@ public interface IDemoService
   /// </summary>
   /// <param name="fn">Betroffener Dateiname der CSV-Datei.</param>
   /// <returns>Evtl. Fehlermeldungen.</returns>
-  ServiceErgebnis SaveObjektList(string s);
+  ServiceErgebnis SaveObjektList(string fn);
 }

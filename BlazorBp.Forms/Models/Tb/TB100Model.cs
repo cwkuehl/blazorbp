@@ -67,7 +67,7 @@ public class TB100Model : PageModelBase
   /// <summary>Holt oder setzt den Luftdruck.</summary>
   [Display(Name = "Luftdruck hPa", Description = "Luftdruck-Kurve zum ausgewählten Datum")]
   public string? Diagramb2 { get; set; }
-  
+
   /// <summary>Holt oder setzt 1 Jahr vorher.</summary>
   [Display(Name = "1 Jahr vorher", Description = "Eintrag vor einem Jahr")]
   //// [Required(ErrorMessage = "1 Jahr vorher muss angegeben werden.")]
@@ -298,7 +298,7 @@ public class TB100Model : PageModelBase
     Search8 = null;
     Search9 = "%%";
     Search100 = "%%";
-    Search110  = "%%";
+    Search110 = "%%";
     Search120 = null;
     Position2 = null;
     From = Functions.IsLinux() ? DateTime.Today.AddYears(-1) : null;

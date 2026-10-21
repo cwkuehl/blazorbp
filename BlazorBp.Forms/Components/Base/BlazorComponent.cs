@@ -10,8 +10,11 @@ using CSBP.Services.Base;
 /// <summary>
 /// Abgeleitete Klasse für alle Blazor-Formulare.
 /// </summary>
-public class BlazorComponent<T, V> : BlazorComponentBase<T, V>
-  where T : PageModelBase where V : TableRowModelBase
+/// <typeparam name="T">Typ des Models.</typeparam>
+/// <typeparam name="TV">Typ des Table-Models.</typeparam>
+public class BlazorComponent<T, TV> : BlazorComponentBase<T, TV>
+  where T : PageModelBase
+  where TV : TableRowModelBase
 {
   /// <summary>Holt eine neue Instanz der ServiceDaten.</summary>
   protected ServiceDaten ServiceDaten

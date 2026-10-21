@@ -17,7 +17,7 @@ public class FormData
   /// Alle möglichen Daten aus Formularen.
   /// </summary>
   [JsonInclude]
-  private Dictionary<string, string> Data = new();
+  private Dictionary<string, string> data = new();
 
   /// <summary>
   /// Holt oder setzt Daten eines Formulars.
@@ -28,19 +28,20 @@ public class FormData
   {
     get
     {
-      if (Data.ContainsKey(key))
-        return Data[key];
+      if (data.ContainsKey(key))
+        return data[key];
       return null;
     }
+
     set
     {
       if (value == null)
       {
-        if (Data.ContainsKey(key))
-          Data.Remove(key);
+        if (data.ContainsKey(key))
+          data.Remove(key);
       }
       else
-        Data[key] = value;
+        data[key] = value;
     }
   }
 
@@ -50,7 +51,7 @@ public class FormData
   /// <returns>Daten als JSON-String.</returns>
   public string ToJsonString()
   {
-    string json = JsonSerializer.Serialize(Data);
+    string json = JsonSerializer.Serialize(data);
     return json;
   }
 
@@ -65,20 +66,20 @@ public class FormData
       ReadCommentHandling = JsonCommentHandling.Skip, // Kommentare überspringen
       Converters = { }, // Keine Fehler werfen, wenn das JSON ungültig ist
     };
-    Dictionary<string, string>? data = null;
+    Dictionary<string, string>? data2;
     try
     {
-      data = JsonSerializer.Deserialize<Dictionary<string, string>>(json, options);
+      data2 = JsonSerializer.Deserialize<Dictionary<string, string>>(json, options);
     }
     catch (JsonException)
     {
       // Fehler beim Deserialisieren ignorieren und mit leeren Daten fortfahren.
-      data = [];
+      data2 = [];
     }
-    Data.Clear();
-    foreach (var kvp in data ?? [])
+    data.Clear();
+    foreach (var kvp in data2 ?? [])
     {
-      Data[kvp.Key] = kvp.Value;
+      data[kvp.Key] = kvp.Value;
     }
   }
 }

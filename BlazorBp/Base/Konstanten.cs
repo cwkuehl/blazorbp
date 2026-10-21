@@ -7,6 +7,6 @@ namespace BlazorBp.Base;
 /// <summary>Konstanten für die Anwendung.</summary>
 public static class Konstanten
 {
-  /// <summary>Blazor mit Interaktivität?</summary>
+  /// <summary>Blazor mit oder ohne Interaktivität.</summary>
   public const bool Interactive = false;
 }

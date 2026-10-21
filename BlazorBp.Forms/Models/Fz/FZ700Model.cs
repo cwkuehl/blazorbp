@@ -32,7 +32,7 @@ public class FZ700Model : PageModelBase
     {
       // KennwortAlt = null;
     }
-    // SetMandatoryHiddenReadonly(nameof(Mandant), true, false, true);
-    // SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
+    //// TODO SetMandatoryHiddenReadonly(nameof(Mandant), true, false, true);
+    //// SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
   }
 }

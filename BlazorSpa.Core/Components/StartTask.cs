@@ -1,4 +1,4 @@
-// <copyright file="DownloadData.cs" company="cwkuehl.de">
+// <copyright file="StartTask.cs" company="cwkuehl.de">
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
@@ -12,14 +12,14 @@ using Microsoft.AspNetCore.Http;
 public static class StartTask
 {
   /// <summary>Liste von Funktionen zum Starten von Aufgaben.</summary>
-  private static List<Func<string, string, HttpContext, IServiceProvider, (bool, string?)>> _funcStart = new();
+  private static List<Func<string, string, HttpContext, IServiceProvider, (bool, string?)>> funcStart = new();
 
   /// <summary>Funktion zum Starten von Aufgaben registrieren.</summary>
   /// <param name="func">Zu registrierende Funktion.</param>
   public static void RegisterFuncStartTask(Func<string, string, HttpContext, IServiceProvider, (bool, string?)>? func)
   {
     if (func != null)
-      _funcStart.Add(func);
+      funcStart.Add(func);
   }
 
   /// <summary>Startet eine asynchrone, länger laufende Aufgabe.</summary>
@@ -31,7 +31,7 @@ public static class StartTask
   {
     bool b = false;
     string? fehler = null;
-    foreach (var func in _funcStart)
+    foreach (var func in funcStart)
     {
       (b, fehler) = func(page, id, context, sp);
       if (b)

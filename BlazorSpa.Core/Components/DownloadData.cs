@@ -13,25 +13,25 @@ using Microsoft.AspNetCore.Http;
 public static class DownloadData
 {
   /// <summary>Liste von Funktionen zum Erzeugen von CSV-Dateien.</summary>
-  private static List<Func<string, string, HttpContext, IServiceProvider, (string?, string?)>> _funcCsv = new();
+  private static List<Func<string, string, HttpContext, IServiceProvider, (string?, string?)>> funcCsv = new();
 
   /// <summary>Liste von Funktionen zum Erzeugen von HTML-Dateien.</summary>
-  private static List<Func<string, string, HttpContext, IServiceProvider, (byte[]?, string?)>> _funcHtml = new();
+  private static List<Func<string, string, HttpContext, IServiceProvider, (byte[]?, string?)>> funcHtml = new();
 
   /// <summary>Funktion zum Erzeugen von CSV-Dateien registrieren.</summary>
   /// <param name="func">Zu registrierende Funktion.</param>
   public static void RegisterFuncCsv(Func<string, string, HttpContext, IServiceProvider, (string?, string?)>? func)
   {
     if (func != null)
-      _funcCsv.Add(func);
+      funcCsv.Add(func);
   }
 
   /// <summary>Funktion zum Erzeugen von HTML-Dateien registrieren.</summary>
   /// <param name="func">Zu registrierende Funktion.</param>
   public static void RegisterFuncHtml(Func<string, string, HttpContext, IServiceProvider, (byte[]?, string?)>? func)
   {
-    if (func != null) 
-      _funcHtml.Add(func);
+    if (func != null)
+      funcHtml.Add(func);
   }
 
   /// <summary>Daten für CSV-Dateien lesen.</summary>
@@ -44,7 +44,7 @@ public static class DownloadData
   {
     string? s = null;
     string? fehler = null;
-    foreach (var func in _funcCsv)
+    foreach (var func in funcCsv)
     {
       (s, fehler) = func(page, id, context, sp);
       if (!string.IsNullOrEmpty(s))
@@ -69,7 +69,7 @@ public static class DownloadData
   {
     byte[]? s = null;
     string? fehler = null;
-    foreach (var func in _funcHtml)
+    foreach (var func in funcHtml)
     {
       (s, fehler) = func(page, id, context, sp);
       if (s != null && s.Length > 0)

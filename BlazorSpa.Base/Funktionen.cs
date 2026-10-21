@@ -331,4 +331,3 @@ public static partial class Funktionen
     return buffer;
   }
 }
-

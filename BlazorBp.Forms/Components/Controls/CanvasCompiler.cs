@@ -7,50 +7,26 @@ namespace BlazorBp.Forms.Components.Controls;
 using System.Text.Json;
 
 /// <summary>
-/// Klasse für die Erstellung von Canvas-Befehlen eines Steuerelements.
-/// </summary>
-public class CanvasControl
-{
-  /// <summary>Holt oder setzt die ID des Canvas-Steuerelements, auf das die Befehle angewendet werden sollen.</summary>
-  public string Canvasid { get; set; } = "";
-
-  /// <summary>Holt oder setzt die Liste der Canvas-Befehle, die auf das Steuerelement angewendet werden sollen.</summary>
-  public List<CanvasCommand> Commands { get; set; } = new();
-}
-
-/// <summary>
-/// Klasse für die Erstellung eines Canvas-Befehls.
-/// </summary>
-public class CanvasCommand
-{
-  /// <summary>Holt oder setzt den Funktionsnamen des Canvas-Befehls.</summary>
-  public string Cmd { get; set; } = "";
-
-  /// <summary>Holt oder setzt die Argumente des Canvas-Befehls.</summary>
-  public Dictionary<string, object>? Args { get; set; }
-}
-
-/// <summary>
 /// Klasse für die Erstellung von Canvas-Befehlen für Steuerelemente.
 /// Sie ermöglicht das Hinzufügen von Befehlen und die Kompilierung der Befehle in ein JSON-Format, das an die Client-Seite gesendet werden kann.
 /// </summary>
 public class CanvasCompiler
 {
   /// <summary>Holt die Liste der Canvas-Steuerelemente, die die Befehle enthalten.</summary>
-  private readonly List<CanvasControl> _controls = new();
+  private readonly List<CanvasControl> controls = new();
 
   /// <summary>Holt oder setzt das aktuelle Canvas-Steuerelement, auf das die Befehle angewendet werden.</summary>
-  private CanvasControl? _control = null;
+  private CanvasControl? control = null;
 
   /// <summary>
   /// Fügt ein neues Canvas-Steuerelement mit der angegebenen ID hinzu und setzt es als aktuelles Steuerelement, auf das die Befehle angewendet werden.
   /// </summary>
-  /// <param name="id">Betroffene Steuerelement-ID</param>
+  /// <param name="id">Betroffene Steuerelement-ID.</param>
   /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
   public CanvasCompiler AddControl(string id)
   {
-    _control = new CanvasControl { Canvasid = id };
-    _controls.Add(_control);
+    control = new CanvasControl { Canvasid = id };
+    controls.Add(control);
     return this;
   }
 
@@ -61,10 +37,10 @@ public class CanvasCompiler
   /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
   public CanvasCompiler SetFillStyle(string color)
   {
-    _control?.Commands.Add(new CanvasCommand
+    control?.Commands.Add(new CanvasCommand
     {
       Cmd = "setFillStyle",
-      Args = new() { ["color"] = color }
+      Args = new() { ["color"] = color },
     });
     return this;
   }
@@ -79,10 +55,10 @@ public class CanvasCompiler
   /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
   public CanvasCompiler FillRect(int x, int y, int w, int h)
   {
-    _control?.Commands.Add(new CanvasCommand
+    control?.Commands.Add(new CanvasCommand
     {
       Cmd = "fillRect",
-      Args = new() { ["x"] = x, ["y"] = y, ["w"] = w, ["h"] = h }
+      Args = new() { ["x"] = x, ["y"] = y, ["w"] = w, ["h"] = h },
     });
     return this;
   }
@@ -97,10 +73,10 @@ public class CanvasCompiler
   /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
   public CanvasCompiler StrokeRect(int x, int y, int w, int h)
   {
-    _control?.Commands.Add(new CanvasCommand
+    control?.Commands.Add(new CanvasCommand
     {
       Cmd = "strokeRect",
-      Args = new() { ["x"] = x, ["y"] = y, ["w"] = w, ["h"] = h }
+      Args = new() { ["x"] = x, ["y"] = y, ["w"] = w, ["h"] = h },
     });
     return this;
   }
@@ -114,10 +90,10 @@ public class CanvasCompiler
   /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
   public CanvasCompiler FillText(string text, int x, int y)
   {
-    _control?.Commands.Add(new CanvasCommand
+    control?.Commands.Add(new CanvasCommand
     {
       Cmd = "fillText",
-      Args = new() { ["text"] = text, ["x"] = x, ["y"] = y }
+      Args = new() { ["text"] = text, ["x"] = x, ["y"] = y },
     });
     return this;
   }
@@ -129,10 +105,10 @@ public class CanvasCompiler
   /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
   public CanvasCompiler SetStrokeStyle(string color)
   {
-    _control?.Commands.Add(new CanvasCommand
+    control?.Commands.Add(new CanvasCommand
     {
       Cmd = "setStrokeStyle",
-      Args = new() { ["color"] = color }
+      Args = new() { ["color"] = color },
     });
     return this;
   }
@@ -143,10 +119,10 @@ public class CanvasCompiler
   /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
   public CanvasCompiler BeginPath()
   {
-    _control?.Commands.Add(new CanvasCommand
+    control?.Commands.Add(new CanvasCommand
     {
       Cmd = "beginPath",
-      Args = new()
+      Args = new(),
     });
     return this;
   }
@@ -159,10 +135,10 @@ public class CanvasCompiler
   /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
   public CanvasCompiler MoveTo(decimal x, decimal y)
   {
-    _control?.Commands.Add(new CanvasCommand
+    control?.Commands.Add(new CanvasCommand
     {
       Cmd = "moveTo",
-      Args = new() { ["x"] = x, ["y"] = y }
+      Args = new() { ["x"] = x, ["y"] = y },
     });
     return this;
   }
@@ -175,10 +151,10 @@ public class CanvasCompiler
   /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
   public CanvasCompiler LineTo(decimal x, decimal y)
   {
-    _control?.Commands.Add(new CanvasCommand
+    control?.Commands.Add(new CanvasCommand
     {
       Cmd = "lineTo",
-      Args = new() { ["x"] = x, ["y"] = y }
+      Args = new() { ["x"] = x, ["y"] = y },
     });
     return this;
   }
@@ -189,10 +165,10 @@ public class CanvasCompiler
   /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
   public CanvasCompiler Stroke()
   {
-    _control?.Commands.Add(new CanvasCommand
+    control?.Commands.Add(new CanvasCommand
     {
       Cmd = "stroke",
-      Args = new()
+      Args = new(),
     });
     return this;
   }
@@ -204,10 +180,10 @@ public class CanvasCompiler
   /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
   public CanvasCompiler SetFont(string font)
   {
-    _control?.Commands.Add(new CanvasCommand
+    control?.Commands.Add(new CanvasCommand
     {
       Cmd = "setFont",
-      Args = new() { ["font"] = font }
+      Args = new() { ["font"] = font },
     });
     return this;
   }
@@ -219,10 +195,10 @@ public class CanvasCompiler
   /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
   public CanvasCompiler Rotate(decimal angle)
   {
-    _control?.Commands.Add(new CanvasCommand
+    control?.Commands.Add(new CanvasCommand
     {
       Cmd = "rotate",
-      Args = new() { ["angle"] = angle }
+      Args = new() { ["angle"] = angle },
     });
     return this;
   }
@@ -239,10 +215,10 @@ public class CanvasCompiler
   /// <returns>Eigene Instanz für Methoden-Chaining.</returns>
   public CanvasCompiler Arc(decimal x, decimal y, decimal radius, decimal startangle, decimal endangle, bool anticlockwise = false)
   {
-    _control?.Commands.Add(new CanvasCommand
+    control?.Commands.Add(new CanvasCommand
     {
       Cmd = "arc",
-      Args = new() { ["x"] = x, ["y"] = y, ["radius"] = radius, ["startangle"] = startangle, ["endangle"] = endangle, ["anticlockwise"] = anticlockwise }
+      Args = new() { ["x"] = x, ["y"] = y, ["radius"] = radius, ["startangle"] = startangle, ["endangle"] = endangle, ["anticlockwise"] = anticlockwise },
     });
     return this;
   }
@@ -253,6 +229,34 @@ public class CanvasCompiler
   /// <returns>Die JSON-Serialisierung der Canvas-Steuerelemente mit ihren Befehlen.</returns>
   public string Compile()
   {
-    return JsonSerializer.Serialize(_controls);
+    return JsonSerializer.Serialize(controls);
   }
+}
+
+/// <summary>
+/// Klasse für die Erstellung von Canvas-Befehlen eines Steuerelements.
+/// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
+public class CanvasControl
+#pragma warning restore SA1402
+{
+  /// <summary>Holt oder setzt die ID des Canvas-Steuerelements, auf das die Befehle angewendet werden sollen.</summary>
+  public string Canvasid { get; set; } = "";
+
+  /// <summary>Holt oder setzt die Liste der Canvas-Befehle, die auf das Steuerelement angewendet werden sollen.</summary>
+  public List<CanvasCommand> Commands { get; set; } = new();
+}
+
+/// <summary>
+/// Klasse für die Erstellung eines Canvas-Befehls.
+/// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
+public class CanvasCommand
+#pragma warning restore SA1402
+{
+  /// <summary>Holt oder setzt den Funktionsnamen des Canvas-Befehls.</summary>
+  public string Cmd { get; set; } = "";
+
+  /// <summary>Holt oder setzt die Argumente des Canvas-Befehls.</summary>
+  public Dictionary<string, object>? Args { get; set; }
 }

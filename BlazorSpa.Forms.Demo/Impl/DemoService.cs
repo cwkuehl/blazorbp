@@ -4,22 +4,54 @@
 
 namespace BlazorSpa.Forms.Demo.Impl;
 
-using BlazorSpa.Forms.Demo.Apis;
-using BlazorSpa.Forms.Demo.Models.Demo;
-using BlazorSpa.Base.Services;
-using BlazorSpa.Base.Models;
 using BlazorSpa.Base;
 using BlazorSpa.Base.Csv;
+using BlazorSpa.Base.Models;
+using BlazorSpa.Base.Services;
+using BlazorSpa.Forms.Demo.Apis;
+using BlazorSpa.Forms.Demo.Models.Demo;
 
+/// <summary>
+/// Implementierung der Services-Funktionen für das Demo-Modul.
+/// </summary>
 public class DemoService : IDemoService
 {
   private readonly List<Book> booklist = new();
 
+  private readonly List<Objekt> objlist = new();
+
+  /// <summary>
+  /// Sortieren einer Liste.
+  /// </summary>
+  /// <param name="l">Betroffene Liste.</param>
+  /// <param name="sortColumn">Spalte zur Sortierung.</param>
+  /// <typeparam name="T">Typ der Liste.</typeparam>
+  public static void SortList<T>(List<T> l, string? sortColumn)
+    where T : new()
+  {
+    if (!string.IsNullOrEmpty(sortColumn))
+    {
+      var desc = sortColumn.EndsWith("-");
+      var sort = sortColumn.TrimEnd(['-', '+']).TrimEnd('#');
+      var l1 = l.AsQueryable().OrderBy(sort ?? "", desc)?.ToList() ?? [];
+      l.Clear();
+      l.AddRange(l1);
+    }
+  }
+
+  /// <summary>Liefert ein Buch anhand der ID.</summary>
+  /// <param name="id">Betroffene ID.</param>
+  /// <returns>Buch oder null, falls nicht gefunden.</returns>
   public Book? GetBook(int id)
   {
     return booklist.FirstOrDefault(a => a.Id == id);
   }
 
+  /// <summary>
+  /// Liefert eine Liste von Büchern.
+  /// </summary>
+  /// <param name="filter">Filter für die Suche.</param>
+  /// <returns>Liste von Büchern.</returns>
   public List<Book> GetBookList(string? filter = null)
   {
     if (string.IsNullOrEmpty(filter))
@@ -27,6 +59,8 @@ public class DemoService : IDemoService
     return booklist.Where(a => (a.Title ?? "").Contains(filter) || (a.Author ?? "").Contains(filter)).ToList();
   }
 
+  /// <summary>Speichert ein Buch.</summary>
+  /// <param name="book">Betroffenes Buch.</param>
   public void SaveBook(Book book)
   {
     var b = booklist.FirstOrDefault(a => a.Id == book.Id);
@@ -37,8 +71,9 @@ public class DemoService : IDemoService
     booklist.Add(book);
   }
 
-  private readonly List<Objekt> objlist = new();
-
+  /// <summary>Liefert eine Liste von Objekten.</summary>
+  /// <param name="rm">Betroffene Filterung und Sortierung.</param>
+  /// <returns>Liste von Objekten.</returns>
   public List<Objekt> GetObjektList(TableReadModel? rm = null)
   {
     if (rm == null)
@@ -65,9 +100,7 @@ public class DemoService : IDemoService
     return l2;
   }
 
-  /// <summary>
-  /// Speichern eines Objekts.
-  /// </summary>
+  /// <summary>Speichern eines Objekts.</summary>
   /// <param name="o">Betroffenes Objekt.</param>
   /// <returns>Evtl. Fehlermeldungen.</returns>
   public ServiceErgebnis SaveObjekt(Objekt o)
@@ -118,23 +151,6 @@ public class DemoService : IDemoService
   }
 
   /// <summary>
-  /// Sortieren einer Liste.
-  /// </summary>
-  /// <param name="l">Betroffene Liste.</param>
-  /// <param name="sortColumn">Spalte zur Sortierung.</param>
-  public static void SortList<T>(List<T> l, string? sortColumn) where T : new()
-  {
-    if (!string.IsNullOrEmpty(sortColumn))
-    {
-      var desc = sortColumn.EndsWith("-");
-      var sort = sortColumn.TrimEnd(['-', '+']).TrimEnd('#');
-      var l1 = l.AsQueryable().OrderBy(sort ?? "", desc)?.ToList() ?? [];
-      l.Clear();
-      l.AddRange(l1);
-    }
-  }
-
-  /// <summary>
   /// Liefert eine CSV-Datei mit allen Datensätze des betroffenen Formulars.
   /// </summary>
   /// <param name="page">Betroffenes Formular.</param>
@@ -177,7 +193,7 @@ public class DemoService : IDemoService
           {
             Id = Funktionen.ToInt32(sp[2]),
             Name = sp[0],
-            Description = sp[1]
+            Description = sp[1],
           };
           l.Add(o);
         }

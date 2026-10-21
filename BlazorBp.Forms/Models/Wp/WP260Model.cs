@@ -122,7 +122,7 @@ public class WP260Model : PageModelBase
     IncomeAccountUid = Ertrag,
     Notiz = Notiz,
   };
-  
+
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
   public void From(WpAnlage m) =>

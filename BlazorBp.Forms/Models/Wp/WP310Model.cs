@@ -5,9 +5,9 @@
 namespace BlazorBp.Forms.Models.Wp;
 
 using System.ComponentModel.DataAnnotations;
+using BlazorSpa.Base;
 using BlazorSpa.Core.Base;
 using BlazorSpa.Core.Models;
-using BlazorSpa.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorSpa.Core.Base.DialogTypeEnum;
@@ -32,7 +32,7 @@ public class WP310Model : PageModelBase
   [Display(Name = "Bo_xgröße", Description = "Boxgröße absolut oder prozentual")]
   //// [Required(ErrorMessage = "Boxgröße muss angegeben werden.")]
   public decimal Box { get; set; }
-  
+
   /// <summary>Holt oder setzt die Auswahlliste von Skala.</summary>
   public List<ListItem>? AuswahlSkala { get; set; } = default!;
 

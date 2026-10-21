@@ -5,8 +5,8 @@
 namespace BlazorBp.Forms.Models.Tb;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorSpa.Core.Base;
 using BlazorSpa.Base;
+using BlazorSpa.Core.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 using static BlazorSpa.Core.Base.DialogTypeEnum;
@@ -74,6 +74,7 @@ public class TB200TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
+  /// <returns>Das kopierte Model.</returns>
   public static TB200TableRowModel From(TbOrt m)
   {
     return new TB200TableRowModel
@@ -86,7 +87,7 @@ public class TB200TableRowModel : TableRowModelBase
       Zeitzone = m.Zeitzone,
       Notiz = Functions.Left2(m.Notiz),
       AngelegtAm = m.Angelegt_Am,
-      AngelegtVon = m.Angelegt_Von, 
+      AngelegtVon = m.Angelegt_Von,
       GeaendertAm = m.Geaendert_Am,
       GeaendertVon = m.Geaendert_Von,
     };

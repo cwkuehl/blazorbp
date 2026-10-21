@@ -5,8 +5,8 @@
 namespace BlazorBp.Forms.Models.Wp;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorSpa.Core.Base;
 using BlazorSpa.Base;
+using BlazorSpa.Core.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 
@@ -18,7 +18,11 @@ public class WP250TableRowModel : TableRowModelBase
 {
   /// <summary>Holt oder setzt Nr.</summary>
   [Display(Name = "Nr.", Description = "Anlagen-Nr.")]
-  public string? Nummer { get { return Id; } set { Id = value; } }
+  public string? Nummer
+  {
+    get { return Id; }
+    set { Id = value; }
+  }
 
   /// <summary>Holt oder setzt Bezeichnung.</summary>
   [Display(Name = "_Bezeichnung", Description = "Bezeichnung")]
@@ -82,6 +86,7 @@ public class WP250TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
+  /// <returns>Das kopierte Model.</returns>
   public static WP250TableRowModel From(WpAnlage m)
   {
     return new WP250TableRowModel

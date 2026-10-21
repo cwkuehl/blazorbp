@@ -45,6 +45,60 @@
   private CSBP.Services.Apis.Services.IClientService ClientService { get; set; } = default!;
 
   /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  /// <param name="id2">Id aus 2. modalen Dialog.</param>
+  protected override void HandleModal(string? form, string? handler, string? id, string? id2)
+  {
+    var (dt, msubmit, mvalid) = HandleModal1(form, "am500t", "am510modal", AM510Model.GetSubmit(HttpContext.Request), nameof(AM510Model.Schliessen), handler, id);
+    if (dt == DialogTypeEnum.New)
+    {
+      AM510Model.SetMhrf(dt);
+      Model.ModalArt = handler;
+      Model.ModalId = id;
+    }
+    else if (dt == DialogTypeEnum.Edit)
+    {
+      var i = Functions.ToInt32(id);
+      var l = Table?.Liste ?? TableData(Table, ModalMessages);
+      if (l != null && i >= 1 && l.Count() >= i)
+      {
+        var ds = l.Skip(i - 1).FirstOrDefault();
+        if (ds != null)
+        {
+          AM510Model.From(ds);
+          AM510Model.SetMhrf(dt);
+          Model.ModalArt = handler;
+          Model.ModalId = id;
+        }
+      }
+    }
+    else if (dt == DialogTypeEnum.Postback)
+    {
+      var dt1 = Formular.GetTableDialogType(Model.ModalArt);
+      if (mvalid && msubmit == nameof(AM510Model.Ok) && dt1 == DialogTypeEnum.Edit)
+      {
+        var daten = ServiceDaten;
+        var o = AM510Model.To(daten.MandantNr);
+        var p = Parameter.Params.TryGetValue(o.Schluessel, out var v) ? v : null;
+        var r = ClientService.SaveOption(daten, daten.MandantNr, p, o.Wert);
+        if (r.Ok)
+        {
+          Model.ModalArt = null;
+          Model.ModalId = null;
+          Refresh();
+        }
+        else
+          ModalMessages?.Add(() => AM510Model, r.GetErrors() ?? "");
+      }
+    }
+    WriteFormularModel(Model.Nr ?? "0", Model);
+  }
+
+  /// <summary>
   /// Initialisierung des Models.
   /// </summary>
   /// <param name="id">Betroffene Id.</param>
@@ -92,60 +146,6 @@
       return;
 
     // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
-  }
-
-  /// <summary>
-  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines modalen Dialogs benutzt werden.
-  /// </summary>
-  /// <param name="form">Betroffenes Postback-Formular.</param>
-  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
-  /// <param name="id">Id aus Tabellen-Aktion.</param>
-  /// <param name="id2">Id aus 2. modalen Dialog.</param>
-  public override void HandleModal(string? form, string? handler, string? id, string? id2)
-  {
-    var (dt, msubmit, mvalid) = HandleModal1(form, "am500t", "am510modal", AM510Model.GetSubmit(HttpContext.Request), nameof(AM510Model.Schliessen), handler, id);
-    if (dt == DialogTypeEnum.New)
-    {
-      AM510Model.SetMhrf(dt);
-      Model.ModalArt = handler;
-      Model.ModalId = id;
-    }
-    else if (dt == DialogTypeEnum.Edit)
-    {
-      var i = Functions.ToInt32(id);
-      var l = Table?.Liste ?? TableData(Table, ModalMessages);
-      if (l != null && i >= 1 && l.Count() >= i)
-      {
-        var ds = l.Skip(i - 1).FirstOrDefault();
-        if (ds != null)
-        {
-          AM510Model.From(ds);
-          AM510Model.SetMhrf(dt);
-          Model.ModalArt = handler;
-          Model.ModalId = id;
-        }
-      }
-    }
-    else if (dt == DialogTypeEnum.Postback)
-    {
-      var dt1 = Formular.GetTableDialogType(Model.ModalArt);
-      if (mvalid && msubmit == nameof(AM510Model.Ok) && dt1 == DialogTypeEnum.Edit)
-      {
-        var daten = ServiceDaten;
-        var o = AM510Model.To(daten.MandantNr);
-        var p = Parameter.Params.TryGetValue(o.Schluessel, out var v) ? v : null;
-        var r = ClientService.SaveOption(daten, daten.MandantNr, p, o.Wert);
-        if (r.Ok)
-        {
-          Model.ModalArt = null;
-          Model.ModalId = null;
-          Refresh();
-        }
-        else
-          ModalMessages?.Add(() => AM510Model, r.GetErrors() ?? "");
-      }
-    }
-    WriteFormularModel(Model.Nr ?? "0", Model);
   }
 
   /// <summary>

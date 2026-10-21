@@ -1,4 +1,4 @@
-// <copyright file="AuthController.cs" company="LDI">
+// <copyright file="AuthController.cs" company="cwkuehl.de">
 // Copyright (c) cwkuehl.de. All rights reserved.
 // </copyright>
 
@@ -6,50 +6,37 @@ namespace BlazorBp.Controllers;
 
 using System.Security.Claims;
 using System.Text.Json;
-using BlazorSpa.Core.Base;
 using BlazorSpa.Base;
 using BlazorSpa.Base.Auth;
 using BlazorSpa.Base.Models;
+using BlazorSpa.Core.Base;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-  /// <summary>Controller für die Anmeldung und Abmeldung eines Benutzers.</summary>
+/// <summary>Controller für die Anmeldung und Abmeldung eines Benutzers.</summary>
 public class AuthController(IAuthService singleton) : Controller
 {
-  /// <summary>Daten für die Anmeldung eines Benutzers.</summary>
-  public class UserInfo
-  {
-    /// <summary>Betroffener Mandant.</summary>
-    public int Client { get; set; }
-
-    /// <summary>Betroffene Benutzer-ID.</summary>
-    public string? Username { get; set; }
-
-    /// <summary>Betroffenes Kennwort.</summary>
-    public string? Password { get; set; }
-  }
-
   /// <summary>Initialisiert eine neue Instanz der <see cref="AuthController"/> Klasse.</summary>
   private readonly IAuthService authService = singleton;
 
   /// <summary>Anmeldung für einen Benutzer.</summary>
-  /// <param name="Model">Daten für die Anmeldung eines Benutzers.</param>
+  /// <param name="model">Daten für die Anmeldung eines Benutzers.</param>
   /// <returns>Daten des angemeldeten Benutzers.</returns>
   [AllowAnonymous]
   [HttpPost("/auth/login")]
-  public async Task<IActionResult> LoginUser([FromBody] UserInfo Model)
+  public async Task<IActionResult> LoginUser([FromBody] UserInfo model)
   {
-    if (Model == null)
+    if (model == null)
       return NoContent();
-    // using StreamReader reader = new(HttpContext.Request.Body, false);
-    // var str = await reader.ReadToEndAsync();
-    // // {"id":"1x","client":1,"username":"admin","password":"test","nr":null,"submitControl":null,"handler":null,"modalArt":null,"modalId":null,"focus":"Password","readonlyHiddenError":null,"submit":null}
-    // var Model = System.Text.Json.JsonSerializer.Deserialize<UserInfo>(str);
+    //// using StreamReader reader = new(HttpContext.Request.Body, false);
+    //// var str = await reader.ReadToEndAsync();
+    //// // {"id":"1x","client":1,"username":"admin","password":"test","nr":null,"submitControl":null,"handler":null,"modalArt":null,"modalId":null,"focus":"Password","readonlyHiddenError":null,"submit":null}
+    //// var Model = System.Text.Json.JsonSerializer.Deserialize<UserInfo>(str);
     var sessionId = UserDaten.GetNewSessionId();
-    var ud0 = new UserDaten(sessionId, Model.Client, Model.Username ?? "Benutzer", []);
-    var ud = authService.LoginUser(ud0, Model?.Password ?? "");
+    var ud0 = new UserDaten(sessionId, model.Client, model.Username ?? "Benutzer", []);
+    var ud = authService.LoginUser(ud0, model?.Password ?? "");
     if (ud != null)
     {
       // Rollen bestimmen.
@@ -69,7 +56,7 @@ public class AuthController(IAuthService singleton) : Controller
         });
       var json = JsonSerializer.Serialize(ud);
       return Json(json);
-      // return Json($"{{\"Client\":{daten.MandantNr},\"Username\":\"{Username}\"}}");
+      //// return Json($"{{\"Client\":{daten.MandantNr},\"Username\":\"{Username}\"}}");
     }
     return NotFound(); // Json("{\"result\":false}");
   }
@@ -77,6 +64,7 @@ public class AuthController(IAuthService singleton) : Controller
   /// <summary>
   /// Logout und Weiterleitung an die Startseite.
   /// </summary>
+  /// <returns>Weiterleitung an die Startseite.</returns>
   [Authorize] // Kein Redirect mit ReturnUrl.
   //// [ValidateAntiForgeryToken] // Fehler: No service for type 'Microsoft.AspNetCore.Mvc.ViewFeatures.Filters.ValidateAntiforgeryTokenAuthorizationFilter' has been registered.
   [HttpGet("/auth/logout")]
@@ -96,5 +84,18 @@ public class AuthController(IAuthService singleton) : Controller
     HttpContext.Session?.RemoveAllModels();
     await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     return Redirect("/");
+  }
+
+  /// <summary>Daten für die Anmeldung eines Benutzers.</summary>
+  public class UserInfo
+  {
+    /// <summary>Betroffener Mandant.</summary>
+    public int Client { get; set; }
+
+    /// <summary>Betroffene Benutzer-ID.</summary>
+    public string? Username { get; set; }
+
+    /// <summary>Betroffenes Kennwort.</summary>
+    public string? Password { get; set; }
   }
 }

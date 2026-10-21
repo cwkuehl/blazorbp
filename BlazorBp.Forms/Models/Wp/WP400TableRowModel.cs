@@ -5,8 +5,8 @@
 namespace BlazorBp.Forms.Models.Wp;
 
 using System.ComponentModel.DataAnnotations;
-using BlazorSpa.Core.Base;
 using BlazorSpa.Base;
+using BlazorSpa.Core.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
 
@@ -18,7 +18,11 @@ public class WP400TableRowModel : TableRowModelBase
 {
   /// <summary>Holt oder setzt Nr.</summary>
   [Display(Name = "Nr.", Description = "Nummer")]
-  public string? Nummer { get { return Id; } set { Id = value; } }
+  public string? Nummer
+  {
+    get { return Id; }
+    set { Id = value; }
+  }
 
   /// <summary>Holt oder setzt Anlage.</summary>
   [Display(Name = "_Wertpapier", Description = "Bezeichnung des Wertpapiers")]
