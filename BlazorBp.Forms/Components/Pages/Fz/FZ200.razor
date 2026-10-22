@@ -158,20 +158,8 @@
   /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
   protected override bool Submit(string? submit)
   {
-    if (Valid && submit == "OK")
-    {
-      @* var daten = ServiceDaten;
-      var r = new ServiceErgebnis();
-      if (r != null)
-      {
-        Get(r);
-        if (r.Ok)
-        {
-          CloseFormular();
-          return;
-        }
-      } *@
-    }
+    if (submit == nameof(Model.Refresh))
+        Refresh();
     if (submit == nameof(Model.Schliessen))
       return true;
     return false;

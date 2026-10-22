@@ -111,6 +111,8 @@
   /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
   protected override bool Submit(string? submit)
   {
+    if (submit == nameof(Model.Refresh))
+        Refresh();
     if (submit == nameof(Model.Schliessen))
       return true;
     return false;

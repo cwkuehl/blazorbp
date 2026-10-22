@@ -151,7 +151,7 @@
       if (db.HasValue)
         Model.Bis = db;
     }
-    if (Table != null && (submit == nameof(Model.Betrag) || submit == nameof(Model.Konto) || submit == nameof(Model.Kennzeichen) || (submit?.StartsWith(nameof(Model.Von)) ?? false) || (submit?.StartsWith(nameof(Model.Bis)) ?? false)))
+    if (Table != null && (submit == nameof(Model.Refresh) || submit == nameof(Model.Betrag) || submit == nameof(Model.Konto) || submit == nameof(Model.Kennzeichen) || (submit?.StartsWith(nameof(Model.Von)) ?? false) || (submit?.StartsWith(nameof(Model.Bis)) ?? false)))
     {
       Refresh();
     }

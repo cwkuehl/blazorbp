@@ -178,6 +178,8 @@
       if (submit == nameof(Model.Fahrrad) && Table != null)
         OnTable(Table, Messages);
     }
+    if (submit == nameof(Model.Refresh))
+        Refresh();
     if (submit == nameof(Model.Schliessen))
       return true;
     return false;

@@ -140,6 +140,8 @@
         DoPostbackReload();
       }
     }
+    if (submit == nameof(Model.Refresh))
+        Refresh();
     if (submit == nameof(Model.Schliessen))
       return true;
     return false;

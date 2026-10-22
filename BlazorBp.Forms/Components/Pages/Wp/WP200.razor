@@ -173,6 +173,8 @@
     {
       SetError("TODO Formular WP220 für Import und Export aufrufen.");
     }
+    if (submit == nameof(Model.Refresh))
+        Refresh();
     if (submit == nameof(Model.Schliessen))
       return true;
     return false;
