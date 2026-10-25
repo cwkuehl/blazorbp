@@ -16,12 +16,10 @@ public class FZ700Model : PageModelBase
 {
   /// <summary>Holt oder setzt Aktualisieren.</summary>
   [Display(Name = "Aktualisieren", Description = "Aktualisieren")]
-  //// [Required(ErrorMessage = "Aktualisieren muss angegeben werden.")]
   public string? Refresh { get; set; }
 
   /// <summary>Holt oder setzt Schließen.</summary>
   [Display(Name = "Schließen", Description = "Schließen")]
-  //// [Required(ErrorMessage = "Schließen muss angegeben werden.")]
   public string? Schliessen { get; set; }
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
@@ -30,9 +28,9 @@ public class FZ700Model : PageModelBase
   {
     if (mode == New)
     {
-      // KennwortAlt = null;
+      // Nummer = null;
     }
-    //// TODO SetMandatoryHiddenReadonly(nameof(Mandant), true, false, true);
-    //// SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, mode == Delete);
+    SetMandatoryHiddenReadonly(nameof(Refresh), false, false, false, false);
+    SetMandatoryHiddenReadonly(nameof(Schliessen), false, false, false, false);
   }
 }

@@ -41,6 +41,8 @@ public class FZ250Model : PageModelBase
     {
       // Nummer = "";
     }
-    //// TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Fahrrad), false, false, false, mode == New);
+    SetMandatoryHiddenReadonly(nameof(Refresh), false, false, false, false);
+    SetMandatoryHiddenReadonly(nameof(Schliessen), false, false, false, false);
   }
 }

@@ -30,10 +30,11 @@ public class WP300Model : PageModelBase
   /// <param name="mode">Betroffener Modus.</param>
   public void SetMhrf(DialogTypeEnum mode)
   {
-    if (mode == New || mode == Copy)
+    if (mode == New)
     {
       // Nummer = "";
     }
-    //// TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Refresh), false, false, false, false);
+    SetMandatoryHiddenReadonly(nameof(Schliessen), false, false, false, false);
   }
 }

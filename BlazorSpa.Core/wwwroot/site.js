@@ -72,6 +72,7 @@ export function onUpdate() {
         const form = e.composedPath().find(e => e.matches('form'))
         const submitButton = form && form.querySelector('button[type=submit]:not(.btn-primary):enabled'); // :enabled
         if (submitButton) {
+          // Andere Submit-Buttons nicht auslösen, wenn Enter gedrückt wird.
           const preventSubmit = (e2) => {
             e2.preventDefault();
             return false;

@@ -15,6 +15,9 @@ using static BlazorSpa.Core.Base.DialogTypeEnum;
 [Serializable]
 public class TB200Model : PageModelBase
 {
+  /// <summary>Holt oder setzt den Link für Map.</summary>
+  public string? MapHref { get; set; } = default!;
+
   /// <summary>Holt oder setzt Chart oder Karte.</summary>
   [Display(Name = "Karte", Description = "Aufruf der Position in einer Karte")]
   //// [Required(ErrorMessage = "Chart oder Karte muss angegeben werden.")]
@@ -29,21 +32,16 @@ public class TB200Model : PageModelBase
   [Display(Name = "Schließen", Description = "Schließen")]
   public string? Schliessen { get; set; }
 
-  /// <summary>Holt oder setzt den Link für Map.</summary>
-  public string? MapHref { get; set; } = default!;
-
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>
   public void SetMhrf(DialogTypeEnum mode)
   {
-    if (mode == New || mode == Copy)
+    if (mode == New)
     {
       // Nummer = "";
     }
-    if (mode == New)
-    {
-      // Thema = null;
-    }
-    //// TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Chart), false, false, false, mode == New);
+    SetMandatoryHiddenReadonly(nameof(Refresh), false, false, false, false);
+    SetMandatoryHiddenReadonly(nameof(Schliessen), false, false, false, false);
   }
 }
