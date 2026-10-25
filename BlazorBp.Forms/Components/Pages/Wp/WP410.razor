@@ -19,7 +19,7 @@
     <LabelInputValid type="combobox" AutoPostback="x" For="@(() => Model!.Anlage)" DataList="@Model!.AuswahlAnlage" VerticalColClass="form-group col-md-4 ms-1"/>
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Valuta)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.Valuta)" VerticalColClass="form-group col-md-2"/>
     <LabelInputValid AutoPostback="" For="@(() => Model!.Preis)" VerticalColClass="form-group col-md-2 ms-1"/>
   </div>
   <div class="row mt-1 g-0">
@@ -105,11 +105,9 @@
       var l0 = Get(StockService.GetInvestmentList(daten, null, false));
       Model.AuswahlAnlage = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList() ?? []);
     }
-    if (Model.AuswahlHhEreignis == null || Model.AnlageEreignis != Model.Anlage)
+    if (Model.AuswahlHhEreignis == null)
     {
-      var le = Get(FactoryService.StockService.GetEventList(ServiceDaten, Model.Anlage)) ?? new List<HhEreignis>();
-      Model.AuswahlHhEreignis = InsertEmpty(le?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList() ?? []);
-      Model.AnlageEreignis = Model.Anlage;
+      EventList(Model.Anlage);
     }
   }
 
@@ -128,6 +126,18 @@
   protected override bool Submit(string? submit)
   {
     var daten = ServiceDaten;
+    if (submit == nameof(Model.Anlage))
+      OnValuta();
+    if (IsDateMhp(submit, nameof(Model.Valuta), Model.Valuta, out var d))
+    {
+      if (d.HasValue)
+      {
+        Model.Valuta = d;
+        OnValuta();
+      }
+    }
+    if (submit == nameof(Model.Valuta))
+      OnValuta();
     if (Valid && submit == nameof(Model.Ok))
     {
       // var o = Model.To(daten);
@@ -159,5 +169,32 @@
     model.AuswahlAnlage = model0.AuswahlAnlage;
     model.AuswahlHhEreignis = model0.AuswahlHhEreignis;
     model.AnlageEreignis = model0.AnlageEreignis;
+  }
+
+    /// <summary>Handles valuta.</summary>
+  private void OnValuta()
+  {
+    var daten = ServiceDaten;
+    var inuid = Model.Anlage;
+    var inv = string.IsNullOrWhiteSpace(inuid) ? null :
+      Get(FactoryService.StockService.GetInvestment(daten, inuid));
+    var p = inv == null || !Model.Valuta.HasValue ? null :
+      Get(FactoryService.StockService.GetPrice(daten, inv.Wertpapier_Uid, Model.Valuta.Value));
+    Model.Preis = Funktionen.ToString(p?.Stueckpreis, 4);
+    if (string.IsNullOrEmpty(Model.Hhbuchung))
+      Model.Hhvaluta = Model.Valuta;
+    EventList(inuid);
+  }
+
+  /// <summary>Handles event list.</summary>
+  /// <param name="inuid">Affected investment uid.</param>
+  private void EventList(string? inuid)
+  {
+    if (Model.AnlageEreignis != inuid)
+    {
+      var le = Get(FactoryService.StockService.GetEventList(ServiceDaten, Model.Anlage)) ?? new List<HhEreignis>();
+      Model.AuswahlHhEreignis = InsertEmpty(le?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList() ?? []);
+      Model.AnlageEreignis = Model.Anlage;
+    }
   }
 }

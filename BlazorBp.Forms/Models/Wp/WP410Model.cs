@@ -20,8 +20,6 @@ public class WP410Model : PageModelBase
 {
   /// <summary>Holt oder setzt Nr..</summary>
   [Display(Name = "Nr.", Description = "")]
-  //// [Required(ErrorMessage = "Nr. muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Nr. darf maximal {1} Zeichen lang sein.")]
   public string? Nummer { get; set; }
 
   /// <summary>Holt oder setzt die Auswahlliste von Anlagen.</summary>
@@ -35,7 +33,7 @@ public class WP410Model : PageModelBase
   /// <summary>Holt oder setzt Datum.</summary>
   [Display(Name = "_Datum", Description = "Buchungsdatum.")]
   [Required(ErrorMessage = "Datum muss angegeben werden.")]
-  public string? Valuta { get; set; }
+  public DateTime? Valuta { get; set; }
 
   /// <summary>Holt oder setzt Preis.</summary>
   [Display(Name = "Preis", Description = "Kurs des Wertpapiers am Datum.")]
@@ -93,40 +91,31 @@ public class WP410Model : PageModelBase
   public string? Buchung { get; set; }
 
   /// <summary>Holt oder setzt HH-Buchung.</summary>
-  [Display(Name = "HH-Buchung", Description = "")]
-  //// [Required(ErrorMessage = "HH-Buchung muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "HH-Buchung darf maximal {1} Zeichen lang sein.")]
+  [Display(Name = "HH-Buchung", Description = "ID der zugeordneten Haushaltsbuchung")]
   public string? Hhbuchung { get; set; }
 
   /// <summary>Holt oder setzt Ändern.</summary>
-  [Display(Name = "Ändern", Description = "")]
-  //// [Required(ErrorMessage = "Ändern muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Ändern darf maximal {1} Zeichen lang sein.")]
+  [Display(Name = "Ändern", Description = "Zugeordnete Buchung ändern")]
   public string? Hhaendern { get; set; }
 
   /// <summary>Holt oder setzt Storno.</summary>
-  [Display(Name = "Storno", Description = "")]
-  //// [Required(ErrorMessage = "Storno muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Storno darf maximal {1} Zeichen lang sein.")]
+  [Display(Name = "Storno", Description = "Zugeordnete Buchung stornieren")]
   public string? Hhstorno { get; set; }
 
   /// <summary>Holt oder setzt Valuta.</summary>
-  [Display(Name = "_Valuta", Description = "")]
+  [Display(Name = "_Valuta", Description = "Valuta der zugeordneten Haushaltsbuchung")]
   //// [Required(ErrorMessage = "Valuta muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Valuta darf maximal {1} Zeichen lang sein.")]
-  public string? Hhvaluta { get; set; }
+  public DateTime? Hhvaluta { get; set; }
 
   /// <summary>Holt oder setzt Betrag.</summary>
-  [Display(Name = "Betrag", Description = "")]
-  //// [Required(ErrorMessage = "Betrag muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Betrag darf maximal {1} Zeichen lang sein.")]
+  [Display(Name = "Betrag", Description = "Betrag der zugeordneten Haushaltsbuchung")]
   public string? Hhbetrag { get; set; }
 
   /// <summary>Holt oder setzt die Auswahlliste von Ereignis.</summary>
   public List<ListItem>? AuswahlHhEreignis { get; set; } = default!;
 
   /// <summary>Holt oder setzt Ereignis.</summary>
-  [Display(Name = "Ereignis", Description = "")]
+  [Display(Name = "Ereignis", Description = "Ereignis der zugeordneten Haushaltsbuchung")]
   public string? Hhereignis { get; set; }
 
   /// <summary>Holt oder setzt die Anlage zur Ereignisliste.</summary>
@@ -159,7 +148,7 @@ public class WP410Model : PageModelBase
   ) = (
     m.Uid,
     m.Anlage_Uid,
-    Funktionen.ToString(m.Datum),
+    m.Datum,
     Funktionen.ToString(0),
     Funktionen.ToString(m.Zahlungsbetrag),
     Funktionen.ToString(m.Rabattbetrag),
@@ -175,33 +164,30 @@ public class WP410Model : PageModelBase
   /// <param name="mode">Betroffener Modus.</param>
   public void SetMhrf(DialogTypeEnum mode)
   {
-    if (mode == New || mode == Copy)
+    if (mode == Copy)
     {
-      // Nummer = "";
+      Fixtext = true;
     }
-    //// TODO SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
-    //// SetMandatoryHiddenReadonly(nameof(Thema), true, false, mode == Delete, mode == New);
-    //// SetMandatoryHiddenReadonly(nameof(Nummer), false, false, mode == Delete, false);
-    //// SetMandatoryHiddenReadonly(nameof(Anlage), false, false, mode == Delete, false);
-    //// SetMandatoryHiddenReadonly(nameof(Valuta), false, false, mode == Delete, false);
-    //// SetMandatoryHiddenReadonly(nameof(Preis), false, false, mode == Delete, false);
-    //// SetMandatoryHiddenReadonly(nameof(Betrag), false, false, mode == Delete, false);
-    //// SetMandatoryHiddenReadonly(nameof(Anteile), false, false, mode == Delete, false);
-    //// SetMandatoryHiddenReadonly(nameof(Preis2), false, false, mode == Delete, false);
-    //// SetMandatoryHiddenReadonly(nameof(Zinsen), false, false, mode == Delete, false);
-    //// SetMandatoryHiddenReadonly(nameof(BText), false, false, mode == Delete, false);
-    //// SetMandatoryHiddenReadonly(nameof(Buchung), false, false, mode == Delete, false);
-    //// SetMandatoryHiddenReadonly(nameof(Rabatt), false, false, mode == Delete, false);
-    //// SetMandatoryHiddenReadonly(nameof(Hhbuchung), false, false, mode == Delete, false);
-    //// SetMandatoryHiddenReadonly(nameof(Hhaendern), false, false, mode == Delete, false);
-    //// SetMandatoryHiddenReadonly(nameof(Hhstorno), false, false, mode == Delete, false);
-    //// SetMandatoryHiddenReadonly(nameof(Hhvaluta), false, false, mode == Delete, false);
-    //// SetMandatoryHiddenReadonly(nameof(Hhbetrag), false, false, mode == Delete, false);
-    //// SetMandatoryHiddenReadonly(nameof(Hhereignis), false, false, mode == Delete, false);
-    //// SetMandatoryHiddenReadonly(nameof(Fixtext), false, false, mode == Delete, false);
-
+    SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Anlage), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Valuta), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Preis), false, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Betrag), false, false, mode == Delete, mode == New || mode == Copy);
+    SetMandatoryHiddenReadonly(nameof(Rabatt), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Anteile), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Preis2), false, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Zinsen), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(BText), true, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Buchung), false, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Fixtext), false, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true, false);
     SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true, false);
+    SetMandatoryHiddenReadonly(nameof(Hhbuchung), false, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Hhaendern), false, false, false, false);
+    SetMandatoryHiddenReadonly(nameof(Hhstorno), false, false, false, false);
+    SetMandatoryHiddenReadonly(nameof(Hhvaluta), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Hhbetrag), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Hhereignis), false, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, false);
     SetMandatoryHiddenReadonly(nameof(Abbrechen), false, false, false, false);
   }
