@@ -16,11 +16,12 @@ public class AuthService : IAuthService
   /// </summary>
   /// <param name="ud">Betroffene Benutzerdaten.</param>
   /// <param name="password">Betroffenes Kennwort.</param>
-  /// <returns>Ergebnis der Anmeldung.</returns>
-  public UserDaten LoginUser(UserDaten ud, string password)
+  /// <returns>Ergebnis der Anmeldung bzw. Fehlermeldung.</returns>
+  public (UserDaten? Ud, string? Fehler) LoginUser(UserDaten ud, string password)
   {
+    // Anmeldung ist immer erfolgreich.
     var d = new UserDaten(ud.SessionId, ud.MandantNr, ud.BenutzerId, [UserDaten.RoleUser]);
-    return d;
+    return (d, null);
   }
 
   /// <summary>

@@ -16,13 +16,13 @@ public interface IAuthService
   /// </summary>
   /// <param name="daten">Betroffene Benutzerdaten.</param>
   /// <param name="password">Betroffenes Kennwort.</param>
-  /// <returns>Ergebnis der Anmeldung.</returns>
-  UserDaten LoginUser(UserDaten daten, string password);
+  /// <returns>Ergebnis der Anmeldung bzw. Fehlermeldung.</returns>
+  (UserDaten? Ud, string? Fehler) LoginUser(UserDaten daten, string password);
 
   /// <summary>
   /// Abmelden eines Benutzers.
   /// </summary>
-  /// <param name="daten">Betroffene Benutzerdaten.</param>
+  /// <param name="ud">Betroffene Benutzerdaten.</param>
   /// <param name="formdata">Betroffene Formulardaten.</param>
   void LogoutUser(UserDaten ud, string? formdata = null);
 

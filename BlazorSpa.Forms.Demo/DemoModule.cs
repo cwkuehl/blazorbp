@@ -27,7 +27,7 @@ public class DemoModule : IFormModule
   {
     return new List<MainMenu>
     {
-      new MainMenu("Demo", 200, "submenudemo1", "bi bi-screwdriver-nav-menu", false, [UserDaten.RoleAdmin, UserDaten.RoleSuperadmin], [
+      new MainMenu("Demo", 200, "submenudemo1", "bi bi-screwdriver-nav-menu", false, [UserDaten.RoleUser, UserDaten.RoleAdmin, UserDaten.RoleSuperadmin], [
         new("SSR", "Statisches Server Side Rendering testen", "/demo/dm010", "bi bi-dot-nav-menu"),
         new("Steuerelemente", "Steuerelemente testen", "/demo/dm100", "bi bi-dot-nav-menu"),
         new("Tabelle", "Tabelle testen", "/demo/dm200", "bi bi-dot-nav-menu"),

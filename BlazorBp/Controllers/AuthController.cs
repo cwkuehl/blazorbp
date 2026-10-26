@@ -36,7 +36,9 @@ public class AuthController(IAuthService singleton) : Controller
     //// var Model = System.Text.Json.JsonSerializer.Deserialize<UserInfo>(str);
     var sessionId = UserDaten.GetNewSessionId();
     var ud0 = new UserDaten(sessionId, model.Client, model.Username ?? "Benutzer", []);
-    var ud = authService.LoginUser(ud0, model?.Password ?? "");
+    var (ud, fehler) = authService.LoginUser(ud0, model?.Password ?? "");
+    if (!string.IsNullOrEmpty(fehler))
+      return BadRequest(fehler);
     if (ud != null)
     {
       // Rollen bestimmen.

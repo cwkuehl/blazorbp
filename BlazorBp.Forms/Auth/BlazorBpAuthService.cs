@@ -17,14 +17,14 @@ public class BlazorBpAuthService : IAuthService
   /// </summary>
   /// <param name="ud">Betroffene Benutzerdaten.</param>
   /// <param name="password">Betroffenes Kennwort.</param>
-  /// <returns>Ergebnis der Anmeldung.</returns>
-  public UserDaten LoginUser(UserDaten ud, string password)
+  /// <returns>Ergebnis der Anmeldung bzw. Fehlermeldung.</returns>
+  public (UserDaten? Ud, string? Fehler) LoginUser(UserDaten ud, string password)
   {
     var daten = new CSBP.Services.Base.ServiceDaten(ud.SessionId, ud.MandantNr, ud.BenutzerId, null);
     var r = CSBP.Services.Factory.FactoryService.LoginService.Login(daten, password, false);
     if (r.Ok && r.Ergebnis != null)
-      return r.Ergebnis;
-    return ud;
+      return (r.Ergebnis, null);
+    return (null, r.GetErrors() ?? "Anmeldung fehlgeschlagen.");
   }
 
   /// <summary>

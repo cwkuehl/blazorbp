@@ -2,7 +2,7 @@
 @using BlazorSpa.Base
 @inherits BlazorComponentBase<DM200Model, DM200TableRowModel>
 @inject IDemoService DemoService
-@attribute [Authorize(Roles = "Admin, Superadmin")]
+@attribute [Authorize(Roles = "User, Admin, Superadmin")]
 
 <SectionContent SectionName="title">@Title</SectionContent>
 <PageTitle>@Title</PageTitle>
