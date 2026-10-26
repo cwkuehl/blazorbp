@@ -12,6 +12,9 @@
   <InputText type="hidden" @bind-Value="Model!.VerticalColClass"/>
   <input type="hidden" name="SubmitControl"/>
   <div class="row mt-1 g-0">
+    <SubmitButton class="btn btn-secondary col-md-2" For="@(() => Model!.SubmitButton)"/>
+  </div>
+  <div class="row mt-1 g-0">
     <LabelInputValid type="submit" class="btn btn-secondary" For="@(() => Model!.Button)" VerticalColClass="@Model.VerticalColClass"/>
   </div>
   <div class="row mt-1 g-0">
@@ -158,6 +161,7 @@ Zeile 2",
     }
     else if (submit == nameof(Model.ReadWrite))
     {
+      Model.SetReadonly(nameof(Model.SubmitButton), true);
       Model.SetReadonly(nameof(Model.Button), true);
       Model.SetReadonly(nameof(Model.TextBox), true);
       Model.SetReadonly(nameof(Model.TextArea), true);
@@ -172,6 +176,7 @@ Zeile 2",
     }
     else if (submit == nameof(Model.ReadOnly))
     {
+      Model.SetReadonly(nameof(Model.SubmitButton));
       Model.SetReadonly(nameof(Model.Button));
       Model.SetReadonly(nameof(Model.TextBox));
       Model.SetReadonly(nameof(Model.TextArea));
@@ -186,6 +191,7 @@ Zeile 2",
     }
     else if (submit == nameof(Model.Hidden))
     {
+      Model.SetHidden(nameof(Model.SubmitButton));
       Model.SetHidden(nameof(Model.Button));
       Model.SetHidden(nameof(Model.TextBox));
       Model.SetHidden(nameof(Model.TextArea));
@@ -200,6 +206,7 @@ Zeile 2",
     }
     else if (submit == nameof(Model.Color0))
     {
+      Model.SetNoColor(nameof(Model.SubmitButton));
       Model.SetNoColor(nameof(Model.Button));
       Model.SetNoColor(nameof(Model.TextBox));
       Model.SetNoColor(nameof(Model.TextArea));
@@ -214,6 +221,7 @@ Zeile 2",
     }
     else if (submit == nameof(Model.Color1))
     {
+      Model.SetColor1(nameof(Model.SubmitButton));
       Model.SetColor1(nameof(Model.Button));
       Model.SetColor1(nameof(Model.TextBox));
       Model.SetColor1(nameof(Model.TextArea));
@@ -228,6 +236,7 @@ Zeile 2",
     }
     else if (submit == nameof(Model.Color2))
     {
+      Model.SetColor2(nameof(Model.SubmitButton));
       Model.SetColor2(nameof(Model.Button));
       Model.SetColor2(nameof(Model.TextBox));
       Model.SetColor2(nameof(Model.TextArea));
@@ -242,6 +251,7 @@ Zeile 2",
     }
     else if (submit == nameof(Model.Color3))
     {
+      Model.SetColor3(nameof(Model.SubmitButton));
       Model.SetColor3(nameof(Model.Button));
       Model.SetColor3(nameof(Model.TextBox));
       Model.SetColor3(nameof(Model.TextArea));
@@ -256,6 +266,7 @@ Zeile 2",
     }
     else if (submit == nameof(Model.Mandatory))
     {
+      Model.SetMandatory(nameof(Model.SubmitButton));
       Model.SetMandatory(nameof(Model.Button));
       Model.SetMandatory(nameof(Model.TextBox));
       Model.SetMandatory(nameof(Model.TextArea));
@@ -270,6 +281,7 @@ Zeile 2",
     }
     else if (submit == nameof(Model.MandatoryNot))
     {
+      Model.SetMandatory(nameof(Model.SubmitButton), true);
       Model.SetMandatory(nameof(Model.Button), true);
       Model.SetMandatory(nameof(Model.TextBox), true);
       Model.SetMandatory(nameof(Model.TextArea), true);
@@ -284,6 +296,7 @@ Zeile 2",
     }
     else if (submit == nameof(Model.Error))
     {
+      Model.SetError(nameof(Model.SubmitButton));
       Model.SetError(nameof(Model.Button));
       Model.SetError(nameof(Model.TextBox));
       Model.SetError(nameof(Model.TextArea));
@@ -298,6 +311,7 @@ Zeile 2",
     }
     else if (submit == nameof(Model.ErrorNot))
     {
+      Model.SetError(nameof(Model.SubmitButton), true);
       Model.SetError(nameof(Model.Button), true);
       Model.SetError(nameof(Model.TextBox), true);
       Model.SetError(nameof(Model.TextArea), true);
@@ -313,6 +327,8 @@ Zeile 2",
     else if (submit == nameof(Model.ErrorMessage))
     {
       #pragma warning disable CS8602, CS8603
+      Messages.Add(() => Model.SubmitButton, $"Fehlermeldung für {nameof(Model.SubmitButton)}");
+      Messages.Add(() => Model, $"Allgemeine Fehlermeldung von {nameof(Model.SubmitButton)}");
       Messages.Add(() => Model.Button, $"Fehlermeldung für {nameof(Model.Button)}");
       Messages.Add(() => Model, $"Allgemeine Fehlermeldung von {nameof(Model.Button)}");
       Messages.Add(() => Model.TextBox, $"Fehlermeldung für {nameof(Model.TextBox)}");

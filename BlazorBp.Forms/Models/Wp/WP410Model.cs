@@ -168,6 +168,7 @@ public class WP410Model : PageModelBase
     {
       Fixtext = true;
     }
+    var b = string.IsNullOrEmpty(Hhbuchung);
     SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
     SetMandatoryHiddenReadonly(nameof(Anlage), true, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Valuta), true, false, mode == Delete, false);
@@ -183,11 +184,11 @@ public class WP410Model : PageModelBase
     SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true, false);
     SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true, false);
     SetMandatoryHiddenReadonly(nameof(Hhbuchung), false, false, true, false);
-    SetMandatoryHiddenReadonly(nameof(Hhaendern), false, false, false, false);
-    SetMandatoryHiddenReadonly(nameof(Hhstorno), false, false, false, false);
-    SetMandatoryHiddenReadonly(nameof(Hhvaluta), false, false, mode == Delete, false);
-    SetMandatoryHiddenReadonly(nameof(Hhbetrag), false, false, mode == Delete, false);
-    SetMandatoryHiddenReadonly(nameof(Hhereignis), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Hhaendern), false, false, b || mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Hhstorno), false, false, b || mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Hhvaluta), false, false, !b || mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Hhbetrag), false, false, !b || mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(Hhereignis), false, false, !b || mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, false);
     SetMandatoryHiddenReadonly(nameof(Abbrechen), false, false, false, false);
   }

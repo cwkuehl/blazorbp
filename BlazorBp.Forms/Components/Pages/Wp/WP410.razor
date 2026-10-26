@@ -190,7 +190,7 @@
   /// <param name="inuid">Affected investment uid.</param>
   private void EventList(string? inuid)
   {
-    if (Model.AnlageEreignis != inuid)
+    if (Model.AnlageEreignis != inuid || (Model.AuswahlHhEreignis == null && string.IsNullOrEmpty(inuid)))
     {
       var le = Get(FactoryService.StockService.GetEventList(ServiceDaten, Model.Anlage)) ?? new List<HhEreignis>();
       Model.AuswahlHhEreignis = InsertEmpty(le?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList() ?? []);

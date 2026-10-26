@@ -17,6 +17,10 @@ public class DM100Model : PageModelBase
   /// <summary>Holt oder setzt die CSS-Klasse des Formulars.</summary>
   public string VerticalColClass { get; set; } = "";
 
+  /// <summary>Holt oder setzt den Test-SubmitButton.</summary>
+  [Display(Name = "_SubmitButton", Description = "Test-SubmitButton")]
+  public string? SubmitButton { get; set; } = default!;
+
   /// <summary>Holt oder setzt den Test-Button.</summary>
   [Display(Name = "_Button", Description = "Test-Button")]
   public string? Button { get; set; } = default!;
