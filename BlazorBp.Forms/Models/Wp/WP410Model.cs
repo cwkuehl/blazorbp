@@ -96,11 +96,11 @@ public class WP410Model : PageModelBase
 
   /// <summary>Holt oder setzt Ändern.</summary>
   [Display(Name = "Ändern", Description = "Zugeordnete Buchung ändern")]
-  public string? Hhaendern { get; set; }
+  public string? HhAendern { get; set; }
 
   /// <summary>Holt oder setzt Storno.</summary>
   [Display(Name = "Storno", Description = "Zugeordnete Buchung stornieren")]
-  public string? Hhstorno { get; set; }
+  public string? HhStorno { get; set; }
 
   /// <summary>Holt oder setzt Valuta.</summary>
   [Display(Name = "_Valuta", Description = "Valuta der zugeordneten Haushaltsbuchung")]
@@ -112,11 +112,14 @@ public class WP410Model : PageModelBase
   public string? Hhbetrag { get; set; }
 
   /// <summary>Holt oder setzt die Auswahlliste von Ereignis.</summary>
+  public List<HhEreignis>? AuswahlHhEreignis0 { get; set; } = default!;
+
+  /// <summary>Holt oder setzt die Auswahlliste von Ereignis.</summary>
   public List<ListItem>? AuswahlHhEreignis { get; set; } = default!;
 
   /// <summary>Holt oder setzt Ereignis.</summary>
   [Display(Name = "Ereignis", Description = "Ereignis der zugeordneten Haushaltsbuchung")]
-  public string? Hhereignis { get; set; }
+  public string? HhEreignis { get; set; }
 
   /// <summary>Holt oder setzt die Anlage zur Ereignisliste.</summary>
   public string? AnlageEreignis { get; set; }
@@ -131,34 +134,56 @@ public class WP410Model : PageModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
-  public void From(WpBuchung m) =>
-  (
-    Nummer,
-    Anlage,
-    Valuta,
-    Preis,
-    Betrag,
-    Rabatt,
-    Anteile,
-    Preis2,
-    Zinsen,
-    BText,
-    Angelegt,
-    Geaendert
-  ) = (
-    m.Uid,
-    m.Anlage_Uid,
-    m.Datum,
-    Funktionen.ToString(0),
-    Funktionen.ToString(m.Zahlungsbetrag),
-    Funktionen.ToString(m.Rabattbetrag),
-    Funktionen.ToString(m.Anteile, 5),
-    Funktionen.ToString(0),
-    Funktionen.ToString(m.Zinsen),
-    m.BText,
-    ModelBase.FormatDateOf(m.Angelegt_Am, m.Angelegt_Von),
-    ModelBase.FormatDateOf(m.Geaendert_Am, m.Geaendert_Von)
-  );
+  /// <param name="b">Zugehörige Haushaltsbuchung.</param>
+  public void From(WpBuchung m, HhBuchung? b = null)
+  {
+    (
+      Nummer,
+      Anlage,
+      Valuta,
+      Preis,
+      Betrag,
+      Rabatt,
+      Anteile,
+      Preis2,
+      Zinsen,
+      BText,
+      Angelegt,
+      Geaendert
+    ) = (
+      m.Uid,
+      m.Anlage_Uid,
+      m.Datum,
+      Funktionen.ToString(0),
+      Funktionen.ToString(m.Zahlungsbetrag),
+      Funktionen.ToString(m.Rabattbetrag),
+      Funktionen.ToString(m.Anteile, 5),
+      Funktionen.ToString(0),
+      Funktionen.ToString(m.Zinsen),
+      m.BText,
+      ModelBase.FormatDateOf(m.Angelegt_Am, m.Angelegt_Von),
+      ModelBase.FormatDateOf(m.Geaendert_Am, m.Geaendert_Von)
+    );
+    if (m.BookingUid != null && b != null)
+    {
+      (
+        Hhbuchung,
+        Hhvaluta,
+        Hhbetrag
+      ) = (
+        b.Uid,
+        b.Soll_Valuta,
+        Funktionen.ToString(b.EBetrag, 2)
+      );
+      var events = AuswahlHhEreignis0;
+      if (events != null)
+      {
+        var ev = events.FirstOrDefault(a => a.Soll_Konto_Uid == b.Soll_Konto_Uid && a.Haben_Konto_Uid == b.Haben_Konto_Uid);
+        if (ev != null)
+          HhEreignis = ev.Uid;
+      }
+    }
+  }
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>
@@ -184,11 +209,11 @@ public class WP410Model : PageModelBase
     SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true, false);
     SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true, false);
     SetMandatoryHiddenReadonly(nameof(Hhbuchung), false, false, true, false);
-    SetMandatoryHiddenReadonly(nameof(Hhaendern), false, false, b || mode == Delete, false);
-    SetMandatoryHiddenReadonly(nameof(Hhstorno), false, false, b || mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(HhAendern), false, false, b || mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(HhStorno), false, false, b || mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Hhvaluta), false, false, !b || mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Hhbetrag), false, false, !b || mode == Delete, false);
-    SetMandatoryHiddenReadonly(nameof(Hhereignis), false, false, !b || mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(HhEreignis), false, false, !b || mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Ok), false, false, false, false);
     SetMandatoryHiddenReadonly(nameof(Abbrechen), false, false, false, false);
   }

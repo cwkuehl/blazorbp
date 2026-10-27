@@ -82,7 +82,7 @@
         SelectedPage = 1,
         RowsPerPage = 10,
         SelectedRow = 1,
-        SortColumn = $"{nameof(WpBuchung.Datum)}#+",
+        SortColumn = $"{nameof(WpBuchung.Datum)}#-",
       };
     Table.Nr = id;
     InitEditContext(Model);
@@ -92,6 +92,15 @@
     {
       var l0 = Get(StockService.GetInvestmentList(daten, null, false));
       Model.AuswahlAnlage = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList() ?? []);
+    }
+    var v = GetStringData("WP410Anlage");
+    if (!string.IsNullOrEmpty(v))
+    {
+      // Liste für zuletzt gebuchte Anlage.
+      SetStringData("WP410Anlage", null);
+      Model.Anlage = v;
+      WriteFormularModel(Model.Nr ?? "0", Model);
+      Refresh();
     }
   }
 

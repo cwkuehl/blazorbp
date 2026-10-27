@@ -23,15 +23,15 @@
     <LabelInputValid AutoPostback="" For="@(() => Model!.Preis)" VerticalColClass="form-group col-md-2 ms-1"/>
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Betrag)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Rabatt)" VerticalColClass="form-group col-md-2 ms-1"/>
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.Betrag)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.Rabatt)" VerticalColClass="form-group col-md-2 ms-1"/>
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Anteile)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.Anteile)" VerticalColClass="form-group col-md-2"/>
     <LabelInputValid AutoPostback="" For="@(() => Model!.Preis2)" VerticalColClass="form-group col-md-2 ms-1"/>
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Zinsen)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.Zinsen)" VerticalColClass="form-group col-md-2"/>
   </div>
   <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="" For="@(() => Model!.BText)" VerticalColClass="form-group col-md-6"/>
@@ -47,15 +47,15 @@
   <hr/>
   <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="" For="@(() => Model!.Hhbuchung)" VerticalColClass="form-group col-md-2"/>
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Hhaendern)"/>
-    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Hhstorno)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.HhAendern)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.HhStorno)"/>
   </div>
   <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="" For="@(() => Model!.Hhvaluta)" VerticalColClass="form-group col-md-2"/>
     <LabelInputValid AutoPostback="" For="@(() => Model!.Hhbetrag)" VerticalColClass="form-group col-md-2 ms-1"/>
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid type="listbox" size="8" DataList="Model!.AuswahlHhEreignis" AutoPostback="x" For="@(() => Model!.Hhereignis)" VerticalColClass="form-group col-md-4"/>
+    <LabelInputValid AutoPostback="x" type="listbox" size="8" DataList="Model!.AuswahlHhEreignis" For="@(() => Model!.HhEreignis)" VerticalColClass="form-group col-md-4"/>
   </div>
   <div class="modal-footer mt-2">
     <SubmitButton class="btn btn-primary col-md-2 ms-1" For="@(() => Model!.Ok)"/>
@@ -92,7 +92,19 @@
         // Lesen des Models aus der Datenbank.
         var r = StockService.GetBooking(daten, id ?? "");
         if (r.Ok && r.Ergebnis != null)
-          Model.From(r.Ergebnis);
+        {
+          var k = r.Ergebnis;
+          HhBuchung? b = null;
+          if (dt == DialogTypeEnum.Copy)
+            k.BookingUid = null;
+          if (!string.IsNullOrEmpty(k.BookingUid))
+          {
+            b = Get(FactoryService.BudgetService.GetBooking(daten, k.BookingUid));
+            if (b != null)
+              EventList(k.Anlage_Uid);
+          }
+          Model.From(k, b);
+        }
       }
       Model.SetMhrf(dt);
     }
@@ -102,7 +114,7 @@
     // Lesen der Listen für Auswahlfelder.
     if (Model.AuswahlAnlage == null)
     {
-      var l0 = Get(StockService.GetInvestmentList(daten, null, false));
+      var l0 = Get(StockService.GetInvestmentList(daten, null, true));
       Model.AuswahlAnlage = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList() ?? []);
     }
     if (Model.AuswahlHhEreignis == null)
@@ -117,7 +129,7 @@
     if (OnInitializedFormular("WP410", "WP-Buchung - WP410", Id, false))
       return;
   }
- 
+
   /// <summary>
   /// Verarbeitung des Postbacks.
   /// </summary>
@@ -138,6 +150,39 @@
     }
     if (submit == nameof(Model.Valuta))
       OnValuta();
+    if (submit == nameof(Model.Betrag) || submit == nameof(Model.Rabatt) || submit == nameof(Model.Anteile) || submit == nameof(Model.Zinsen))
+      OnShares();
+    if (submit == nameof(Model.HhEreignis))
+    {
+      @* TODO var euid = GetText(hhereignis);
+      var ev = events.FirstOrDefault(a => a.Uid == euid);
+      var text = ev?.Bezeichnung;
+      if (!string.IsNullOrEmpty(text))
+      {
+        if (!fixtext.Active)
+          SetText(bText, text);
+        if (ev?.EText == "1")
+        {
+          // Shares without interests.
+          SetText(zinsen, "");
+        }
+        else if (ev?.EText == "2")
+        {
+          // Interests without changes of shares.
+          SetText(betrag, "");
+          //// SetText(rabatt, "");
+          SetText(anteile, "");
+        }
+      } *@
+    }
+    if (submit == nameof(Model.HhAendern))
+    {
+      // TODO HH410 Edit;
+    }
+    if (submit == nameof(Model.HhStorno))
+    {
+      // TODO HH410 Reverse;
+    }
     if (Valid && submit == nameof(Model.Ok))
     {
       // var o = Model.To(daten);
@@ -151,6 +196,49 @@
       // }
       // else
       //   Get(r, ModalMessages);
+
+      @* ServiceErgebnis r = null;
+      if (DialogType == DialogTypeEnum.New || DialogType == DialogTypeEnum.Copy
+        || DialogType == DialogTypeEnum.Edit)
+      {
+        var euid = GetText(hhereignis);
+        var ev = events.FirstOrDefault(a => a.Uid == euid);
+        var booktext = bText.Text ?? ev?.Bezeichnung;
+        var rb = FactoryService.StockService.SaveBooking(ServiceDaten,
+          DialogType == DialogTypeEnum.Edit ? nr.Text : null, GetText(anlage), valuta.ValueNn,
+          Functions.ToDecimal(betrag.Text, 2) ?? 0, Functions.ToDecimal(rabatt.Text, 2) ?? 0,
+          Functions.ToDecimal(anteile.Text, 5) ?? 0, Functions.ToDecimal(zinsen.Text, 2) ?? 0,
+          bText.Text, null, Functions.ToDecimal(preis.Text, 4) ?? 0, hhbuchung.Text, hhvaluta.ValueNn,
+          Functions.ToDecimal(hhbetrag.Text, 2) ?? 0, ev?.Soll_Konto_Uid, ev?.Haben_Konto_Uid, booktext);
+        r = rb;
+        if (rb.Ok && rb.Ergebnis != null && DialogType == DialogTypeEnum.Copy)
+          Lastcopyuid = rb.Ergebnis.Uid;
+      }
+      else if (DialogType == DialogTypeEnum.Delete)
+      {
+        r = FactoryService.StockService.DeleteBooking(ServiceDaten, model);
+      }
+      if (r != null)
+      {
+        Get(r);
+        if (r.Ok)
+        {
+          lastvaluta = valuta.ValueNn;
+          UpdateParent();
+          if (DialogType == DialogTypeEnum.New)
+          {
+            var desc = GetText(anlage, false);
+            SetText(buchung, WP030(valuta.ValueNn, betrag.Text, rabatt.Text, anteile.Text, zinsen.Text, desc, bText.Text));
+            SetText(betrag, "");
+            SetText(rabatt, "");
+            betrag.GrabFocus();
+          }
+          else
+            CloseDialog();
+        }
+      } *@
+
+      // TODO SetStringData("WP410Anlage", Funktionen.ToString(rb.Ergebnis.Uid;));
     }
     if (submit == nameof(Model.Abbrechen))
       return true;
@@ -167,6 +255,7 @@
     model.DialogType = model0.DialogType;
     model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
     model.AuswahlAnlage = model0.AuswahlAnlage;
+    model.AuswahlHhEreignis0 = model0.AuswahlHhEreignis0;
     model.AuswahlHhEreignis = model0.AuswahlHhEreignis;
     model.AnlageEreignis = model0.AnlageEreignis;
   }
@@ -186,15 +275,32 @@
     EventList(inuid);
   }
 
+  /// <summary>Handles shares.</summary>
+  private void OnShares()
+  {
+    var p = Functions.ToDecimal(Model.Betrag);
+    var s = Functions.ToDecimal(Model.Anteile);
+    var z = Functions.ToDecimal(Model.Zinsen) ?? 0;
+    Model.Preis2 = Funktionen.ToString(Functions.CompDouble4(p, 0) == 0 || Functions.CompDouble4(s, 0) == 0 ? null : p / s, 6);
+    if (string.IsNullOrEmpty(Model.Hhbuchung))
+    {
+      if (z == 0)
+        Model.Hhbetrag = Funktionen.ToString(Math.Abs((p ?? 0) - (Functions.ToDecimal(Model.Rabatt) ?? 0)), 2);
+      else
+        Model.Hhbetrag = Funktionen.ToString(Math.Abs(z + (Functions.ToDecimal(Model.Rabatt) ?? 0)), 2);
+    }
+  }
+
   /// <summary>Handles event list.</summary>
   /// <param name="inuid">Affected investment uid.</param>
   private void EventList(string? inuid)
   {
     if (Model.AnlageEreignis != inuid || (Model.AuswahlHhEreignis == null && string.IsNullOrEmpty(inuid)))
     {
-      var le = Get(FactoryService.StockService.GetEventList(ServiceDaten, Model.Anlage)) ?? new List<HhEreignis>();
+      var le = Get(FactoryService.StockService.GetEventList(ServiceDaten, inuid)) ?? new List<HhEreignis>();
+      Model.AuswahlHhEreignis0 = le;
       Model.AuswahlHhEreignis = InsertEmpty(le?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList() ?? []);
-      Model.AnlageEreignis = Model.Anlage;
+      Model.AnlageEreignis = inuid;
     }
   }
 }
