@@ -41,7 +41,7 @@ public class WP410Model : PageModelBase
 
   /// <summary>Holt oder setzt Betrag.</summary>
   [Display(Name = "_Betrag", Description = "Zahlungsbetrag der Buchung.")]
-  [Required(ErrorMessage = "Betrag muss angegeben werden.")]
+  //// [Required(ErrorMessage = "Betrag muss angegeben werden.")]
   public string? Betrag { get; set; }
 
   /// <summary>Holt oder setzt Rabatt.</summary>
@@ -184,6 +184,24 @@ public class WP410Model : PageModelBase
       }
     }
   }
+
+  /// <summary>Kopiert die Werte in ein Model.</summary>
+  /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
+  /// <returns>Das kopierte Model.</returns>
+  public WpBuchung To(ServiceDaten daten) => new()
+  {
+    Mandant_Nr = daten.MandantNr,
+    Uid = DialogType == Edit || DialogType == Delete ? Nummer : null,
+    //// Wertpapier_Uid = Wertpapier,
+    Anlage_Uid = Anlage,
+    Datum = Valuta ?? daten.Heute,
+    Zahlungsbetrag = Functions.ToDecimal(Betrag, 2) ?? 0,
+    Rabattbetrag = Functions.ToDecimal(Rabatt, 2) ?? 0,
+    Anteile = Functions.ToDecimal(Anteile, 5) ?? 0,
+    Zinsen = Functions.ToDecimal(Zinsen, 2) ?? 0,
+    BText = BText,
+    //// Notiz = null,
+  };
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>

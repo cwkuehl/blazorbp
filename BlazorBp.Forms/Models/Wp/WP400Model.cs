@@ -48,6 +48,7 @@ public class WP400Model : PageModelBase
       Von = d.AddDays(1 - d.Day).AddMonths(-14);
     }
     SetMandatoryHiddenReadonly(nameof(Anlage), false, false, false, false);
+    SetMandatoryHiddenReadonly(nameof(Von), false, false, false, false);
     SetMandatoryHiddenReadonly(nameof(Refresh), false, false, false, false);
     SetMandatoryHiddenReadonly(nameof(Schliessen), false, false, false, false);
   }

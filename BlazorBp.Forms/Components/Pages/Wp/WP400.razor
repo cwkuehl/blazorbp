@@ -33,7 +33,7 @@
   <input type="hidden" name="SubmitControl"/>
   <div class="row mt-1 g-0">
     <LabelInputValid type="combobox" AutoPostback="x" For="@(() => Model!.Anlage)" DataList="@Model!.AuswahlAnlage" VerticalColClass="form-group col-md-4"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Von)" VerticalColClass="form-group col-md-4 ms-1"/>
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.Von)" VerticalColClass="form-group col-md-4 ms-1"/>
   </div>
   <div class="modal-footer mt-2">
     <SubmitButton class="btn btn-primary col-md-2 ms-1" imageclass="bi bi-arrow-clockwise-button" For="@(() => Model!.Refresh)"/>
@@ -66,6 +66,8 @@
       Model.SetMhrf(DialogTypeEnum.New, daten);
       var arr = HttpContext?.Session?.GetFormParameter() ?? [];
       var inuid = arr.Length > 0 ? arr[0] : "";
+      if (string.IsNullOrEmpty(inuid))
+        inuid = GetStringData("WP400Anlage");
       if (!string.IsNullOrEmpty(inuid))
       {
         Model.Anlage = inuid;
@@ -93,7 +95,7 @@
       var l0 = Get(StockService.GetInvestmentList(daten, null, false));
       Model.AuswahlAnlage = InsertEmpty(l0?.Select(a => new ListItem(a.Uid, a.Bezeichnung)).ToList() ?? []);
     }
-    var v = GetStringData("WP410Anlage");
+    @* var v = GetStringData("WP410Anlage");
     if (!string.IsNullOrEmpty(v))
     {
       // Liste für zuletzt gebuchte Anlage.
@@ -101,7 +103,7 @@
       Model.Anlage = v;
       WriteFormularModel(Model.Nr ?? "0", Model);
       Refresh();
-    }
+    } *@
   }
 
   /// <summary>
@@ -149,7 +151,11 @@
         Model.Von = d;
     }
     if (submit == nameof(Model.Anlage) || (submit?.StartsWith(nameof(Model.Von)) ?? false) || submit == nameof(Model.Refresh))
-        Refresh();
+    {
+      if (string.IsNullOrEmpty(Model.Anlage) && !Model.Von.HasValue)
+        Model.SetMhrf(DialogTypeEnum.New, ServiceDaten);
+      Refresh();
+    }
     if (submit == nameof(Model.Schliessen))
       return true;
     return false;

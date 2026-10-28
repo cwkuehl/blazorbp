@@ -19,15 +19,13 @@
     <LabelInputValid type="combobox" AutoPostback="x" For="@(() => Model!.Anlage)" DataList="@Model!.AuswahlAnlage" VerticalColClass="form-group col-md-4 ms-1"/>
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="x" For="@(() => Model!.Valuta)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.Valuta)" VerticalColClass="form-group col-md-4"/>
     <LabelInputValid AutoPostback="" For="@(() => Model!.Preis)" VerticalColClass="form-group col-md-2 ms-1"/>
   </div>
   <div class="row mt-1 g-0">
     <LabelInputValid AutoPostback="x" For="@(() => Model!.Betrag)" VerticalColClass="form-group col-md-2"/>
     <LabelInputValid AutoPostback="x" For="@(() => Model!.Rabatt)" VerticalColClass="form-group col-md-2 ms-1"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="x" For="@(() => Model!.Anteile)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.Anteile)" VerticalColClass="form-group col-md-2 ms-1"/>
     <LabelInputValid AutoPostback="" For="@(() => Model!.Preis2)" VerticalColClass="form-group col-md-2 ms-1"/>
   </div>
   <div class="row mt-1 g-0">
@@ -82,10 +80,13 @@
       Model = model;
     if (Model == null)
     {
+      var valuta = Functions.ToDateTime(GetStringData("WP410Valuta")) ?? daten.Heute;
       Model = new WP410Model
       {
         DialogType = dt,
         Nr = id,
+        Valuta = valuta,
+        Hhvaluta = valuta,
       };
       if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
       {
@@ -104,7 +105,12 @@
               EventList(k.Anlage_Uid);
           }
           Model.From(k, b);
+          OnShares();
         }
+      }
+      else if (dt == DialogTypeEnum.New)
+      {
+        Model.Anlage = GetStringData("WP400Anlage");
       }
       Model.SetMhrf(dt);
     }
@@ -152,96 +158,103 @@
       OnValuta();
     if (submit == nameof(Model.Betrag) || submit == nameof(Model.Rabatt) || submit == nameof(Model.Anteile) || submit == nameof(Model.Zinsen))
       OnShares();
+    if (IsDateMhp(submit, nameof(Model.Hhvaluta), Model.Hhvaluta, out var d2))
+    {
+      if (d2.HasValue)
+        Model.Hhvaluta = d2;
+    }
     if (submit == nameof(Model.HhEreignis))
     {
-      @* TODO var euid = GetText(hhereignis);
-      var ev = events.FirstOrDefault(a => a.Uid == euid);
+      var euid = Model.HhEreignis;
+      var ev = Model.AuswahlHhEreignis0?.FirstOrDefault(a => a.Uid == euid);
       var text = ev?.Bezeichnung;
       if (!string.IsNullOrEmpty(text))
       {
-        if (!fixtext.Active)
-          SetText(bText, text);
+        if (!Model.Fixtext)
+          Model.BText = text;
         if (ev?.EText == "1")
         {
           // Shares without interests.
-          SetText(zinsen, "");
+          Model.Zinsen = "";
         }
         else if (ev?.EText == "2")
         {
           // Interests without changes of shares.
-          SetText(betrag, "");
-          //// SetText(rabatt, "");
-          SetText(anteile, "");
+          Model.Betrag = "";
+          //// Model.Rabatt = "";
+          Model.Anteile = "";
         }
-      } *@
+      }
     }
-    if (submit == nameof(Model.HhAendern))
+    if (submit == nameof(Model.HhAendern) && !string.IsNullOrEmpty(Model.Hhbuchung))
     {
       // TODO HH410 Edit;
     }
-    if (submit == nameof(Model.HhStorno))
+    if (submit == nameof(Model.HhStorno) && !string.IsNullOrEmpty(Model.Hhbuchung))
     {
       // TODO HH410 Reverse;
     }
     if (Valid && submit == nameof(Model.Ok))
     {
-      // var o = Model.To(daten);
-      // var r = Model.DialogType == DialogTypeEnum.Delete
-      //   ? StockService.DeleteStock(daten, o)
-      //   : StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, Model.Anlage);
-      // if (r.Ok)
-      // {
-      //   SetFormRefresh();
-      //   return true;
-      // }
-      // else
-      //   Get(r, ModalMessages);
-
-      @* ServiceErgebnis r = null;
-      if (DialogType == DialogTypeEnum.New || DialogType == DialogTypeEnum.Copy
-        || DialogType == DialogTypeEnum.Edit)
+      ServiceErgebnis? r = null;
+      if (Model.DialogType == DialogTypeEnum.New || Model.DialogType == DialogTypeEnum.Copy
+        || Model.DialogType == DialogTypeEnum.Edit)
       {
-        var euid = GetText(hhereignis);
-        var ev = events.FirstOrDefault(a => a.Uid == euid);
-        var booktext = bText.Text ?? ev?.Bezeichnung;
-        var rb = FactoryService.StockService.SaveBooking(ServiceDaten,
-          DialogType == DialogTypeEnum.Edit ? nr.Text : null, GetText(anlage), valuta.ValueNn,
-          Functions.ToDecimal(betrag.Text, 2) ?? 0, Functions.ToDecimal(rabatt.Text, 2) ?? 0,
-          Functions.ToDecimal(anteile.Text, 5) ?? 0, Functions.ToDecimal(zinsen.Text, 2) ?? 0,
-          bText.Text, null, Functions.ToDecimal(preis.Text, 4) ?? 0, hhbuchung.Text, hhvaluta.ValueNn,
-          Functions.ToDecimal(hhbetrag.Text, 2) ?? 0, ev?.Soll_Konto_Uid, ev?.Haben_Konto_Uid, booktext);
+        var o = Model.To(daten);
+        var euid = Model.HhEreignis;
+        var ev = Model.AuswahlHhEreignis0?.FirstOrDefault(a => a.Uid == euid);
+        var booktext = Model.BText ?? ev?.Bezeichnung;
+        var rb = StockService.SaveBooking(daten,
+          o.Uid, o.Anlage_Uid, o.Datum, o.Zahlungsbetrag, o.Rabattbetrag,
+          o.Anteile, o.Zinsen, Model.BText, null,
+          Functions.ToDecimal(Model.Preis, 4) ?? 0, Model.Hhbuchung, Model.Hhvaluta ?? daten.Heute,
+          Functions.ToDecimal(Model.Hhbetrag, 2) ?? 0, ev?.Soll_Konto_Uid, ev?.Haben_Konto_Uid, booktext);
         r = rb;
-        if (rb.Ok && rb.Ergebnis != null && DialogType == DialogTypeEnum.Copy)
-          Lastcopyuid = rb.Ergebnis.Uid;
+        if (rb.Ok && rb.Ergebnis != null)
+        {
+          //// if (Model.DialogType == DialogTypeEnum.New)
+          ////  Model.Hhbuchung = rb.Ergebnis.BookingUid; // Quatsch
+          ////if (Model.DialogType == DialogTypeEnum.Copy)
+            ////   Lastcopyuid = rb.Ergebnis.Uid;
+        }
       }
-      else if (DialogType == DialogTypeEnum.Delete)
+      else if (Model.DialogType == DialogTypeEnum.Delete)
       {
-        r = FactoryService.StockService.DeleteBooking(ServiceDaten, model);
+        var o = Model.To(daten);
+        r = FactoryService.StockService.DeleteBooking(ServiceDaten, o);
       }
       if (r != null)
       {
         Get(r);
         if (r.Ok)
         {
-          lastvaluta = valuta.ValueNn;
-          UpdateParent();
-          if (DialogType == DialogTypeEnum.New)
+          SetStringData("WP410Valuta", Funktionen.ToString(Model.Valuta));
+          if (Model.DialogType == DialogTypeEnum.New)
           {
-            var desc = GetText(anlage, false);
-            SetText(buchung, WP030(valuta.ValueNn, betrag.Text, rabatt.Text, anteile.Text, zinsen.Text, desc, bText.Text));
-            SetText(betrag, "");
-            SetText(rabatt, "");
-            betrag.GrabFocus();
+            var desc = Model.AuswahlAnlage?.FirstOrDefault(a => a.Key == Model.Anlage)?.Value;
+            Model.Buchung = WP030(Model.Valuta ?? daten.Heute, Model.Betrag, Model.Rabatt, Model.Anteile, Model.Zinsen, desc, Model.BText);
+            Model.Betrag = "";
+            Model.Rabatt = "";
+            Model.Anteile = "";
+            Model.Zinsen = "";
+            OnShares();
+            Model.Focus = nameof(Model.Betrag);
+            WriteFormularModel(Model.Nr ?? "0", Model);
+            ForceRefresh();
           }
           else
-            CloseDialog();
+          {
+            SetFormRefresh();
+            return true;
+          }
         }
-      } *@
-
-      // TODO SetStringData("WP410Anlage", Funktionen.ToString(rb.Ergebnis.Uid;));
+      }
     }
     if (submit == nameof(Model.Abbrechen))
+    {
+      SetFormRefresh();
       return true;
+    }
     return false;
   }
 
