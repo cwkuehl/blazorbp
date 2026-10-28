@@ -342,7 +342,7 @@ public partial class LabelInputValid<TItem> : ComponentBase
           }
           if (rhe.Contains($"#{name}#E"))
           {
-            CssClassLabel += Funktionen.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "text-danger";
+            CssClassLabel += Funktionen.Iif(string.IsNullOrEmpty(CssClassLabel), "", " ") + "text-danger";
             CssClass += Funktionen.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "border-danger";
           }
           if (rhe.Contains($"#{name}#M"))

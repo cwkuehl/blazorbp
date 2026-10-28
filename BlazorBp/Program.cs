@@ -189,7 +189,7 @@ if (interactive)
   app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 else
   app.MapRazorComponents<App>().AddAdditionalAssemblies(
-    typeof(BlazorSpa.Core.Modules.IFormModule).Assembly,
+    typeof(BlazorSpa.Core.CoreModule).Assembly,
     typeof(BlazorBp.Forms.FormsModule).Assembly,
     typeof(BlazorSpa.Forms.Demo.DemoModule).Assembly
     );

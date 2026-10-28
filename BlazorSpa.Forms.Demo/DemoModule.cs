@@ -72,14 +72,14 @@ public class DemoModule : IFormModule
 
   /// <summary>Liefert eine Funktion zum Erzeugen von CSV-Dateien.</summary>
   /// <returns>Funktion zum Erzeugen von CSV-Dateien.</returns>
-  public Func<string, string, HttpContext, IServiceProvider, (string?, string?)> GetFuncCsv()
+  public Func<string, string, HttpContext, IServiceProvider, (string?, string?)>? GetFuncCsv()
   {
     return DownloadData.GetCsv;
   }
 
   /// <summary>Liefert eine Funktion zum Erzeugen von HTML-Dateien.</summary>
   /// <returns>Funktion zum Erzeugen von HTML-Dateien.</returns>
-  public Func<string, string, HttpContext, IServiceProvider, (byte[]?, string?)> GetFuncHtml()
+  public Func<string, string, HttpContext, IServiceProvider, (byte[]?, string?)>? GetFuncHtml()
   {
     return DownloadData.GetHtml;
   }

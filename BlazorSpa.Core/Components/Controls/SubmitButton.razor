@@ -19,7 +19,7 @@
   [Parameter]
   public string? Name { get; set; }
 
-  [Parameter] // , EditorRequired]
+  [Parameter]
   public Expression<Func<string>> For { get; set; } = default!;
 
   [Parameter(CaptureUnmatchedValues = true)]
@@ -139,14 +139,14 @@
             // disabled = true;
             SetAttribute(AdditionalAttributes, "disabled", "");
           }
-          @* if (rhe.Contains($"#{name}#E"))
+          if (rhe.Contains($"#{name}#E"))
           {
-            CssClass += Functions.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "border-danger";
+            CssClass += Funktionen.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "border-danger";
           }
           if (rhe.Contains($"#{name}#M"))
           {
-            CssClassLabel += Functions.Iif(string.IsNullOrEmpty(CssClassLabel), "", " ") + "fw-bold";
-          } *@
+            CssClass += Funktionen.Iif(string.IsNullOrEmpty(CssClass), "", " ") + "fw-bold";
+          }
         }
         // Fokus
         var focusprop = modeltype?.GetProperty("Focus");
