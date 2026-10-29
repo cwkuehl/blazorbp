@@ -27,6 +27,9 @@ public class HH410Model : PageModelBase
   [Required(ErrorMessage = "Valuta muss angegeben werden.")]
   public DateTime? Valuta { get; set; }
 
+  /// <summary>Holt oder setzt das Kennzeichen.</summary>
+  public string? Kz { get; set; }
+
   /// <summary>Holt oder setzt Betrag.</summary>
   [Display(Name = "_Betrag", Description = "Betrag, evtl. mit vorangestelltem Operator +, -, * oder /.")]
   //// [Required(ErrorMessage = "Betrag muss angegeben werden.")]
@@ -48,7 +51,7 @@ public class HH410Model : PageModelBase
   public List<ListItem>? AuswahlSollkonto { get; set; } = default!;
 
   /// <summary>Holt oder setzt Sollkonto.</summary>
-  //// [Display(Name = "_Sollkonto", Description = "Sollkonto")]
+  [Display(Name = "_Sollkonto", Description = "Sollkonto")]
   //// [Required(ErrorMessage = "Sollkonto muss angegeben werden.")]
   public string? Sollkonto { get; set; }
 
@@ -56,7 +59,7 @@ public class HH410Model : PageModelBase
   public List<ListItem>? AuswahlHabenkonto { get; set; } = default!;
 
   /// <summary>Holt oder setzt Habenkonto.</summary>
-  //// [Display(Name = "Habe_nkonto", Description = "Habenkonto")]
+  [Display(Name = "Habe_nkonto", Description = "Habenkonto")]
   //// [Required(ErrorMessage = "Habenkonto muss angegeben werden.")]
   public string? Habenkonto { get; set; }
 
@@ -91,6 +94,9 @@ public class HH410Model : PageModelBase
   [Display(Name = "Letzte Buchung", Description = "Letzte Buchung")]
   public string? Buchung { get; set; }
 
+  /// <summary>Holt oder setzt der OK-Label.</summary>
+  public string? OkLabel { get; set; }
+
   /// <summary>Holt oder setzt OK.</summary>
   [Display(Name = "_OK", Description = "Dialog mit Speichern schließen")]
   public string? Ok { get; set; }
@@ -113,6 +119,7 @@ public class HH410Model : PageModelBase
   (
     Nummer,
     Valuta,
+    Kz,
     Betrag,
     Summe,
     Sollkonto,
@@ -125,6 +132,7 @@ public class HH410Model : PageModelBase
   ) = (
     m.Uid,
     m.Soll_Valuta,
+    m.Kz,
     Funktionen.ToString(m.EBetrag, 2),
     0,
     m.Soll_Konto_Uid,
@@ -181,6 +189,15 @@ public class HH410Model : PageModelBase
     if (mode == New || mode == Copy)
     {
       Nummer = "";
+    }
+    if (mode == Delete)
+      OkLabel = "L_öschen";
+    if (mode == Reverse)
+    {
+      if (Kz == Constants.KZB_STORNO)
+        OkLabel = "St_orno aufheben";
+      else
+        OkLabel = "St_orno";
     }
     SetMandatoryHiddenReadonly(nameof(Nummer), true, false, true, false);
     SetMandatoryHiddenReadonly(nameof(Valuta), true, false, mode == Delete, mode == New);

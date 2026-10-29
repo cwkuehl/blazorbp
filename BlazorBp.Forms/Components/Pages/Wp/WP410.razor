@@ -188,11 +188,21 @@
     }
     if (submit == nameof(Model.HhAendern) && !string.IsNullOrEmpty(Model.Hhbuchung))
     {
-      // TODO HH410 Edit;
+      // Formular HH410 Buchung öffnen
+      var dt = Formular.ToShortString(DialogTypeEnum.Edit);
+      var id2 = $"{dt}_{Model.Hhbuchung}";
+      var f = OpenFormular("HH410", id2);
+      if (f != null)
+        OpenFormular(f);
     }
     if (submit == nameof(Model.HhStorno) && !string.IsNullOrEmpty(Model.Hhbuchung))
     {
-      // TODO HH410 Reverse;
+      // Formular HH410 Buchung öffnen
+      var dt = Formular.ToShortString(DialogTypeEnum.Reverse);
+      var id2 = $"{dt}_{Model.Hhbuchung}";
+      var f = OpenFormular("HH410", id2);
+      if (f != null)
+        OpenFormular(f);
     }
     if (Valid && submit == nameof(Model.Ok))
     {

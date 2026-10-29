@@ -44,6 +44,9 @@
   /// <summary>Holt oder setzt das Attribut download für einen Link.</summary>
   private string? Download { get; set; } = null;
 
+  /// <summary>Holt oder setzt den Label.</summary>
+  private string? Label { get; set; } = null;
+
   private string? autofocus = null;
 
   /// <summary>Wert für Attribut name beim Postback.</summary>
@@ -95,6 +98,8 @@
     Href = obj?.ToString() ?? "";
     AdditionalAttributes.TryGetValue("download", out obj);
     Download = obj?.ToString() ?? "";
+    AdditionalAttributes.TryGetValue("label", out obj);
+    Label = obj?.ToString() ?? "";
 
     // Initialisierung für Mehrfach-Rendering.
     autofocus = null;
@@ -157,6 +162,8 @@
     }
     if (string.IsNullOrEmpty(lbl))
       lbl = "OK";
+    if (!string.IsNullOrEmpty(Label))
+      lbl = Label;
     var lbl0 = lbl.Replace("_", "");
     if (string.IsNullOrEmpty(Name))
       Name = lbl0;

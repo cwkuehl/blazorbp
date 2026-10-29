@@ -25,8 +25,8 @@ public enum DialogTypeEnum
   /// <summary>Delete mode.</summary>
   Delete,
 
-  // /// <summary>Reverse mode.</summary>
-  // Reverse,
+  /// <summary>Reverse mode.</summary>
+  Reverse,
 
   /// <summary>Postback mode.</summary>
   Postback,

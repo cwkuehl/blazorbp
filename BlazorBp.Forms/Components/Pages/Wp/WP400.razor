@@ -7,7 +7,7 @@
 <PageTitle>@Title</PageTitle>
 
 <CascadingValue Value="this">
-<SortableTable Table="Table" NoData="" FormName="wp400" NoModal="true" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="WP400Model" TRTable="WP400TableRowModel">
+<SortableTable Table="Table" NoData="" FormName="wp400" NoModal="true" EditAktion="true" DeleteAktion="true" ReverseAktion="false" CopyAktion="true" NewAktion="true" TModel="WP400Model" TRTable="WP400TableRowModel">
   <ChildContent>
     <TableColumn Field="@nameof(WP400TableRowModel.Nummer)" SortField="@nameof(WpBuchung.Uid)" TModel="WP400Model" TRTable="WP400TableRowModel"/>
     <TableColumn Field="@nameof(WP400TableRowModel.Wertpapier)" SortField="@nameof(WpBuchung.StockDescription)" TModel="WP400Model" TRTable="WP400TableRowModel"/>

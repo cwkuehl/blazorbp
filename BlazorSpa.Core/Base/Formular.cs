@@ -49,6 +49,9 @@ public class Formular
       case "Table_Delete":
       case "D":
         return DialogTypeEnum.Delete;
+      case "Table_Reverse":
+      case "R":
+        return DialogTypeEnum.Reverse;
       default:
         return DialogTypeEnum.Without;
     }
@@ -71,6 +74,8 @@ public class Formular
         return "C";
       case DialogTypeEnum.Delete:
         return "D";
+      case DialogTypeEnum.Reverse:
+        return "R";
       default:
         return "W";
     }
@@ -108,6 +113,8 @@ public class Formular
         return $"{title} kopieren";
       case DialogTypeEnum.Delete:
         return $"{title} löschen";
+      case DialogTypeEnum.Reverse:
+        return $"{title} stornieren";
       case DialogTypeEnum.Without:
         return title;
       default:

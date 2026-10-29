@@ -75,6 +75,10 @@
                 {
                  <button type="submit" class="btn btn-outline-info border-0 btn-sm ms-1" formaction="@actionpath?handler=Table_Delete" value="@ix" name="@Funktionen.Iif(NoModal, "Table.NoModalId", "Table.ModalId")" title="Datensatz löschen"><i class="bi bi-dash-square-button"></i></button>
                 }
+                @if (ReverseAktion)
+                {
+                 <button type="submit" class="btn btn-outline-info border-0 btn-sm ms-1" formaction="@actionpath?handler=Table_Reverse" value="@ix" name="@Funktionen.Iif(NoModal, "Table.NoModalId", "Table.ModalId")" title="Datensatz stornieren"><i class="bi bi-dash-square-button"></i></button>
+                }
                 @if (CopyAktion)
                 {
                   <button type="submit" class="btn btn-outline-info border-0 btn-sm ms-1" formaction="@actionpath?handler=Table_Copy" value="@ix" name="@Funktionen.Iif(NoModal, "Table.NoModalId", "Table.ModalId")" title="Datensatz kopieren"><i class="bi bi-copy-button"></i></button>
@@ -187,13 +191,17 @@
   [Parameter]
   public bool EditAktion { get; set; }
 
-  /// <summary>Holt oder setzt einen Wert, der angibt, ob eine Copy-Aktion angeboten wird (Table_Copy).</summary>
-  [Parameter]
-  public bool CopyAktion { get; set; }
-
   /// <summary>Holt oder setzt einen Wert, der angibt, ob eine Delete-Aktion angeboten wird (Table_Delete).</summary>
   [Parameter]
   public bool DeleteAktion { get; set; }
+
+  /// <summary>Holt oder setzt einen Wert, der angibt, ob eine Delete-Aktion angeboten wird (Table_Reverse).</summary>
+  [Parameter]
+  public bool ReverseAktion { get; set; }
+
+  /// <summary>Holt oder setzt einen Wert, der angibt, ob eine Copy-Aktion angeboten wird (Table_Copy).</summary>
+  [Parameter]
+  public bool CopyAktion { get; set; }
 
   private EditContext? EditContext = default!;
 

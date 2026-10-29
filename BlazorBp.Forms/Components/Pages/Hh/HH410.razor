@@ -41,7 +41,7 @@
     <LabelInputValid AutoPostback="" For="@(() => Model!.Buchung)" VerticalColClass="form-group col"/>
   </div>
   <div class="modal-footer mt-2">
-    <SubmitButton class="btn btn-primary col-md-2 ms-1" For="@(() => Model!.Ok)"/>
+    <SubmitButton class="btn btn-primary col-md-2 ms-1" label="@Model!.OkLabel" For="@(() => Model!.Ok)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Kontentausch)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Addition)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.Abbrechen)"/>
@@ -77,7 +77,7 @@
         Model.Valuta = Functions.ToDateTime(GetStringData("HH410Valuta")) ?? daten.Heute;
         Model.BelegDatum = Functions.ToDateTime(GetStringData("HH410BelegDatum")) ?? daten.Heute;
       }
-      else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
+      else if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Reverse || dt == DialogTypeEnum.Copy)
       {
         // Lesen des Models aus der Datenbank.
         var r = BudgetService.GetBooking(daten, id ?? "");
@@ -140,10 +140,10 @@
     }
     if (Valid && submit == nameof(Model.Ok))
     {
-      // TODO Stornierung mit DialogTypeEnum.Reverse.
+      // Stornierung mit DialogTypeEnum.Reverse.
       var o = Model.To(daten);
-      var r = Model.DialogType == DialogTypeEnum.Delete
-        ? BudgetService.DeleteBooking(daten, o)
+      var r = Model.DialogType == DialogTypeEnum.Delete ? BudgetService.DeleteBooking(daten, o)
+        : Model.DialogType == DialogTypeEnum.Reverse ? BudgetService.ReverseBooking(daten, o)
         : BudgetService.SaveBooking(daten, o.Uid, o.Soll_Valuta, o.Betrag, o.EBetrag, o.Soll_Konto_Uid, o.Haben_Konto_Uid, o.BText, o.Beleg_Nr, o.Beleg_Datum);
       if (r.Ok)
       {
@@ -211,5 +211,6 @@
   {
     model.DialogType = model0.DialogType;
     model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+    model.OkLabel = model0.OkLabel;
   }
 }

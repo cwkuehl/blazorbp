@@ -7,7 +7,7 @@
 <PageTitle>@Title</PageTitle>
 
 <CascadingValue Value="this">
-<SortableTable Table="Table" NoData="" FormName="hh400" NoModal="true" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="HH400Model" TRTable="HH400TableRowModel">
+<SortableTable Table="Table" NoData="" FormName="hh400" NoModal="true" EditAktion="true" DeleteAktion="false" ReverseAktion="true" CopyAktion="true" NewAktion="true" TModel="HH400Model" TRTable="HH400TableRowModel">
   <ChildContent>
     <TableColumn Field="@nameof(HH400TableRowModel.Nummer)" SortField="@nameof(HhBuchung.Uid)" TModel="HH400Model" TRTable="HH400TableRowModel"/>
     <TableColumn Field="@nameof(HH400TableRowModel.Valuta)" SortField="@nameof(HhBuchung.Soll_Valuta)" TModel="HH400Model" TRTable="HH400TableRowModel"/>

@@ -263,7 +263,7 @@ public class BlazorComponentBase<T, TV> : LayoutComponentBase
     }
     WriteFormularModel(table.Nr ?? "", null, table);
     SetRhe();
-    if (!string.IsNullOrEmpty(handler) && handler != "Table_New" && handler != "Table_Edit" && handler != "Table_Delete" && handler != "Table_Copy")
+    if (!string.IsNullOrEmpty(handler) && handler != "Table_New" && handler != "Table_Edit" && handler != "Table_Delete" && handler != "Table_Reverse" && handler != "Table_Copy")
       Navigation.NavigateTo(HttpContext.Request.Path, true, true); // Query-Parameter handler entfernen.
   }
 
