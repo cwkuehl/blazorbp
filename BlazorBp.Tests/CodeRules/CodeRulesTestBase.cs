@@ -40,7 +40,7 @@ public record JsonFile(FileInfo FileInfo, string Content);
 
     public static void Init(string solutionname)
     {
-        var solutionFile = new SolutionFileName(solutionname).FindSolutionFileReverseFrom(new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory));
+        var solutionFile = SolutionFileName.WithAnySolutionFormat(solutionname).FindSolutionFileReverseFrom(new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory));
         Solution = solutionFile.Parse();
 
         ProductiveSyntaxTrees = Solution.ProductiveProjects
