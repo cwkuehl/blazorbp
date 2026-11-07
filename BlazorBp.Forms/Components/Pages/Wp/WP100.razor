@@ -98,9 +98,9 @@
         if (Model.Bis.HasValue)
           Model.Von = Model.Bis?.AddDays(-r.Ergebnis.Duration);
         Model.Box = r.Ergebnis.Box;
-        Model.Skala = Functions.ToString(r.Ergebnis.Scale);
+        Model.Skala = Funktionen.ToString(r.Ergebnis.Scale);
         Model.Umkehr = r.Ergebnis.Reversal;
-        Model.Methode = Functions.ToString(r.Ergebnis.Method);
+        Model.Methode = Funktionen.ToString(r.Ergebnis.Method);
       }
     }
     Model.Nr = id;

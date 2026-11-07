@@ -164,7 +164,7 @@
           Model.Betrag = null;
           Model.Summe = 0;
           if (!string.IsNullOrEmpty(o.Beleg_Nr))
-            Model.BelegNr = Functions.ToString(Functions.ToInt64(o.Beleg_Nr) + 1);
+            Model.BelegNr = Funktionen.ToString(Functions.ToInt64(o.Beleg_Nr) + 1);
           Model.SetMhrf(Model.DialogType);
           Model.Focus = nameof(Model.Betrag);
           DoPostbackReload();

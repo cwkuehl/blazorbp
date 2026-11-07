@@ -5,6 +5,7 @@
 namespace BlazorBp.Forms.Models.Fz;
 
 using System.ComponentModel.DataAnnotations;
+using BlazorSpa.Base;
 using BlazorSpa.Core.Base;
 using BlazorSpa.Core.Models;
 using CSBP.Services.Apis.Models;
@@ -74,7 +75,7 @@ public class FZ210Model : PageModelBase
   ) = (
     m.Uid,
     m.Bezeichnung,
-    Functions.ToString(m.Typ),
+    Funktionen.ToString(m.Typ),
     ModelBase.FormatDateOf(m.Angelegt_Am, m.Angelegt_Von),
     ModelBase.FormatDateOf(m.Geaendert_Am, m.Geaendert_Von)
   );
@@ -90,7 +91,7 @@ public class FZ210Model : PageModelBase
     if (mode == New)
     {
       Bezeichnung = null;
-      Typ = Functions.ToString((int)CSBP.Services.Apis.Enums.BikeTypeEnum.Tour);
+      Typ = Funktionen.ToString((int)CSBP.Services.Apis.Enums.BikeTypeEnum.Tour);
     }
     SetMandatoryHiddenReadonly(nameof(Nummer), false, false, true, false);
     SetMandatoryHiddenReadonly(nameof(Bezeichnung), true, false, mode == Delete, mode == New);

@@ -5,6 +5,7 @@
 namespace BlazorBp.Forms.Models.Ag;
 
 using System.ComponentModel.DataAnnotations;
+using BlazorSpa.Base;
 using BlazorSpa.Core.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
@@ -19,7 +20,7 @@ public class AG100TableRowModel : TableRowModelBase
   [Display(Name = "_Nr.", Description = "Die Nummer des Mandanten kann nicht geändert werden.")]
   public int Nummer
   {
-     get { return Functions.ToInt32(Id); } set { Id = Functions.ToString(value); }
+     get { return Functions.ToInt32(Id); } set { Id = Funktionen.ToString(value); }
   }
 
   /// <summary>Holt oder setzt die Beschreibung.</summary>
@@ -45,6 +46,7 @@ public class AG100TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
+  /// <returns>Neue Instanz mit den Werten.</returns>
   public static AG100TableRowModel From(MaMandant m)
   {
     return new AG100TableRowModel

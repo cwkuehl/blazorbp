@@ -5,6 +5,7 @@
 namespace BlazorBp.Forms.Models.Wp;
 
 using System.ComponentModel.DataAnnotations;
+using BlazorSpa.Base;
 using BlazorSpa.Core.Base;
 using BlazorSpa.Core.Models;
 using CSBP.Services.Apis.Models;
@@ -144,7 +145,7 @@ public class WP260Model : PageModelBase
     m.Uid,
     m.Wertpapier_Uid,
     m.Bezeichnung,
-    Status = Functions.ToString(m.State),
+    Status = Funktionen.ToString(m.State),
     m.PortfolioAccountUid,
     m.SettlementAccountUid,
     m.IncomeAccountUid,

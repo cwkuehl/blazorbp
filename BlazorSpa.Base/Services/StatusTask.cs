@@ -415,8 +415,8 @@ public class StatusTask
   public void SetBust(string? s)
   {
     daten["Bust"] = s.TrimNull();
-    //// daten["Nr"] = Functions.ToString(0);
-    //// daten["Anzahl"] = Functions.ToString(0);
+    //// daten["Nr"] = Funktionen.ToString(0);
+    //// daten["Anzahl"] = Funktionen.ToString(0);
     Aendern();
   }
 

@@ -5,6 +5,7 @@
 namespace BlazorBp.Forms.Models.Ag;
 
 using System.ComponentModel.DataAnnotations;
+using BlazorSpa.Base;
 using BlazorSpa.Core.Base;
 using BlazorSpa.Core.Models;
 using CSBP.Services.Apis.Models;
@@ -64,7 +65,7 @@ public class AG210Model : PageModelBase
   /// <param name="m">Zu kopierendes Model.</param>
   public void From(AG200TableRowModel m) =>
    (Nummer, BenutzerId, Kennwort, Berechtigung, Geburt, Angelegt, Geaendert)
-   = (Functions.ToString(m.Nummer), m.BenutzerId, "", m.Berechtigung, m.Geburt, ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon), ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon));
+   = (Funktionen.ToString(m.Nummer), m.BenutzerId, "", m.Berechtigung, m.Geburt, ModelBase.FormatDateOf(m.AngelegtAm, m.AngelegtVon), ModelBase.FormatDateOf(m.GeaendertAm, m.GeaendertVon));
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
   /// <returns>Das kopierte Model.</returns>

@@ -5,9 +5,9 @@
 namespace BlazorBp.Forms.Models.Ag;
 
 using System.ComponentModel.DataAnnotations;
+using BlazorSpa.Base;
 using BlazorSpa.Core.Base;
 using CSBP.Services.Apis.Models;
-using CSBP.Services.Base;
 
 /// <summary>
 /// Model-Klasse für eine Zeile in der Tabelle von Formular AG200 Benutzer.
@@ -56,6 +56,7 @@ public class AG200TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
+  /// <returns>Neue Instanz mit den Werten.</returns>
   public static AG200TableRowModel From(Benutzer m)
   {
     return new AG200TableRowModel
@@ -63,7 +64,7 @@ public class AG200TableRowModel : TableRowModelBase
       Nummer = m.Person_Nr,
       BenutzerId = m.Benutzer_ID,
       Kennwort = "••••••",
-      Berechtigung = Functions.ToString(m.Berechtigung),
+      Berechtigung = Funktionen.ToString(m.Berechtigung),
       Geburt = m.Geburt,
       AngelegtAm = m.Angelegt_Am,
       AngelegtVon = m.Angelegt_Von,

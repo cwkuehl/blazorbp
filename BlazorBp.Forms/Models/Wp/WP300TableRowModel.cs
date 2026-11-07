@@ -5,6 +5,7 @@
 namespace BlazorBp.Forms.Models.Wp;
 
 using System.ComponentModel.DataAnnotations;
+using BlazorSpa.Base;
 using BlazorSpa.Core.Base;
 using CSBP.Services.Apis.Models;
 using CSBP.Services.Base;
@@ -88,6 +89,7 @@ public class WP300TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
+  /// <returns>Neue Instanz mit den Werten.</returns>
   public static WP300TableRowModel From(WpKonfiguration m)
   {
     return new WP300TableRowModel
@@ -95,9 +97,9 @@ public class WP300TableRowModel : TableRowModelBase
       Nummer = m.Uid,
       Bezeichnung = Functions.Left2(m.Bezeichnung),
       Box = m.Box ?? 0,
-      Skala = Functions.ToString(m.Scale),
+      Skala = Funktionen.ToString(m.Scale),
       Umkehr = m.Reversal,
-      Methode = Functions.ToString(m.Method),
+      Methode = Funktionen.ToString(m.Method),
       Dauer = m.Duration,
       Relativ = m.Relative,
       Status = m.Status,
