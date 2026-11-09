@@ -47,7 +47,7 @@ public class WP200Model : PageModelBase
   public string? Berechnen { get; set; }
 
   /// <summary>Holt oder setzt Bis.</summary>
-  [Display(Name = "B_is", Description = "")]
+  [Display(Name = "B_is", Description = "Datum bis")]
   [Required(ErrorMessage = "Bis muss angegeben werden.")]
   public DateTime? Bis { get; set; }
 

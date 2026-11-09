@@ -17,24 +17,24 @@ using static BlazorSpa.Core.Base.DialogTypeEnum;
 public class FZ100Model : PageModelBase
 {
   /// <summary>Holt oder setzt Datum.</summary>
-  [Display(Name = "_Datum", Description = "")]
+  [Display(Name = "_Datum", Description = "Datum")]
   [Required(ErrorMessage = "Datum muss angegeben werden.")]
   public DateTime? Datum { get; set; }
 
   /// <summary>Holt oder setzt Bilanz.</summary>
-  [Display(Name = "_Bilanz", Description = "")]
+  [Display(Name = "_Bilanz", Description = "Bilanz-Übersicht")]
   public string? Bilanz { get; set; }
 
   /// <summary>Holt oder setzt Bücher.</summary>
-  [Display(Name = "Bü_cher", Description = "")]
+  [Display(Name = "Bü_cher", Description = "Bücher-Übersicht")]
   public string? Buecher { get; set; }
 
   /// <summary>Holt oder setzt Fahrrad.</summary>
-  [Display(Name = "_Fahrrad", Description = "")]
+  [Display(Name = "_Fahrrad", Description = "Fahrrad-Übersicht")]
   public string? Fahrrad { get; set; }
 
   /// <summary>Holt oder setzt Chart.</summary>
-  [Display(Name = "Diagramm", Description = "")]
+  [Display(Name = "Diagramm", Description = "Bilanz-Diagramm")]
   public string? Diagram { get; set; }
 
   /// <summary>Holt oder setzt Aktualisieren.</summary>

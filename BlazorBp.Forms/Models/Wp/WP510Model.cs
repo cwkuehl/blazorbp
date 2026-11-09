@@ -27,7 +27,7 @@ public class WP510Model : PageModelBase
   public string? Wertpapier { get; set; }
 
   /// <summary>Holt oder setzt Datum.</summary>
-  [Display(Name = "_Datum", Description = "")]
+  [Display(Name = "_Datum", Description = "Datum des Stands")]
   [Required(ErrorMessage = "Datum muss angegeben werden.")]
   public DateTime? Valuta { get; set; }
 

@@ -18,27 +18,26 @@ using static BlazorSpa.Core.Base.DialogTypeEnum;
 public class TB210Model : PageModelBase
 {
   /// <summary>Holt oder setzt Nr..</summary>
-  [Display(Name = "Nr.", Description = "")]
-  //// [Required(ErrorMessage = "Nr. muss angegeben werden.")]
+  [Display(Name = "Nr.", Description = "Position-Nr.")]
   public string? Nummer { get; set; }
 
   /// <summary>Holt oder setzt Bezeichnung.</summary>
-  [Display(Name = "_Bezeichnung", Description = "")]
+  [Display(Name = "_Bezeichnung", Description = "Bezeichnung")]
   [Required(ErrorMessage = "Bezeichnung muss angegeben werden.")]
   public string? Bezeichnung { get; set; }
 
   /// <summary>Holt oder setzt Breite.</summary>
-  [Display(Name = "_Breite", Description = "")]
+  [Display(Name = "_Breite", Description = "Breite")]
   [Required(ErrorMessage = "Breite muss angegeben werden.")]
   public decimal Breite { get; set; }
 
   /// <summary>Holt oder setzt Länge.</summary>
-  [Display(Name = "_Länge", Description = "")]
+  [Display(Name = "_Länge", Description = "Länge")]
   [Required(ErrorMessage = "Länge muss angegeben werden.")]
   public decimal Laenge { get; set; }
 
   /// <summary>Holt oder setzt Höhe.</summary>
-  [Display(Name = "_Höhe", Description = "")]
+  [Display(Name = "_Höhe", Description = "Höhe")]
   //// [Required(ErrorMessage = "Höhe muss angegeben werden.")]
   public decimal Hoehe { get; set; }
 
@@ -51,28 +50,24 @@ public class TB210Model : PageModelBase
   public string? Zeitzone { get; set; }
 
   /// <summary>Holt oder setzt Notiz.</summary>
-  [Display(Name = "_Notiz", Description = "")]
+  [Display(Name = "_Notiz", Description = "Notizen")]
   //// [Required(ErrorMessage = "Notiz muss angegeben werden.")]
   public string? Notiz { get; set; }
 
   /// <summary>Holt oder setzt Angelegt.</summary>
-  [Display(Name = "Angelegt", Description = "")]
-  //// [Required(ErrorMessage = "Angelegt muss angegeben werden.")]
+  [Display(Name = "Angelegt", Description = "Die Benutzer-ID und der Zeitpunkt der Anlage.")]
   public string? Angelegt { get; set; }
 
   /// <summary>Holt oder setzt Geändert.</summary>
-  [Display(Name = "Geändert", Description = "")]
-  //// [Required(ErrorMessage = "Geändert muss angegeben werden.")]
+  [Display(Name = "Geändert", Description = "Die Benutzer-ID und der Zeitpunkt der letzten Änderung.")]
   public string? Geaendert { get; set; }
 
   /// <summary>Holt oder setzt OK.</summary>
-  [Display(Name = "_OK", Description = "")]
-  //// [Required(ErrorMessage = "OK muss angegeben werden.")]
+  [Display(Name = "_OK", Description = "Dialog mit Speichern schließen")]
   public string? Ok { get; set; }
 
   /// <summary>Holt oder setzt Abbrechen.</summary>
-  [Display(Name = "Abbre_chen", Description = "")]
-  //// [Required(ErrorMessage = "Abbrechen muss angegeben werden.")]
+  [Display(Name = "Abbre_chen", Description = "Dialog ohne Speichern schließen")]
   public string? Abbrechen { get; set; }
 
   /// <summary>Kopiert die Werte in ein Model.</summary>

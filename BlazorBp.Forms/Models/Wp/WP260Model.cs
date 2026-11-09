@@ -76,7 +76,7 @@ public class WP260Model : PageModelBase
   public string? Ertrag { get; set; }
 
   /// <summary>Holt oder setzt Notiz.</summary>
-  [Display(Name = "_Notiz", Description = "")]
+  [Display(Name = "_Notiz", Description = "Notizen")]
   [MaxLength(255000, ErrorMessage = "Notiz darf maximal {1} Zeichen lang sein.")]
   public string? Notiz { get; set; }
 

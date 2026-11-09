@@ -17,7 +17,7 @@ using static BlazorSpa.Core.Base.DialogTypeEnum;
 public class WP250Model : PageModelBase
 {
   /// <summary>Holt oder setzt Status.</summary>
-  [Display(Name = "Status", Description = "")]
+  [Display(Name = "Status", Description = "Status der Anlage")]
   //// [Required(ErrorMessage = "Status muss angegeben werden.")]
   //// [MaxLength(255, ErrorMessage = "Status darf maximal {1} Zeichen lang sein.")]
   public string? Status { get; set; }
@@ -40,7 +40,7 @@ public class WP250Model : PageModelBase
   public string? Berechnen { get; set; }
 
   /// <summary>Holt oder setzt Bis.</summary>
-  [Display(Name = "B_is", Description = "")]
+  [Display(Name = "B_is", Description = "Datum bis")]
   [Required(ErrorMessage = "Bis muss angegeben werden.")]
   public DateTime? Bis { get; set; }
 

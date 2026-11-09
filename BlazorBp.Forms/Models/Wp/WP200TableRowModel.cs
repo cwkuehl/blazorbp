@@ -73,7 +73,7 @@ public class WP200TableRowModel : TableRowModelBase
   public string? Relation { get; set; }
 
   /// <summary>Holt oder setzt Notiz.</summary>
-  [Display(Name = "Notiz", Description = "")]
+  [Display(Name = "Notiz", Description = "Notizen zum Wertpapier")]
   public string? Notiz { get; set; }
 
   /// <summary>Holt oder setzt Angelegt am.</summary>

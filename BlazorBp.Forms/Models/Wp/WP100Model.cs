@@ -20,16 +20,16 @@ public class WP100Model : PageModelBase
   public List<ListItem>? AuswahlData { get; set; } = default!;
 
   /// <summary>Holt oder setzt Daten.</summary>
-  [Display(Name = "_Daten", Description = "")]
+  [Display(Name = "_Daten", Description = "Daten für Chart")]
   public string? Data { get; set; }
 
   /// <summary>Holt oder setzt Von.</summary>
-  [Display(Name = "_Von", Description = "")]
+  [Display(Name = "_Von", Description = "Datum von")]
   [Required(ErrorMessage = "Von muss angegeben werden.")]
   public DateTime? Von { get; set; }
 
   /// <summary>Holt oder setzt Bis.</summary>
-  [Display(Name = "B_is", Description = "")]
+  [Display(Name = "B_is", Description = "Datum bis")]
   [Required(ErrorMessage = "Bis muss angegeben werden.")]
   public DateTime? Bis { get; set; }
 
@@ -72,7 +72,7 @@ public class WP100Model : PageModelBase
   public bool Relativ { get; set; }
 
   /// <summary>Holt oder setzt Chart.</summary>
-  [Display(Name = "Chart", Description = "")]
+  [Display(Name = "Chart", Description = "PnF-Chart")]
   public string? Chart { get; set; }
 
   /// <summary>Holt oder setzt Aktualisieren.</summary>

@@ -38,7 +38,7 @@ public class HH210Model : PageModelBase
   public List<ListItem>? AuswahlKontoart { get; set; } = default!;
 
   /// <summary>Holt oder setzt Kontoart.</summary>
-  [Display(Name = "Kontoa_rt", Description = "")]
+  [Display(Name = "Kontoa_rt", Description = "Kontoart")]
   [Required(ErrorMessage = "Kontoart muss angegeben werden.")]
   public string? Kontoart { get; set; }
 

@@ -35,11 +35,11 @@ public class HH200TableRowModel : TableRowModelBase
   public string? Kontoart { get; set; }
 
   /// <summary>Holt oder setzt Gültigkeit von.</summary>
-  [Display(Name = "Gültigkeit _von", Description = "")]
+  [Display(Name = "Gültigkeit _von", Description = "Gültigkeit von")]
   public DateTime? Von { get; set; }
 
   /// <summary>Holt oder setzt Bis.</summary>
-  [Display(Name = "B_is", Description = "")]
+  [Display(Name = "B_is", Description = "Gültigkeit bis")]
   public DateTime? Bis { get; set; }
 
   /// <summary>Holt oder setzt Betrag.</summary>

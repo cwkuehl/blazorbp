@@ -19,7 +19,7 @@ using static BlazorSpa.Core.Base.DialogTypeEnum;
 public class WP410Model : PageModelBase
 {
   /// <summary>Holt oder setzt Nr..</summary>
-  [Display(Name = "Nr.", Description = "")]
+  [Display(Name = "Nr.", Description = "WP-Buchungs-Nr.")]
   public string? Nummer { get; set; }
 
   /// <summary>Holt oder setzt die Auswahlliste von Anlagen.</summary>

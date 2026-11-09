@@ -29,7 +29,7 @@ public class WP500TableRowModel : TableRowModelBase
   public string? Wertpapier { get; set; }
 
   /// <summary>Holt oder setzt Datum.</summary>
-  [Display(Name = "_Datum", Description = "")]
+  [Display(Name = "_Datum", Description = "Valuta des Stands")]
   public string? Valuta { get; set; }
 
   /// <summary>Holt oder setzt Betrag.</summary>

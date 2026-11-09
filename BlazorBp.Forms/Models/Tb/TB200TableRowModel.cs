@@ -17,59 +17,48 @@ using static BlazorSpa.Core.Base.DialogTypeEnum;
 [Serializable]
 public class TB200TableRowModel : TableRowModelBase
 {
-  /// <summary>Holt oder setzt Nr..</summary>
-  [Display(Name = "Nr.", Description = "")]
-  //// [Required(ErrorMessage = "Nr. muss angegeben werden.")]
+  /// <summary>Holt oder setzt Nr.</summary>
+  [Display(Name = "Nr.", Description = "Positions-Nr.")]
   public string? Nummer { get; set; }
 
   /// <summary>Holt oder setzt Bezeichnung.</summary>
-  [Display(Name = "_Bezeichnung", Description = "")]
-  //// [Required(ErrorMessage = "Bezeichnung muss angegeben werden.")]
+  [Display(Name = "_Bezeichnung", Description = "Bezeichnung")]
   public string? Bezeichnung { get; set; }
 
   /// <summary>Holt oder setzt Breite.</summary>
-  [Display(Name = "_Breite", Description = "")]
-  //// [Required(ErrorMessage = "Breite muss angegeben werden.")]
+  [Display(Name = "_Breite", Description = "Breite")]
   public string? Breite { get; set; }
 
-  /// <summary>Holt oder setzt Notiz.</summary>
-  [Display(Name = "_Notiz", Description = "")]
-  //// [Required(ErrorMessage = "Notiz muss angegeben werden.")]
-  public string? Notiz { get; set; }
-
   /// <summary>Holt oder setzt Länge.</summary>
-  [Display(Name = "_Länge", Description = "")]
-  //// [Required(ErrorMessage = "Länge muss angegeben werden.")]
+  [Display(Name = "_Länge", Description = "Länge")]
   public string? Laenge { get; set; }
 
   /// <summary>Holt oder setzt Höhe.</summary>
-  [Display(Name = "_Höhe", Description = "")]
-  //// [Required(ErrorMessage = "Höhe muss angegeben werden.")]
+  [Display(Name = "_Höhe", Description = "Höhe")]
   public string? Hoehe { get; set; }
 
   /// <summary>Holt oder setzt Zeitzone.</summary>
   [Display(Name = "_Zeitzone", Description = "Zeitzone")]
-  //// [Required(ErrorMessage = "Zeitzone muss angegeben werden.")]
   public string? Zeitzone { get; set; }
+
+  /// <summary>Holt oder setzt Notiz.</summary>
+  [Display(Name = "_Notiz", Description = "Notizen")]
+  public string? Notiz { get; set; }
 
   /// <summary>Holt oder setzt Angelegt am.</summary>
   [Display(Name = "Angelegt am", Description = "Der Zeitpunkt der Anlage")]
-  //// [Required(ErrorMessage = "Angelegt am muss angegeben werden.")]
   public DateTime? AngelegtAm { get; set; }
 
   /// <summary>Holt oder setzt Angelegt von.</summary>
   [Display(Name = "Angelegt von", Description = "Die Benutzer-ID der Anlage")]
-  //// [Required(ErrorMessage = "Angelegt von muss angegeben werden.")]
   public string? AngelegtVon { get; set; }
 
   /// <summary>Holt oder setzt Geändert am.</summary>
   [Display(Name = "Geändert am", Description = "Der Zeitpunkt der letzten Änderung")]
-  //// [Required(ErrorMessage = "Geändert am muss angegeben werden.")]
   public DateTime? GeaendertAm { get; set; }
 
   /// <summary>Holt oder setzt Geändert von.</summary>
   [Display(Name = "Geändert von", Description = "Die Benutzer-ID der letzten Änderung")]
-  //// [Required(ErrorMessage = "Geändert von muss angegeben werden.")]
   public string? GeaendertVon { get; set; }
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>

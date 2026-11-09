@@ -49,11 +49,11 @@ public class WP400TableRowModel : TableRowModelBase
   public string? Rabatt { get; set; }
 
   /// <summary>Holt oder setzt Anteile.</summary>
-  [Display(Name = "_Anteile", Description = "")]
+  [Display(Name = "_Anteile", Description = "Anteile der Buchung")]
   public string? Anteile { get; set; }
 
   /// <summary>Holt oder setzt Zinsen.</summary>
-  [Display(Name = "_Zinsen", Description = "")]
+  [Display(Name = "_Zinsen", Description = "Zinsen, Erträge ohne Anteilsänderung")]
   public string? Zinsen { get; set; }
 
   /// <summary>Holt oder setzt Angelegt am.</summary>
@@ -74,6 +74,7 @@ public class WP400TableRowModel : TableRowModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
+  /// <returns>Das kopierte Model.</returns>
   public static WP400TableRowModel From(WpBuchung m)
   {
     // No.;Stock;Description;Date;Posting text;Payment_r;Discount_r;Shares_r;Interest_r;Changed at;Changed by;Created at;Created by

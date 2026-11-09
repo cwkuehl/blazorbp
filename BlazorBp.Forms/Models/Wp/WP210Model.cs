@@ -93,7 +93,7 @@ public class WP210Model : PageModelBase
   public string? Relation { get; set; }
 
   /// <summary>Holt oder setzt Notiz.</summary>
-  [Display(Name = "Notiz", Description = "")]
+  [Display(Name = "Notiz", Description = "Notizen")]
   //// [Required(ErrorMessage = "Notiz muss angegeben werden.")]
   public string? Notiz { get; set; }
 

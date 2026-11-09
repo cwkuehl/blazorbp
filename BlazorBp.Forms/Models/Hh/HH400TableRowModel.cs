@@ -30,7 +30,7 @@ public class HH400TableRowModel : TableRowModelBase
   public string? Kennzeichen { get; set; }
 
   /// <summary>Holt oder setzt Valuta.</summary>
-  [Display(Name = "_Valuta", Description = "")]
+  [Display(Name = "_Valuta", Description = "Valuta")]
   public string? Valuta { get; set; }
 
   /// <summary>Holt oder setzt Betrag.</summary>
@@ -55,7 +55,7 @@ public class HH400TableRowModel : TableRowModelBase
   public string? BelegNr { get; set; }
 
   /// <summary>Holt oder setzt Vom.</summary>
-  [Display(Name = "Vom", Description = "")]
+  [Display(Name = "Vom", Description = "Gültigkeit von")]
   public string? BelegDatum { get; set; }
 
   /// <summary>Holt oder setzt Angelegt am.</summary>

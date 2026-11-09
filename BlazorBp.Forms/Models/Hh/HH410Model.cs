@@ -23,7 +23,7 @@ public class HH410Model : PageModelBase
   public string? Nummer { get; set; }
 
   /// <summary>Holt oder setzt Valuta.</summary>
-  [Display(Name = "_Valuta", Description = "")]
+  [Display(Name = "_Valuta", Description = "Valuta")]
   [Required(ErrorMessage = "Valuta muss angegeben werden.")]
   public DateTime? Valuta { get; set; }
 
@@ -32,7 +32,6 @@ public class HH410Model : PageModelBase
 
   /// <summary>Holt oder setzt Betrag.</summary>
   [Display(Name = "_Betrag", Description = "Betrag, evtl. mit vorangestelltem Operator +, -, * oder /.")]
-  //// [Required(ErrorMessage = "Betrag muss angegeben werden.")]
   [MaxLength(20, ErrorMessage = "Betrag darf maximal {1} Zeichen lang sein.")]
   public string? Betrag { get; set; }
 

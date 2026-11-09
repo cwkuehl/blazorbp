@@ -18,7 +18,7 @@ using static BlazorSpa.Core.Base.DialogTypeEnum;
 public class HH500Model : PageModelBase
 {
   /// <summary>Holt oder setzt Überschrift der Soll-Spalte.</summary>
-  [Display(Name = "Aktiva", Description = "")]
+  [Display(Name = "Aktiva", Description = " ")]
   public string? Soll0 { get; set; }
 
   /// <summary>Holt oder setzt die Auswahlliste von Soll.</summary>
@@ -29,15 +29,15 @@ public class HH500Model : PageModelBase
   public string? Soll { get; set; }
 
   /// <summary>Holt oder setzt Summe.</summary>
-  [Display(Name = "Summe", Description = "")]
+  [Display(Name = "Summe", Description = " ")]
   public string? SollSumme0 { get; set; }
 
   /// <summary>Holt oder setzt den Label für den Soll-Betrag.</summary>
-  [Display(Name = "", Description = "")]
+  [Display(Name = "", Description = " ")]
   public string? SollBetrag0 { get; set; }
 
   /// <summary>Holt oder setzt Überschrift der Haben-Spalte.</summary>
-  [Display(Name = "Passiva", Description = "")]
+  [Display(Name = "Passiva", Description = " ")]
   public string? Haben0 { get; set; }
 
   /// <summary>Holt oder setzt die Auswahlliste von Haben.</summary>
@@ -48,24 +48,24 @@ public class HH500Model : PageModelBase
   public string? Haben { get; set; }
 
   /// <summary>Holt oder setzt Summe.</summary>
-  [Display(Name = "Summe", Description = "")]
+  [Display(Name = "Summe", Description = " ")]
   public string? HabenSumme0 { get; set; }
 
   /// <summary>Holt oder setzt .</summary>
-  [Display(Name = "", Description = "")]
+  [Display(Name = "", Description = " ")]
   public string? HabenBetrag0 { get; set; }
 
   /// <summary>Holt oder setzt Überschrift von Von-Datum.</summary>
-  [Display(Name = "Von", Description = "")]
+  [Display(Name = "Von", Description = " ")]
   public string? Von0 { get; set; }
 
   /// <summary>Holt oder setzt Von.</summary>
-  [Display(Name = "_Von", Description = "")]
+  [Display(Name = "_Von", Description = "Anfangsdatum für die Bilanz")]
   //// [Required(ErrorMessage = "Von muss angegeben werden.")]
   public DateTime? Von { get; set; }
 
   /// <summary>Holt oder setzt Bis.</summary>
-  [Display(Name = "_Bis", Description = "")]
+  [Display(Name = "_Bis", Description = "Enddatum für die Bilanz")]
   //// [Required(ErrorMessage = "Bis muss angegeben werden.")]
   public DateTime? Bis { get; set; }
 
