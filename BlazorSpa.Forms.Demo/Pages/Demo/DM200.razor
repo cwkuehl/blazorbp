@@ -37,7 +37,7 @@
 @if (!string.IsNullOrEmpty(Model!.ModalId))
 {
 <div class="modal xxxfade" id="idmodal" tabindex="-1" role="dialog" aria-labelledby="lbldetails" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="lbldetails">@Funktionen.Iif(Model?.ModalArt == "Table_Edit", "Objekt ändern", Funktionen.Iif(Model?.ModalArt == "Table_Delete", "Objekt löschen", "Neues Objekt"))</h5>
@@ -52,7 +52,11 @@
           <input type="hidden" name="SubmitControl"/>
           <div class="row mt-1">
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Nummer)" VerticalColClass="form-group col-md-4"/>
-            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Bezeichnung)" VerticalColClass="form-group col-md-4 ms-1"/>
+          </div>
+          <div class="row mt-1">
+            <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Bezeichnung)" VerticalColClass="form-group col ms-1"/>
+          </div>
+          <div class="row mt-1">
             <LabelInputValid AutoPostback="" For="@(() => ModalModel!.Beschreibung)" VerticalColClass="form-group col ms-1"/>
           </div>
           <div class="modal-footer mt-2 p-0">
