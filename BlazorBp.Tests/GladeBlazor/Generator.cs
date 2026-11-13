@@ -261,6 +261,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
 
   /// <summary>Kopiert die Werte in ein Model.</summary>
   /// <param name="daten">Service-Daten für den Datenbankzugriff.</param>
+  /// <returns>Das kopierte Model.</returns>
   public {{form}}TodoModel To(ServiceDaten daten)
   {
     return new {{form}}TodoModel
@@ -275,6 +276,7 @@ public class {{form}}{{prefix}}Model : {{baseclass}}
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
+  /// <returns>Das kopierte Model.</returns>
   public static {{form}}TableRowModel From({{form}}TodoModel m)
   {
     return new {{form}}TableRowModel
@@ -686,7 +688,7 @@ else
   protected override bool Submit(string? submit)
   {
     var daten = ServiceDaten;
-    if (valid && submit == nameof(Model.Ok))
+    if (Valid && submit == nameof(Model.Ok))
     {
       // var o = Model.To(daten);
       // var r = Model.DialogType == DialogTypeEnum.Delete
@@ -937,7 +939,7 @@ else
   /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
   protected override bool Submit(string? submit)
   {
-    if (valid && submit == "OK")
+    if (Valid && submit == "OK")
     {
       var daten = ServiceDaten;
       var r = new ServiceErgebnis(); // TODO xxxService.yyy(daten, Model.abc);

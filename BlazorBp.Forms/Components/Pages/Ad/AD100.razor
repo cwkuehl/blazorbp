@@ -1,0 +1,227 @@
+@page "/ad/ad100/{id?}"
+@using CSBP.Services.Apis.Models
+@inherits BlazorComponent<AD100Model, AD100TableRowModel>
+@attribute [Authorize(Roles = "User, Admin, Superadmin")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<CascadingValue Value="this">
+<SortableTable Table="Table" NoData="" FormName="ad100" NoModal="true" EditAktion="true" DeleteAktion="true" CopyAktion="true" NewAktion="true" TModel="AD100Model" TRTable="AD100TableRowModel">
+  <ChildContent>
+    <TableColumn Field="@nameof(AD100TableRowModel.Nummer)" SortField="@nameof(AD100TodoModel.Nummer)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Titel)" SortField="@nameof(AD100TodoModel.Titel)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Vorname)" SortField="@nameof(AD100TodoModel.Vorname)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Praedikat)" SortField="@nameof(AD100TodoModel.Praedikat)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Name1)" SortField="@nameof(AD100TodoModel.Name1)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Name2)" SortField="@nameof(AD100TodoModel.Name2)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Geschlecht0)" SortField="@nameof(AD100TodoModel.Geschlecht0)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Geschlecht1)" SortField="@nameof(AD100TodoModel.Geschlecht1)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Geschlecht2)" SortField="@nameof(AD100TodoModel.Geschlecht2)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Geschlecht3)" SortField="@nameof(AD100TodoModel.Geschlecht3)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Geburt)" SortField="@nameof(AD100TodoModel.Geburt)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.PersonStatus0)" SortField="@nameof(AD100TodoModel.PersonStatus0)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.PersonStatus1)" SortField="@nameof(AD100TodoModel.PersonStatus1)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.PersonStatus2)" SortField="@nameof(AD100TodoModel.PersonStatus2)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Name)" SortField="@nameof(AD100TodoModel.Name)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Strasse)" SortField="@nameof(AD100TodoModel.Strasse)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Hausnr)" SortField="@nameof(AD100TodoModel.Hausnr)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Postfach)" SortField="@nameof(AD100TodoModel.Postfach)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Staat)" SortField="@nameof(AD100TodoModel.Staat)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Plz)" SortField="@nameof(AD100TodoModel.Plz)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Ort)" SortField="@nameof(AD100TodoModel.Ort)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Telefon)" SortField="@nameof(AD100TodoModel.Telefon)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Fax)" SortField="@nameof(AD100TodoModel.Fax)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Mobil)" SortField="@nameof(AD100TodoModel.Mobil)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Homepage)" SortField="@nameof(AD100TodoModel.Homepage)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Email)" SortField="@nameof(AD100TodoModel.Email)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.Notiz)" SortField="@nameof(AD100TodoModel.Notiz)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.SitzStatus0)" SortField="@nameof(AD100TodoModel.SitzStatus0)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.SitzStatus1)" SortField="@nameof(AD100TodoModel.SitzStatus1)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.SitzStatus2)" SortField="@nameof(AD100TodoModel.SitzStatus2)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.AngelegtAm)" SortField="@nameof(AD100TodoModel.Angelegt_Am)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.AngelegtVon)" SortField="@nameof(AD100TodoModel.Angelegt_Von)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.GeaendertAm)" SortField="@nameof(AD100TodoModel.Geaendert_Am)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+    <TableColumn Field="@nameof(AD100TableRowModel.GeaendertVon)" SortField="@nameof(AD100TodoModel.Geaendert_Von)" TModel="AD100Model" TRTable="AD100TableRowModel"/>
+  </ChildContent>
+</SortableTable>
+</CascadingValue>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="ad100">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <input type="hidden" name="SubmitControl"/>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Name)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Vorname)" maxlength="255" VerticalColClass="form-group col-md-2"/>
+  </div>
+  <div class="modal-footer mt-2">
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.SitzNeu)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.SitzEins)"/>
+    <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.GebListe)"/>
+    <SubmitButton class="btn btn-secondary col-md-1 ms-1" imageclass="bi bi-printer-fill-nav-menu" For="@(() => Model!.Print)"/>
+    <SubmitButton class="btn btn-secondary col-md-1 ms-1" imageclass="bi bi-floppy-button" For="@(() => Model!.Floppy)"/>
+    <SubmitButton class="btn btn-primary col-md-1 ms-1" imageclass="bi bi-arrow-clockwise-button" For="@(() => Model!.Refresh)"/>
+    <SubmitButton class="btn btn-secondary col-md-1 ms-1" imageclass="bi bi-x-lg-button" For="@(() => Model!.Schliessen)"/>
+  </div>
+</EditForm>
+
+@code {
+
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IStockService StockService { get; set; } = default!;
+
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id">Betroffene Id.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id, AD100Model? model = null, TableModelBase<AD100TableRowModel>? table = null)
+  {
+    var daten = ServiceDaten;
+    if (model != null)
+      Model = model;
+    if (Model == null)
+    {
+      Model = new AD100Model
+      {
+        Nr = id,
+      };
+      Model.SetMhrf(DialogTypeEnum.New);
+    }
+    Model.Nr = id;
+    if (table != null)
+      Table = table;
+    if (Table == null)
+      Table = new TableModelBase<AD100TableRowModel>
+      {
+        SelectedPage = 1,
+        RowsPerPage = 10,
+        SelectedRow = 1,
+        SortColumn = $"{nameof(AD100TodoModel.Nummer)}#+",
+      };
+    Table.Nr = id;
+    InitEditContext(Model);
+  }
+
+  /// <summary>
+  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
+  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
+  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    if (OnInitializedFormular("AD100", "Personen - AD100", Id, true))
+      return;
+
+    // Alle Submit-Aktionen, die vor dem Rendern der Komponenten ausgeführt werden müssen.
+    var handler = HttpContext.Request.Query["handler"];
+    if (handler == "Table_All")
+    {
+      Model.SetMhrf(DialogTypeEnum.Copy);
+      WriteFormularModel(Model.Nr ?? "0", Model);
+    }
+  }
+
+  /// <summary>
+  /// Dialog wird über Tabellen-Aktion informiert und kann für den Aufruf eines nicht modalen Dialogs benutzt werden.
+  /// </summary>
+  /// <param name="form">Betroffenes Postback-Formular.</param>
+  /// <param name="handler">Handler aus Tabellen-Aktion.</param>
+  /// <param name="id">Id aus Tabellen-Aktion.</param>
+  public override void HandleNoModal(string? form, string? handler, string? id)
+  {
+    HandleNoModal1(form, handler, id, "AD110");
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// </summary>
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
+  {
+    if (Valid && submit == "OK")
+    {
+      var daten = ServiceDaten;
+      var r = new ServiceErgebnis(); // TODO xxxService.yyy(daten, Model.abc);
+      if (r != null)
+      {
+        Get(r);
+        if (r.Ok)
+          return true;
+      }
+    }
+    if (submit == nameof(Model.Refresh))
+      Refresh();
+    if (submit == nameof(Model.Schliessen))
+      return true;
+    return false;
+  }
+
+  /// <summary>
+  /// Bereitstellen der Tabellen-Daten mit Berücksichtigung der Filterung, Sortierung und Paginierung.
+  /// </summary>
+  /// <param name="m">Betroffenes TableRowModel.</param>
+  /// <param name="messages">Betroffene Fehlermeldungen.</param>
+  /// <returns>Tabellen-Daten als Liste.</returns>
+  protected override List<AD100TableRowModel> TableData(TableModelBase<AD100TableRowModel>? m, ValidationMessageStore? messages)
+  {
+    var rm = m?.ReadModel;
+    var daten = ServiceDaten;
+    var r = new ServiceErgebnis<List<AD100TodoModel>>(new List<AD100TodoModel>());
+    r.Ergebnis?.Add(new AD100TodoModel()
+    {
+      Nummer = "1",
+      Geschlecht1 = "Geschlecht11",
+      Geschlecht2 = "Geschlecht21",
+      Geschlecht3 = "Geschlecht31",
+      PersonStatus1 = "PersonStatus11",
+      PersonStatus2 = "PersonStatus21",
+      Notiz = "Notiz1",
+      SitzStatus1 = "SitzStatus11",
+      SitzStatus2 = "SitzStatus21",
+      SitzNr = "SitzNr1",
+      AdressNr = "AdressNr1",
+      Titel = "Titel1",
+      Vorname = "Vorname1",
+      Praedikat = "Praedikat1",
+      Name1 = "Name11",
+      Name2 = "Name21",
+      Geschlecht0 = "Geschlecht01",
+      Geburt = "Geburt1",
+      PersonStatus0 = "PersonStatus01",
+      Name = "Name1",
+      Strasse = "Strasse1",
+      Hausnr = "Hausnr1",
+      Postfach = "Postfach1",
+      Staat = "Staat1",
+      Plz = "Plz1",
+      Ort = "Ort1",
+      Telefon = "Telefon1",
+      Fax = "Fax1",
+      Mobil = "Mobil1",
+      Homepage = "Homepage1",
+      Email = "Email1",
+      SitzStatus0 = "SitzStatus01",
+    });
+    if (rm != null)
+      rm.PageCount = 0;
+    // TODO var l0 = Get(PrivateService.GetClientList(daten, rm), messages);
+    var l = r.Ergebnis?.Select(a => AD100TableRowModel.From(a)).ToList() ?? new List<AD100TableRowModel>();
+    return UpdateTable(m, rm, l);
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData(AD100Model model, AD100Model model0)
+  {
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+  }
+}

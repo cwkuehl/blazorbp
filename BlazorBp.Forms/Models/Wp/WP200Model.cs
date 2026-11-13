@@ -16,24 +16,6 @@ using static BlazorSpa.Core.Base.DialogTypeEnum;
 [Serializable]
 public class WP200Model : PageModelBase
 {
-  /// <summary>Holt oder setzt Aktualisieren.</summary>
-  [Display(Name = "Aktualisieren", Description = "Aktualisieren")]
-  //// [Required(ErrorMessage = "Aktualisieren muss angegeben werden.")]
-  public string? Refresh { get; set; }
-
-  /// <summary>Holt oder setzt Importieren und Exportieren.</summary>
-  [Display(Name = "Importieren und Exportieren", Description = "Importieren und Exportieren")]
-  //// [Required(ErrorMessage = "Importieren und Exportieren muss angegeben werden.")]
-  public string? Floppy { get; set; }
-
-  /// <summary>Holt oder setzt Chart.</summary>
-  [Display(Name = "Chart", Description = "Chart zum ausgewählten Wertpapier anzeigen")]
-  public string? Chart { get; set; }
-
-  /// <summary>Holt oder setzt Status.</summary>
-  [Display(Name = "Status", Description = "Status der Berechnung")]
-  public string? Status { get; set; }
-
   /// <summary>Holt oder setzt Muster.</summary>
   [Display(Name = "_Muster", Description = "Zu suchendes Muster")]
   public string? Muster { get; set; }
@@ -41,10 +23,6 @@ public class WP200Model : PageModelBase
   /// <summary>Holt oder setzt auch inaktive.</summary>
   [Display(Name = "auch inaktive", Description = "Sollen auch inaktive Wertpapiere angezeigt werden?")]
   public bool Auchinaktiv { get; set; }
-
-  /// <summary>Holt oder setzt Bewertungen berechnen.</summary>
-  [Display(Name = "Bewertungen berechnen", Description = "Soll die Bewertung für jedes aktive Wertpapier berechnet werden?")]
-  public string? Berechnen { get; set; }
 
   /// <summary>Holt oder setzt Bis.</summary>
   [Display(Name = "B_is", Description = "Datum bis")]
@@ -58,6 +36,28 @@ public class WP200Model : PageModelBase
   [Display(Name = "_Konfiguration", Description = "Konfiguration für Bewertung festlegen")]
   [Required(ErrorMessage = "Konfiguration muss angegeben werden.")]
   public string? Konfiguration { get; set; }
+
+  /// <summary>Holt oder setzt Bewertungen berechnen.</summary>
+  [Display(Name = "Bewertungen berechnen", Description = "Soll die Bewertung für jedes aktive Wertpapier berechnet werden?")]
+  public string? Berechnen { get; set; }
+
+  /// <summary>Holt oder setzt Status.</summary>
+  [Display(Name = "Status", Description = "Status der Berechnung")]
+  public string? Status { get; set; }
+
+  /// <summary>Holt oder setzt Chart.</summary>
+  [Display(Name = "Chart", Description = "Chart zum ausgewählten Wertpapier anzeigen")]
+  public string? Chart { get; set; }
+
+  /// <summary>Holt oder setzt Importieren und Exportieren.</summary>
+  [Display(Name = "Importieren und Exportieren", Description = "Importieren und Exportieren")]
+  //// [Required(ErrorMessage = "Importieren und Exportieren muss angegeben werden.")]
+  public string? Floppy { get; set; }
+
+  /// <summary>Holt oder setzt Aktualisieren.</summary>
+  [Display(Name = "Aktualisieren", Description = "Aktualisieren")]
+  //// [Required(ErrorMessage = "Aktualisieren muss angegeben werden.")]
+  public string? Refresh { get; set; }
 
   /// <summary>Holt oder setzt Schließen.</summary>
   [Display(Name = "Schließen", Description = "Schließen")]
@@ -77,6 +77,12 @@ public class WP200Model : PageModelBase
     {
       Auchinaktiv = false;
     }
+    SetMandatoryHiddenReadonly(nameof(Muster), false, false, false, false);
+    SetMandatoryHiddenReadonly(nameof(Auchinaktiv), false, false, false, false);
+    SetMandatoryHiddenReadonly(nameof(Bis), false, false, false, false);
+    SetMandatoryHiddenReadonly(nameof(Konfiguration), false, false, false, false);
+    SetMandatoryHiddenReadonly(nameof(Berechnen), false, false, false, false);
     SetMandatoryHiddenReadonly(nameof(Status), false, false, true, false);
+    SetMandatoryHiddenReadonly(nameof(Schliessen), false, false, false, false);
   }
 }
