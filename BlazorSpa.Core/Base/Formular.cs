@@ -132,6 +132,6 @@ public class Formular
   {
     if (close)
       return $"/close/{Action}/{Id}";
-    return $"{Funktionen.Iif(string.IsNullOrEmpty(Area), "", $"/{Area}")}/{Action}{Funktionen.Iif(string.IsNullOrEmpty(Id) || !id, "", $"/{Id}")}";
+    return $"{Funktionen.Iif(string.IsNullOrEmpty(Area), "", $"/{Area}")}/{Action}{Funktionen.Iif(string.IsNullOrEmpty(Id) || !id, "", $"/{Id}")}?init=1";
   }
 }

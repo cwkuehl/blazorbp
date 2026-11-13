@@ -202,7 +202,7 @@ app.Use(async (context, next) =>
   // const string POLICY = "default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self'; frame-ancestors 'self'; form-action 'self';"; // To tighten further
   if (0 == 0)
   {
-    const string POLICY = "default-src 'self'; script-src 'self' 'unsafe-hashes' 'sha256-CUqQNXXMRfh20wSHsbWzap8G4U55uWVlFrnrwSqnd10=' 'sha256-UlYTlM874RdFSS67t+aMjiuwzawEsxJkZV0OrhmqESo=' 'sha256-E3Jin0zoOcW167+rqzMm4duzknSmqrDJ7LJs+P1wAdI='; img-src 'self' data:; form-action 'self'; frame-ancestors 'none';"; // To prevent all framing of your content
+    const string POLICY = "default-src 'self'; script-src 'self' 'unsafe-hashes' 'sha256-CUqQNXXMRfh20wSHsbWzap8G4U55uWVlFrnrwSqnd10=' 'sha256-UlYTlM874RdFSS67t+aMjiuwzawEsxJkZV0OrhmqESo=' 'sha256-E3Jin0zoOcW167+rqzMm4duzknSmqrDJ7LJs+P1wAdI=' 'sha256-YbA5kKwhyF1MyOgxXBZPEIqxpBAr2HbAxweT7zBzBmo='; img-src 'self' data:; form-action 'self'; frame-ancestors 'none';"; // To prevent all framing of your content
     //// const string POLICY = "default-src 'self'; script-src 'self' 'unsafe-hashes' 'sha256-fa0BfrkfoHWYWTFJg9cIEoVa6Mn3OUorfpaz+NXuHCI=' 'sha256-RFWPLDbv2BY+rCkDzsE+0fr8ylGr2R2faWMhq4lfEQc='; connect-src 'self'; img-src 'self' data:; style-src 'self'; form-action 'self'; frame-ancestors 'none';"; // To prevent all framing of your content
     //// const string POLICY = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; img-src 'self'; style-src 'self'; form-action 'self'; frame-ancestors 'none';";
     //// script-src 'unsafe-inline' 'unsafe-eval' for ajax
@@ -217,6 +217,7 @@ app.Use(async (context, next) =>
     //// 'sha256-CUqQNXXMRfh20wSHsbWzap8G4U55uWVlFrnrwSqnd10=' submitc($(this));
     //// 'sha256-UlYTlM874RdFSS67t+aMjiuwzawEsxJkZV0OrhmqESo=' statec($(this));
     //// 'sha256-E3Jin0zoOcW167+rqzMm4duzknSmqrDJ7LJs+P1wAdI=' return confimp();
+    //// 'sha256-YbA5kKwhyF1MyOgxXBZPEIqxpBAr2HbAxweT7zBzBmo=' dblrow($(this));
     //// 'sha256-aV5tqRL+qWGkuS9LFLVv5WMI1ldktz5yzpz7ftN2I5k=' alert('Hallo'); <script>alert('Hallo');</script>
     context.Response.Headers.Append("Content-Security-Policy", $"{POLICY}");
     //// Verhindern von MIME-Typ-Sniffing.

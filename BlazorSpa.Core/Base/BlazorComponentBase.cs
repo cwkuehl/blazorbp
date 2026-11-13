@@ -596,10 +596,12 @@ public class BlazorComponentBase<T, TV> : LayoutComponentBase
     {
       model = ReadFormularModel(id); // Bei Model-Postback ist kein Read notwendig.
       if ((!string.IsNullOrEmpty(model?.ModalId) || !string.IsNullOrEmpty(model?.Modal2Id))
-        && HttpContext.Request.QueryString.Value?.Contains("init=1") == true)
+        && (Postback == 2 || HttpContext.Request.QueryString.Value?.Contains("init=1") == true || HttpContext.Request.QueryString.Value?.Contains("bsmode=") == true))
       {
         model.ModalId = null; // Unterformulare nicht anzeigen.
         model.Modal2Id = null;
+        if (Postback == 2)
+          WriteFormularModel(id, Model);
       }
     }
     if (Table == null)

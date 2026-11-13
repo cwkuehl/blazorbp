@@ -59,17 +59,18 @@
         {
           ix++;
           <tr class="@Funktionen.Iif(ix == sr, "table-info", "")">
-            <td scope="row"><button type="submit" class="btn btn-secondary btn-sm" formaction="@actionpath?handler=Table_Row" value="@ix" name="Table.SelectedRow" title="Zeile markieren">&gt;</button></td>
+            <td scope="row"><button type="submit" class="btn btn-secondary btn-sm" formaction="@actionpath?handler=Table_Row" value="@ix" name="Table.SelectedRow" title="Zeile markieren">&gt;</button>
+            </td>
             @foreach (var c in Columns.Where(a => a.Visible))
             {
-              <td class="@Funktionen.Iif(c.Right, "text-end", "")">@FormatForColumn(c.Pi.GetValue(r))</td>
+              <td class="@Funktionen.Iif(c.Right, "text-end", "")" ondblclick="dblrow($(this));">@FormatForColumn(c.Pi.GetValue(r))</td>
             }
             @if (EditAktion || DeleteAktion || CopyAktion)
             {
               <td>
                 @if (EditAktion)
                 {
-                  <button type="submit" class="btn btn-outline-info border-0 btn-sm" formaction="@actionpath?handler=Table_Edit" value="@ix" name="@Funktionen.Iif(NoModal, "Table.NoModalId", "Table.ModalId")" title="Datensatz ändern"><i class="bi bi-pencil-button"></i></button>
+                  <button type="submit" class="btn btn-outline-info border-0 btn-sm dblrow-edit" formaction="@actionpath?handler=Table_Edit" value="@ix" name="@Funktionen.Iif(NoModal, "Table.NoModalId", "Table.ModalId")" title="Datensatz ändern"><i class="bi bi-pencil-button"></i></button>
                 }
                 @if (DeleteAktion)
                 {

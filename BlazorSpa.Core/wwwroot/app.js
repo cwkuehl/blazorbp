@@ -34,6 +34,19 @@ function submitc(ctrl) {
   // window.onbeforeunload = function() { return "Bitte zuerst abmelden, wenn Sie die Seite verlassen wollen."; }
 }
 
+/** Löst Ändern-Funktion in Tabellenzeile bei Doppelklick auf Zeile aus.
+ * param ctrl Auslösendes Control.
+ */
+function dblrow(ctrl) {
+  if (ctrl == null)
+    return;
+  var edit = ctrl.siblings().find('.dblrow-edit');
+  if (edit.length > 0)
+  {
+    edit.click();
+  }
+}
+
 /** Liest den Status für einen Task.
  * @param ctrl Auslösendes Control mit Attribut 'data-stateof'.
  */
