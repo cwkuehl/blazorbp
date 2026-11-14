@@ -43,7 +43,7 @@ public class FormsModule : IFormModule
         new("Tagebuch", "Tagebuch", "/tb/tb100", "bi bi-dot-nav-menu"),
         new("Positionen", "Positionen bearbeiten", "/tb/tb200", "bi bi-dot-nav-menu"),
         new("Notizen", "Notizen bearbeiten", "/fz/fz700", "bi bi-dot-nav-menu"),
-        new("Personen", "Personen bearbeiten", "/ad/ad100", "bi bi-dot-nav-menu"),
+        new("Personen / Adressen", "Personen bearbeiten", "/ad/ad100", "bi bi-dot-nav-menu"),
         new("Fahrradstände", "Fahrradstände bearbeiten", "/fz/fz250", "bi bi-dot-nav-menu"),
         new("Fahrräder", "Fahrräder bearbeiten", "/fz/fz200", "bi bi-dot-nav-menu"),
         new("Statistik", "Statistik", "/fz/fz100", "bi bi-dot-nav-menu"),

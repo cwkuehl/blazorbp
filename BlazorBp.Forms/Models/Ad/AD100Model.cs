@@ -16,56 +16,38 @@ public class AD100Model : PageModelBase
 {
   /// <summary>Holt oder setzt Name.</summary>
   [Display(Name = "_Name", Description = "Suche für Name")]
-  //// [Required(ErrorMessage = "Name muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Name darf maximal {1} Zeichen lang sein.")]
   public string? Name { get; set; }
 
   /// <summary>Holt oder setzt Vorname.</summary>
   [Display(Name = "_Vorname", Description = "Suche für Vorname")]
-  //// [Required(ErrorMessage = "Vorname muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Vorname darf maximal {1} Zeichen lang sein.")]
   public string? Vorname { get; set; }
 
   /// <summary>Holt oder setzt Neuer Sitz.</summary>
   [Display(Name = "N_euer Sitz", Description = "Neuen Sitz erstellen")]
-  //// [Required(ErrorMessage = "Neuer Sitz muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Neuer Sitz darf maximal {1} Zeichen lang sein.")]
   public string? SitzNeu { get; set; }
 
   /// <summary>Holt oder setzt 1. Sitz.</summary>
-  [Display(Name = "1. _Sitz", Description = "Ausgewählten Sitz zum 1. Sitz machen")]
-  //// [Required(ErrorMessage = "1. Sitz muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "1. Sitz darf maximal {1} Zeichen lang sein.")]
+  [Display(Name = "1. _Sitz", Description = "Ausgewählten Sitz zum 1. Sitz der Person machen")]
   public string? SitzEins { get; set; }
 
   /// <summary>Holt oder setzt Geburtstagsliste.</summary>
   [Display(Name = "_Geburtstagsliste", Description = "Liste von aktuellen Geburtstagen anzeigen")]
-  //// [Required(ErrorMessage = "Geburtstagsliste muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Geburtstagsliste darf maximal {1} Zeichen lang sein.")]
   public string? GebListe { get; set; }
 
-  /// <summary>Holt oder setzt Action.print.</summary>
-  [Display(Name = "Action.print", Description = "Action.print")]
-  //// [Required(ErrorMessage = "Action.print muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Action.print darf maximal {1} Zeichen lang sein.")]
+  /// <summary>Holt oder setzt Drucken.</summary>
+  [Display(Name = "Drucken", Description = "Adressen als HTML-Datei ausgeben")]
   public string? Print { get; set; }
 
   /// <summary>Holt oder setzt Importieren und Exportieren.</summary>
-  [Display(Name = "Importieren und Exportieren", Description = "Importieren und Exportieren")]
-  //// [Required(ErrorMessage = "Importieren und Exportieren muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Importieren und Exportieren darf maximal {1} Zeichen lang sein.")]
+  [Display(Name = "Importieren und Exportieren", Description = "Importieren und Zeichen lang sein.")]
   public string? Floppy { get; set; }
 
   /// <summary>Holt oder setzt Aktualisieren.</summary>
   [Display(Name = "Aktualisieren", Description = "Aktualisieren")]
-  //// [Required(ErrorMessage = "Aktualisieren muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Aktualisieren darf maximal {1} Zeichen lang sein.")]
   public string? Refresh { get; set; }
 
   /// <summary>Holt oder setzt Schließen.</summary>
   [Display(Name = "Schließen", Description = "Schließen")]
-  //// [Required(ErrorMessage = "Schließen muss angegeben werden.")]
-  //// [MaxLength(255, ErrorMessage = "Schließen darf maximal {1} Zeichen lang sein.")]
   public string? Schliessen { get; set; }
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
