@@ -57,6 +57,7 @@ else if (InputType == "checkbox")
 }
 else if (InputType == "radio")
 {
+  @((MarkupString)"<div class=\"d-flex gap-3\">")
   var i = 0;
   var v = CurrentValue?.ToString();
   foreach (var t in DataList ?? new List<ListItem>())
@@ -88,6 +89,7 @@ else if (InputType == "radio")
       @((MarkupString)"</div>")
     }
   }
+  @((MarkupString)"</div>")
 }
 else if (combobox || listbox)
 {

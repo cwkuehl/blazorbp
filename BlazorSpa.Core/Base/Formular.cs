@@ -46,6 +46,8 @@ public class Formular
       case "Table_Copy":
       case "C":
         return DialogTypeEnum.Copy;
+      case "K":
+        return DialogTypeEnum.Copy2;
       case "Table_Delete":
       case "D":
         return DialogTypeEnum.Delete;
@@ -72,6 +74,8 @@ public class Formular
         return "E";
       case DialogTypeEnum.Copy:
         return "C";
+      case DialogTypeEnum.Copy2:
+        return "K";
       case DialogTypeEnum.Delete:
         return "D";
       case DialogTypeEnum.Reverse:
@@ -110,6 +114,7 @@ public class Formular
       case DialogTypeEnum.Edit:
         return $"{title} bearbeiten";
       case DialogTypeEnum.Copy:
+      case DialogTypeEnum.Copy2:
         return $"{title} kopieren";
       case DialogTypeEnum.Delete:
         return $"{title} löschen";

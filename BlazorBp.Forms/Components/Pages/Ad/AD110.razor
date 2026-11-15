@@ -16,51 +16,55 @@
   @* <InputText type="hidden" @bind-Value="Model!.ReadonlyHiddenError"/> *@
   <input type="hidden" name="SubmitControl"/>
   <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Nummer)" VerticalColClass="form-group col-md-4"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.SitzNr)" VerticalColClass="form-group col-md-4 ms-1"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.AdressNr)" VerticalColClass="form-group col ms-1"/>
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Geschlecht1)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Geschlecht2)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Geschlecht3)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid type="radio" AutoPostback="" DataList="Model!.AuswahlPersonStatus" For="@(() => Model!.PersonStatus)" VerticalColClass="form-group col-md-4"/>
+    <LabelInputValid AutoPostback="" maxlength="40" For="@(() => Model!.Titel)" VerticalColClass="form-group col-md-2 ms-1"/>
+    <LabelInputValid AutoPostback="" maxlength="40" For="@(() => Model!.Vorname)" VerticalColClass="form-group col ms-1"/>
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.PersonStatus1)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.PersonStatus2)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" maxlength="40" For="@(() => Model!.Praedikat)" VerticalColClass="form-group col-md-4"/>
+    <LabelInputValid AutoPostback="" maxlength="40" For="@(() => Model!.Name1)" VerticalColClass="form-group col-md-4 ms-1"/>
+    <LabelInputValid AutoPostback="" maxlength="40" For="@(() => Model!.Name2)" VerticalColClass="form-group col ms-1"/>
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Notiz)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid type="radio" AutoPostback="" DataList="Model!.AuswahlGeschlecht" For="@(() => Model!.Geschlecht)" VerticalColClass="form-group col"/>
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.SitzStatus1)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.SitzStatus2)" VerticalColClass="form-group col-md-2"/>
-  </div>
-  <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Nummer)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.SitzNr)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.AdressNr)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Titel)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Vorname)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Praedikat)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Name1)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Name2)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Geschlecht0)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Geburt)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.PersonStatus0)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Name)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Strasse)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Hausnr)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Postfach)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Staat)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Plz)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Ort)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Telefon)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Fax)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Mobil)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Homepage)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Email)" VerticalColClass="form-group col-md-2"/>
     <LabelInputValid AutoPostback="" For="@(() => Model!.SitzStatus0)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.AdresseAnzahl)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Angelegt)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.Geaendert)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.SitzStatus1)" VerticalColClass="form-group col-md-2 ms-1"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.SitzStatus2)" VerticalColClass="form-group col-md-2 ms-1"/>
+    <LabelInputValid AutoPostback="" maxlength="40" For="@(() => Model!.Name)" VerticalColClass="form-group col ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" maxlength="40" For="@(() => Model!.Strasse)" VerticalColClass="form-group col-md-4"/>
+    <LabelInputValid AutoPostback="" maxlength="20" For="@(() => Model!.Hausnr)" VerticalColClass="form-group col-md-4 ms-1"/>
+    <LabelInputValid AutoPostback="" maxlength="10" For="@(() => Model!.Postfach)" VerticalColClass="form-group col ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" maxlength="3" For="@(() => Model!.Staat)" VerticalColClass="form-group col-md-4 ms-1"/>
+    <LabelInputValid AutoPostback="" maxlength="10" For="@(() => Model!.Plz)" VerticalColClass="form-group col-md-4"/>
+    <LabelInputValid AutoPostback="" maxlength="40" For="@(() => Model!.Ort)" VerticalColClass="form-group col ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" maxlength="40" For="@(() => Model!.Telefon)" VerticalColClass="form-group col-md-4"/>
+    <LabelInputValid AutoPostback="" maxlength="40" For="@(() => Model!.Fax)" VerticalColClass="form-group col-md-4 ms-1"/>
+    <LabelInputValid AutoPostback="" maxlength="40" For="@(() => Model!.Mobil)" VerticalColClass="form-group col ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" maxlength="100" For="@(() => Model!.Homepage)" VerticalColClass="form-group col-md-4 ms-1"/>
+    <LabelInputValid AutoPostback="" maxlength="40" For="@(() => Model!.Email)" VerticalColClass="form-group col-md-4 ms-1"/>
+    <LabelInputValid AutoPostback="" maxlength="255" rows="3" For="@(() => Model!.Notiz)" VerticalColClass="form-group col ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.AdresseAnzahl)" VerticalColClass="form-group col ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Angelegt)" VerticalColClass="form-group col-md-6"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Geaendert)" VerticalColClass="form-group col ms-1"/>
   </div>
   <div class="modal-footer mt-2">
     <SubmitButton class="btn btn-primary col-md-2 ms-1" For="@(() => Model!.Ok)"/>
@@ -71,6 +75,10 @@
 </EditForm>
 
 @code {
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IAddressService AddressService { get; set; } = default!;
+
   /// <summary>
   /// Initialisierung des Models.
   /// </summary>
@@ -92,16 +100,20 @@
       };
       if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
       {
-        // TODO Lesen des Models aus der Datenbank, z.B.:
-        // var r = StockService.GetStock(daten, id ?? "");
-        // if (r.Ok && r.Ergebnis != null)
-        //   Model.From(r.Ergebnis);
+        // Lesen des Models aus der Datenbank, z.B.:
+        var r = AddressService.GetSite(daten, id ?? "");
+        if (r.Ok && r.Ergebnis != null)
+          Model.From(r.Ergebnis);
       }
       Model.SetMhrf(dt);
     }
     Model.Nr = id;
     InitEditContext(Model);
-    // TODO Lesen der Listen für Auswahlfelder, z.B.:
+    // Lesen der Listen für Auswahlfelder.
+    if (Model.AuswahlPersonStatus == null)
+      Model.AuswahlPersonStatus = [ new ListItem("0", "Aktuell"), new ListItem("1", "Alt") ];
+    if (Model.AuswahlGeschlecht == null)
+      Model.AuswahlGeschlecht = [ new ListItem("N", "Neutrum"),new ListItem("M", "Männlich"), new ListItem("F", "Weiblich") ];
     // var l0 = Get(StockService.GetStateList(daten));
     // Model.AuswahlStatus = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
   }
@@ -149,5 +161,7 @@
   {
     model.DialogType = model0.DialogType;
     model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+    model.AuswahlPersonStatus = model0.AuswahlPersonStatus;
+    model.AuswahlGeschlecht = model0.AuswahlGeschlecht;
   }
 }

@@ -16,8 +16,8 @@ public enum DialogTypeEnum
   /// <summary>Copy mode.</summary>
   Copy,
 
-  // /// <summary>Copy2 mode.</summary>
-  // Copy2,
+  /// <summary>Copy2 mode.</summary>
+  Copy2,
 
   /// <summary>Edit mode.</summary>
   Edit,
