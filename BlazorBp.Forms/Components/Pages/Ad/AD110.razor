@@ -34,9 +34,7 @@
     <LabelInputValid type="radio" AutoPostback="" DataList="Model!.AuswahlGeschlecht" For="@(() => Model!.Geschlecht)" VerticalColClass="form-group col"/>
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" For="@(() => Model!.SitzStatus0)" VerticalColClass="form-group col-md-2"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.SitzStatus1)" VerticalColClass="form-group col-md-2 ms-1"/>
-    <LabelInputValid AutoPostback="" For="@(() => Model!.SitzStatus2)" VerticalColClass="form-group col-md-2 ms-1"/>
+    <LabelInputValid type="radio" AutoPostback="" DataList="Model!.AuswahlSitzStatus" For="@(() => Model!.SitzStatus)" VerticalColClass="form-group col-md-2"/>
     <LabelInputValid AutoPostback="" maxlength="40" For="@(() => Model!.Name)" VerticalColClass="form-group col ms-1"/>
   </div>
   <div class="row mt-1 g-0">
@@ -45,8 +43,8 @@
     <LabelInputValid AutoPostback="" maxlength="10" For="@(() => Model!.Postfach)" VerticalColClass="form-group col ms-1"/>
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid AutoPostback="" maxlength="3" For="@(() => Model!.Staat)" VerticalColClass="form-group col-md-4 ms-1"/>
-    <LabelInputValid AutoPostback="" maxlength="10" For="@(() => Model!.Plz)" VerticalColClass="form-group col-md-4"/>
+    <LabelInputValid AutoPostback="" maxlength="3" For="@(() => Model!.Staat)" VerticalColClass="form-group col-md-4"/>
+    <LabelInputValid AutoPostback="" maxlength="10" For="@(() => Model!.Plz)" VerticalColClass="form-group col-md-4 ms-1"/>
     <LabelInputValid AutoPostback="" maxlength="40" For="@(() => Model!.Ort)" VerticalColClass="form-group col ms-1"/>
   </div>
   <div class="row mt-1 g-0">
@@ -103,7 +101,10 @@
         // Lesen des Models aus der Datenbank, z.B.:
         var r = AddressService.GetSite(daten, id ?? "");
         if (r.Ok && r.Ergebnis != null)
+        {
           Model.From(r.Ergebnis);
+          SetAddress(r.Ergebnis?.Address);
+        }
       }
       Model.SetMhrf(dt);
     }
@@ -114,8 +115,8 @@
       Model.AuswahlPersonStatus = [ new ListItem("0", "Aktuell"), new ListItem("1", "Alt") ];
     if (Model.AuswahlGeschlecht == null)
       Model.AuswahlGeschlecht = [ new ListItem("N", "Neutrum"),new ListItem("M", "Männlich"), new ListItem("F", "Weiblich") ];
-    // var l0 = Get(StockService.GetStateList(daten));
-    // Model.AuswahlStatus = InsertEmpty(l0?.Select(a => new ListItem(a.Schluessel, a.Wert)).ToList());
+    if (Model.AuswahlSitzStatus == null)
+      Model.AuswahlSitzStatus = [ new ListItem("0", "Aktuell"), new ListItem("1", "Alt") ]; 
   }
 
   /// <summary>Initialisierung der Komponente.</summary>
@@ -163,5 +164,27 @@
     model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
     model.AuswahlPersonStatus = model0.AuswahlPersonStatus;
     model.AuswahlGeschlecht = model0.AuswahlGeschlecht;
+    model.AuswahlSitzStatus = model0.AuswahlSitzStatus;
+  }
+
+  /// <summary>
+  /// Sets a new address.
+  /// </summary>
+  /// <param name="ad">New address.</param>
+  private void SetAddress(AdAdresse? ad)
+  {
+    var diff = 0;
+    if (Functions.CompString(ad?.Uid, Model.AdressNr) != 0)
+    {
+      // If the number is changing, the new number will be used once more.
+      diff = 1;
+    }
+    Model.AdressNr = ad?.Uid;
+    Model.Strasse = ad?.Strasse;
+    Model.Hausnr = ad?.HausNr;
+    Model.Staat = ad?.Staat;
+    Model.Plz = ad?.Plz;
+    Model.Ort = ad?.Ort;
+    Model.AdresseAnzahl = Funktionen.ToString(diff + Get(AddressService.GetAddressCount(ServiceDaten, ad?.Uid)));
   }
 }

@@ -140,17 +140,12 @@ public class AD110Model : PageModelBase
   [MaxLength(255, ErrorMessage = "Bemerkung darf maximal {1} Zeichen lang sein.")]
   public string? Notiz { get; set; }
 
+  /// <summary>Holt oder setzt die Liste von Sitz-Status.</summary>
+  public List<ListItem>? AuswahlSitzStatus { get; set; }
+
   /// <summary>Holt oder setzt Sitz-Status.</summary>
-  [Display(Name = "Sitz-Status", Description = "")]
-  public string? SitzStatus0 { get; set; }
-
-  /// <summary>Holt oder setzt Aktuell.</summary>
-  [Display(Name = "Aktuell", Description = "Sitz wird ausgedruckt")]
-  public string? SitzStatus1 { get; set; }
-
-  /// <summary>Holt oder setzt Alt.</summary>
-  [Display(Name = "Alt", Description = "Sitz wird nicht ausgedruckt")]
-  public string? SitzStatus2 { get; set; }
+  [Display(Name = "Sitz-Status", Description = "Legt fest, ob der Sitz ausgedruckt wird.")]
+  public string? SitzStatus { get; set; }
 
   /// <summary>Holt oder setzt # gleiche Adresse.</summary>
   [Display(Name = "# gleiche Adresse", Description = "Wie oft wird diese Adresse insgesamt verwendet?")]
@@ -182,56 +177,56 @@ public class AD110Model : PageModelBase
 
   /// <summary>Kopiert die Werte aus einem Model.</summary>
   /// <param name="m">Zu kopierendes Model.</param>
-  public void From(AdSitz m) =>
-  (
-    Nummer,
-    SitzNr,
-    AdressNr,
-    Titel,
-    Vorname,
-    Praedikat,
-    Name1,
-    Name2,
-    Geschlecht,
-    Geburt,
-    PersonStatus,
-    Name,
-    Postfach,
-    Telefon,
-    Fax,
-    Mobil,
-    Homepage,
-    Email,
-    Notiz, // TODO Adresse
-    SitzStatus0,
-    AdresseAnzahl,
-    Angelegt,
-    Geaendert
-  ) = (
-    m.Person?.Uid,
-    m.Uid,
-    m.Address?.Uid,
-    m.Person?.Titel,
-    m.Person?.Vorname,
-    m.Person?.Praedikat,
-    m.Person?.Name1,
-    m.Person?.Name2,
-    m.Person?.Geschlecht,
-    Funktionen.ToString(m.Person?.Geburt),
-    Funktionen.ToString(m.Person?.Person_Status),
-    m.Name,
-    m.Postfach,
-    m.Telefon,
-    m.Fax,
-    m.Mobil,
-    m.Homepage,
-    m.Email,
-    m.Bemerkung,
-    Funktionen.ToString(m.Sitz_Status),
-    "1", // TODO m.AdresseAnzahl,
-    ModelBase.FormatDateOf(m.Angelegt_Am, m.Angelegt_Von),
-    ModelBase.FormatDateOf(m.Geaendert_Am, m.Geaendert_Von)
-  );
+  public void From(AdSitz m)
+  {
+    (
+      Nummer,
+      SitzNr,
+      AdressNr,
+      Titel,
+      Vorname,
+      Praedikat,
+      Name1,
+      Name2,
+      Geschlecht,
+      Geburt,
+      PersonStatus,
+      Name,
+      Postfach,
+      Telefon,
+      Fax,
+      Mobil,
+      Homepage,
+      Email,
+      Notiz,
+      SitzStatus,
+      Angelegt,
+      Geaendert
+    ) = (
+      m.Person?.Uid,
+      m.Uid,
+      m.Address?.Uid,
+      m.Person?.Titel,
+      m.Person?.Vorname,
+      m.Person?.Praedikat,
+      m.Person?.Name1,
+      m.Person?.Name2,
+      m.Person?.Geschlecht,
+      Funktionen.ToString(m.Person?.Geburt),
+      Funktionen.ToString(m.Person?.Person_Status),
+      m.Name,
+      m.Postfach,
+      m.Telefon,
+      m.Fax,
+      m.Mobil,
+      m.Homepage,
+      m.Email,
+      m.Bemerkung,
+      Funktionen.ToString(m.Sitz_Status),
+      ModelBase.FormatDateOf(m.Angelegt_Am, m.Angelegt_Von),
+      ModelBase.FormatDateOf(m.Geaendert_Am, m.Geaendert_Von)
+    );
+  }
 
   /// <summary>Setzt die Werte und Modi für das Model.</summary>
   /// <param name="mode">Betroffener Modus.</param>
@@ -267,9 +262,7 @@ public class AD110Model : PageModelBase
     SetMandatoryHiddenReadonly(nameof(Homepage), false, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Email), false, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(Notiz), false, false, mode == Delete, false);
-    SetMandatoryHiddenReadonly(nameof(SitzStatus0), false, false, mode == Delete, false);
-    SetMandatoryHiddenReadonly(nameof(SitzStatus1), false, false, mode == Delete, false);
-    SetMandatoryHiddenReadonly(nameof(SitzStatus2), false, false, mode == Delete, false);
+    SetMandatoryHiddenReadonly(nameof(SitzStatus), false, false, mode == Delete, false);
     SetMandatoryHiddenReadonly(nameof(AdresseAnzahl), false, false, false, false);
     SetMandatoryHiddenReadonly(nameof(Angelegt), false, mode == New, true);
     SetMandatoryHiddenReadonly(nameof(Geaendert), false, mode == New, true);
