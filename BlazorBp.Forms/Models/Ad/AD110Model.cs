@@ -65,7 +65,7 @@ public class AD110Model : PageModelBase
 
   /// <summary>Holt oder setzt Geburt.</summary>
   [Display(Name = "_Geburt", Description = "Geburtsdatum der Person")]
-  public string? Geburt { get; set; }
+  public DateTime? Geburt { get; set; }
 
   /// <summary>Holt oder setzt die Liste von Person-Status.</summary>
   public List<ListItem>? AuswahlPersonStatus { get; set; }
@@ -212,7 +212,7 @@ public class AD110Model : PageModelBase
       m.Person?.Name1,
       m.Person?.Name2,
       m.Person?.Geschlecht,
-      Funktionen.ToString(m.Person?.Geburt),
+      m.Person?.Geburt,
       Funktionen.ToString(m.Person?.Person_Status),
       m.Name,
       m.Postfach,

@@ -31,7 +31,8 @@
     <LabelInputValid AutoPostback="" maxlength="40" For="@(() => Model!.Name2)" VerticalColClass="form-group col ms-1"/>
   </div>
   <div class="row mt-1 g-0">
-    <LabelInputValid type="radio" AutoPostback="" DataList="Model!.AuswahlGeschlecht" For="@(() => Model!.Geschlecht)" VerticalColClass="form-group col"/>
+    <LabelInputValid type="radio" AutoPostback="" DataList="Model!.AuswahlGeschlecht" For="@(() => Model!.Geschlecht)" VerticalColClass="form-group col-md-4"/>
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Geburt)" VerticalColClass="form-group col-md-4 ms-1"/>
   </div>
   <div class="row mt-1 g-0">
     <LabelInputValid type="radio" AutoPostback="" DataList="Model!.AuswahlSitzStatus" For="@(() => Model!.SitzStatus)" VerticalColClass="form-group col-md-2"/>
@@ -134,19 +135,51 @@
   protected override bool Submit(string? submit)
   {
     var daten = ServiceDaten;
+    if (IsDateMhp(submit, nameof(Model.Geburt), Model.Geburt, out var g))
+    {
+      if (g.HasValue)
+        Model.Geburt = g;
+    }
     if (Valid && submit == nameof(Model.Ok))
     {
-      // var o = Model.To(daten);
-      // var r = Model.DialogType == DialogTypeEnum.Delete
-      //   ? StockService.DeleteStock(daten, o)
-      //   : StockService.SaveStock(daten, o.Uid, o.Bezeichnung, o.Kuerzel, o.SignalPrice1, o.Sorting, o.Datenquelle, o.Status, o.Relation_Uid, o.Notiz, o.Type, o.Currency, Model.Anlage);
-      // if (r.Ok)
-      // {
-      //   SetFormRefresh();
-      //   return true;
-      // }
-      // else
-      //   Get(r, ModalMessages);
+      ServiceErgebnis? r = null;
+      if (Model.DialogType == DialogTypeEnum.New || Model.DialogType == DialogTypeEnum.Copy
+          || Model.DialogType == DialogTypeEnum.Copy2 || Model.DialogType == DialogTypeEnum.Edit)
+      {
+        var newuid = Model.DialogType == DialogTypeEnum.New || Model.DialogType == DialogTypeEnum.Copy;
+        var uid = newuid ? null : Model.Nummer;
+        var suid = newuid ? null : Model.SitzNr;
+        var auid = newuid ? null : Model.AdressNr;
+        r = FactoryService.AddressService.SaveSite(daten, uid, Model.Geschlecht,
+          Model.Geburt, Model.Name1, Model.Name2, Model.Praedikat, Model.Vorname,
+          Model.Titel, Model.PersonStatus == "0" ? 0 : 1, suid, Model.Name, Model.Telefon,
+          Model.Fax, Model.Mobil, Model.Email, Model.Homepage, Model.Postfach, Model.Notiz,
+          Model.SitzStatus == "0" ? 0 : 1, auid, Model.Staat, Model.Plz, Model.Ort,
+          Model.Strasse, Model.Hausnr);
+      }
+      else if (Model.DialogType == DialogTypeEnum.Delete)
+      {
+        var e = new AdSitz { Person_Uid = Model.Nummer, Uid = Model.SitzNr };
+        r = FactoryService.AddressService.DeleteSite(ServiceDaten, e);
+      }
+      if (r != null)
+      {
+        Get(r);
+        if (r.Ok)
+        {
+          SetFormRefresh();
+          return true;
+        }
+      }
+    }
+    if (submit == nameof(Model.AdresseDupl))
+    {
+      Model.AdressNr = null;
+      Model.AdresseAnzahl = "0";
+    }
+    if (submit == nameof(Model.AdresseWechseln))
+    {
+      SetError("TODO Formular AD130 Adressen aufrufen.");
     }
     if (submit == nameof(Model.Abbrechen))
       return true;
