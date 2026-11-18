@@ -121,8 +121,15 @@
       Refresh();
     if (submit == nameof(Model.SitzNeu))
     {
+      // Formular AD110 Person öffnen.
       var uid = GetTableRowId();
-      SetError("TODO Formular AD110 Person aufrufen.");
+      if (!string.IsNullOrEmpty(uid))
+      {
+        var id2 = $"{Formular.ToShortString(DialogTypeEnum.Copy2)}_{uid}";
+        var f = OpenFormular("AD110", id2);
+        if (f != null)
+          OpenFormular(f);
+      }
     }
     if (submit == nameof(Model.SitzEins))
     {

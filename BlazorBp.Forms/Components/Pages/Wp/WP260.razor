@@ -119,8 +119,7 @@
     if (submit == nameof(Model.Wpdetails))
     {
       // Formular WP210 Wertpapier öffnen
-      var dt = Formular.ToShortString(DialogTypeEnum.Edit);
-      var id2 = $"{dt}_{Model.Wertpapier}";
+      var id2 = $"{Formular.ToShortString(DialogTypeEnum.Edit)}_{Model.Wertpapier}";
       var f = OpenFormular("WP210", id2);
       if (f != null)
         OpenFormular(f);

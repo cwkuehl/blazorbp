@@ -97,7 +97,7 @@
         DialogType = dt,
         Nr = id,
       };
-      if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy)
+      if (dt == DialogTypeEnum.Edit || dt == DialogTypeEnum.Delete || dt == DialogTypeEnum.Copy || dt == DialogTypeEnum.Copy2)
       {
         // Lesen des Models aus der Datenbank, z.B.:
         var r = AddressService.GetSite(daten, id ?? "");
