@@ -4,6 +4,7 @@
 
 namespace BlazorBp.Forms.Components.Pages;
 
+using BlazorBp.Forms.Models.Ad;
 using BlazorBp.Forms.Models.Ag;
 using BlazorBp.Forms.Models.Am;
 using BlazorBp.Forms.Models.Fz;
@@ -166,6 +167,16 @@ public static class DownloadData
       ServiceErgebnis<byte[]>? r = null;
       switch (page)
       {
+        case "AD100":
+        {
+          var pm = BlazorComponentBaseStatic.ReadFormularFormModel<AD100Model>(s, "AD100", id);
+          if (pm != null)
+          {
+            var sv = sp.GetService(typeof(IAddressService)) as IAddressService;
+            r = sv?.GetAddressReport(daten);
+          }
+          break;
+        }
         case "HH510BL":
         {
           var pm = BlazorComponentBaseStatic.ReadFormularFormModel<HH510Model>(s, "HH510", id);

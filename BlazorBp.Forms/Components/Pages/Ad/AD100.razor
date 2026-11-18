@@ -33,7 +33,7 @@
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.SitzNeu)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.SitzEins)"/>
     <SubmitButton class="btn btn-secondary col-md-2 ms-1" For="@(() => Model!.GebListe)"/>
-    <SubmitButton class="btn btn-secondary col-md-1 ms-1" imageclass="bi bi-printer-fill-nav-menu" For="@(() => Model!.Print)"/>
+    <SubmitButton class="btn btn-secondary col-md-1 ms-1" href="@($"/downloadhtml/AD100/{Model!.Nr}")" download="adressen.html" imageclass="bi bi-printer-fill-nav-menu" For="@(() => Model!.Print)"/>
     <SubmitButton class="btn btn-secondary col-md-1 ms-1" imageclass="bi bi-floppy-button" For="@(() => Model!.Floppy)"/>
     <SubmitButton class="btn btn-primary col-md-1 ms-1" imageclass="bi bi-arrow-clockwise-button" For="@(() => Model!.Refresh)"/>
     <SubmitButton class="btn btn-secondary col-md-1 ms-1" imageclass="bi bi-x-lg-button" For="@(() => Model!.Schliessen)"/>
@@ -143,8 +143,7 @@
     }
     if (submit == nameof(Model.Print))
     {
-      // TODO Download der HTML-Datei.
-      var r = Get(AddressService.GetAddressReport(daten));
+      // Bericht wird als Link heruntergeladen.
     }
     if (submit == nameof(Model.Floppy))
     {
