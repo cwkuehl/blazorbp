@@ -115,6 +115,12 @@
           var ru = HttpContext.Request.Query["returnurl"].ToString().TrimNull() ?? "/";
           if (!BlazorComponentBaseStatic.IsValidReturnUrl(ru))
             ru = "/";
+          if (ru == "/")
+          {
+            var data = HttpContext.Session?.GetFormData() ?? new FormData();
+            if (Funktionen.ToInt32(data["AD120Start"]) != 0)
+              ru = "/ad/ad120";
+          }
           navigation.NavigateTo(ru);
         }
       }

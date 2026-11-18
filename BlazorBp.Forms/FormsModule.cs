@@ -94,6 +94,7 @@ public class FormsModule : IFormModule
     {
       { "AD100", new Formular { Action = "ad100", Area = "ad", Name = "Personen" } },
       { "AD110", new Formular { Action = "ad110", Area = "ad", Name = "Person" } },
+      { "AD120", new Formular { Action = "ad120", Area = "ad", Name = "Geburtstage" } },
       { "AG100", new Formular { Action = "ag100", Area = "ag", Name = "Mandanten" } },
       //// { "AG110", new Formular { Action = "ag110", Area = "ag", Name = "Mandant" } },
       { "AG200", new Formular { Action = "ag200", Area = "ag", Name = "Benutzer" } },

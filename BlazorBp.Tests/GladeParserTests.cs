@@ -27,6 +27,7 @@ public class GladeParserTests
     // Generator.Generate($"{basepath}/HH/HH500Balance.glade", null, null, resfile, genpath);
     // Generator.Generate($"{basepath}/HH/HH510Interface.glade", null, null, resfile, genpath);
     // Generator.Generate($"{basepath}/WP/WP400Bookings.glade", null, $"{basepath}/WP/WP410Booking.glade", resfile, genpath);
-    Generator.Generate($"{basepath}/AD/AD100Persons.glade", null, $"{basepath}/AD/AD110Person.glade", resfile, genpath);
+    // Generator.Generate($"{basepath}/AD/AD100Persons.glade", null, $"{basepath}/AD/AD110Person.glade", resfile, genpath);
+    Generator.Generate($"{basepath}/AD/AD120Birthdays.glade", null, null, resfile, genpath);
   }
 }

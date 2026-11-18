@@ -139,7 +139,11 @@
     }
     if (submit == nameof(Model.GebListe))
     {
-      SetError("TODO Formular AD120 Geburtstage aufrufen.");
+      // Formular AD120 Geburtstage aufrufen.
+      var id2 = $"{Formular.ToShortString(DialogTypeEnum.New)}_{Guid.NewGuid().ToString()}";
+      var f = OpenFormular("AD120", id2);
+      if (f != null)
+        OpenFormular(f);
     }
     if (submit == nameof(Model.Print))
     {

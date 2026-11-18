@@ -990,10 +990,11 @@ public class BlazorComponentBase<T, TV> : LayoutComponentBase
   /// <summary>
   /// Lesen eines String-Werts aus der Session.
   /// </summary> <param name="key">Betroffener Schlüssel.</param>
+  /// <param name="defaultValue">Betroffener Standardwert.</param>
   /// <returns>Betroffener Wert.</returns>
-  protected string? GetStringData(string key)
+  protected string? GetStringData(string key, string? defaultValue = null)
   {
     var data = HttpContext.Session?.GetFormData() ?? new FormData();
-    return data[key];
+    return Funktionen.TrimNull(data[key]) ?? defaultValue;
   }
 }

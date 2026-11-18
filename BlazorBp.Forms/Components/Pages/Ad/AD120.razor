@@ -1,0 +1,118 @@
+@page "/ad/ad120/{id?}"
+@inherits BlazorComponent<AD120Model, TableRowModelBase>
+@attribute [Authorize(Roles = "User, Admin, Superadmin")]
+
+<SectionContent SectionName="title">@Title</SectionContent>
+<PageTitle>@Title</PageTitle>
+
+<EditForm Enhance method="post" EditContext="EditContext" OnValidSubmit="Submit" FormName="ad120">
+  <DataAnnotationsValidator/>
+  <ValidationSummary class="text-danger"/>
+  <InputText type="hidden" @bind-Value="Model!.Nr"/>
+  <input type="hidden" name="SubmitControl"/>
+  <div class="row mt-1 g-0">
+    <LabelInputValid AutoPostback="" For="@(() => Model!.Datum)" VerticalColClass="form-group col-md-2"/>
+    <LabelInputValid AutoPostback="x" For="@(() => Model!.Tage)" maxlength="255" VerticalColClass="form-group col-md-2 ms-1"/>
+  </div>
+  <div class="row mt-1 g-0">
+    <LabelInputValid type="listbox" size="25" class="font-monospace" AutoPostback="" DataList="Model!.AuswahlGeburtstage" For="@(() => Model!.Geburtstage)" VerticalColClass="form-group col-md-6"/>
+  </div>
+  <div class="modal-footer mt-2">
+    <LabelInputValid type="checkbox" AutoPostback="" For="@(() => Model!.Starten)" VerticalColClass="form-group col-md-2"/>
+    <SubmitButton class="btn btn-primary col-md-2 ms-1" For="@(() => Model!.Ok)"/>
+  </div>
+</EditForm>
+
+@code {
+
+  /// <summary>Holt oder setzt den betroffenen Service.</summary>
+  [Inject]
+  private CSBP.Services.Apis.Services.IAddressService AddressService { get; set; } = default!;
+
+  /// <summary>
+  /// Initialisierung des Models.
+  /// </summary>
+  /// <param name="id">Betroffene Id.</param>
+  /// <param name="model">Evtl. gelesenes Model.</param>
+  /// <param name="table">Evtl. gelesenes Table-Model.</param>
+  protected override void Init(string? id, AD120Model? model = null, TableModelBase<TableRowModelBase>? table = null)
+  {
+    var daten = ServiceDaten;
+    if (model != null)
+      Model = model;
+    if (Model == null)
+    {
+      Model = new AD120Model
+      {
+        Nr = id,
+      };
+      Model.SetMhrf(DialogTypeEnum.New, daten);
+      Model.Tage = Funktionen.ToInt32(GetStringData("AD120Tage", "12"));
+      Model.Starten = Funktionen.ToInt32(GetStringData("AD120Start")) != 0;
+    }
+    Model.Nr = id;
+    InitEditContext(Model);
+    if (Model.AuswahlGeburtstage == null)
+      Refresh();
+  }
+
+  /// <summary>
+  /// Aktualisierung nach Undo/Redo.
+  /// </summary>
+  protected override void Refresh()
+  {
+    var daten = ServiceDaten;
+    var l = Get(AddressService.GetBirthdayList(daten, Model.Datum ?? daten.Heute, Model.Tage)) ?? new List<string>();
+    Model.AuswahlGeburtstage = InsertEmptyIfEmpty(l.Select(a => new ListItem(a, a)).ToList());
+  }
+
+  /// <summary>
+  /// Initialisierung des Formulars kann wegen EditContext nicht asynchron sein:
+  /// -Formular-Manager braucht eine Id, ansonsten Redirect mit neuer Guid.
+  /// -Lesen des Models aus der Session, ansonsten Initialisierung des Models.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    if (OnInitializedFormular("AD120", "Geburtstagsliste - AD120", Id, true))
+      return;
+  }
+
+  /// <summary>
+  /// Verarbeitung des Postbacks.
+  /// </summary>
+  /// <param name="submit">Betroffener Submit-Parameter.</param>
+  /// <returns>True, wenn das Formular geschlossen werden soll, sonst false.</returns>
+  protected override bool Submit(string? submit)
+  {
+    if (IsDateMhp(submit, nameof(Model.Datum), Model.Datum, out var d))
+    {
+      if (d.HasValue)
+      {
+        Model.Datum = d;
+        Refresh();
+      }
+    }
+    if (submit == nameof(Model.Tage))
+    {
+      Refresh();
+      SetStringData("AD120Tage", Funktionen.Iif(Model.Tage <= 0, null, Funktionen.ToString(Model.Tage)));
+    }
+    if (submit == nameof(Model.Ok))
+    {
+      SetStringData("AD120Start", Funktionen.Iif(Model.Starten, "1", null));
+      return true;
+    }
+    return false;
+  }
+
+  /// <summary>
+  /// Kopieren von Daten im Model, die nicht über Postback gesendet werden.
+  /// </summary>
+  /// <param name="model">Betroffenes Model, das geändert werden soll.</param>
+  /// <param name="model0">Model, aus dem kopiert werden soll.</param>
+  protected override void CopyNotPostbackData(AD120Model model, AD120Model model0)
+  {
+    model.ReadonlyHiddenError = model0.ReadonlyHiddenError;
+    model.AuswahlGeburtstage = model0.AuswahlGeburtstage;
+  }
+}
