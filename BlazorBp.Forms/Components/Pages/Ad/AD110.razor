@@ -117,7 +117,14 @@
     if (Model.AuswahlGeschlecht == null)
       Model.AuswahlGeschlecht = [ new ListItem("N", "Neutrum"),new ListItem("M", "Männlich"), new ListItem("F", "Weiblich") ];
     if (Model.AuswahlSitzStatus == null)
-      Model.AuswahlSitzStatus = [ new ListItem("0", "Aktuell"), new ListItem("1", "Alt") ]; 
+      Model.AuswahlSitzStatus = [ new ListItem("0", "Aktuell"), new ListItem("1", "Alt") ];
+    var adruid = GetStringData("AD130Return");
+    if (!string.IsNullOrEmpty(adruid))
+    {
+      SetStringData("AD130Return", null);
+      var ad = Get(AddressService.GetAddress(daten, adruid));
+      SetAddress(ad);
+    }
   }
 
   /// <summary>Initialisierung der Komponente.</summary>
@@ -179,7 +186,11 @@
     }
     if (submit == nameof(Model.AdresseWechseln))
     {
-      SetError("TODO Formular AD130 Adressen aufrufen.");
+      // Formular AD130 Adressen öffnen.
+      var id2 = $"{Formular.ToShortString(DialogTypeEnum.Copy2)}_{Guid.NewGuid()}";
+      var f = OpenFormular("AD130", id2);
+      if (f != null)
+        OpenFormular(f);
     }
     if (submit == nameof(Model.Abbrechen))
       return true;
